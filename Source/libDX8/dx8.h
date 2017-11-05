@@ -46,13 +46,13 @@ typedef int16_t  Sword;
 typedef struct {
   CPU_REGISTER(I, x, y) I;
   CPU_REGISTER(J, z, w) J;
-  CPU_REGISTER(pc, lo, hi) pc;
+  CPU_REGISTER(w, lo, hi) pc;
   Byte a;
   Byte stack;
   struct {
-    Byte  flag1 : 1;
-    Byte  flag2 : 1;
-    Byte  flag3 : 1;
+    Byte  bZero : 1;
+    Byte  bNegative : 1;
+    Byte  bCarry : 1;
     Byte  flag4 : 1;
     Byte  flag5 : 1;
     Byte  flag6 : 1;
