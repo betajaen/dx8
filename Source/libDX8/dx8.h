@@ -35,4 +35,40 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+typedef uint8_t  Byte;
+typedef uint16_t Word;
+typedef int8_t   Sbyte;
+typedef int16_t  Sword;
+
+#define CPU_REGISTER(NAME, A, B) \
+  struct { union { Word NAME; struct { Byte A, B; };  }; }
+
+typedef struct {
+  CPU_REGISTER(I, x, y) I;
+  CPU_REGISTER(J, z, w) J;
+  CPU_REGISTER(pc, lo, hi) pc;
+  Byte a;
+  Byte stack;
+  struct {
+    Byte  flag1 : 1;
+    Byte  flag2 : 1;
+    Byte  flag3 : 1;
+    Byte  flag4 : 1;
+    Byte  flag5 : 1;
+    Byte  flag6 : 1;
+    Byte  flag7 : 1;
+    Byte  flag8 : 1;
+  } flags;
+} Cpu;
+
+typedef struct {
+  Byte (*get)(Word address);
+  void (*set)(Word address, Byte value);
+} Mmu;
+
+
+void Cpu_Reset(Cpu* cpu);
+
+int Cpu_Step(Cpu* cpu, Mmu* mmu);
+
 #endif

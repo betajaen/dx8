@@ -30,4 +30,3 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
-
