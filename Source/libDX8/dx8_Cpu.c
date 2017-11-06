@@ -92,6 +92,7 @@ void Cpu_Reset(Cpu* cpu)
 // BRA_GT   -- Call to DATA, flags.n    = 1
 // BRA_LT   -- Call to DATA, flags.c    = 1
 
+#define DO_OP_NOP()                 REG_PC += Opf_Single;
 #define DO_OP_PUSH(R0)              PushToStack(cpu, mmu, R0);        REG_PC += Opf_Single; 
 #define DO_OP_POP(R0)               R0 = PopFromStack(cpu, mmu);      REG_PC += Opf_Single; 
 #define DO_OP_LOAD(R0)              R0 = LoadFromMemory(mmu, data.w); REG_PC += Opf_Address;
@@ -119,40 +120,40 @@ void Cpu_Reset(Cpu* cpu)
 #define DO_OP_JMP_GT()              JumpCond(cpu, FL_N == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_LT()              JumpCond(cpu, FL_C == 1, data.w, REG_PC + Opf_Address);
 
-inline void PushToStack(Cpu* cpu, Mmu* mmu, Byte value)
+inline void PushToStack(Cpu* cpu, Byte value)
 {
   //! TODO
 }
 
-inline Byte PopFromStack(Cpu* cpu, Mmu* mmu)
+inline Byte PopFromStack(Cpu* cpu)
 {
   //! TODO
   return 0;
 }
 
-inline void Call(Cpu* cpu, Mmu* mmu, Byte lo_offset, Word callAddress)
+inline void Call(Cpu* cpu, Byte lo_offset, Word callAddress)
 {
   Word pc = cpu->pc.w + lo_offset;
 
-  PushToStack(cpu, mmu, LO_BYTE(pc));
-  PushToStack(cpu, mmu, HI_BYTE(pc));
+  PushToStack(cpu, LO_BYTE(pc));
+  PushToStack(cpu, HI_BYTE(pc));
   REG_PC = (callAddress & PROG_SIZE);
 }
 
-inline void Return(Cpu* cpu, Mmu* mmu)
+inline void Return(Cpu* cpu)
 {
-  cpu->pc.hi = PopFromStack(cpu, mmu);
-  cpu->pc.lo = PopFromStack(cpu, mmu);
+  cpu->pc.hi = PopFromStack(cpu);
+  cpu->pc.lo = PopFromStack(cpu);
 }
 
-inline Byte LoadFromMemory(Mmu* mmu, Word address)
+inline Byte LoadFromMemory(Word address)
 {
-  return mmu->get(address);
+  return Mmu_Get(address);
 }
 
-inline void StoreToMemory(Mmu* mmu, Word address, Byte value)
+inline void StoreToMemory(Word address, Byte value)
 {
-  mmu->set(address, value);
+  Mmu_Set(address, value);
 }
 
 inline void Compare(Cpu* cpu, Byte lhs, Byte rhs)
@@ -190,11 +191,11 @@ inline void JumpCond(Cpu* cpu, bool cond, Word ifTrue, Word ifFalse)
   }
 }
 
-inline void BranchCond(Cpu* cpu, Mmu* mmu, bool cond, Word ifTrue, Word ifFalse)
+inline void BranchCond(Cpu* cpu, bool cond, Word ifTrue, Word ifFalse)
 {
   if (cond)
   {
-    Call(cpu, mmu, 0, ifTrue);
+    Call(cpu, 0, ifTrue);
   }
   else
   {
@@ -202,12 +203,12 @@ inline void BranchCond(Cpu* cpu, Mmu* mmu, bool cond, Word ifTrue, Word ifFalse)
   }
 }
 
-int Cpu_Step(Cpu* cpu, Mmu* mmu)
+int Cpu_Step(Cpu* cpu)
 {
-  Byte opcode  = mmu->get(REG_PC);
+  Byte opcode  = Mmu_Get(REG_PC);
   Data data;
-  data.lo = mmu->get(REG_PC + 1);
-  data.hi = mmu->get(REG_PC + 2);
+  data.lo = Mmu_Get(REG_PC + 1);
+  data.hi = Mmu_Get(REG_PC + 2);
   
 #undef OP
 #define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; return TIME;

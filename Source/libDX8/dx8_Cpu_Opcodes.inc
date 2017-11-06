@@ -1,5 +1,5 @@
 // Nop
-OP(Nop, None, Opf_Single, 1, {})
+OP(Nop, None, Opf_Single, 1, { DO_OP_NOP(); })
 
 // Push
 OP(Push, x, Opf_Single, 3,  { DO_OP_PUSH(REG_X); })

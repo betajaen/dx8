@@ -61,14 +61,16 @@ typedef struct {
   } flags;
 } Cpu;
 
-typedef struct {
-  Byte (*get)(Word address);
-  void (*set)(Word address, Byte value);
-} Mmu;
-
-
 void Cpu_Reset(Cpu* cpu);
 
-int Cpu_Step(Cpu* cpu, Mmu* mmu);
+int Cpu_Step(Cpu* cpu);
+
+void Mmu_Set(Word address, Byte value);
+
+Byte Mmu_Get(Word address);
+
+void ChipRam_Set(Word address, Byte value);
+
+Byte ChipRam_Get(Word address);
 
 #endif
