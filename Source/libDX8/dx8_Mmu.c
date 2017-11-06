@@ -32,10 +32,23 @@
 #include "dx8.h"
 #include <malloc.h>
 
+#define Program_Begin (0x0000)
+#define Chip_Begin    (0x4000)
+#define Gpu_Begin     (0x5000)
+#define Sfx_Begin     (0x6000)
+#define Io_Begin      (0x7000)
+
+enum
+{
+#define ADDRESS(RAM, NAME, VALUE) RAM##_##NAME = RAM##_Begin + VALUE, RAM##_##NAME##_Relative = VALUE,
+  #include "dx8_Memory_Addresses.inc"
+#undef ADDRESS
+};
+
 Byte* sChipRam;
 Byte* sProgramRam;
 Byte* sSharedRam;
-Byte  sBanks;
+Byte* sBankMask;
 
 Byte Program_Get(Word address)
 {
@@ -53,16 +66,31 @@ void ChipRam_Set(Word address, Byte value)
   // TODO! Events on this.
 }
 
+Byte Bank_GetUpperMask()
+{
+  return *sBankMask;
+}
+
 Byte Bank_Get(Byte bank, Word address)
 {
-  address = (((sBanks & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
+  address = (((Bank_GetUpperMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
   return sSharedRam[address & SHARED_SIZE];
 }
 
 void Bank_Set(Byte bank, Word address, Byte value)
 {
-  address = (((sBanks & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
+  address = (((Bank_GetUpperMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
   sSharedRam[address & SHARED_SIZE] = value;
+}
+
+void Stack_Set(Byte offset, Byte value)
+{
+  sChipRam[Chip_StackEnd_Relative - offset] = value;
+}
+
+Byte Stack_Get(Byte offset)
+{
+  return sChipRam[Chip_StackEnd_Relative - offset];
 }
 
 void Mmu_Setup()
@@ -70,6 +98,8 @@ void Mmu_Setup()
   sChipRam = malloc(CHIP_SIZE);
   sProgramRam = malloc(PROGRAM_SIZE);
   sSharedRam = malloc(SHARED_SIZE);
+
+  sBankMask = &sChipRam[Chip_BankMask];
 }
 
 void Mmu_Teardown()
@@ -83,21 +113,21 @@ void Mmu_Set(Word address, Byte value)
 {
   switch(address & 0xF000)
   {
-    case 0x0000:
-    case 0x1000:
-    case 0x2000:
-    case 0x3000:
+    case Program_Begin:
+    case Program_Begin + 0x1000:
+    case Program_Begin + 0x2000:
+    case Program_Begin + 0x3000:
       return;
-    case 0x4000:
+    case Chip_Begin:
       ChipRam_Set(address & 0xBFFF, value);
       return;
-    case 0x5000:
+    case Gpu_Begin:
       GpuMmu_Set(address & 0xAFFF, value);
       return;
-    case 0x6000:
+    case Sfx_Begin:
       SfxMmu_Set(address & 0x9FFF, value);
       return;
-    case 0x7000:
+    case Io_Begin:
       IoMmu_Set(address & 0x8FFF, value);
       return;
     case 0x8000:

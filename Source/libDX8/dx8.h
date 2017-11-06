@@ -75,6 +75,10 @@ void Mmu_Set(Word address, Byte value);
 
 Byte Mmu_Get(Word address);
 
+void Stack_Set(Byte offset, Byte value);
+
+Byte Stack_Get(Byte offset);
+
 void GpuMmu_Set(Word address, Byte value);
 
 Byte GpuMmu_Get(Word address);

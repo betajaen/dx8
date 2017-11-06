@@ -121,13 +121,15 @@ void Cpu_Reset(Cpu* cpu)
 
 inline void PushToStack(Cpu* cpu, Byte value)
 {
-  //! TODO
+  Stack_Set(cpu->stack, value);
+  ++cpu->stack;
 }
 
 inline Byte PopFromStack(Cpu* cpu)
 {
-  //! TODO
-  return 0;
+  Byte value = Stack_Get(cpu->stack);
+  --cpu->stack;
+  return value;
 }
 
 inline void Call(Cpu* cpu, Byte lo_offset, Word callAddress)
