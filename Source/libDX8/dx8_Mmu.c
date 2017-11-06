@@ -30,6 +30,54 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
+#include <malloc.h>
+
+Byte* sChipRam;
+Byte* sProgramRam;
+Byte* sSharedRam;
+Byte  sBanks;
+
+Byte Program_Get(Word address)
+{
+  return sProgramRam[address & PROGRAM_SIZE];
+}
+
+Byte ChipRam_Get(Word address)
+{
+  return sChipRam[address & CHIP_SIZE];
+}
+
+void ChipRam_Set(Word address, Byte value)
+{
+  sChipRam[address & CHIP_SIZE] = value;
+  // TODO! Events on this.
+}
+
+Byte Bank_Get(Byte bank, Word address)
+{
+  address = (((sBanks & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
+  return sSharedRam[address & SHARED_SIZE];
+}
+
+void Bank_Set(Byte bank, Word address, Byte value)
+{
+  address = (((sBanks & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
+  sSharedRam[address & SHARED_SIZE] = value;
+}
+
+void Mmu_Setup()
+{
+  sChipRam = malloc(CHIP_SIZE);
+  sProgramRam = malloc(PROGRAM_SIZE);
+  sSharedRam = malloc(SHARED_SIZE);
+}
+
+void Mmu_Teardown()
+{
+  free(sSharedRam);
+  free(sProgramRam);
+  free(sChipRam);
+}
 
 void Mmu_Set(Word address, Byte value)
 {
@@ -39,7 +87,6 @@ void Mmu_Set(Word address, Byte value)
     case 0x1000:
     case 0x2000:
     case 0x3000:
-      Program_Set(address, value);
       return;
     case 0x4000:
       ChipRam_Set(address & 0xBFFF, value);
@@ -114,4 +161,5 @@ Byte Mmu_Get(Word address)
     case 0xF000:
       return Bank_Get(7, address & 0x0FFF);
   }
+  return 0;
 }

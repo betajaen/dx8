@@ -31,3 +31,11 @@
 
 #include "dx8.h"
 
+void GpuMmu_Set(Word address, Byte value)
+{
+}
+
+Byte GpuMmu_Get(Word address)
+{
+  return 0; //! TODO
+}

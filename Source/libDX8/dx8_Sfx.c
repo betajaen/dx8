@@ -29,62 +29,13 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_H
-#define DX8_H
+#include "dx8.h"
 
-#include <stdint.h>
-#include <stdbool.h>
+void SfxMmu_Set(Word address, Byte value)
+{
+}
 
-#define PROGRAM_SIZE 0x4000
-#define CHIP_SIZE    0x400
-#define SHARED_SIZE  0x8000
-#define HALF_SHARED_SIZE (SHARED_SIZE / 2)
-#define BANK_SIZE    0x1000
-
-typedef uint8_t  Byte;
-typedef uint16_t Word;
-typedef int8_t   Sbyte;
-typedef int16_t  Sword;
-
-#define CPU_REGISTER(NAME, A, B) \
-  struct { union { Word NAME; struct { Byte A, B; };  }; }
-
-typedef struct {
-  CPU_REGISTER(I, x, y) I;
-  CPU_REGISTER(J, z, w) J;
-  CPU_REGISTER(w, lo, hi) pc;
-  Byte a;
-  Byte stack;
-  struct {
-    Byte  bZero : 1;
-    Byte  bNegative : 1;
-    Byte  bCarry : 1;
-    Byte  flag4 : 1;
-    Byte  flag5 : 1;
-    Byte  flag6 : 1;
-    Byte  flag7 : 1;
-    Byte  flag8 : 1;
-  } flags;
-} Cpu;
-
-void Cpu_Reset(Cpu* cpu);
-
-int Cpu_Step(Cpu* cpu);
-
-void Mmu_Set(Word address, Byte value);
-
-Byte Mmu_Get(Word address);
-
-void GpuMmu_Set(Word address, Byte value);
-
-Byte GpuMmu_Get(Word address);
-
-void SfxMmu_Set(Word address, Byte value);
-
-Byte SfxMmu_Get(Word address);
-
-void IoMmu_Set(Word address, Byte value);
-
-Byte IoMmu_Get(Word address);
-
-#endif
+Byte SfxMmu_Get(Word address)
+{
+  return 0; //! TODO
+}

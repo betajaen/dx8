@@ -32,7 +32,6 @@
 #include "dx8.h"
 #include "string.h"
 
-#define PROG_SIZE (2 << 15)
 #define REG_A     (cpu->a)
 #define REG_PC    (cpu->pc.w)
 #define REG_X     (cpu->I.x)
@@ -93,12 +92,12 @@ void Cpu_Reset(Cpu* cpu)
 // BRA_LT   -- Call to DATA, flags.c    = 1
 
 #define DO_OP_NOP()                 REG_PC += Opf_Single;
-#define DO_OP_PUSH(R0)              PushToStack(cpu, mmu, R0);        REG_PC += Opf_Single; 
-#define DO_OP_POP(R0)               R0 = PopFromStack(cpu, mmu);      REG_PC += Opf_Single; 
-#define DO_OP_LOAD(R0)              R0 = LoadFromMemory(mmu, data.w); REG_PC += Opf_Address;
-#define DO_OP_STORE(R0)             StoreToMemory(mmu, data.w, R0);   REG_PC += Opf_Address;
-#define DO_OP_CALL()                Call(cpu, mmu, 0, data.w);
-#define DO_OP_RETURN()              Return(cpu, mmu);
+#define DO_OP_PUSH(R0)              PushToStack(cpu, R0);             REG_PC += Opf_Single; 
+#define DO_OP_POP(R0)               R0 = PopFromStack(cpu);           REG_PC += Opf_Single; 
+#define DO_OP_LOAD(R0)              R0 = LoadFromMemory(data.w);      REG_PC += Opf_Address;
+#define DO_OP_STORE(R0)             StoreToMemory(data.w, R0);        REG_PC += Opf_Address;
+#define DO_OP_CALL()                Call(cpu, 0, data.w);
+#define DO_OP_RETURN()              Return(cpu);
 #define DO_OP_SET(R0)               R0 = data.lo;                     REG_PC += Opf_Byte;
 #define DO_OP_ADD(R0, R1)           R0 += R1;                         REG_PC += Opf_Single;
 #define DO_OP_SUB(R0, R1)           R0 -= R1;                         REG_PC += Opf_Single;
@@ -137,7 +136,7 @@ inline void Call(Cpu* cpu, Byte lo_offset, Word callAddress)
 
   PushToStack(cpu, LO_BYTE(pc));
   PushToStack(cpu, HI_BYTE(pc));
-  REG_PC = (callAddress & PROG_SIZE);
+  REG_PC = (callAddress & PROGRAM_SIZE);
 }
 
 inline void Return(Cpu* cpu)
@@ -171,23 +170,23 @@ inline void CompareBit(Cpu* cpu, Byte val, Byte bit)
 
 inline void JumpAdd(Cpu* cpu, Word addr, Word lo, Word hi)
 {
-  cpu->pc.w = (addr + lo + hi * 256) & PROG_SIZE;
+  cpu->pc.w = (addr + lo + hi * 256) & PROGRAM_SIZE;
 }
 
 inline void JumpAbs(Cpu* cpu, Word lo, Word hi)
 {
-  cpu->pc.w = (lo + hi * 256) & PROG_SIZE;
+  cpu->pc.w = (lo + hi * 256) & PROGRAM_SIZE;
 }
 
 inline void JumpCond(Cpu* cpu, bool cond, Word ifTrue, Word ifFalse)
 {
   if (cond)
   {
-    cpu->pc.w = ifTrue & PROG_SIZE;
+    cpu->pc.w = ifTrue & PROGRAM_SIZE;
   }
   else
   {
-    cpu->pc.w = ifFalse & PROG_SIZE;
+    cpu->pc.w = ifFalse & PROGRAM_SIZE;
   }
 }
 
@@ -199,7 +198,7 @@ inline void BranchCond(Cpu* cpu, bool cond, Word ifTrue, Word ifFalse)
   }
   else
   {
-    cpu->pc.w = ifFalse & PROG_SIZE;
+    cpu->pc.w = ifFalse & PROGRAM_SIZE;
   }
 }
 

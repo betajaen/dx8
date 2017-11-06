@@ -31,3 +31,11 @@
 
 #include "dx8.h"
 
+void IoMmu_Set(Word address, Byte value)
+{
+}
+
+Byte IoMmu_Get(Word address)
+{
+  return 0; //! TODO
+}
