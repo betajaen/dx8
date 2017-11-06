@@ -45,6 +45,13 @@
 
 typedef CPU_REGISTER(w, lo, hi) Data;
 
+enum OpFormat
+{
+  Opf_Single  = 1,
+  Opf_Byte    = 2,
+  Opf_Address = 3
+};
+
 enum OperandPair
 {
   Opr_None,
@@ -97,13 +104,22 @@ enum Opcodes
   Op_Sub,
   Op_Mul,
   Op_Div,
+  Op_And,
+  Op_Or,
+  Op_Xor,
+  Op_BitTest,
+  Op_ShiftLeft,
+  Op_ShiftRight,
+  Op_RollLeft,
+  Op_RollRight,
+  Op_Not,
   Op_Jmp,
   Op_SetPc,
   Op_Cmp,
-  Op_Jmp_eq,
-  Op_Jmp_neq,
-  Op_Jmp_gt,
-  Op_Jmp_lt,
+  Op_JmpEq,
+  Op_JmpNeq,
+  Op_JmpGt,
+  Op_JmpLt,
 };
 
 
@@ -176,300 +192,337 @@ int Cpu_Step(Cpu* cpu, Mmu* mmu)
   // JMP_GT   -- Jump to DATA, flags.n    = 1
   // JMP_LT   -- Jump to DATA, flags.c    = 1
 
-#define OP(IDX, OP, OPERANDS) IDX
 
-#define DO_OP_PUSH(R0)       PushToStack(cpu, mmu, R0);        REG_PC += 1; return 3
-#define DO_OP_POP(R0)        R0 = PopFromStack(cpu, mmu);      REG_PC += 1; return 3
-#define DO_OP_LOAD(R0)       R0 = LoadFromMemory(mmu, data.w); REG_PC += 3; return 4
-#define DO_OP_STORE(R0)      StoreToMemory(mmu, data.w, R0);   REG_PC += 3; return 4
-#define DO_OP_SET(R0)        R0 = data.lo;                     REG_PC += 2; return 3
-#define DO_OP_ADD(R0, R1)    R0 += R1;                         REG_PC += 1; return 3
-#define DO_OP_SUB(R0, R1)    R0 -= R1;                         REG_PC += 1; return 3
-#define DO_OP_MUL(R0, R1)    R0 *= R1;                         REG_PC += 2; return 3
-#define DO_OP_DIV(R0, R1)    R0 /= R1;                         REG_PC += 2; return 3
-#define DO_OP_CMP(R0, R1)    Compare(cpu, R0, R1);             REG_PC += 3; return 3
-#define DO_OP_JMP(LO, HI)    Jump(cpu, data.w, LO, HI);        return 4 
-#define DO_OP_SET_PC(LO, HI) REG_PC = ((LO + (((Word)HI) * 256)) & PROG_SIZE);  return 4 
+
+#define OP(IDX, OP, OPERANDS, FORMAT, TIME, CODE) case IDX: CODE; return TIME
+
+#define DO_OP_PUSH(R0)              PushToStack(cpu, mmu, R0);        REG_PC += Opf_Single;   // return 3
+#define DO_OP_POP(R0)               R0 = PopFromStack(cpu, mmu);      REG_PC += Opf_Single;   // return 3
+#define DO_OP_LOAD(R0)              R0 = LoadFromMemory(mmu, data.w); REG_PC += Opf_Address;  // return 4
+#define DO_OP_STORE(R0)             StoreToMemory(mmu, data.w, R0);   REG_PC += Opf_Address;  // return 4
+#define DO_OP_CALL()                PushToStack(cpu, mmu, cpu->pc.lo);\
+                                    PushToStack(cpu, mmu, cpu->pc.hi);\
+                                    REG_PC = data.w                    
+#define DO_OP_RETURN()              data.hi = PopFromStack(cpu, mmu);\
+                                    data.lo = PopFromStack(cpu, mmu);\
+                                    REG_PC = data.w;                  
+#define DO_OP_SET(R0)               R0 = data.lo;                     REG_PC += Opf_Byte;     // return 3
+#define DO_OP_ADD(R0, R1)           R0 += R1;                         REG_PC += Opf_Single;   // return 3
+#define DO_OP_SUB(R0, R1)           R0 -= R1;                         REG_PC += Opf_Single;   // return 3
+#define DO_OP_MUL(R0, R1)           R0 *= R1;                         REG_PC += Opf_Single;   // return 3
+#define DO_OP_AND(R0, R1)           R0 &= R1;                         REG_PC += Opf_Single;   // return 3
+#define DO_OP_OR(R0, R1)            R0 |= R1;                         REG_PC += Opf_Single;   // return 3
+#define DO_OP_XOR(R0, R1)           R0 ^= R1;                         REG_PC += Opf_Single;   // return 3
+#define DO_OP_NOT(R0)               R0 = ~R0;                         REG_PC += Opf_Single;   // return 3
+#define DO_OP_SHIFT_LEFT(R0)        R0 <<= data.lo;                   REG_PC += Opf_Byte;     // return 3
+#define DO_OP_SHIFT_RIGHT(R0)       R0 >>= data.lo;                   REG_PC += Opf_Byte;     // return 3
+#define DO_OP_ROLL_LEFT(R0)         /*  */                            REG_PC += Opf_Byte;     // return 3
+#define DO_OP_ROLL_RIGHT(R0)        /*  */                            REG_PC += Opf_Byte;     // return 3
+#define DO_OP_CMP(R0, R1)           Compare(cpu, R0, R1);             REG_PC += Opf_Single;   // return 3
+#define DO_OP_CMP_BIT(R0)           CompareBit(cpu, R0, data.lo);     REG_PC += Opf_Byte;     // return 3
+#define DO_OP_JMP(LO, HI)           Jump(cpu, data.w, LO, HI);                                // return 4 
+#define DO_OP_JMP_EQ()              if (FL_Z == 1)\
+                                      REG_PC = data.w & PROG_SIZE;\
+                                    else\
+                                      REG_PC += Opf_Address;
+#define DO_OP_JMP_NEQ()             if (FL_Z == 0)\
+                                      REG_PC = data.w & PROG_SIZE;\
+                                    else\
+                                      REG_PC += Opf_Address;
+#define DO_OP_JMP_GT()              if (FL_N == 1)\
+                                      REG_PC = data.w & PROG_SIZE;\
+                                    else\
+                                      REG_PC += Opf_Address;
+#define DO_OP_JMP_LT()              if (FL_C == 1)\
+                                      REG_PC = data.w & PROG_SIZE;\
+                                    else\
+                                      REG_PC += Opf_Address;
+
+#define DO_OP_SET_PC(LO, HI)        REG_PC = ((LO + (((Word)HI) * 256)) & PROG_SIZE);         // return 4
 
   switch(opcode)
   {
     default:
-    case OP(0, Op_Nop, Opr_None):
-      REG_PC += 1;
-      return 1;
+    OP(0,   Op_Nop, Opr_None, Opf_Single, 1, {});
 
     // Push
-    case OP(1,  Op_Push, Opr_x): DO_OP_PUSH(REG_X);
-    case OP(2,  Op_Push, Opr_y): DO_OP_PUSH(REG_Y);
-    case OP(3,  Op_Push, Opr_z): DO_OP_PUSH(REG_Z);
-    case OP(4,  Op_Push, Opr_w): DO_OP_PUSH(REG_W);
-    case OP(5,  Op_Push, Opr_a): DO_OP_PUSH(REG_A);
+    OP(1,   Op_Push, Opr_x, Opf_Single, 3,  { DO_OP_PUSH(REG_X); });
+    OP(2,   Op_Push, Opr_y, Opf_Single, 3,  { DO_OP_PUSH(REG_Y); });
+    OP(3,   Op_Push, Opr_z, Opf_Single, 3,  { DO_OP_PUSH(REG_Z); });
+    OP(4,   Op_Push, Opr_w, Opf_Single, 3,  { DO_OP_PUSH(REG_W); });
+    OP(5,   Op_Push, Opr_a, Opf_Single, 3,  { DO_OP_PUSH(REG_A); });
 
     // Pop
-    case OP(6,  Op_Pop, Opr_x): DO_OP_POP(REG_X);
-    case OP(7,  Op_Pop, Opr_y): DO_OP_POP(REG_Y);
-    case OP(8,  Op_Pop, Opr_z): DO_OP_POP(REG_Z);
-    case OP(9,  Op_Pop, Opr_w): DO_OP_POP(REG_W);
-    case OP(10, Op_Pop, Opr_a): DO_OP_POP(REG_A);
+    OP(6,   Op_Pop, Opr_x, Opf_Single, 3,   { DO_OP_POP(REG_X) });
+    OP(7,   Op_Pop, Opr_y, Opf_Single, 3,   { DO_OP_POP(REG_Y) });
+    OP(8,   Op_Pop, Opr_z, Opf_Single, 3,   { DO_OP_POP(REG_Z) });
+    OP(9,   Op_Pop, Opr_w, Opf_Single, 3,   { DO_OP_POP(REG_W) });
+    OP(10,  Op_Pop, Opr_a, Opf_Single, 3,   { DO_OP_POP(REG_A) });
 
     // Load
-    case OP(11, Op_Load, Opr_x): DO_OP_LOAD(REG_X);
-    case OP(12, Op_Load, Opr_y): DO_OP_LOAD(REG_Y);
-    case OP(13, Op_Load, Opr_z): DO_OP_LOAD(REG_Z);
-    case OP(14, Op_Load, Opr_w): DO_OP_LOAD(REG_W);
-    case OP(15, Op_Load, Opr_a): DO_OP_LOAD(REG_A);
+    OP(11,  Op_Load, Opr_x, Opf_Address, 4, { DO_OP_LOAD(REG_X); });
+    OP(12,  Op_Load, Opr_y, Opf_Address, 4, { DO_OP_LOAD(REG_Y); });
+    OP(13,  Op_Load, Opr_z, Opf_Address, 4, { DO_OP_LOAD(REG_Z); });
+    OP(14,  Op_Load, Opr_w, Opf_Address, 4, { DO_OP_LOAD(REG_W); });
+    OP(15,  Op_Load, Opr_a, Opf_Address, 4, { DO_OP_LOAD(REG_A); });
 
     // Store
-    case OP(16, Op_Store, Opr_x): DO_OP_STORE(REG_X);
-    case OP(17, Op_Store, Opr_y): DO_OP_STORE(REG_Y);
-    case OP(18, Op_Store, Opr_z): DO_OP_STORE(REG_Z);
-    case OP(19, Op_Store, Opr_w): DO_OP_STORE(REG_W);
-    case OP(20, Op_Store, Opr_a): DO_OP_STORE(REG_A);
+    OP(16,  Op_Store, Opr_x, Opf_Address, 4, { DO_OP_STORE(REG_X); });
+    OP(17,  Op_Store, Opr_y, Opf_Address, 4, { DO_OP_STORE(REG_Y); });
+    OP(18,  Op_Store, Opr_z, Opf_Address, 4, { DO_OP_STORE(REG_Z); });
+    OP(19,  Op_Store, Opr_w, Opf_Address, 4, { DO_OP_STORE(REG_W); });
+    OP(20,  Op_Store, Opr_a, Opf_Address, 4, { DO_OP_STORE(REG_A); });
 
     // Call
-    case OP(21, Op_Call, Opr_Address):
-      PushToStack(cpu, mmu, cpu->pc.lo);
-      PushToStack(cpu, mmu, cpu->pc.hi);
-      REG_PC = data.w;
-    return 4;
+    OP(21,  Op_Call, Opr_Address, Opf_Address, 4, { DO_OP_CALL();  });
 
     // Return
-    case OP(22, Op_Return, Opr_None):
-      data.hi = PopFromStack(cpu, mmu);
-      data.lo = PopFromStack(cpu, mmu);
-      REG_PC = data.w;
-      return 4;
-    
+    OP(22,  Op_Return, Opr_None, Opf_Single, 4,   { DO_OP_RETURN(); });
+
     // Set
-    case OP(23, Op_Set, Opr_x): DO_OP_SET(REG_X);
-    case OP(24, Op_Set, Opr_y): DO_OP_SET(REG_Y);
-    case OP(25, Op_Set, Opr_z): DO_OP_SET(REG_Z);
-    case OP(26, Op_Set, Opr_w): DO_OP_SET(REG_W);
-    case OP(27, Op_Set, Opr_a): DO_OP_SET(REG_A);
+    OP(23,  Op_Set, Opr_x, Opf_Byte, 3, { DO_OP_SET(REG_X); });
+    OP(24,  Op_Set, Opr_y, Opf_Byte, 3, { DO_OP_SET(REG_Y); });
+    OP(25,  Op_Set, Opr_z, Opf_Byte, 3, { DO_OP_SET(REG_Z); });
+    OP(26,  Op_Set, Opr_w, Opf_Byte, 3, { DO_OP_SET(REG_W); });
+    OP(27,  Op_Set, Opr_a, Opf_Byte, 3, { DO_OP_SET(REG_A); });
 
     // Add
-    case OP(28, Op_Add, Opr_xx): DO_OP_ADD(REG_X, REG_X);
-    case OP(29, Op_Add, Opr_xy): DO_OP_ADD(REG_X, REG_Y);
-    case OP(30, Op_Add, Opr_xz): DO_OP_ADD(REG_X, REG_Z);
-    case OP(31, Op_Add, Opr_xw): DO_OP_ADD(REG_X, REG_W);
-    case OP(32, Op_Add, Opr_xa): DO_OP_ADD(REG_X, REG_A);
-    case OP(33, Op_Add, Opr_yx): DO_OP_ADD(REG_Y, REG_X);
-    case OP(34, Op_Add, Opr_yy): DO_OP_ADD(REG_Y, REG_Y);
-    case OP(35, Op_Add, Opr_yz): DO_OP_ADD(REG_Y, REG_Z);
-    case OP(36, Op_Add, Opr_yw): DO_OP_ADD(REG_Y, REG_W);
-    case OP(37, Op_Add, Opr_ya): DO_OP_ADD(REG_Y, REG_A);
-    case OP(38, Op_Add, Opr_zx): DO_OP_ADD(REG_Z, REG_X);
-    case OP(39, Op_Add, Opr_zy): DO_OP_ADD(REG_Z, REG_Y);
-    case OP(40, Op_Add, Opr_zz): DO_OP_ADD(REG_Z, REG_Z);
-    case OP(41, Op_Add, Opr_zw): DO_OP_ADD(REG_Z, REG_W);
-    case OP(42, Op_Add, Opr_za): DO_OP_ADD(REG_Z, REG_A);
-    case OP(43, Op_Add, Opr_wx): DO_OP_ADD(REG_W, REG_X);
-    case OP(44, Op_Add, Opr_wy): DO_OP_ADD(REG_W, REG_Y);
-    case OP(45, Op_Add, Opr_wz): DO_OP_ADD(REG_W, REG_Z);
-    case OP(46, Op_Add, Opr_ww): DO_OP_ADD(REG_W, REG_W);
-    case OP(47, Op_Add, Opr_wa): DO_OP_ADD(REG_W, REG_A);
-    case OP(48, Op_Add, Opr_ax): DO_OP_ADD(REG_A, REG_X);
-    case OP(49, Op_Add, Opr_ay): DO_OP_ADD(REG_A, REG_Y);
-    case OP(50, Op_Add, Opr_az): DO_OP_ADD(REG_A, REG_Z);
-    case OP(51, Op_Add, Opr_aw): DO_OP_ADD(REG_A, REG_W);
-    case OP(52, Op_Add, Opr_aa): DO_OP_ADD(REG_A, REG_A);
+    OP(28, Op_Add, Opr_xx, Opf_Single, 3, { DO_OP_ADD(REG_X, REG_X); });
+    OP(29, Op_Add, Opr_xy, Opf_Single, 3, { DO_OP_ADD(REG_X, REG_Y); });
+    OP(30, Op_Add, Opr_xz, Opf_Single, 3, { DO_OP_ADD(REG_X, REG_Z); });
+    OP(31, Op_Add, Opr_xw, Opf_Single, 3, { DO_OP_ADD(REG_X, REG_W); });
+    OP(32, Op_Add, Opr_xa, Opf_Single, 3, { DO_OP_ADD(REG_X, REG_A); });
+    OP(33, Op_Add, Opr_yx, Opf_Single, 3, { DO_OP_ADD(REG_Y, REG_X); });
+    OP(34, Op_Add, Opr_yy, Opf_Single, 3, { DO_OP_ADD(REG_Y, REG_Y); });
+    OP(35, Op_Add, Opr_yz, Opf_Single, 3, { DO_OP_ADD(REG_Y, REG_Z); });
+    OP(36, Op_Add, Opr_yw, Opf_Single, 3, { DO_OP_ADD(REG_Y, REG_W); });
+    OP(37, Op_Add, Opr_ya, Opf_Single, 3, { DO_OP_ADD(REG_Y, REG_A); });
+    OP(38, Op_Add, Opr_zx, Opf_Single, 3, { DO_OP_ADD(REG_Z, REG_X); });
+    OP(39, Op_Add, Opr_zy, Opf_Single, 3, { DO_OP_ADD(REG_Z, REG_Y); });
+    OP(40, Op_Add, Opr_zz, Opf_Single, 3, { DO_OP_ADD(REG_Z, REG_Z); });
+    OP(41, Op_Add, Opr_zw, Opf_Single, 3, { DO_OP_ADD(REG_Z, REG_W); });
+    OP(42, Op_Add, Opr_za, Opf_Single, 3, { DO_OP_ADD(REG_Z, REG_A); });
+    OP(43, Op_Add, Opr_wx, Opf_Single, 3, { DO_OP_ADD(REG_W, REG_X); });
+    OP(44, Op_Add, Opr_wy, Opf_Single, 3, { DO_OP_ADD(REG_W, REG_Y); });
+    OP(45, Op_Add, Opr_wz, Opf_Single, 3, { DO_OP_ADD(REG_W, REG_Z); });
+    OP(46, Op_Add, Opr_ww, Opf_Single, 3, { DO_OP_ADD(REG_W, REG_W); });
+    OP(47, Op_Add, Opr_wa, Opf_Single, 3, { DO_OP_ADD(REG_W, REG_A); });
+    OP(48, Op_Add, Opr_ax, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_X); });
+    OP(49, Op_Add, Opr_ay, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_Y); });
+    OP(50, Op_Add, Opr_az, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_Z); });
+    OP(51, Op_Add, Opr_aw, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_W); });
+    OP(52, Op_Add, Opr_aa, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_A); });
 
     // Sub
-    case OP(53, Op_Sub, Opr_xx): DO_OP_SUB(REG_X, REG_X);
-    case OP(54, Op_Sub, Opr_xy): DO_OP_SUB(REG_X, REG_Y);
-    case OP(55, Op_Sub, Opr_xz): DO_OP_SUB(REG_X, REG_Z);
-    case OP(56, Op_Sub, Opr_xw): DO_OP_SUB(REG_X, REG_W);
-    case OP(57, Op_Sub, Opr_xa): DO_OP_SUB(REG_X, REG_A);
-    case OP(58, Op_Sub, Opr_yx): DO_OP_SUB(REG_Y, REG_X);
-    case OP(59, Op_Sub, Opr_yy): DO_OP_SUB(REG_Y, REG_Y);
-    case OP(60, Op_Sub, Opr_yz): DO_OP_SUB(REG_Y, REG_Z);
-    case OP(61, Op_Sub, Opr_yw): DO_OP_SUB(REG_Y, REG_W);
-    case OP(62, Op_Sub, Opr_ya): DO_OP_SUB(REG_Y, REG_A);
-    case OP(63, Op_Sub, Opr_zx): DO_OP_SUB(REG_Z, REG_X);
-    case OP(64, Op_Sub, Opr_zy): DO_OP_SUB(REG_Z, REG_Y);
-    case OP(65, Op_Sub, Opr_zz): DO_OP_SUB(REG_Z, REG_Z);
-    case OP(66, Op_Sub, Opr_zw): DO_OP_SUB(REG_Z, REG_W);
-    case OP(67, Op_Sub, Opr_za): DO_OP_SUB(REG_Z, REG_A);
-    case OP(68, Op_Sub, Opr_wx): DO_OP_SUB(REG_W, REG_X);
-    case OP(69, Op_Sub, Opr_wy): DO_OP_SUB(REG_W, REG_Y);
-    case OP(70, Op_Sub, Opr_wz): DO_OP_SUB(REG_W, REG_Z);
-    case OP(71, Op_Sub, Opr_ww): DO_OP_SUB(REG_W, REG_W);
-    case OP(72, Op_Sub, Opr_wa): DO_OP_SUB(REG_W, REG_A);
-    case OP(73, Op_Sub, Opr_ax): DO_OP_SUB(REG_A, REG_X);
-    case OP(74, Op_Sub, Opr_ay): DO_OP_SUB(REG_A, REG_Y);
-    case OP(75, Op_Sub, Opr_az): DO_OP_SUB(REG_A, REG_Z);
-    case OP(76, Op_Sub, Opr_aw): DO_OP_SUB(REG_A, REG_W);
-    case OP(77, Op_Sub, Opr_aa): DO_OP_SUB(REG_A, REG_A);
+    OP(53, Op_Sub, Opr_xx, Opf_Single, 3, { DO_OP_SUB(REG_X, REG_X); });
+    OP(54, Op_Sub, Opr_xy, Opf_Single, 3, { DO_OP_SUB(REG_X, REG_Y); });
+    OP(55, Op_Sub, Opr_xz, Opf_Single, 3, { DO_OP_SUB(REG_X, REG_Z); });
+    OP(56, Op_Sub, Opr_xw, Opf_Single, 3, { DO_OP_SUB(REG_X, REG_W); });
+    OP(57, Op_Sub, Opr_xa, Opf_Single, 3, { DO_OP_SUB(REG_X, REG_A); });
+    OP(58, Op_Sub, Opr_yx, Opf_Single, 3, { DO_OP_SUB(REG_Y, REG_X); });
+    OP(59, Op_Sub, Opr_yy, Opf_Single, 3, { DO_OP_SUB(REG_Y, REG_Y); });
+    OP(60, Op_Sub, Opr_yz, Opf_Single, 3, { DO_OP_SUB(REG_Y, REG_Z); });
+    OP(61, Op_Sub, Opr_yw, Opf_Single, 3, { DO_OP_SUB(REG_Y, REG_W); });
+    OP(62, Op_Sub, Opr_ya, Opf_Single, 3, { DO_OP_SUB(REG_Y, REG_A); });
+    OP(63, Op_Sub, Opr_zx, Opf_Single, 3, { DO_OP_SUB(REG_Z, REG_X); });
+    OP(64, Op_Sub, Opr_zy, Opf_Single, 3, { DO_OP_SUB(REG_Z, REG_Y); });
+    OP(65, Op_Sub, Opr_zz, Opf_Single, 3, { DO_OP_SUB(REG_Z, REG_Z); });
+    OP(66, Op_Sub, Opr_zw, Opf_Single, 3, { DO_OP_SUB(REG_Z, REG_W); });
+    OP(67, Op_Sub, Opr_za, Opf_Single, 3, { DO_OP_SUB(REG_Z, REG_A); });
+    OP(68, Op_Sub, Opr_wx, Opf_Single, 3, { DO_OP_SUB(REG_W, REG_X); });
+    OP(69, Op_Sub, Opr_wy, Opf_Single, 3, { DO_OP_SUB(REG_W, REG_Y); });
+    OP(70, Op_Sub, Opr_wz, Opf_Single, 3, { DO_OP_SUB(REG_W, REG_Z); });
+    OP(71, Op_Sub, Opr_ww, Opf_Single, 3, { DO_OP_SUB(REG_W, REG_W); });
+    OP(72, Op_Sub, Opr_wa, Opf_Single, 3, { DO_OP_SUB(REG_W, REG_A); });
+    OP(73, Op_Sub, Opr_ax, Opf_Single, 3, { DO_OP_SUB(REG_A, REG_X); });
+    OP(74, Op_Sub, Opr_ay, Opf_Single, 3, { DO_OP_SUB(REG_A, REG_Y); });
+    OP(75, Op_Sub, Opr_az, Opf_Single, 3, { DO_OP_SUB(REG_A, REG_Z); });
+    OP(76, Op_Sub, Opr_aw, Opf_Single, 3, { DO_OP_SUB(REG_A, REG_W); });
+    OP(77, Op_Sub, Opr_aa, Opf_Single, 3, { DO_OP_SUB(REG_A, REG_A); });
 
     // Mul
-    case OP(78, Op_Sub, Opr_xx): DO_OP_MUL(REG_X, REG_X);
-    case OP(79, Op_Sub, Opr_xy): DO_OP_MUL(REG_X, REG_Y);
-    case OP(80, Op_Sub, Opr_xz): DO_OP_MUL(REG_X, REG_Z);
-    case OP(81, Op_Sub, Opr_xw): DO_OP_MUL(REG_X, REG_W);
-    case OP(82, Op_Sub, Opr_xa): DO_OP_MUL(REG_X, REG_A);
-    case OP(83, Op_Sub, Opr_yx): DO_OP_MUL(REG_Y, REG_X);
-    case OP(84, Op_Sub, Opr_yy): DO_OP_MUL(REG_Y, REG_Y);
-    case OP(85, Op_Sub, Opr_yz): DO_OP_MUL(REG_Y, REG_Z);
-    case OP(86, Op_Sub, Opr_yw): DO_OP_MUL(REG_Y, REG_W);
-    case OP(87, Op_Sub, Opr_ya): DO_OP_MUL(REG_Y, REG_A);
-    case OP(88, Op_Sub, Opr_zx): DO_OP_MUL(REG_Z, REG_X);
-    case OP(89, Op_Sub, Opr_zy): DO_OP_MUL(REG_Z, REG_Y);
-    case OP(90, Op_Sub, Opr_zz): DO_OP_MUL(REG_Z, REG_Z);
-    case OP(91, Op_Sub, Opr_zw): DO_OP_MUL(REG_Z, REG_W);
-    case OP(92, Op_Sub, Opr_za): DO_OP_MUL(REG_Z, REG_A);
-    case OP(93, Op_Sub, Opr_wx): DO_OP_MUL(REG_W, REG_X);
-    case OP(94, Op_Sub, Opr_wy): DO_OP_MUL(REG_W, REG_Y);
-    case OP(95, Op_Sub, Opr_wz): DO_OP_MUL(REG_W, REG_Z);
-    case OP(96, Op_Sub, Opr_ww): DO_OP_MUL(REG_W, REG_W);
-    case OP(97, Op_Sub, Opr_wa): DO_OP_MUL(REG_W, REG_A);
-    case OP(98, Op_Sub, Opr_ax): DO_OP_MUL(REG_A, REG_X);
-    case OP(99, Op_Sub, Opr_ay): DO_OP_MUL(REG_A, REG_Y);
-    case OP(100, Op_Sub, Opr_az): DO_OP_MUL(REG_A, REG_Z);
-    case OP(101, Op_Sub, Opr_aw): DO_OP_MUL(REG_A, REG_W);
-    case OP(102, Op_Sub, Opr_aa): DO_OP_MUL(REG_A, REG_A);
-
-    // Div
-    case OP(103, Op_Div, Opr_xx): DO_OP_DIV(REG_X, REG_X);
-    case OP(104, Op_Div, Opr_xy): DO_OP_DIV(REG_X, REG_Y);
-    case OP(105, Op_Div, Opr_xz): DO_OP_DIV(REG_X, REG_Z);
-    case OP(106, Op_Div, Opr_xw): DO_OP_DIV(REG_X, REG_W);
-    case OP(107, Op_Div, Opr_xa): DO_OP_DIV(REG_X, REG_A);
-    case OP(108, Op_Div, Opr_yx): DO_OP_DIV(REG_Y, REG_X);
-    case OP(109, Op_Div, Opr_yy): DO_OP_DIV(REG_Y, REG_Y);
-    case OP(110, Op_Div, Opr_yz): DO_OP_DIV(REG_Y, REG_Z);
-    case OP(111, Op_Div, Opr_yw): DO_OP_DIV(REG_Y, REG_W);
-    case OP(112, Op_Div, Opr_ya): DO_OP_DIV(REG_Y, REG_A);
-    case OP(113, Op_Div, Opr_zx): DO_OP_DIV(REG_Z, REG_X);
-    case OP(114, Op_Div, Opr_zy): DO_OP_DIV(REG_Z, REG_Y);
-    case OP(115, Op_Div, Opr_zz): DO_OP_DIV(REG_Z, REG_Z);
-    case OP(116, Op_Div, Opr_zw): DO_OP_DIV(REG_Z, REG_W);
-    case OP(117, Op_Div, Opr_za): DO_OP_DIV(REG_Z, REG_A);
-    case OP(118, Op_Div, Opr_wx): DO_OP_DIV(REG_W, REG_X);
-    case OP(119, Op_Div, Opr_wy): DO_OP_DIV(REG_W, REG_Y);
-    case OP(120, Op_Div, Opr_wz): DO_OP_DIV(REG_W, REG_Z);
-    case OP(121, Op_Div, Opr_ww): DO_OP_DIV(REG_W, REG_W);
-    case OP(122, Op_Div, Opr_wa): DO_OP_DIV(REG_W, REG_A);
-    case OP(123, Op_Div, Opr_ax): DO_OP_DIV(REG_A, REG_X);
-    case OP(124, Op_Div, Opr_ay): DO_OP_DIV(REG_A, REG_Y);
-    case OP(125, Op_Div, Opr_az): DO_OP_DIV(REG_A, REG_Z);
-    case OP(126, Op_Div, Opr_aw): DO_OP_DIV(REG_A, REG_W);
-    case OP(127, Op_Div, Opr_aa): DO_OP_DIV(REG_A, REG_A);
+    OP(78,  Op_Mul, Opr_xx, Opf_Single, 3, { DO_OP_MUL(REG_X, REG_X); });
+    OP(79,  Op_Mul, Opr_xy, Opf_Single, 3, { DO_OP_MUL(REG_X, REG_Y); });
+    OP(80,  Op_Mul, Opr_xz, Opf_Single, 3, { DO_OP_MUL(REG_X, REG_Z); });
+    OP(81,  Op_Mul, Opr_xw, Opf_Single, 3, { DO_OP_MUL(REG_X, REG_W); });
+    OP(82,  Op_Mul, Opr_xa, Opf_Single, 3, { DO_OP_MUL(REG_X, REG_A); });
+    OP(83,  Op_Mul, Opr_yx, Opf_Single, 3, { DO_OP_MUL(REG_Y, REG_X); });
+    OP(84,  Op_Mul, Opr_yy, Opf_Single, 3, { DO_OP_MUL(REG_Y, REG_Y); });
+    OP(85,  Op_Mul, Opr_yz, Opf_Single, 3, { DO_OP_MUL(REG_Y, REG_Z); });
+    OP(86,  Op_Mul, Opr_yw, Opf_Single, 3, { DO_OP_MUL(REG_Y, REG_W); });
+    OP(87,  Op_Mul, Opr_ya, Opf_Single, 3, { DO_OP_MUL(REG_Y, REG_A); });
+    OP(88,  Op_Mul, Opr_zx, Opf_Single, 3, { DO_OP_MUL(REG_Z, REG_X); });
+    OP(89,  Op_Mul, Opr_zy, Opf_Single, 3, { DO_OP_MUL(REG_Z, REG_Y); });
+    OP(90,  Op_Mul, Opr_zz, Opf_Single, 3, { DO_OP_MUL(REG_Z, REG_Z); });
+    OP(91,  Op_Mul, Opr_zw, Opf_Single, 3, { DO_OP_MUL(REG_Z, REG_W); });
+    OP(92,  Op_Mul, Opr_za, Opf_Single, 3, { DO_OP_MUL(REG_Z, REG_A); });
+    OP(93,  Op_Mul, Opr_wx, Opf_Single, 3, { DO_OP_MUL(REG_W, REG_X); });
+    OP(94,  Op_Mul, Opr_wy, Opf_Single, 3, { DO_OP_MUL(REG_W, REG_Y); });
+    OP(95,  Op_Mul, Opr_wz, Opf_Single, 3, { DO_OP_MUL(REG_W, REG_Z); });
+    OP(96,  Op_Mul, Opr_ww, Opf_Single, 3, { DO_OP_MUL(REG_W, REG_W); });
+    OP(97,  Op_Mul, Opr_wa, Opf_Single, 3, { DO_OP_MUL(REG_W, REG_A); });
+    OP(98,  Op_Mul, Opr_ax, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_X); });
+    OP(99,  Op_Mul, Opr_ay, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_Y); });
+    OP(100, Op_Mul, Opr_az, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_Z); });
+    OP(101, Op_Mul, Opr_aw, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_W); });
+    OP(102, Op_Mul, Opr_aa, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_A); });
 
     // Cmp
-    case OP(128, Op_Cmp, Opr_xx): DO_OP_CMP(REG_X, REG_X);
-    case OP(129, Op_Cmp, Opr_xy): DO_OP_CMP(REG_X, REG_Y);
-    case OP(130, Op_Cmp, Opr_xz): DO_OP_CMP(REG_X, REG_Z);
-    case OP(131, Op_Cmp, Opr_xw): DO_OP_CMP(REG_X, REG_W);
-    case OP(132, Op_Cmp, Opr_xa): DO_OP_CMP(REG_X, REG_A);
-    case OP(133, Op_Cmp, Opr_yx): DO_OP_CMP(REG_Y, REG_X);
-    case OP(134, Op_Cmp, Opr_yy): DO_OP_CMP(REG_Y, REG_Y);
-    case OP(135, Op_Cmp, Opr_yz): DO_OP_CMP(REG_Y, REG_Z);
-    case OP(136, Op_Cmp, Opr_yw): DO_OP_CMP(REG_Y, REG_W);
-    case OP(137, Op_Cmp, Opr_ya): DO_OP_CMP(REG_Y, REG_A);
-    case OP(138, Op_Cmp, Opr_zx): DO_OP_CMP(REG_Z, REG_X);
-    case OP(139, Op_Cmp, Opr_zy): DO_OP_CMP(REG_Z, REG_Y);
-    case OP(141, Op_Cmp, Opr_zz): DO_OP_CMP(REG_Z, REG_Z);
-    case OP(142, Op_Cmp, Opr_zw): DO_OP_CMP(REG_Z, REG_W);
-    case OP(143, Op_Cmp, Opr_za): DO_OP_CMP(REG_Z, REG_A);
-    case OP(144, Op_Cmp, Opr_wx): DO_OP_CMP(REG_W, REG_X);
-    case OP(145, Op_Cmp, Opr_wy): DO_OP_CMP(REG_W, REG_Y);
-    case OP(146, Op_Cmp, Opr_wz): DO_OP_CMP(REG_W, REG_Z);
-    case OP(147, Op_Cmp, Opr_ww): DO_OP_CMP(REG_W, REG_W);
-    case OP(148, Op_Cmp, Opr_wa): DO_OP_CMP(REG_W, REG_A);
-    case OP(149, Op_Cmp, Opr_ax): DO_OP_CMP(REG_A, REG_X);
-    case OP(150, Op_Cmp, Opr_ay): DO_OP_CMP(REG_A, REG_Y);
-    case OP(151, Op_Cmp, Opr_az): DO_OP_CMP(REG_A, REG_Z);
-    case OP(152, Op_Cmp, Opr_aw): DO_OP_CMP(REG_A, REG_W);
-    case OP(153, Op_Cmp, Opr_aa): DO_OP_CMP(REG_A, REG_A);
+    OP(128, Op_Cmp, Opr_xx, Opf_Single, 3, { DO_OP_CMP(REG_X, REG_X); });
+    OP(129, Op_Cmp, Opr_xy, Opf_Single, 3, { DO_OP_CMP(REG_X, REG_Y); });
+    OP(130, Op_Cmp, Opr_xz, Opf_Single, 3, { DO_OP_CMP(REG_X, REG_Z); });
+    OP(131, Op_Cmp, Opr_xw, Opf_Single, 3, { DO_OP_CMP(REG_X, REG_W); });
+    OP(132, Op_Cmp, Opr_xa, Opf_Single, 3, { DO_OP_CMP(REG_X, REG_A); });
+    OP(133, Op_Cmp, Opr_yx, Opf_Single, 3, { DO_OP_CMP(REG_Y, REG_X); });
+    OP(134, Op_Cmp, Opr_yy, Opf_Single, 3, { DO_OP_CMP(REG_Y, REG_Y); });
+    OP(135, Op_Cmp, Opr_yz, Opf_Single, 3, { DO_OP_CMP(REG_Y, REG_Z); });
+    OP(136, Op_Cmp, Opr_yw, Opf_Single, 3, { DO_OP_CMP(REG_Y, REG_W); });
+    OP(137, Op_Cmp, Opr_ya, Opf_Single, 3, { DO_OP_CMP(REG_Y, REG_A); });
+    OP(138, Op_Cmp, Opr_zx, Opf_Single, 3, { DO_OP_CMP(REG_Z, REG_X); });
+    OP(139, Op_Cmp, Opr_zy, Opf_Single, 3, { DO_OP_CMP(REG_Z, REG_Y); });
+    OP(141, Op_Cmp, Opr_zz, Opf_Single, 3, { DO_OP_CMP(REG_Z, REG_Z); });
+    OP(142, Op_Cmp, Opr_zw, Opf_Single, 3, { DO_OP_CMP(REG_Z, REG_W); });
+    OP(143, Op_Cmp, Opr_za, Opf_Single, 3, { DO_OP_CMP(REG_Z, REG_A); });
+    OP(144, Op_Cmp, Opr_wx, Opf_Single, 3, { DO_OP_CMP(REG_W, REG_X); });
+    OP(145, Op_Cmp, Opr_wy, Opf_Single, 3, { DO_OP_CMP(REG_W, REG_Y); });
+    OP(146, Op_Cmp, Opr_wz, Opf_Single, 3, { DO_OP_CMP(REG_W, REG_Z); });
+    OP(147, Op_Cmp, Opr_ww, Opf_Single, 3, { DO_OP_CMP(REG_W, REG_W); });
+    OP(148, Op_Cmp, Opr_wa, Opf_Single, 3, { DO_OP_CMP(REG_W, REG_A); });
+    OP(149, Op_Cmp, Opr_ax, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_X); });
+    OP(150, Op_Cmp, Opr_ay, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_Y); });
+    OP(151, Op_Cmp, Opr_az, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_Z); });
+    OP(152, Op_Cmp, Opr_aw, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_W); });
+    OP(153, Op_Cmp, Opr_aa, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_A); });
+
+    // Bit Test
+    OP(154, Op_BitTest, Opr_x, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_A); });
+    OP(155, Op_BitTest, Opr_y, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_X); });
+    OP(156, Op_BitTest, Opr_z, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_Y); });
+    OP(157, Op_BitTest, Opr_w, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_Z); });
+    OP(158, Op_BitTest, Opr_a, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_W); });
 
     // Jmp
-    case OP(154, Op_Jmp, Opr_Address): REG_PC = data.w & PROG_SIZE; return 4;
-    case OP(155, Op_Jmp, Opr_xy):      DO_OP_JMP(REG_X, REG_Y);
-    case OP(156, Op_Jmp, Opr_xz):      DO_OP_JMP(REG_X, REG_Z);
-    case OP(157, Op_Jmp, Opr_xw):      DO_OP_JMP(REG_X, REG_W);
-    case OP(158, Op_Jmp, Opr_xa):      DO_OP_JMP(REG_X, REG_A);
-    case OP(159, Op_Jmp, Opr_yx):      DO_OP_JMP(REG_Y, REG_X);
-    case OP(160, Op_Jmp, Opr_yz):      DO_OP_JMP(REG_Y, REG_Z);
-    case OP(161, Op_Jmp, Opr_yw):      DO_OP_JMP(REG_Y, REG_W);
-    case OP(162, Op_Jmp, Opr_ya):      DO_OP_JMP(REG_Y, REG_A);
-    case OP(163, Op_Jmp, Opr_zx):      DO_OP_JMP(REG_Z, REG_X);
-    case OP(164, Op_Jmp, Opr_zy):      DO_OP_JMP(REG_Z, REG_Y);
-    case OP(165, Op_Jmp, Opr_zw):      DO_OP_JMP(REG_Z, REG_W);
-    case OP(166, Op_Jmp, Opr_za):      DO_OP_JMP(REG_Z, REG_A);
-    case OP(167, Op_Jmp, Opr_wx):      DO_OP_JMP(REG_W, REG_X);
-    case OP(168, Op_Jmp, Opr_wy):      DO_OP_JMP(REG_W, REG_Y);
-    case OP(169, Op_Jmp, Opr_wz):      DO_OP_JMP(REG_W, REG_Z);
-    case OP(170, Op_Jmp, Opr_wa):      DO_OP_JMP(REG_W, REG_A);
-    case OP(171, Op_Jmp, Opr_ax):      DO_OP_JMP(REG_A, REG_X);
-    case OP(172, Op_Jmp, Opr_ay):      DO_OP_JMP(REG_A, REG_Y);
-    case OP(173, Op_Jmp, Opr_az):      DO_OP_JMP(REG_A, REG_Z);
-    case OP(174, Op_Jmp, Opr_aw):      DO_OP_JMP(REG_A, REG_W);
-    case OP(175, Op_Jmp, Opr_x):       DO_OP_JMP(REG_X, 0);
-    case OP(176, Op_Jmp, Opr_y):       DO_OP_JMP(REG_Y, 0);
-    case OP(177, Op_Jmp, Opr_z):       DO_OP_JMP(REG_Z, 0);
-    case OP(178, Op_Jmp, Opr_w):       DO_OP_JMP(REG_W, 0);
-    case OP(179, Op_Jmp, Opr_a):       DO_OP_JMP(REG_A, 0);
+    OP(159, Op_Jmp, Opr_Address, Opf_Address, 4, { REG_PC = data.w & PROG_SIZE; });
+    OP(160, Op_Jmp, Opr_xy, Opf_Address,      4, { DO_OP_JMP(REG_X, REG_Y);  });
+    OP(161, Op_Jmp, Opr_zw, Opf_Address,      4, { DO_OP_JMP(REG_Z, REG_W);  });
+    OP(162, Op_Jmp, Opr_x, Opf_Address,       4, { DO_OP_JMP(REG_X, 0); });
+    OP(163, Op_Jmp, Opr_y, Opf_Address,       4, { DO_OP_JMP(REG_Y, 0); });
+    OP(164, Op_Jmp, Opr_z, Opf_Address,       4, { DO_OP_JMP(REG_Z, 0); });
+    OP(165, Op_Jmp, Opr_w, Opf_Address,       4, { DO_OP_JMP(REG_W, 0); });
+    OP(166, Op_Jmp, Opr_a, Opf_Address,       4, { DO_OP_JMP(REG_A, 0); });
 
-    case OP(180, Op_SetPc, Opr_xy):    DO_OP_SET_PC(REG_X, REG_Y);
-    case OP(181, Op_SetPc, Opr_xz):    DO_OP_SET_PC(REG_X, REG_Z);
-    case OP(182, Op_SetPc, Opr_xw):    DO_OP_SET_PC(REG_X, REG_W);
-    case OP(183, Op_SetPc, Opr_xa):    DO_OP_SET_PC(REG_X, REG_A);
-    case OP(184, Op_SetPc, Opr_yx):    DO_OP_SET_PC(REG_Y, REG_X);
-    case OP(185, Op_SetPc, Opr_yz):    DO_OP_SET_PC(REG_Y, REG_Z);
-    case OP(186, Op_SetPc, Opr_yw):    DO_OP_SET_PC(REG_Y, REG_W);
-    case OP(187, Op_SetPc, Opr_ya):    DO_OP_SET_PC(REG_Y, REG_A);
-    case OP(188, Op_SetPc, Opr_zx):    DO_OP_SET_PC(REG_Z, REG_X);
-    case OP(189, Op_SetPc, Opr_zy):    DO_OP_SET_PC(REG_Z, REG_Y);
-    case OP(190, Op_SetPc, Opr_zw):    DO_OP_SET_PC(REG_Z, REG_W);
-    case OP(191, Op_SetPc, Opr_za):    DO_OP_SET_PC(REG_Z, REG_A);
-    case OP(192, Op_SetPc, Opr_wx):    DO_OP_SET_PC(REG_W, REG_X);
-    case OP(193, Op_SetPc, Opr_wy):    DO_OP_SET_PC(REG_W, REG_Y);
-    case OP(194, Op_SetPc, Opr_wz):    DO_OP_SET_PC(REG_W, REG_Z);
-    case OP(195, Op_SetPc, Opr_wa):    DO_OP_SET_PC(REG_W, REG_A);
-    case OP(196, Op_SetPc, Opr_ax):    DO_OP_SET_PC(REG_A, REG_X);
-    case OP(197, Op_SetPc, Opr_ay):    DO_OP_SET_PC(REG_A, REG_Y);
-    case OP(198, Op_SetPc, Opr_az):    DO_OP_SET_PC(REG_A, REG_Z);
-    case OP(199, Op_SetPc, Opr_aw):    DO_OP_SET_PC(REG_A, REG_W);
+    // SetPc
+    OP(167, Op_SetPc, Opr_xy, Opf_Single,     2, { DO_OP_SET_PC(REG_X, REG_Y); });
+    OP(168, Op_SetPc, Opr_zw, Opf_Single,     2, { DO_OP_SET_PC(REG_Z, REG_W); });
 
     // Jmp Eq
-    case OP(200, Op_Jmp_eq, Opr_Address):
-    {
-      if (FL_Z == 1)
-        REG_PC = data.w & PROG_SIZE;
-      else
-        REG_PC += 3;
-    }
-    return 2;
+    OP(169, Op_JmpEq, Opr_Address, Opf_Address,   2, { DO_OP_JMP_EQ(); });
 
-    // Jmp neq
-    case OP(201, Op_Jmp_neq, Opr_Address):
-    {
-      if (FL_Z == 0)
-        REG_PC = data.w & PROG_SIZE;
-      else
-        REG_PC += 3;
-    }
-    return 2;
+    // Jmp Neq
+    OP(170, Op_JmpNeq, Opr_Address, Opf_Address,  2, { DO_OP_JMP_NEQ(); });
 
-    // Jmp gt
-    case OP(202, Op_Jmp_gt, Opr_Address):
-    {
-      if (FL_N == 1)
-        REG_PC = data.w & PROG_SIZE;
-      else
-        REG_PC += 3;
-    }
-    return 2;
+    // Jmp Gt
+    OP(171, Op_JmpGt, Opr_Address, Opf_Address, 2,   { DO_OP_JMP_GT(); });
 
-    // Jmp lt
-    case OP(203, Op_Jmp_lt, Opr_Address):
-    {
-      if (FL_C == 1)
-        REG_PC = data.w & PROG_SIZE;
-      else
-        REG_PC += 3;
-    }
-    return 2;
+    // Jmp Lt
+    OP(172, Op_JmpLt, Opr_Address, Opf_Address, 2, { DO_OP_JMP_LT(); });
+
+    // And
+    OP(173, Op_And, Opr_xy, Opf_Single, 1, { DO_OP_AND(REG_X, REG_Y); });
+    OP(174, Op_And, Opr_xz, Opf_Single, 1, { DO_OP_AND(REG_X, REG_Z); });
+    OP(175, Op_And, Opr_xw, Opf_Single, 1, { DO_OP_AND(REG_X, REG_W); });
+    OP(176, Op_And, Opr_xa, Opf_Single, 1, { DO_OP_AND(REG_X, REG_A); });
+    OP(177, Op_And, Opr_yx, Opf_Single, 1, { DO_OP_AND(REG_Y, REG_X); });
+    OP(178, Op_And, Opr_yz, Opf_Single, 1, { DO_OP_AND(REG_Y, REG_Z); });
+    OP(179, Op_And, Opr_yw, Opf_Single, 1, { DO_OP_AND(REG_Y, REG_W); });
+    OP(180, Op_And, Opr_ya, Opf_Single, 1, { DO_OP_AND(REG_Y, REG_A); });
+    OP(181, Op_And, Opr_zx, Opf_Single, 1, { DO_OP_AND(REG_Z, REG_X); });
+    OP(182, Op_And, Opr_zy, Opf_Single, 1, { DO_OP_AND(REG_Z, REG_Y); });
+    OP(183, Op_And, Opr_zw, Opf_Single, 1, { DO_OP_AND(REG_Z, REG_W); });
+    OP(184, Op_And, Opr_za, Opf_Single, 1, { DO_OP_AND(REG_Z, REG_A); });
+    OP(185, Op_And, Opr_wx, Opf_Single, 1, { DO_OP_AND(REG_W, REG_X); });
+    OP(186, Op_And, Opr_wy, Opf_Single, 1, { DO_OP_AND(REG_W, REG_Y); });
+    OP(187, Op_And, Opr_wz, Opf_Single, 1, { DO_OP_AND(REG_W, REG_Z); });
+    OP(188, Op_And, Opr_wa, Opf_Single, 1, { DO_OP_AND(REG_W, REG_A); });
+    OP(189, Op_And, Opr_ax, Opf_Single, 1, { DO_OP_AND(REG_A, REG_X); });
+    OP(190, Op_And, Opr_ay, Opf_Single, 1, { DO_OP_AND(REG_A, REG_Y); });
+    OP(191, Op_And, Opr_az, Opf_Single, 1, { DO_OP_AND(REG_A, REG_Z); });
+    OP(192, Op_And, Opr_aw, Opf_Single, 1, { DO_OP_AND(REG_A, REG_W); });
+
+    // Or
+    OP(193, Op_Or, Opr_xy, Opf_Single,  1, { DO_OP_OR(REG_X, REG_Y); });
+    OP(194, Op_Or, Opr_xz, Opf_Single,  1, { DO_OP_OR(REG_X, REG_Z); });
+    OP(195, Op_Or, Opr_xw, Opf_Single,  1, { DO_OP_OR(REG_X, REG_W); });
+    OP(196, Op_Or, Opr_xa, Opf_Single,  1, { DO_OP_OR(REG_X, REG_A); });
+    OP(197, Op_Or, Opr_yx, Opf_Single,  1, { DO_OP_OR(REG_Y, REG_X); });
+    OP(198, Op_Or, Opr_yz, Opf_Single,  1, { DO_OP_OR(REG_Y, REG_Z); });
+    OP(199, Op_Or, Opr_yw, Opf_Single,  1, { DO_OP_OR(REG_Y, REG_W); });
+    OP(200, Op_Or, Opr_ya, Opf_Single,  1, { DO_OP_OR(REG_Y, REG_A); });
+    OP(201, Op_Or, Opr_zx, Opf_Single,  1, { DO_OP_OR(REG_Z, REG_X); });
+    OP(202, Op_Or, Opr_zy, Opf_Single,  1, { DO_OP_OR(REG_Z, REG_Y); });
+    OP(203, Op_Or, Opr_zw, Opf_Single,  1, { DO_OP_OR(REG_Z, REG_W); });
+    OP(204, Op_Or, Opr_za, Opf_Single,  1, { DO_OP_OR(REG_Z, REG_A); });
+    OP(205, Op_Or, Opr_wx, Opf_Single,  1, { DO_OP_OR(REG_W, REG_X); });
+    OP(206, Op_Or, Opr_wy, Opf_Single,  1, { DO_OP_OR(REG_W, REG_Y); });
+    OP(207, Op_Or, Opr_wz, Opf_Single,  1, { DO_OP_OR(REG_W, REG_Z); });
+    OP(208, Op_Or, Opr_wa, Opf_Single,  1, { DO_OP_OR(REG_W, REG_A); });
+    OP(209, Op_Or, Opr_ax, Opf_Single,  1, { DO_OP_OR(REG_A, REG_X); });
+    OP(210, Op_Or, Opr_ay, Opf_Single,  1, { DO_OP_OR(REG_A, REG_Y); });
+    OP(211, Op_Or, Opr_az, Opf_Single,  1, { DO_OP_OR(REG_A, REG_Z); });
+    OP(212, Op_Or, Opr_aw, Opf_Single,  1, { DO_OP_OR(REG_A, REG_W); });
+
+    // Not
+    OP(213, Op_Not, Opr_x, Opf_Single,  1, { DO_OP_NOT(REG_X); });
+    OP(214, Op_Not, Opr_y, Opf_Single,  1, { DO_OP_NOT(REG_Y); });
+    OP(215, Op_Not, Opr_z, Opf_Single,  1, { DO_OP_NOT(REG_Z); });
+    OP(216, Op_Not, Opr_w, Opf_Single,  1, { DO_OP_NOT(REG_W); });
+    OP(217, Op_Not, Opr_a, Opf_Single,  1, { DO_OP_NOT(REG_A); });
+
+    // Xor
+    OP(218, Op_Xor, Opr_xx, Opf_Single, 1, { DO_OP_XOR(REG_X, REG_X); });
+    OP(219, Op_Xor, Opr_xy, Opf_Single, 1, { DO_OP_XOR(REG_X, REG_Y); });
+    OP(220, Op_Xor, Opr_xz, Opf_Single, 1, { DO_OP_XOR(REG_X, REG_Z); });
+    OP(221, Op_Xor, Opr_xw, Opf_Single, 1, { DO_OP_XOR(REG_X, REG_W); });
+    OP(222, Op_Xor, Opr_xa, Opf_Single, 1, { DO_OP_XOR(REG_X, REG_A); });
+    OP(223, Op_Xor, Opr_yx, Opf_Single, 1, { DO_OP_XOR(REG_Y, REG_X); });
+    OP(224, Op_Xor, Opr_yy, Opf_Single, 1, { DO_OP_XOR(REG_Y, REG_Y); });
+    OP(225, Op_Xor, Opr_yz, Opf_Single, 1, { DO_OP_XOR(REG_Y, REG_Z); });
+    OP(226, Op_Xor, Opr_yw, Opf_Single, 1, { DO_OP_XOR(REG_Y, REG_W); });
+    OP(227, Op_Xor, Opr_ya, Opf_Single, 1, { DO_OP_XOR(REG_Y, REG_A); });
+    OP(228, Op_Xor, Opr_zx, Opf_Single, 1, { DO_OP_XOR(REG_Z, REG_X); });
+    OP(229, Op_Xor, Opr_zy, Opf_Single, 1, { DO_OP_XOR(REG_Z, REG_Y); });
+    OP(230, Op_Xor, Opr_zz, Opf_Single, 1, { DO_OP_XOR(REG_Z, REG_Z); });
+    OP(231, Op_Xor, Opr_zw, Opf_Single, 1, { DO_OP_XOR(REG_Z, REG_W); });
+    OP(232, Op_Xor, Opr_za, Opf_Single, 1, { DO_OP_XOR(REG_Z, REG_A); });
+    OP(233, Op_Xor, Opr_wx, Opf_Single, 1, { DO_OP_XOR(REG_W, REG_X); });
+    OP(234, Op_Xor, Opr_wy, Opf_Single, 1, { DO_OP_XOR(REG_W, REG_Y); });
+    OP(235, Op_Xor, Opr_wz, Opf_Single, 1, { DO_OP_XOR(REG_W, REG_Z); });
+    OP(236, Op_Xor, Opr_ww, Opf_Single, 1, { DO_OP_XOR(REG_W, REG_W); });
+    OP(237, Op_Xor, Opr_wa, Opf_Single, 1, { DO_OP_XOR(REG_W, REG_A); });
+    OP(238, Op_Xor, Opr_ax, Opf_Single, 1, { DO_OP_XOR(REG_A, REG_X); });
+    OP(239, Op_Xor, Opr_ay, Opf_Single, 1, { DO_OP_XOR(REG_A, REG_Y); });
+    OP(240, Op_Xor, Opr_az, Opf_Single, 1, { DO_OP_XOR(REG_A, REG_Z); });
+    OP(241, Op_Xor, Opr_aw, Opf_Single, 1, { DO_OP_XOR(REG_A, REG_W); });
+    OP(242, Op_Xor, Opr_aa, Opf_Single, 1, { DO_OP_XOR(REG_A, REG_A); });
+
+    // Shift Left
+    OP(243, Op_ShiftLeft, Opr_x, Opf_Byte, 1, { DO_OP_SHIFT_LEFT(REG_X);  });
+    OP(244, Op_ShiftLeft, Opr_y, Opf_Byte, 1, { DO_OP_SHIFT_LEFT(REG_Y);  });
+    OP(245, Op_ShiftLeft, Opr_z, Opf_Byte, 1, { DO_OP_SHIFT_LEFT(REG_Z);  });
+    OP(246, Op_ShiftLeft, Opr_w, Opf_Byte, 1, { DO_OP_SHIFT_LEFT(REG_W);  });
+    OP(247, Op_ShiftLeft, Opr_a, Opf_Byte, 1, { DO_OP_SHIFT_LEFT(REG_A);  });
+
+    // Shift Right
+    OP(248, Op_ShiftLeft, Opr_x, Opf_Byte, 1, { DO_OP_SHIFT_RIGHT(REG_X); });
+    OP(249, Op_ShiftLeft, Opr_y, Opf_Byte, 1, { DO_OP_SHIFT_RIGHT(REG_Y); });
+    OP(250, Op_ShiftLeft, Opr_z, Opf_Byte, 1, { DO_OP_SHIFT_RIGHT(REG_Z); });
+    OP(251, Op_ShiftLeft, Opr_w, Opf_Byte, 1, { DO_OP_SHIFT_RIGHT(REG_W); });
+    OP(252, Op_ShiftLeft, Opr_a, Opf_Byte, 1, { DO_OP_SHIFT_RIGHT(REG_A); });
+
+    // 253
+    // 254
+    // 255
+
   }
 
 }
