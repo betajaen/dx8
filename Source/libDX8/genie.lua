@@ -21,7 +21,8 @@ solution "DX8"
     flags           { "FatalWarnings" }
     files           {
       "*.c",
-      "*.h"
+      "*.h",
+      "*.inc"
   }
 
   project "libDX8-DevKit"

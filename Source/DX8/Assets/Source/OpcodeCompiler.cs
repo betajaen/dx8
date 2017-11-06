@@ -30,7 +30,6 @@ namespace DX8
       RollRight,
       Cmp,
       CmpBit,
-      SetPc,
       Jmp,
       JmpEq,
       JmpNeq,
@@ -61,7 +60,6 @@ namespace DX8
       "ror",
       "cmp",
       "cmpbit",
-      "setpc",
       "jmp",
       "jmp eq",
       "jmp neq",
@@ -84,7 +82,7 @@ namespace DX8
 
     public static String[] OperandAsm = new String[(int) Operand.COUNT] {
       "",
-      "$00",
+      "#$00",
       "$0000",
       "x",
       "y",
@@ -130,7 +128,10 @@ namespace DX8
 
           if (Operand2 != Operand.None)
           {
-            sb.Append(',');
+            if (Opcode == Opcode.Jmp && Operand2 == Operand.Address)
+              sb.Append('+');
+            else
+              sb.Append(',');
             sb.Append(OperandAsm[(int) Operand2]);
           }
         }
@@ -196,23 +197,22 @@ namespace DX8
       
 
       String[] lines = System.IO.File.ReadAllLines(path);
-
+      int nextIdx = 0;
       for(int ii=0;ii < lines.Length;ii++)
       {
         String line = lines[ii];
         if (LineStartsWith_OP(line) == false)
           continue;
         
-        Match match = Regex.Match(line, @"OP\(\s*(\d+)\s*,\s*Op_(\w+)\s*,\s*Opr_(\w+)\s*,\s*Opf_(\w+)\s*,\s*(\d)", RegexOptions.IgnoreCase);
+        Match match = Regex.Match(line, @"OP\(\s*(\w+)\s*,\s*(\w+)\s*,\s*Opf_(\w+)\s*,\s*(\d)", RegexOptions.IgnoreCase);
 
         if (match.Success)
         {
-            string idxStr   = match.Groups[1].Value;
-            string name     = match.Groups[2].Value;
-            string operands = match.Groups[3].Value;
-            string format   = match.Groups[4].Value;
+            string name     = match.Groups[1].Value;
+            string operands = match.Groups[2].Value;
+            string format   = match.Groups[3].Value;
 
-            int    idx = Int32.Parse(idxStr);
+            int    idx = nextIdx++;
             Opcode op = (Opcode) Enum.Parse(typeof(Opcode), name);
             Operand operand1 = Operand.None, operand2 = Operand.None;
             int    length = 1;
@@ -260,7 +260,14 @@ namespace DX8
             }
 
             if (format == "Address")
+            {
+              if (operand1 != Operand.Address && operand2 == Operand.None)
+              {
+                operand2 = Operand.Address;
+              }
+
               length = 3;
+            }
             else if (format == "Byte")
             {
               if (operand1 != Operand.Byte && operand2 == Operand.None)
@@ -270,9 +277,7 @@ namespace DX8
               
               length = 2;
             }
-
-            // Debug.LogFormat("{0}, {1}, {2}, {3}, {4}", idx, op, operand1, operand2, length);
-
+            
             ops[idx] = new Op(idx, op, operand1, operand2, length);
         }
         
