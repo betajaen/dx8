@@ -22,7 +22,8 @@ solution "DX8"
     files           {
       "*.c",
       "*.h",
-      "*.inc"
+      "*.inc",
+      "genie.lua"
   }
 
   project "libDX8-DevKit"
@@ -34,4 +35,16 @@ solution "DX8"
     files           {
       "dx8_DevKit.c",
       "dx8.h"
+  }
+  configuration     { "vs*" }
+    postbuildcommands   { "copy /Y \"$(TargetDir)$(TargetName).dll\" \"C:/dev/dx8/Source/dx8/Assets/Plugins/libDX8-DevKit.dll\"" }
+
+  project "DX8-Test"
+    kind            "ConsoleApp"
+    language        "C"
+    objdir          ".Obj"
+    flags           { "FatalWarnings" }
+    defines         ( "DX8_TESTS")
+    files           {
+      "dx8_Tests.c",
   }

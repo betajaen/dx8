@@ -29,5 +29,110 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
+#if DX8_DEVKIT
+
 #include "dx8.h"
 
+#if defined(_WIN32)
+  #define _CRT_SECURE_NO_WARNINGS
+  #include <Windows.h>
+  #include <stdio.h>
+  #define EXPORT extern __declspec(dllexport)
+#else
+  #error Platform not supported :(
+#endif
+
+typedef int(*InitialiseFn)();
+typedef int(*ShutdownFn)();
+typedef int(*StepFn)(float deltaTime);
+
+#if defined(_WIN32)
+HMODULE dll;
+#endif
+
+InitialiseFn initialiseFn;
+ShutdownFn   shutdownFn;
+StepFn       stepFn;
+
+#define SRC_PATH "C:/dev/dx8/Source/libDX8/Build/libDX8.dll"
+#define LIB_PATH "C:/dev/dx8/Source/RT/libDX8.dll"
+
+EXPORT int Initialise()
+{
+  #if defined(_WIN32)
+    if (CopyFile(SRC_PATH, LIB_PATH, FALSE) == 0)
+    {
+      return 10001;
+    }
+
+    dll = LoadLibraryA(LIB_PATH);
+    if (dll == NULL)
+    {
+      return 10002;
+    }
+  #else
+    return 10003;
+  #endif
+
+  initialiseFn = (InitialiseFn)GetProcAddress(dll, "Initialise");
+  shutdownFn   = (ShutdownFn)GetProcAddress(dll, "Shutdown");
+  stepFn       = (StepFn)GetProcAddress(dll, "Step");
+
+  if (initialiseFn == NULL ||
+    shutdownFn == NULL ||
+    stepFn == NULL)
+  {
+
+    #if defined(_WIN32)
+      FreeLibrary(dll);
+      dll = NULL;
+    #endif
+
+    initialiseFn = NULL;
+    shutdownFn = NULL;
+    stepFn = NULL;
+
+    return 10004;
+  }
+
+  return initialiseFn();
+}
+
+EXPORT int Shutdown()
+{
+  #if defined(_WIN32)
+    if (dll == NULL)
+      return 9000;
+  #else
+    return 9001;
+  #endif
+
+  shutdownFn();
+
+  #if defined(_WIN32)
+    FreeLibrary(dll);
+    dll = NULL;
+    DeleteFile(LIB_PATH);
+  #endif
+
+  initialiseFn = NULL;
+  shutdownFn = NULL;
+  stepFn = NULL;
+
+  return 0;
+}
+
+
+EXPORT int Step(float deltaTime)
+{
+  #if defined(_WIN32)
+    if (dll == NULL)
+      return 9000;
+  #else
+    return 9001;
+  #endif
+
+  return stepFn(deltaTime);
+}
+
+#endif

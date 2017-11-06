@@ -30,3 +30,7 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
+
+extern void dx8_Step(float dt)
+{
+}

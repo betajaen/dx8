@@ -67,9 +67,9 @@ typedef struct {
   } flags;
 } Cpu;
 
-void Cpu_Reset(Cpu* cpu);
+void Cpu_Reset();
 
-int Cpu_Step(Cpu* cpu);
+int Cpu_Step();
 
 void Mmu_Set(Word address, Byte value);
 
@@ -90,5 +90,12 @@ Byte SfxMmu_Get(Word address);
 void IoMmu_Set(Word address, Byte value);
 
 Byte IoMmu_Get(Word address);
+
+
+extern void dx8_Initialise();
+
+extern void dx8_Shutdown();
+
+extern void dx8_Step(float dt);
 
 #endif

@@ -30,17 +30,19 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
-#include "string.h"
+#include <string.h>
 
-#define REG_A     (cpu->a)
-#define REG_PC    (cpu->pc.w)
-#define REG_X     (cpu->I.x)
-#define REG_Y     (cpu->I.y)
-#define REG_Z     (cpu->J.z)
-#define REG_W     (cpu->J.w)
-#define FL_Z      (cpu->flags.bZero)
-#define FL_N      (cpu->flags.bNegative)
-#define FL_C      (cpu->flags.bCarry)
+Cpu cpu;
+
+#define REG_A     (cpu.a)
+#define REG_PC    (cpu.pc.w)
+#define REG_X     (cpu.I.x)
+#define REG_Y     (cpu.I.y)
+#define REG_Z     (cpu.J.z)
+#define REG_W     (cpu.J.w)
+#define FL_Z      (cpu.flags.bZero)
+#define FL_N      (cpu.flags.bNegative)
+#define FL_C      (cpu.flags.bCarry)
 
 typedef CPU_REGISTER(w, lo, hi) Data;
 
@@ -62,9 +64,9 @@ enum Instructions
   Op_COUNT
 };
 
-void Cpu_Reset(Cpu* cpu)
+void Cpu_Reset()
 {
-  memset(cpu, 0, sizeof(Cpu));
+  memset(&cpu, 0, sizeof(Cpu));
 }
 
 
@@ -78,9 +80,9 @@ void Cpu_Reset(Cpu* cpu)
 // SET      -- Set R to DATA[0]
 // ADD      -- Set R to be R + R1;  R += R1
 // SUB      -- Set R to be R - R1;  R -= R1
-// MUL      -- Set R to be R * R1   R /= R1
-// DIV      -- Set R to be R / R1   R *= R1
+// MUL      -- Set R to be R * R1   R *= R1
 // CMP      -- Compare R and R1, and set flags to result; R1 - R
+// CMP_BIT  -- Compare 
 // JUMP     -- Set PC to DATA + (R0)
 // JMP_EQ   -- Jump to DATA, flags.z    = 1
 // JMP_NEQ  -- Jump to DATA, flags.z    = 0
@@ -90,13 +92,17 @@ void Cpu_Reset(Cpu* cpu)
 // BRA_NEQ  -- Call to DATA, flags.z    = 0
 // BRA_GT   -- Call to DATA, flags.n    = 1
 // BRA_LT   -- Call to DATA, flags.c    = 1
+// LSH      --
+// RSH      --
+// ROL      --
+// ROR      --
 
 #define DO_OP_NOP()                 REG_PC += Opf_Single;
-#define DO_OP_PUSH(R0)              PushToStack(cpu, R0);             REG_PC += Opf_Single; 
+#define DO_OP_PUSH(R0)              PushToStack(R0);             REG_PC += Opf_Single; 
 #define DO_OP_POP(R0)               R0 = PopFromStack(cpu);           REG_PC += Opf_Single; 
 #define DO_OP_LOAD(R0)              R0 = LoadFromMemory(data.w);      REG_PC += Opf_Address;
 #define DO_OP_STORE(R0)             StoreToMemory(data.w, R0);        REG_PC += Opf_Address;
-#define DO_OP_CALL()                Call(cpu, 0, data.w);
+#define DO_OP_CALL()                Call(0, data.w);
 #define DO_OP_RETURN()              Return(cpu);
 #define DO_OP_SET(R0)               R0 = data.lo;                     REG_PC += Opf_Byte;
 #define DO_OP_ADD(R0, R1)           R0 += R1;                         REG_PC += Opf_Single;
@@ -110,41 +116,41 @@ void Cpu_Reset(Cpu* cpu)
 #define DO_OP_SHIFT_RIGHT(R0)       R0 >>= 1;                         REG_PC += Opf_Byte;  
 #define DO_OP_ROLL_LEFT(R0)         /*  */                            REG_PC += Opf_Single;
 #define DO_OP_ROLL_RIGHT(R0)        /*  */                            REG_PC += Opf_Single;
-#define DO_OP_CMP(R0, R1)           Compare(cpu, R0, R1);             REG_PC += Opf_Single;
-#define DO_OP_CMP_BIT(R0)           CompareBit(cpu, R0, data.lo);     REG_PC += Opf_Byte;  
-#define DO_OP_JMP_ADD(LO, HI)       JumpAdd(cpu, data.w, LO, HI);
-#define DO_OP_JMP_ABS(LO, HI)       JumpAbs(cpu, LO, HI);
-#define DO_OP_JMP_EQ()              JumpCond(cpu, FL_Z == 1, data.w, REG_PC + Opf_Address);
-#define DO_OP_JMP_NEQ()             JumpCond(cpu, FL_Z == 0, data.w, REG_PC + Opf_Address);
-#define DO_OP_JMP_GT()              JumpCond(cpu, FL_N == 1, data.w, REG_PC + Opf_Address);
-#define DO_OP_JMP_LT()              JumpCond(cpu, FL_C == 1, data.w, REG_PC + Opf_Address);
+#define DO_OP_CMP(R0, R1)           Compare(R0, R1);             REG_PC += Opf_Single;
+#define DO_OP_CMP_BIT(R0)           CompareBit(R0, data.lo);     REG_PC += Opf_Byte;  
+#define DO_OP_JMP_ADD(LO, HI)       JumpAdd(data.w, LO, HI);
+#define DO_OP_JMP_ABS(LO, HI)       JumpAbs(LO, HI);
+#define DO_OP_JMP_EQ()              JumpCond(FL_Z == 1, data.w, REG_PC + Opf_Address);
+#define DO_OP_JMP_NEQ()             JumpCond(FL_Z == 0, data.w, REG_PC + Opf_Address);
+#define DO_OP_JMP_GT()              JumpCond(FL_N == 1, data.w, REG_PC + Opf_Address);
+#define DO_OP_JMP_LT()              JumpCond(FL_C == 1, data.w, REG_PC + Opf_Address);
 
-inline void PushToStack(Cpu* cpu, Byte value)
+inline void PushToStack(Byte value)
 {
-  Stack_Set(cpu->stack, value);
-  ++cpu->stack;
+  Stack_Set(cpu.stack, value);
+  ++cpu.stack;
 }
 
-inline Byte PopFromStack(Cpu* cpu)
+inline Byte PopFromStack()
 {
-  Byte value = Stack_Get(cpu->stack);
-  --cpu->stack;
+  Byte value = Stack_Get(cpu.stack);
+  --cpu.stack;
   return value;
 }
 
-inline void Call(Cpu* cpu, Byte lo_offset, Word callAddress)
+inline void Call(Byte lo_offset, Word callAddress)
 {
-  Word pc = cpu->pc.w + lo_offset;
+  Word pc = cpu.pc.w + lo_offset;
 
-  PushToStack(cpu, LO_BYTE(pc));
-  PushToStack(cpu, HI_BYTE(pc));
+  PushToStack(LO_BYTE(pc));
+  PushToStack(HI_BYTE(pc));
   REG_PC = (callAddress & PROGRAM_SIZE);
 }
 
-inline void Return(Cpu* cpu)
+inline void Return()
 {
-  cpu->pc.hi = PopFromStack(cpu);
-  cpu->pc.lo = PopFromStack(cpu);
+  cpu.pc.hi = PopFromStack(cpu);
+  cpu.pc.lo = PopFromStack(cpu);
 }
 
 inline Byte LoadFromMemory(Word address)
@@ -157,54 +163,54 @@ inline void StoreToMemory(Word address, Byte value)
   Mmu_Set(address, value);
 }
 
-inline void Compare(Cpu* cpu, Byte lhs, Byte rhs)
+inline void Compare(Byte lhs, Byte rhs)
 {
-  cpu->flags.bCarry = (rhs >= lhs);
+  cpu.flags.bCarry = (rhs >= lhs);
   Sword val = rhs - lhs;
-  cpu->flags.bZero     = (val == 0);
-  cpu->flags.bNegative = (val < 0);
+  cpu.flags.bZero     = (val == 0);
+  cpu.flags.bNegative = (val < 0);
 }
 
-inline void CompareBit(Cpu* cpu, Byte val, Byte bit)
+inline void CompareBit(Byte val, Byte bit)
 {
   // TODO
 }
 
-inline void JumpAdd(Cpu* cpu, Word addr, Word lo, Word hi)
+inline void JumpAdd(Word addr, Word lo, Word hi)
 {
-  cpu->pc.w = (addr + lo + hi * 256) & PROGRAM_SIZE;
+  cpu.pc.w = (addr + lo + hi * 256) & PROGRAM_SIZE;
 }
 
-inline void JumpAbs(Cpu* cpu, Word lo, Word hi)
+inline void JumpAbs(Word lo, Word hi)
 {
-  cpu->pc.w = (lo + hi * 256) & PROGRAM_SIZE;
+  cpu.pc.w = (lo + hi * 256) & PROGRAM_SIZE;
 }
 
-inline void JumpCond(Cpu* cpu, bool cond, Word ifTrue, Word ifFalse)
-{
-  if (cond)
-  {
-    cpu->pc.w = ifTrue & PROGRAM_SIZE;
-  }
-  else
-  {
-    cpu->pc.w = ifFalse & PROGRAM_SIZE;
-  }
-}
-
-inline void BranchCond(Cpu* cpu, bool cond, Word ifTrue, Word ifFalse)
+inline void JumpCond(bool cond, Word ifTrue, Word ifFalse)
 {
   if (cond)
   {
-    Call(cpu, 0, ifTrue);
+    cpu.pc.w = ifTrue & PROGRAM_SIZE;
   }
   else
   {
-    cpu->pc.w = ifFalse & PROGRAM_SIZE;
+    cpu.pc.w = ifFalse & PROGRAM_SIZE;
   }
 }
 
-int Cpu_Step(Cpu* cpu)
+inline void BranchCond(bool cond, Word ifTrue, Word ifFalse)
+{
+  if (cond)
+  {
+    Call(0, ifTrue);
+  }
+  else
+  {
+    cpu.pc.w = ifFalse & PROGRAM_SIZE;
+  }
+}
+
+int Cpu_Step()
 {
   Byte opcode  = Mmu_Get(REG_PC);
   Data data;

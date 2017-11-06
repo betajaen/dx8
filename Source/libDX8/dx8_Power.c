@@ -31,3 +31,25 @@
 
 #include "dx8.h"
 
+#if defined(_WIN32)
+  #define EXPORT extern __declspec(dllexport)
+#else
+  #error Platform not supported :(
+#endif
+
+EXPORT int Initialise()
+{
+  return 0;
+}
+
+EXPORT int Shutdown()
+{
+  return 0;
+}
+
+int count = 0;
+
+EXPORT int Step()
+{
+  return count--;
+}

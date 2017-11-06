@@ -61,10 +61,10 @@ namespace DX8
       "cmp",
       "cmpbit",
       "jmp",
-      "jmp eq",
-      "jmp neq",
-      "jmp gt",
-      "jmp lt"
+      "jmp.eq",
+      "jmp.neq",
+      "jmp.gt",
+      "jmp.lt"
     };
 
     public enum Operand
@@ -115,6 +115,15 @@ namespace DX8
         Operand1 = operand1;
         Operand2 = operand2;
         Length = length;
+      }
+
+      static System.Text.StringBuilder sTemp = new System.Text.StringBuilder(32);
+
+      public String GetAssemblerFormat()
+      {
+        sTemp.Length = 0;
+        ToAssemblerFormat(ref sTemp);
+        return sTemp.ToString();
       }
       
       public void ToAssemblerFormat(ref System.Text.StringBuilder sb)
@@ -186,6 +195,192 @@ namespace DX8
           jj = 0;
         }
       }
+      return sb.ToString();
+    }
+
+    public static void DbForOpCode(ref System.Text.StringBuilder sb, Op op, int indent)
+    {
+      sb.Append(indent == 1 ? "  " : "    ");
+      sb.AppendFormat("; [${0:X2}] {1}", op.Index, op.GetAssemblerFormat());
+      sb.AppendLine();
+
+      sb.Append(indent == 1 ? "  " : "    ");
+      sb.AppendFormat("db ${0:X2}", op.Index);
+      sb.AppendLine();
+      
+      if (op.Operand1 == Operand.Address || op.Operand1 == Operand.Byte)
+      {
+        sb.Append(indent == 1 ? "  " : "    ");
+        sb.AppendFormat(op.Length == 2 ? "db A" : "dw A");
+        sb.AppendLine();
+      }
+      else if (op.Operand2 != Operand.None)
+      {
+        if (op.Operand2 == Operand.Address || op.Operand2 == Operand.Byte)
+        {
+          sb.Append(indent == 1 ? "  " : "    ");
+          sb.AppendFormat(op.Length == 2 ? "db B" : "dw B");
+          sb.AppendLine();
+        }
+      }
+      
+    }
+
+    public static void ConditionForOpcode(ref System.Text.StringBuilder sb, Op op)
+    {
+      sb.Append("A eq ");
+      switch(op.Operand1)
+      {
+        case Operand.X: sb.Append("x"); break;
+        case Operand.Y: sb.Append("y"); break;
+        case Operand.Z: sb.Append("z"); break;
+        case Operand.W: sb.Append("w"); break;
+        case Operand.A: sb.Append("a"); break;
+      }
+
+      if (op.Operand2 != Operand.None && op.Operand2 != Operand.Byte && op.Operand2 != Operand.Address)
+      {
+        sb.Append(" & B eq ");
+        switch(op.Operand2)
+        {
+          case Operand.X: sb.Append("x"); break;
+          case Operand.Y: sb.Append("y"); break;
+          case Operand.Z: sb.Append("z"); break;
+          case Operand.W: sb.Append("w"); break;
+          case Operand.A: sb.Append("a"); break;
+        }
+      }
+      
+    }
+
+    public static String MakeMacros(List<Op> opcodes)
+    {
+      System.Text.StringBuilder sb = new System.Text.StringBuilder(4096);
+      
+      List<string> done = new List<string>(256);
+
+      String lastName = string.Empty;
+
+      Opcode[] allOpcodes = (Opcode[]) Enum.GetValues(typeof(Opcode));
+
+      for(int ii=0;ii < (int) Opcode.COUNT;ii++)
+      {
+        List<Op> ops = new List<Op>(256);
+        Opcode opcode = allOpcodes[ii];
+        for(int jj=0;jj < opcodes.Count;jj++)
+        {
+          Op op = opcodes[jj];
+          if (op.Opcode == opcode)
+          {
+            ops.Add(op);
+          }
+        }
+
+        string name = OpcodeAsm[(int) opcode];
+        Debug.Log(ops.Count);
+
+        if (ops.Count == 0)
+          continue;
+        
+        sb.AppendFormat("macro {0} [A, B] {{", name);
+        sb.AppendLine();
+        
+        if (ops.Count == 1 || opcode == Opcode.Nop)
+        {
+          DbForOpCode(ref sb, ops[0], 1);
+        }
+        else
+        {
+          Op elseOp = new Op(0);
+          int kk=0;
+          for(int jj=0;jj < ops.Count;jj++)
+          {
+            Op op = ops[jj];
+            
+            if (op.Operand1 == Operand.Address && op.Operand2 == Operand.None)
+            {
+              elseOp = op;
+              continue;
+            }
+
+            if (kk == 0)
+              sb.Append("  if ");
+            else 
+              sb.Append("  else if ");
+            kk++;
+
+            // Condition here.
+            ConditionForOpcode(ref sb, op);
+            sb.AppendLine();
+            DbForOpCode(ref sb, ops[jj], 2);
+          }
+
+          if (elseOp.Opcode != Opcode.Nop)
+          {
+            sb.Append("  else");
+            sb.AppendLine();
+            DbForOpCode(ref sb, elseOp, 2);
+          }
+
+          sb.AppendLine("  end if");
+        }
+        
+        sb.AppendLine("}");
+        
+      }
+
+
+      /*
+
+      macro nop {
+      db $00
+}
+
+macro add [A, B] {
+      if (A eq x & B eq y)
+         db 'R'
+      else if (A eq y & B eq x)
+         db 'B'
+      else
+         db 'A'
+      end if
+
+}
+
+macro test [A, B] {
+      if (A eq x)
+         db 'T'
+      else
+         db 'C'
+      end if
+}   
+*/
+
+      /*
+      for(int ii = 0; ii < 256; ii++)
+      {
+        Op op = opcodes[ii];
+        String asm = op.GetAssemblerFormat();
+        if (done.Contains(asm))
+          continue;
+        
+        done.Add(asm);
+        string name = OpcodeAsm[(int) op.Opcode];
+
+        if (name != lastName)
+        {
+          sb.AppendLine("}");
+          
+          sb.AppendFormat("macro {0} {{", name);
+          sb.AppendLine();
+
+        }
+
+        lastName = asm;
+      }
+      */
+
+
       return sb.ToString();
     }
 

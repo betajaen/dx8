@@ -31,6 +31,7 @@
 
 #include "dx8.h"
 #include <malloc.h>
+#include <string.h>
 
 #define Program_Begin (0x0000)
 #define Chip_Begin    (0x4000)
@@ -48,7 +49,6 @@ enum
 Byte* sChipRam;
 Byte* sProgramRam;
 Byte* sSharedRam;
-Byte* sBankMask;
 
 Byte Program_Get(Word address)
 {
@@ -63,23 +63,27 @@ Byte ChipRam_Get(Word address)
 void ChipRam_Set(Word address, Byte value)
 {
   sChipRam[address & CHIP_SIZE] = value;
-  // TODO! Events on this.
 }
 
-Byte Bank_GetUpperMask()
+Byte Bank_GetMask()
 {
-  return *sBankMask;
+  return sChipRam[Chip_BankMask_Relative];
+}
+
+void Bank_SetMask(Byte mask)
+{
+  sChipRam[Chip_BankMask_Relative] = mask;
 }
 
 Byte Bank_Get(Byte bank, Word address)
 {
-  address = (((Bank_GetUpperMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
+  address = (((Bank_GetMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
   return sSharedRam[address & SHARED_SIZE];
 }
 
 void Bank_Set(Byte bank, Word address, Byte value)
 {
-  address = (((Bank_GetUpperMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
+  address = (((Bank_GetMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
   sSharedRam[address & SHARED_SIZE] = value;
 }
 
@@ -96,10 +100,13 @@ Byte Stack_Get(Byte offset)
 void Mmu_Setup()
 {
   sChipRam = malloc(CHIP_SIZE);
+  memset(sChipRam, 0, CHIP_SIZE);
   sProgramRam = malloc(PROGRAM_SIZE);
+  memset(sProgramRam, 0, PROGRAM_SIZE);
   sSharedRam = malloc(SHARED_SIZE);
+  memset(sSharedRam, 0, SHARED_SIZE);
 
-  sBankMask = &sChipRam[Chip_BankMask];
+  Bank_SetMask(0);
 }
 
 void Mmu_Teardown()
@@ -161,18 +168,18 @@ Byte Mmu_Get(Word address)
 {
   switch (address & 0xF000)
   {
-    case 0x0000:
-    case 0x1000:
-    case 0x2000:
-    case 0x3000:
+    case Program_Begin:
+    case Program_Begin + 0x1000:
+    case Program_Begin + 0x2000:
+    case Program_Begin + 0x3000:
       return Program_Get(address);
-    case 0x4000:
+    case Chip_Begin:
       return ChipRam_Get(address & 0xBFFF);
-    case 0x5000:
+    case Gpu_Begin:
       return GpuMmu_Get(address & 0xAFFF);
-    case 0x6000:
+    case Sfx_Begin:
       return SfxMmu_Get(address & 0x9FFF);
-    case 0x7000:
+    case Io_Begin:
       return IoMmu_Get(address & 0x8FFF);
     case 0x8000:
       return Bank_Get(0, address & 0x7FFF);
