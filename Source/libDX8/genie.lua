@@ -19,6 +19,7 @@ solution "DX8"
     language        "C"
     objdir          ".Obj"
     flags           { "FatalWarnings" }
+    defines         { "_CRT_SECURE_NO_WARNINGS" }
     files           {
       "*.c",
       "*.h",

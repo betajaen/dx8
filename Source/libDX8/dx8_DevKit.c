@@ -44,7 +44,11 @@
 
 typedef int(*InitialiseFn)();
 typedef int(*ShutdownFn)();
-typedef int(*StepFn)(float deltaTime);
+typedef int(*SetValueFn)(int name, int value);
+typedef int(*GetValueFn)(int name);
+typedef int(*SetDataFn)(int name, void* data, int length);
+typedef int(*GetDataFn)(int name, void* data, int length);
+typedef int(*CallFn)(int name, int value);
 
 #if defined(_WIN32)
 HMODULE dll;
@@ -52,7 +56,11 @@ HMODULE dll;
 
 InitialiseFn initialiseFn;
 ShutdownFn   shutdownFn;
-StepFn       stepFn;
+SetValueFn   setValueFn;
+GetValueFn   getValueFn;
+SetDataFn    setDataFn;
+GetDataFn    getDataFn;
+CallFn       callFn;
 
 #define SRC_PATH "C:/dev/dx8/Source/libDX8/Build/libDX8.dll"
 #define LIB_PATH "C:/dev/dx8/Source/RT/libDX8.dll"
@@ -75,12 +83,21 @@ EXPORT int Initialise()
   #endif
 
   initialiseFn = (InitialiseFn)GetProcAddress(dll, "Initialise");
-  shutdownFn   = (ShutdownFn)GetProcAddress(dll, "Shutdown");
-  stepFn       = (StepFn)GetProcAddress(dll, "Step");
+  shutdownFn = (ShutdownFn)GetProcAddress(dll, "Shutdown");
+  setValueFn = (SetValueFn)GetProcAddress(dll, "SetValue");
+  getValueFn = (GetValueFn)GetProcAddress(dll, "GetValue");
+  setDataFn = (SetDataFn)GetProcAddress(dll, "SetData");
+  getDataFn = (GetDataFn)GetProcAddress(dll, "GetData");
+  callFn = (CallFn)GetProcAddress(dll, "Call");
 
   if (initialiseFn == NULL ||
     shutdownFn == NULL ||
-    stepFn == NULL)
+    setValueFn == NULL ||
+    getValueFn == NULL ||
+    setDataFn == NULL ||
+    getDataFn == NULL ||
+    callFn == NULL
+    )
   {
 
     #if defined(_WIN32)
@@ -90,7 +107,11 @@ EXPORT int Initialise()
 
     initialiseFn = NULL;
     shutdownFn = NULL;
-    stepFn = NULL;
+    setValueFn = NULL;
+    getValueFn = NULL;
+    setDataFn = NULL;
+    getDataFn = NULL;
+    callFn = NULL;
 
     return 10004;
   }
@@ -117,22 +138,74 @@ EXPORT int Shutdown()
 
   initialiseFn = NULL;
   shutdownFn = NULL;
-  stepFn = NULL;
+  setValueFn = NULL;
+  getValueFn = NULL;
+  setDataFn = NULL;
+  getDataFn = NULL;
+  callFn = NULL;
 
   return 0;
 }
 
 
-EXPORT int Step(float deltaTime)
+EXPORT int GetValue(int name)
 {
   #if defined(_WIN32)
     if (dll == NULL)
-      return 9000;
+      return 0;
   #else
-    return 9001;
+    return 0;
   #endif
 
-  return stepFn(deltaTime);
+  return getValueFn(name);
+}
+
+EXPORT int SetValue(int name, int value)
+{
+#if defined(_WIN32)
+  if (dll == NULL)
+    return -1;
+#else
+  return -1;
+#endif
+
+  return setValueFn(name, value);
+}
+
+EXPORT int SetData(int name, void* data, int length)
+{
+#if defined(_WIN32)
+  if (dll == NULL)
+    return -1;
+#else
+  return -1;
+#endif
+
+  return setDataFn(name, data, length);
+}
+
+EXPORT int GetData(int name, void* data, int length)
+{
+#if defined(_WIN32)
+  if (dll == NULL)
+    return -1;
+#else
+  return -1;
+#endif
+
+  return getDataFn(name, data, length);
+}
+
+EXPORT int Call(int name, int value)
+{
+#if defined(_WIN32)
+  if (dll == NULL)
+    return -1;
+#else
+  return -1;
+#endif
+
+  return callFn(name, value);
 }
 
 #endif

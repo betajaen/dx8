@@ -264,7 +264,7 @@ OP(RollRight, w, Opf_Single, 1, { DO_OP_SHIFT_RIGHT(REG_W); })
 OP(RollRight, a, Opf_Single, 1, { DO_OP_SHIFT_RIGHT(REG_A); })
 
 // Jmp
-OP(Jmp, Address, Opf_Address, 2, { REG_PC = data.w & PROGRAM_SIZE; })
+OP(Jmp, Address, Opf_Address, 2, { REG_PC = data.w & ~PROGRAM_SIZE; })
 OP(Jmp, xy, Opf_Single, 3, { DO_OP_JMP_ABS(REG_X, REG_Y); })
 OP(Jmp, zw, Opf_Single, 3, { DO_OP_JMP_ABS(REG_Z, REG_W); })
 OP(Jmp, x, Opf_Address, 4, { DO_OP_JMP_ADD(REG_X, 0); })

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
 
@@ -145,7 +146,62 @@ namespace DX8
           }
         }
       }
-      
+
+      internal void ToAssemblerFormat(ref StringBuilder sb, Byte lo, Byte hi)
+      {
+        sb.Append(OpcodeCompiler.OpcodeAsm[(int) Opcode]);
+
+        if (Operand1 != Operand.None)
+        {
+          sb.Append(' ');
+          if (Operand1 == Operand.Byte)
+            sb.AppendFormat("${0:X2}", lo);
+          else if (Operand1 == Operand.Address)
+            sb.AppendFormat("${0:X4}", lo | (hi << 8));
+          else
+            sb.Append(OperandAsm[(int) Operand1]);
+
+          if (Operand2 != Operand.None)
+          {
+            if (Opcode == Opcode.Jmp && Operand2 == Operand.Address)
+              sb.Append('+');
+            else
+              sb.Append(',');
+            
+            sb.Append(' ');
+
+            if (Operand2 == Operand.Byte)
+              sb.AppendFormat("${0:X2}", lo);
+            else if (Operand2 == Operand.Address)
+              sb.AppendFormat("${0:X4}", lo | (hi << 8));
+            else
+              sb.Append(OperandAsm[(int) Operand2]);
+          }
+        }
+      }
+    }
+
+    public static String GetApi(String apiPath)
+    {
+      String[] lines = System.IO.File.ReadAllLines(apiPath);
+      int lineLength = lines.Length;
+      StringBuilder sb = new StringBuilder();
+      sb.AppendLine("// Automatically generated file");
+      sb.AppendLine("namespace DX8 { class Api { ");
+      for (int ii=0;ii < lineLength;ii++)
+      {
+        Match match = Regex.Match(lines[ii], @"API_NAME\(\s*(\w+)\s*,\s*(\d+)\)", RegexOptions.IgnoreCase);
+
+        if (match.Success)
+        {
+            string name     = match.Groups[1].Value;
+            string valueStr = match.Groups[2].Value;
+            sb.AppendFormat("  public const int {0} = {1};", name, valueStr);
+            sb.AppendLine();
+        }
+      }
+      sb.AppendLine("}}");
+      return sb.ToString();
     }
 
     static bool LineStartsWith_OP(String line)
@@ -329,57 +385,62 @@ namespace DX8
         
       }
 
+      
+      return sb.ToString();
+    }
 
-      /*
+    public static String Decompile(List<Op> ops, Byte[] data)
+    {
+      int len = data.Length;
 
-      macro nop {
-      db $00
-}
+      System.Text.StringBuilder sb = new System.Text.StringBuilder(len * 30);
+      StringBuilder temp = new StringBuilder(100);
 
-macro add [A, B] {
-      if (A eq x & B eq y)
-         db 'R'
-      else if (A eq y & B eq x)
-         db 'B'
-      else
-         db 'A'
-      end if
-
-}
-
-macro test [A, B] {
-      if (A eq x)
-         db 'T'
-      else
-         db 'C'
-      end if
-}   
-*/
-
-      /*
-      for(int ii = 0; ii < 256; ii++)
+      for(int ii=0;ii < len;)
       {
-        Op op = opcodes[ii];
-        String asm = op.GetAssemblerFormat();
-        if (done.Contains(asm))
-          continue;
-        
-        done.Add(asm);
-        string name = OpcodeAsm[(int) op.Opcode];
+        byte   lo = 0, hi = 0;
 
-        if (name != lastName)
+        ushort address = (ushort) ii;
+
+        Op op = ops[data[ii]];
+        ii++;
+        if (op.Length == 2)
         {
-          sb.AppendLine("}");
-          
-          sb.AppendFormat("macro {0} {{", name);
-          sb.AppendLine();
+          lo = data[ii];
+          ii++;
+        }
+        else if (op.Length == 3)
+        {
+          lo = data[ii];
+          ii++;
+          hi = data[ii];
+          ii++;
+        }
+        sb.AppendFormat("{0:X4}: ", address);
 
+        temp.Length = 0;
+        op.ToAssemblerFormat(ref temp, lo, hi);
+        
+        sb.Append(temp.ToString());
+
+        for(int i=0;i < 20 - temp.Length;i++)
+          sb.Append(' ');
+
+        if (op.Length == 1)
+        {
+          sb.AppendFormat("; {0:X2}", op.Index);
+        }
+        else if (op.Length == 2)
+        {
+          sb.AppendFormat("; {0:X2} {1:X2}", op.Index, lo);
+        }
+        else if (op.Length == 3)
+        {
+          sb.AppendFormat("; {0:X2} {1:X2} {2:X2}", op.Index, lo, hi);
         }
 
-        lastName = asm;
+        sb.AppendLine();
       }
-      */
-
 
       return sb.ToString();
     }

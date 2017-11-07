@@ -64,9 +64,15 @@ enum Instructions
   Op_COUNT
 };
 
-void Cpu_Reset()
+void Mmu_Reset();
+
+void Cpu_Reset(bool soft)
 {
   memset(&cpu, 0, sizeof(Cpu));
+  if (!soft)
+  {
+    Mmu_Reset();
+  }
 }
 
 
@@ -88,10 +94,10 @@ void Cpu_Reset()
 // JMP_NEQ  -- Jump to DATA, flags.z    = 0
 // JMP_GT   -- Jump to DATA, flags.n    = 1
 // JMP_LT   -- Jump to DATA, flags.c    = 1
-// BRA_EQ   -- Call to DATA, flags.z    = 1
-// BRA_NEQ  -- Call to DATA, flags.z    = 0
-// BRA_GT   -- Call to DATA, flags.n    = 1
-// BRA_LT   -- Call to DATA, flags.c    = 1
+// BRA_EQ   -- Do_Call to DATA, flags.z    = 1
+// BRA_NEQ  -- Do_Call to DATA, flags.z    = 0
+// BRA_GT   -- Do_Call to DATA, flags.n    = 1
+// BRA_LT   -- Do_Call to DATA, flags.c    = 1
 // LSH      --
 // RSH      --
 // ROL      --
@@ -102,7 +108,7 @@ void Cpu_Reset()
 #define DO_OP_POP(R0)               R0 = PopFromStack(cpu);           REG_PC += Opf_Single; 
 #define DO_OP_LOAD(R0)              R0 = LoadFromMemory(data.w);      REG_PC += Opf_Address;
 #define DO_OP_STORE(R0)             StoreToMemory(data.w, R0);        REG_PC += Opf_Address;
-#define DO_OP_CALL()                Call(0, data.w);
+#define DO_OP_CALL()                Do_Call(0, data.w);
 #define DO_OP_RETURN()              Return(cpu);
 #define DO_OP_SET(R0)               R0 = data.lo;                     REG_PC += Opf_Byte;
 #define DO_OP_ADD(R0, R1)           R0 += R1;                         REG_PC += Opf_Single;
@@ -138,13 +144,13 @@ inline Byte PopFromStack()
   return value;
 }
 
-inline void Call(Byte lo_offset, Word callAddress)
+inline void Do_Call(Byte lo_offset, Word callAddress)
 {
   Word pc = cpu.pc.w + lo_offset;
 
   PushToStack(LO_BYTE(pc));
   PushToStack(HI_BYTE(pc));
-  REG_PC = (callAddress & PROGRAM_SIZE);
+  REG_PC = (callAddress & ~PROGRAM_SIZE);
 }
 
 inline void Return()
@@ -178,23 +184,23 @@ inline void CompareBit(Byte val, Byte bit)
 
 inline void JumpAdd(Word addr, Word lo, Word hi)
 {
-  cpu.pc.w = (addr + lo + hi * 256) & PROGRAM_SIZE;
+  cpu.pc.w = (addr + lo + hi * 256) & ~PROGRAM_SIZE;
 }
 
 inline void JumpAbs(Word lo, Word hi)
 {
-  cpu.pc.w = (lo + hi * 256) & PROGRAM_SIZE;
+  cpu.pc.w = (lo + hi * 256) & ~PROGRAM_SIZE;
 }
 
 inline void JumpCond(bool cond, Word ifTrue, Word ifFalse)
 {
   if (cond)
   {
-    cpu.pc.w = ifTrue & PROGRAM_SIZE;
+    cpu.pc.w = ifTrue & ~PROGRAM_SIZE;
   }
   else
   {
-    cpu.pc.w = ifFalse & PROGRAM_SIZE;
+    cpu.pc.w = ifFalse & ~PROGRAM_SIZE;
   }
 }
 
@@ -202,7 +208,7 @@ inline void BranchCond(bool cond, Word ifTrue, Word ifFalse)
 {
   if (cond)
   {
-    Call(0, ifTrue);
+    Do_Call(0, ifTrue);
   }
   else
   {
@@ -220,6 +226,9 @@ int Cpu_Step()
 #undef OP
 #define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; return TIME;
 
+  cpu.lastOpcode = opcode;
+  cpu.lastOperand = data.w;
+
   switch(opcode)
   {
     default:
@@ -227,4 +236,111 @@ int Cpu_Step()
   }
 
   return 1;
+}
+
+Byte Cpu_GetLastOpcode()
+{
+  return cpu.lastOpcode;
+}
+
+Word Cpu_GetLastOperand()
+{
+  return cpu.lastOperand;
+}
+
+Byte Cpu_GetARegister()
+{
+  return REG_A;
+}
+
+void Cpu_SetARegister(Byte value)
+{
+  REG_A = value;
+}
+
+Byte Cpu_GetXRegister()
+{
+  return REG_X;
+}
+
+void Cpu_SetXRegister(Byte value)
+{
+  REG_X = value;
+}
+
+Byte Cpu_GetYRegister()
+{
+  return REG_Y;
+}
+
+void Cpu_SetYRegister(Byte value)
+{
+  REG_Y = value;
+}
+
+Byte Cpu_GetZRegister()
+{
+  return REG_Z;
+}
+
+void Cpu_SetZRegister(Byte value)
+{
+  REG_Z = value;
+}
+
+Byte Cpu_GetWRegister()
+{
+  return REG_W;
+}
+
+void Cpu_SetWRegister(Byte value)
+{
+  REG_W = value;
+}
+
+Word Cpu_GetPcRegister()
+{
+  return REG_PC;
+}
+
+void Cpu_SetPcRegister(Word value)
+{
+  REG_PC = value & ~PROGRAM_SIZE;
+}
+
+Word Cpu_GetFlagsRegister()
+{
+  return cpu.flags._data;
+}
+
+void Cpu_SetFlagsRegister(Byte value)
+{
+  cpu.flags._data = value;
+}
+
+Byte Cpu_GetStackRegister()
+{
+  return cpu.stack;
+}
+
+void Cpu_SetStackRegister(Byte value)
+{
+  cpu.stack;
+}
+
+int Cpu_Cycle(int ms)
+{
+  int count = 0;
+  if (ms < 0.0f)
+  {
+    Cpu_Step();
+    count = 1;
+  }
+  else
+  {
+    // Temp. Will need to call this multiple times, based on time passed
+    Cpu_Step();
+  }
+  
+  return count;
 }

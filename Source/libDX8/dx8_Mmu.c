@@ -32,6 +32,7 @@
 #include "dx8.h"
 #include <malloc.h>
 #include <string.h>
+#include <stdio.h>
 
 #define Program_Begin (0x0000)
 #define Chip_Begin    (0x4000)
@@ -52,17 +53,17 @@ Byte* sSharedRam;
 
 Byte Program_Get(Word address)
 {
-  return sProgramRam[address & PROGRAM_SIZE];
+  return sProgramRam[address & ~PROGRAM_SIZE];
 }
 
 Byte ChipRam_Get(Word address)
 {
-  return sChipRam[address & CHIP_SIZE];
+  return sChipRam[address & ~CHIP_SIZE];
 }
 
 void ChipRam_Set(Word address, Byte value)
 {
-  sChipRam[address & CHIP_SIZE] = value;
+  sChipRam[address & ~CHIP_SIZE] = value;
 }
 
 Byte Bank_GetMask()
@@ -78,13 +79,13 @@ void Bank_SetMask(Byte mask)
 Byte Bank_Get(Byte bank, Word address)
 {
   address = (((Bank_GetMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
-  return sSharedRam[address & SHARED_SIZE];
+  return sSharedRam[address & ~SHARED_SIZE];
 }
 
 void Bank_Set(Byte bank, Word address, Byte value)
 {
   address = (((Bank_GetMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
-  sSharedRam[address & SHARED_SIZE] = value;
+  sSharedRam[address & ~SHARED_SIZE] = value;
 }
 
 void Stack_Set(Byte offset, Byte value)
@@ -114,6 +115,31 @@ void Mmu_Teardown()
   free(sSharedRam);
   free(sProgramRam);
   free(sChipRam);
+}
+
+void Mmu_Reset()
+{
+  memset(sChipRam, 0, CHIP_SIZE);
+  memset(sProgramRam, 0, PROGRAM_SIZE);
+  memset(sSharedRam, 0, SHARED_SIZE);
+}
+
+bool Mmu_CopyToProgramRam(void* data, int length)
+{
+  if (data != NULL)
+  {
+    int len = length & ~PROGRAM_SIZE;
+
+    memcpy(sProgramRam, data, len);
+    
+    FILE* f = fopen("test.dat", "wb");
+    fwrite(&len, 4, 1, f);
+    fwrite(sProgramRam, len, 1, f);
+    fclose(f);
+    
+    return true;
+  }
+  return false;
 }
 
 void Mmu_Set(Word address, Byte value)

@@ -55,21 +55,67 @@ typedef struct {
   CPU_REGISTER(w, lo, hi) pc;
   Byte a;
   Byte stack;
-  struct {
-    Byte  bZero : 1;
-    Byte  bNegative : 1;
-    Byte  bCarry : 1;
-    Byte  flag4 : 1;
-    Byte  flag5 : 1;
-    Byte  flag6 : 1;
-    Byte  flag7 : 1;
-    Byte  flag8 : 1;
-  } flags;
+  union
+  {
+    struct {
+      Byte  bZero : 1;
+      Byte  bNegative : 1;
+      Byte  bCarry : 1;
+      Byte  flag4 : 1;
+      Byte  flag5 : 1;
+      Byte  flag6 : 1;
+      Byte  flag7 : 1;
+      Byte  flag8 : 1;
+    };
+    Byte _data;
+  }
+  flags;
+
+  Byte lastOpcode;
+  Word lastOperand;
 } Cpu;
 
-void Cpu_Reset();
+int  Cpu_Cycle(int ms);
+
+void Cpu_Reset(bool soft);
 
 int Cpu_Step();
+
+Byte Cpu_GetARegister();
+
+void Cpu_SetARegister(Byte value);
+
+Byte Cpu_GetXRegister();
+
+void Cpu_SetXRegister(Byte value);
+
+Byte Cpu_GetYRegister();
+
+void Cpu_SetYRegister(Byte value);
+
+Byte Cpu_GetZRegister();
+
+void Cpu_SetZRegister(Byte value);
+
+Byte Cpu_GetWRegister();
+
+void Cpu_SetWRegister(Byte value);
+
+Word Cpu_GetPcRegister();
+
+void Cpu_SetPcRegister(Word value);
+
+Word Cpu_GetFlagsRegister();
+
+void Cpu_SetFlagsRegister(Byte value);
+
+Byte Cpu_GetStackRegister();
+
+void Cpu_SetStackRegister(Byte value);
+
+Byte Cpu_GetLastOpcode();
+
+Word Cpu_GetLastOperand();
 
 void Mmu_Set(Word address, Byte value);
 
@@ -91,11 +137,6 @@ void IoMmu_Set(Word address, Byte value);
 
 Byte IoMmu_Get(Word address);
 
-
-extern void dx8_Initialise();
-
-extern void dx8_Shutdown();
-
-extern void dx8_Step(float dt);
+bool Mmu_CopyToProgramRam(void* data, int length);
 
 #endif
