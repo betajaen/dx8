@@ -328,10 +328,12 @@ void Cpu_SetStackRegister(Byte value)
   cpu.stack;
 }
 
+void Gpu_Cycle();
+
 int Cpu_Cycle(int ms)
 {
   int count = 0;
-  if (ms < 0.0f)
+  if (ms < 0)
   {
     Cpu_Step();
     count = 1;
@@ -342,5 +344,6 @@ int Cpu_Cycle(int ms)
     Cpu_Step();
   }
   
+  Gpu_Cycle();
   return count;
 }

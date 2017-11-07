@@ -9,6 +9,7 @@ API_NAME(Flags, 6)
 API_NAME(Stack, 7)
 API_NAME(LastOpcode, 8)
 API_NAME(LastOperand, 9)
+API_NAME(CrtDirty, 10)
 
 // Data
 API_NAME(ProgramRam, 100)

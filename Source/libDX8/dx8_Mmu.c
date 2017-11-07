@@ -98,6 +98,21 @@ Byte Stack_Get(Byte offset)
   return sChipRam[Chip_StackEnd_Relative - offset];
 }
 
+void Shared_Set(Word absoluteAddress, Byte value)
+{
+  sSharedRam[absoluteAddress & SHARED_SIZE] = value;
+}
+
+Byte Shared_Get(Word absoluteAddress)
+{
+  return sSharedRam[absoluteAddress & SHARED_SIZE];
+}
+
+Byte* Shared_GetPtr()
+{
+  return sSharedRam;
+}
+
 void Mmu_Setup()
 {
   sChipRam = malloc(CHIP_SIZE);

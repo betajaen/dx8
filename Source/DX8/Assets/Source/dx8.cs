@@ -37,6 +37,9 @@ namespace DX8
 
       [DllImport(Name, CallingConvention = CallingConvention.Cdecl)]
       internal static extern int Call(int name, int value);
+      
+      [DllImport(Name, CallingConvention = CallingConvention.Cdecl)]
+      internal static extern IntPtr GetCrt();
     }
 #else
     static class Dll
@@ -48,6 +51,7 @@ namespace DX8
       internal static extern int SetData(int name, IntPtr data, int length)   { return 0; }
       internal static extern int GetData(int name, IntPtr data, int length)   { return 0; }
       internal static extern int Call(int name, int value)   { return 0; }
+      internal static extern IntPtr GetCrt()   { return IntPtr.Null; }
     }
 #endif
     
@@ -86,6 +90,12 @@ namespace DX8
     {
       return Dll.Call(name, value);
     }
+
+    internal static IntPtr GetCrt()
+    {
+      return Dll.GetCrt();
+    }
+
   }
 
   public class CRuntime : MonoBehaviour
@@ -95,6 +105,7 @@ namespace DX8
     public  bool                   IsRunning;
     public  string                 RomPath = @"C:\dev\dx8\ROMS\test_add.bin";
     public  int                    LastSteps = 0;
+    public  Texture2D              Crt;
 
 #if UNITY_EDITOR
     static System.IO.FileSystemWatcher DllWatcher;
@@ -182,6 +193,12 @@ namespace DX8
         }
       }
     }
+    
+    void Awake()
+    {
+      Crt = new Texture2D(640, 400, TextureFormat.RGB24, false);
+      Crt.filterMode = FilterMode.Point;
+    }
 
     void Start()
     {
@@ -258,6 +275,11 @@ namespace DX8
         Debug.LogFormat("Loaded Program = {0}, Length: {1}", r, data.Length);
         Marshal.FreeHGlobal(romPtr);
       }
+      
+      if (GUI.Button(new Rect(400, 0, 100, 25), "Save Crt"))
+      {
+        System.IO.File.WriteAllBytes("crt.png", Crt.EncodeToPNG());
+      }
 
       GUI.Label(new Rect(0, 25, Screen.width, 25), String.Format(
         "A={0:X2} X={1:X2} Y={2:X2} Z={3:X2} W={4:X2} Pc={5:X4}, St={6:X2}, Fl={7:X2}, Steps={8}, Opcode={9:X2}, Operand={10:X4}",
@@ -273,12 +295,25 @@ namespace DX8
           Library.GetValue(Api.LastOpcode),
           Library.GetValue(Api.LastOperand)
        ));
+
+       GUI.DrawTexture(new Rect(Screen.width / 2 - 640 / 2, Screen.height / 2 - 400 / 2, 640, 400), Crt);
     }
 
     void RunOnce(float timeSec)
     {
       int ms = (int) (timeSec * 1000.0f);
       LastSteps = Library.Call(Api.CycleFn, ms);
+      UpdateCrt();
+    }
+
+    void UpdateCrt()
+    {
+      if (Library.GetValue(Api.CrtDirty) == 1)
+      {
+        IntPtr crt = Library.GetCrt();
+        Crt.LoadRawTextureData(crt, 640 * 400 * 3);
+        Crt.Apply();
+      }
     }
 
   }

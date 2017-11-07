@@ -125,6 +125,11 @@ void Stack_Set(Byte offset, Byte value);
 
 Byte Stack_Get(Byte offset);
 
+void Shared_Set(Word absoluteAddress, Byte value);
+
+Byte Shared_Get(Word absoluteAddress);
+
+
 void GpuMmu_Set(Word address, Byte value);
 
 Byte GpuMmu_Get(Word address);

@@ -31,12 +31,12 @@
 
 #include "dx8.h"
 
-#if defined(_WIN32)
-  #define EXPORT extern __declspec(dllexport)
-#else
-  #error Platform not supported :(
-#endif
 
+#if defined(_WIN32)
+#define EXPORT extern __declspec(dllexport)
+#else
+#error Platform not supported :(
+#endif
 
 enum ApiName
 {
@@ -47,10 +47,15 @@ enum ApiName
 
 void Mmu_Setup();
 void Mmu_Teardown();
+void Gpu_Setup();
+void Gpu_Teardown();
+
+bool Crt_IsDirty();
 
 EXPORT int Initialise()
 {
   Mmu_Setup();
+  Gpu_Setup();
   Cpu_Reset(true);
   return 0;
 }
@@ -58,6 +63,7 @@ EXPORT int Initialise()
 EXPORT int Shutdown()
 {
   Mmu_Teardown();
+  Gpu_Teardown();
   return 0;
 }
 
@@ -85,6 +91,8 @@ EXPORT int GetValue(int name)
       return Cpu_GetLastOpcode();
     case Api_LastOperand:
       return Cpu_GetLastOperand();
+    case Api_CrtDirty:
+      return Crt_IsDirty();
   }
   return 0;
 }
