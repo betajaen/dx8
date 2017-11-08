@@ -9,9 +9,10 @@ STACK_END = $4200
 GFX_MODE = $5000
 
 ; Interrupts commands (int $01)
-INT_MMU_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length.
-INT_MMU_MEMCPY = $02    ; Copy Shared Memory: W1=dst W2=src W3=length.
-INT_MMU_RSTSFT = $FF    ; Soft Reset
+INT_MMU_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length
+INT_MMU_MEMCPY = $02    ; Copy Shared Memory: W1=dst W2=src W3=length
+INT_MMU_PRGCPY = $03    ; Copy Program Memory to Shared Memory: W1=dst W2=src W3=length
+INT_CPU_RESET = $FF    ; Soft Reset
 
 ; X8 Processor Instructions
 macro nop [A, B] {

@@ -133,6 +133,31 @@ void Mmu_Int_MemCpy()
 
   for(Word ii=0;ii < length;ii++)
   {
+    sSharedRam[dst] = sSharedRam[src];
+    ++dst;
+    ++src;
+  }
+}
+
+void Mmu_Int_PrgCpy()
+{
+  Word dst, src, length;
+  dst = ChipRam_GetWord(Chip_MMU_W1_Relative) & ~PROGRAM_SIZE;
+  src = ChipRam_GetWord(Chip_MMU_W2_Relative);
+  length = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~SHARED_SIZE;
+
+  LOGF("Mmu_Int_PrgCpy: Dst=%4x Src=%4x Length=%4x", dst, src, length);
+
+  if (src > PROGRAM_SIZE || dst < SHARED_BANK_0)
+  {
+    LOGF("Mmu_Int_PrgCpy: ** Not in shared ram!");
+    return;
+  }
+
+  dst -= SHARED_BANK_0;
+
+  for (Word ii = 0; ii < length; ii++)
+  {
     sSharedRam[dst] = sProgramRam[src];
     ++dst;
     ++src;

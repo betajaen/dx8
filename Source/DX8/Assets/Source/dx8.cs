@@ -163,6 +163,7 @@ namespace DX8
       {
         IsOpen = true;
         FirstCycle = true;
+        IsRunning = true;
       }
       else
       {

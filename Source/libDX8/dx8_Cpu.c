@@ -224,6 +224,7 @@ inline void BranchCond(bool cond, Word ifTrue, Word ifFalse)
 
 void Mmu_Int_MemCpy();
 void Mmu_Int_MemSet();
+void Mmu_Int_PrgCpy();
 
 inline void DoInterrupt(Byte name)
 {
@@ -236,7 +237,10 @@ inline void DoInterrupt(Byte name)
     case INT_MMU_MEMSET:
       Mmu_Int_MemSet();
       return;
-    case INT_MMU_RSTSFT:
+    case INT_MMU_PRGCPY:
+      Mmu_Int_PrgCpy();
+      return;
+    case INT_CPU_RESET:
       Cpu_Reset(true);
       return;
   }

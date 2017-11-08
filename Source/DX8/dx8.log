@@ -1,2 +1,4 @@
-2017-11-08 12:35:27 INFO  c:\dev\dx8\source\libdx8\dx8_cpu.c:72: Cpu Reset. Soft = 1
-2017-11-08 12:35:28 INFO  c:\dev\dx8\source\libdx8\dx8_cpu.c:72: Cpu Reset. Soft = 0
+2017-11-08 16:34:12 INFO  c:\dev\dx8\source\libdx8\dx8_cpu.c:72: Cpu Reset. Soft = 1
+2017-11-08 16:34:12 INFO  c:\dev\dx8\source\libdx8\dx8_cpu.c:72: Cpu Reset. Soft = 0
+2017-11-08 16:34:12 INFO  c:\dev\dx8\source\libdx8\dx8_mmu.c:149: Mmu_Int_PrgCpy: Dst=8000 Src= 1f7 Length= 1f4
+2017-11-08 16:34:12 INFO  c:\dev\dx8\source\libdx8\dx8_mmu.c:149: Mmu_Int_PrgCpy: Dst=81f4 Src= 3eb Length= 1f4
