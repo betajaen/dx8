@@ -7,11 +7,13 @@ namespace DX8
 {
   public static class Menus
   {
-    public static string ApiCsPath     = @"C:\dev\dx8\Source\DX8\Assets\Source\dx8_Api.cs";
-    public static string ApiPath       = @"C:\dev\dx8\Source\libDX8\dx8_Api.inc";
-    public static string OpcodesPath   = @"C:\dev\dx8\Source\libDX8\dx8_Cpu_Opcodes.inc";
-    public static string OpcodesCsv    = @"C:\dev\dx8\Documentation\OpcodesAsm.csv";
-    public static string OpcodesInc    = @"C:\dev\dx8\ROMS\dx8.inc";
+    public static string ApiCsPath         = @"C:\dev\dx8\Source\DX8\Assets\Source\dx8_Api.cs";
+    public static string ApiPath           = @"C:\dev\dx8\Source\libDX8\dx8_Api.inc";
+    public static string OpcodesPath       = @"C:\dev\dx8\Source\libDX8\dx8_Cpu_Opcodes.inc";
+    public static string MemoryConstants   = @"C:\dev\dx8\Source\libDX8\dx8_Memory_Addresses.inc";
+    public static string Interrupts        = @"C:\dev\dx8\Source\libDX8\dx8_Interrupts.inc";
+    public static string OpcodesCsv        = @"C:\dev\dx8\Documentation\OpcodesAsm.csv";
+    public static string OpcodesInc        = @"C:\dev\dx8\ROMS\dx8.inc";
 
     [MenuItem("DX8/Generate CSV")]
     public static void TestOpcodes()
@@ -27,8 +29,10 @@ namespace DX8
     public static void MakeMacros()
     {
       List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
+      Dictionary<string, int> constants = OpcodeCompiler.Generate_AddressConstants(MemoryConstants);
+      Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Interrupts);
 
-      System.IO.File.WriteAllText(OpcodesInc, OpcodeCompiler.MakeMacros(ops));
+      System.IO.File.WriteAllText(OpcodesInc, OpcodeCompiler.MakeMacros(ops, constants, interrupts));
       Debug.LogFormat("Wrote {0} macros to {1}", ops.Count, OpcodesInc);
     }
     

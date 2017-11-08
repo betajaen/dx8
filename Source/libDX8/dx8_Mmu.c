@@ -34,22 +34,13 @@
 #include <string.h>
 #include <stdio.h>
 
-#define Program_Begin (0x0000)
-#define Chip_Begin    (0x4000)
-#define Gpu_Begin     (0x5000)
-#define Sfx_Begin     (0x6000)
-#define Io_Begin      (0x7000)
-
-enum
-{
-#define ADDRESS(RAM, NAME, VALUE) RAM##_##NAME = RAM##_Begin + VALUE, RAM##_##NAME##_Relative = VALUE,
-  #include "dx8_Memory_Addresses.inc"
-#undef ADDRESS
-};
+#include "log_c/src/log.h"
 
 Byte* sChipRam;
 Byte* sProgramRam;
 Byte* sSharedRam;
+
+#define SHARED_BANK_0 0x8000
 
 Byte Program_Get(Word address)
 {
@@ -61,6 +52,14 @@ Byte ChipRam_Get(Word address)
   return sChipRam[address & ~CHIP_SIZE];
 }
 
+Word ChipRam_GetWord(Word address)
+{
+  Word v;
+  v  = sChipRam[(address    )  & ~CHIP_SIZE];
+  v |= sChipRam[(address + 1)  & ~CHIP_SIZE]  << 8;
+  return v;
+}
+
 void ChipRam_Set(Word address, Byte value)
 {
   sChipRam[address & ~CHIP_SIZE] = value;
@@ -68,12 +67,12 @@ void ChipRam_Set(Word address, Byte value)
 
 Byte Bank_GetMask()
 {
-  return sChipRam[Chip_BankMask_Relative];
+  return sChipRam[Chip_MMU_BANK_Relative];
 }
 
 void Bank_SetMask(Byte mask)
 {
-  sChipRam[Chip_BankMask_Relative] = mask;
+  sChipRam[Chip_MMU_BANK_Relative] = mask;
 }
 
 Byte Bank_Get(Byte bank, Word address)
@@ -90,12 +89,12 @@ void Bank_Set(Byte bank, Word address, Byte value)
 
 void Stack_Set(Byte offset, Byte value)
 {
-  sChipRam[Chip_StackEnd_Relative - offset] = value;
+  sChipRam[Chip_STACK_END_Relative - offset] = value;
 }
 
 Byte Stack_Get(Byte offset)
 {
-  return sChipRam[Chip_StackEnd_Relative - offset];
+  return sChipRam[Chip_STACK_END_Relative - offset];
 }
 
 void Shared_Set(Word absoluteAddress, Byte value)
@@ -111,6 +110,61 @@ Byte Shared_Get(Word absoluteAddress)
 Byte* Shared_GetPtr()
 {
   return sSharedRam;
+}
+
+void Mmu_Int_MemCpy()
+{
+  Word dst, src, length;
+  dst    = ChipRam_GetWord(Chip_MMU_W1_Relative);
+  src    = ChipRam_GetWord(Chip_MMU_W2_Relative);
+  length = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~SHARED_SIZE;
+
+  //LOGF("Mmu_Int_MemCpy: Dst=%4x Src=%4x Length=%4x", dst, src, length);
+
+  if (dst < SHARED_BANK_0 || src < SHARED_BANK_0)
+  {
+    LOGF("Mmu_Int_MemCpy: ** Not in shared ram!");
+    // Memcpy only on shared ram.
+    return;
+  }
+
+  dst -= SHARED_BANK_0;
+  src -= SHARED_BANK_0;
+
+  for(Word ii=0;ii < length;ii++)
+  {
+    sSharedRam[dst] = sProgramRam[src];
+    ++dst;
+    ++src;
+  }
+}
+
+void Mmu_Int_MemSet()
+{
+  
+  Word dst, length;
+  Byte value;
+  
+  value  = ChipRam_Get(Chip_MMU_B1_Relative);
+  dst    = ChipRam_GetWord(Chip_MMU_W1_Relative);
+  length = ChipRam_GetWord(Chip_MMU_W2_Relative) & ~SHARED_SIZE;
+
+ // LOGF("Mmu_Int_MemSet: Value=%2x Dst=%4x Length=%i", value, dst, length);
+
+  if (dst < SHARED_BANK_0)
+  {
+    LOGF("Mmu_Int_MemSet: ** Not in shared ram!");
+    // Memset only on shared ram.
+    return;
+  }
+
+  dst -= SHARED_BANK_0;
+
+  for (Word ii = 0; ii < length; ii++)
+  {
+    sSharedRam[dst] = value;
+    ++dst;
+  }
 }
 
 void Mmu_Setup()

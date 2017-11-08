@@ -13,5 +13,5 @@ Ax,"or y,a","or z,x","or z,y","or z,w","or z,a","or w,x","or w,y","or w,z","or w
 Bx,"not w","not a","xor x,x","xor x,y","xor x,z","xor x,w","xor x,a","xor y,x","xor y,y","xor y,z","xor y,w","xor y,a","xor z,x","xor z,y","xor z,z","xor z,w",
 Cx,"xor z,a","xor w,x","xor w,y","xor w,z","xor w,w","xor w,a","xor a,x","xor a,y","xor a,z","xor a,w","xor a,a","shl x","shl y","shl z","shl w","shl a",
 Dx,"shr x","shr y","shr z","shr w","shr a","rol x","rol y","rol z","rol w","rol a","ror x","ror y","ror z","ror w","ror a","jmp $0000",
-Ex,"jmp x,y","jmp z,w","jmp x+$0000","jmp y+$0000","jmp z+$0000","jmp w+$0000","jmp a+$0000","jmp.eq $0000","jmp.neq $0000","jmp.gt $0000","jmp.lt $0000","nop","nop","nop","nop","nop",
+Ex,"jmp x,y","jmp z,w","jmp x+$0000","jmp y+$0000","jmp z+$0000","jmp w+$0000","jmp a+$0000","jmp.eq $0000","jmp.neq $0000","jmp.gt $0000","jmp.lt $0000","int","nop","nop","nop","nop",
 Fx,"nop","nop","nop","nop","nop","nop","nop","nop","nop","nop","nop","nop","nop","nop","nop","nop",

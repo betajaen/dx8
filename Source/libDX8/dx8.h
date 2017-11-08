@@ -144,4 +144,31 @@ Byte IoMmu_Get(Word address);
 
 bool Mmu_CopyToProgramRam(void* data, int length);
 
+#define Program_Begin (0x0000)
+#define Chip_Begin    (0x4000)
+#define Shared_Begin  (0x8000)
+#define Gpu_Begin     (0x5000)
+#define Sfx_Begin     (0x6000)
+#define Io_Begin      (0x7000)
+
+enum
+{
+#ifdef ADDRESS
+#undef ADDRESS
+#endif
+#define ADDRESS(RAM, NAME, VALUE) RAM##_##NAME = RAM##_Begin + VALUE, RAM##_##NAME##_Relative = VALUE,
+#include "dx8_Memory_Addresses.inc"
+#undef ADDRESS
+};
+
+enum
+{
+#ifdef INTERRUPT
+#undef INTERRUPT
+#endif
+#define INTERRUPT(N, V, D) N = V,
+#include "dx8_Interrupts.inc"
+#undef INTERRUPT
+};
+
 #endif

@@ -31,6 +31,7 @@
 
 #include "dx8.h"
 #include <string.h>
+#include "log_c/src/log.h"
 
 Cpu cpu;
 
@@ -68,6 +69,7 @@ void Mmu_Reset();
 
 void Cpu_Reset(bool soft)
 {
+  LOGF("Cpu Reset. Soft = %i", soft);
   memset(&cpu, 0, sizeof(Cpu));
   if (!soft)
   {
@@ -108,15 +110,15 @@ void Cpu_Reset(bool soft)
 #define DO_OP_POP(R0)               R0 = PopFromStack(cpu);           REG_PC += Opf_Single; 
 #define DO_OP_LOAD(R0)              R0 = LoadFromMemory(data.w);      REG_PC += Opf_Address;
 #define DO_OP_STORE(R0)             StoreToMemory(data.w, R0);        REG_PC += Opf_Address;
-#define DO_OP_CALL()                Do_Call(0, data.w);
+#define DO_OP_CALL()                Do_Call(Opf_Address, data.w);
 #define DO_OP_RETURN()              Return(cpu);
 #define DO_OP_SET(R0)               R0 = data.lo;                     REG_PC += Opf_Byte;
-#define DO_OP_ADD(R0, R1)           R0 += R1;                         REG_PC += Opf_Single;
+#define DO_OP_ADD(R0, R1)           R0 += R1;             REG_PC += Opf_Single;
 #define DO_OP_SUB(R0, R1)           R0 -= R1;                         REG_PC += Opf_Single;
 #define DO_OP_MUL(R0, R1)           R0 *= R1;                         REG_PC += Opf_Single;
 #define DO_OP_AND(R0, R1)           R0 &= R1;                         REG_PC += Opf_Single;
 #define DO_OP_OR(R0, R1)            R0 |= R1;                         REG_PC += Opf_Single;
-#define DO_OP_XOR(R0, R1)           R0 ^= R1;                         REG_PC += Opf_Single;
+#define DO_OP_XOR(R0, R1)           R0 ^= R1;                       REG_PC += Opf_Single;
 #define DO_OP_NOT(R0)               R0 = ~R0;                         REG_PC += Opf_Single;
 #define DO_OP_SHIFT_LEFT(R0)        R0 <<= 1;                         REG_PC += Opf_Byte;  
 #define DO_OP_SHIFT_RIGHT(R0)       R0 >>= 1;                         REG_PC += Opf_Byte;  
@@ -130,17 +132,20 @@ void Cpu_Reset(bool soft)
 #define DO_OP_JMP_NEQ()             JumpCond(FL_Z == 0, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_GT()              JumpCond(FL_N == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_LT()              JumpCond(FL_C == 1, data.w, REG_PC + Opf_Address);
+#define DO_OP_INT()                 DoInterrupt(data.lo);              REG_PC += Opf_Byte;
 
 inline void PushToStack(Byte value)
 {
   Stack_Set(cpu.stack, value);
   ++cpu.stack;
+ // LOGF("Pushed %02X to stack. Stack size is %i", value, cpu.stack);
 }
 
 inline Byte PopFromStack()
 {
-  Byte value = Stack_Get(cpu.stack);
   --cpu.stack;
+  Byte value = Stack_Get(cpu.stack);
+ // LOGF("Popped %02X from stack. Stack size is %i", value, cpu.stack);
   return value;
 }
 
@@ -155,8 +160,9 @@ inline void Do_Call(Byte lo_offset, Word callAddress)
 
 inline void Return()
 {
-  cpu.pc.hi = PopFromStack(cpu);
-  cpu.pc.lo = PopFromStack(cpu);
+  cpu.pc.hi = PopFromStack();
+  cpu.pc.lo = PopFromStack();
+ // LOGF("Return Pc = %i, lo=%i, hi=%i", cpu.pc.w, cpu.pc.lo, cpu.pc.hi);
 }
 
 inline Byte LoadFromMemory(Word address)
@@ -216,6 +222,39 @@ inline void BranchCond(bool cond, Word ifTrue, Word ifFalse)
   }
 }
 
+void Mmu_Int_MemCpy();
+void Mmu_Int_MemSet();
+
+inline void DoInterrupt(Byte name)
+{
+ // LOGF("Interrupt for %i", name);
+  switch(name)
+  {
+    case INT_MMU_MEMCPY:
+      Mmu_Int_MemCpy();
+      return;
+    case INT_MMU_MEMSET:
+      Mmu_Int_MemSet();
+      return;
+    case INT_MMU_RSTSFT:
+      Cpu_Reset(true);
+      return;
+  }
+ // LOGF("** Unknown Interrupt %i", name);
+}
+
+#undef OP
+
+#define QUOTE(name) #name
+#define STR(macro) QUOTE(macro)
+
+#define OP(OP, A,B,C,D)  STR(OP),
+
+const char* OpcodeStr[] = {
+#include "dx8_Cpu_Opcodes.inc"
+};
+
+
 int Cpu_Step()
 {
   Byte opcode  = Mmu_Get(REG_PC);
@@ -223,11 +262,15 @@ int Cpu_Step()
   data.lo = Mmu_Get(REG_PC + 1);
   data.hi = Mmu_Get(REG_PC + 2);
   
+ // LOGF("Step %Pc: %4x, Op: %2x Lo:%2x Hi: %2x", REG_PC, opcode, data.lo, data.hi);
+
 #undef OP
 #define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; return TIME;
 
   cpu.lastOpcode = opcode;
   cpu.lastOperand = data.w;
+
+ // LOGF("OPCODE = %s:%i", OpcodeStr[opcode], opcode);
 
   switch(opcode)
   {
@@ -341,7 +384,10 @@ int Cpu_Cycle(int ms)
   else
   {
     // Temp. Will need to call this multiple times, based on time passed
-    Cpu_Step();
+    for(int i=0;i < 1000;i++)
+    {
+      Cpu_Step();
+    }
   }
   
   Gpu_Cycle();

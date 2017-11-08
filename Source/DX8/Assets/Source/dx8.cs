@@ -106,6 +106,8 @@ namespace DX8
     public  string                 RomPath = @"C:\dev\dx8\ROMS\test_add.bin";
     public  int                    LastSteps = 0;
     public  Texture2D              Crt;
+    public  bool FirstCycle = false;
+
 
 #if UNITY_EDITOR
     static System.IO.FileSystemWatcher DllWatcher;
@@ -160,6 +162,7 @@ namespace DX8
       if (r == 0)
       {
         IsOpen = true;
+        FirstCycle = true;
       }
       else
       {
@@ -266,14 +269,7 @@ namespace DX8
 
       if (GUI.Button(new Rect(300, 0, 100, 25), "Load"))
       {
-        byte[] data = System.IO.File.ReadAllBytes(RomPath);
-        IntPtr romPtr = Marshal.AllocHGlobal(data.Length);
-        Marshal.Copy(data, 0, romPtr, data.Length);
-        
-        Library.Call(Api.HardReset, 0);
-        int r = Library.SetData(Api.ProgramRam, romPtr, data.Length);
-        Debug.LogFormat("Loaded Program = {0}, Length: {1}", r, data.Length);
-        Marshal.FreeHGlobal(romPtr);
+        LoadProgram();
       }
       
       if (GUI.Button(new Rect(400, 0, 100, 25), "Save Crt"))
@@ -296,11 +292,16 @@ namespace DX8
           Library.GetValue(Api.LastOperand)
        ));
 
-       GUI.DrawTexture(new Rect(Screen.width / 2 - 640 / 2, Screen.height / 2 - 400 / 2, 640, 400), Crt);
+        GUI.DrawTexture(new Rect(Screen.width / 2 - 640 / 2, Screen.height / 2 + 400 / 2, 640, -400), Crt);
     }
 
     void RunOnce(float timeSec)
     {
+      if (FirstCycle)
+      {
+        LoadProgram();
+        FirstCycle = false;
+      }
       int ms = (int) (timeSec * 1000.0f);
       LastSteps = Library.Call(Api.CycleFn, ms);
       UpdateCrt();
@@ -314,6 +315,18 @@ namespace DX8
         Crt.LoadRawTextureData(crt, 640 * 400 * 3);
         Crt.Apply();
       }
+    }
+
+    void LoadProgram()
+    {
+      byte[] data = System.IO.File.ReadAllBytes(RomPath);
+      IntPtr romPtr = Marshal.AllocHGlobal(data.Length);
+      Marshal.Copy(data, 0, romPtr, data.Length);
+        
+      Library.Call(Api.HardReset, 0);
+      int r = Library.SetData(Api.ProgramRam, romPtr, data.Length);
+      Debug.LogFormat("Loaded Program = {0}, Length: {1}", r, data.Length);
+      Marshal.FreeHGlobal(romPtr);
     }
 
   }

@@ -8,6 +8,15 @@ namespace DX8
 {
   public class OpcodeCompiler
   {
+    public static Dictionary<string, int> AddressRanges = new Dictionary<string, int> {
+      {"Program", 0x0000},
+      {"Chip",    0x4000},
+      {"Shared",  0x8000},
+      {"Gpu",     0x5000},
+      {"Sfx",     0x6000},
+      {"Io",      0x7000},
+    };
+
     public enum Opcode
     {
       Nop,
@@ -36,6 +45,7 @@ namespace DX8
       JmpNeq,
       JmpGt,
       JmpLt,
+      Int,
       COUNT
     }
 
@@ -65,7 +75,8 @@ namespace DX8
       "jmp.eq",
       "jmp.neq",
       "jmp.gt",
-      "jmp.lt"
+      "jmp.lt",
+      "int"
     };
 
     public enum Operand
@@ -309,9 +320,37 @@ namespace DX8
       
     }
 
-    public static String MakeMacros(List<Op> opcodes)
+    public static String MakeMacros(List<Op> opcodes, Dictionary<string, int> constants, Dictionary<string, KeyValuePair<int, string>> interrupts)
     {
       System.Text.StringBuilder sb = new System.Text.StringBuilder(4096);
+      
+      // Constants
+
+      sb.AppendLine("; Common Addresses and Registers");
+
+      foreach(var constant in constants)
+      {
+        sb.AppendFormat("{0} = ${1:X4}", constant.Key, constant.Value);
+        sb.AppendLine();
+      }
+      
+      sb.AppendLine();
+      
+      // Interrupts
+      
+      sb.AppendLine("; Interrupts commands (int $01)");
+
+      foreach(var interrupt in interrupts)
+      {
+        sb.AppendFormat("{0} = ${1:X2}    ; {2}", interrupt.Key, interrupt.Value.Key, interrupt.Value.Value);
+        sb.AppendLine();
+      }
+      
+      sb.AppendLine();
+
+      // Macros
+      
+      sb.AppendLine("; X8 Processor Instructions");
       
       List<string> done = new List<string>(256);
 
@@ -333,7 +372,6 @@ namespace DX8
         }
 
         string name = OpcodeAsm[(int) opcode];
-        Debug.Log(ops.Count);
 
         if (ops.Count == 0)
           continue;
@@ -376,6 +414,13 @@ namespace DX8
             sb.Append("  else");
             sb.AppendLine();
             DbForOpCode(ref sb, elseOp, 2);
+          }
+          else
+          {
+            sb.Append("  else");
+            sb.AppendLine();
+            sb.Append("    error SyntaxError");
+            sb.AppendLine();
           }
 
           sb.AppendLine("  end if");
@@ -444,7 +489,7 @@ namespace DX8
 
       return sb.ToString();
     }
-
+    
     public static List<Op> GenerateOpcodes(String path)
     {
       List<Op> ops = new List<Op>(256);
@@ -541,6 +586,76 @@ namespace DX8
 
 
       return ops;
+    }
+
+    public static Dictionary<string, int> Generate_AddressConstants(String path)
+    {
+      Dictionary<string, int> constants = new Dictionary<string, int>(100);
+
+      String[] lines = System.IO.File.ReadAllLines(path);
+      
+      for(int ii=0;ii < lines.Length;ii++)
+      {
+        
+        Match match = Regex.Match(lines[ii], @"ADDRESS\(\s*(\w+)\s*,\s*(\w+)\s*,\s*0x(\w+)\s*\)", RegexOptions.IgnoreCase);
+
+        if (!match.Success)
+          continue;
+
+        string rangeStr  = match.Groups[1].Value;
+        string name      = match.Groups[2].Value;
+        string valueStr  = match.Groups[3].Value;
+        
+        int range;
+        if (!AddressRanges.TryGetValue(rangeStr, out range))
+        {
+          Debug.LogWarningFormat("Bad Syntax (Range): {0}", lines[ii]);
+          continue;
+        }
+
+        int value;
+        if (!Int32.TryParse(valueStr, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out value))
+        {
+          Debug.LogWarningFormat("Bad Syntax (Value '{0}'): {1}", valueStr, lines[ii]);
+          continue;
+        }
+        
+        constants.Add(name, range + value);
+
+      }
+
+      return constants;
+    }
+    
+    public static Dictionary<string, KeyValuePair<int, string>> Generate_Interrupts(String path)
+    {
+      Dictionary<string, KeyValuePair<int, string> > interrupts = new Dictionary<string, KeyValuePair<int, string>>(100);
+
+      String[] lines = System.IO.File.ReadAllLines(path);
+      
+      for(int ii=0;ii < lines.Length;ii++)
+      {
+        Match match = Regex.Match(lines[ii], @"INTERRUPT\(\s*(\w+)\s*,\s*0x(\w+)\s*,\s*""(.+)""", RegexOptions.IgnoreCase);
+
+        if (!match.Success)
+          continue;
+
+        string name  = match.Groups[1].Value;
+        string valueStr  = match.Groups[2].Value;
+        string desc = match.Groups[3].Value;
+        
+        int value;
+        if (!Int32.TryParse(valueStr, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out value))
+        {
+          Debug.LogWarningFormat("Bad Syntax (Value '{0}'): {1}", valueStr, lines[ii]);
+          continue;
+        }
+        
+        interrupts.Add(name, new KeyValuePair<int, string>(value, desc));
+
+      }
+
+      return interrupts;
     }
 
   }

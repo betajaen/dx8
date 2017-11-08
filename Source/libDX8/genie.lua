@@ -24,7 +24,9 @@ solution "DX8"
       "*.c",
       "*.h",
       "*.inc",
-      "genie.lua"
+      "genie.lua",
+      "log_c/src/log.c",
+      "log_c/src/log.h"
   }
 
   project "libDX8-DevKit"

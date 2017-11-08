@@ -30,7 +30,7 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
-
+#include "log_c/src/log.h"
 
 #if defined(_WIN32)
 #define EXPORT extern __declspec(dllexport)
@@ -52,8 +52,12 @@ void Gpu_Teardown();
 
 bool Crt_IsDirty();
 
+FILE* logFp;
+
 EXPORT int Initialise()
 {
+  logFp = fopen("dx8.log", "w+");
+  log_set_fp(logFp);
   Mmu_Setup();
   Gpu_Setup();
   Cpu_Reset(true);
@@ -64,6 +68,7 @@ EXPORT int Shutdown()
 {
   Mmu_Teardown();
   Gpu_Teardown();
+  fclose(logFp);
   return 0;
 }
 

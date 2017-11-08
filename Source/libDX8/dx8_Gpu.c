@@ -42,11 +42,6 @@
 
 #define GPU_MEM_SIZE 0x100
 
-enum GpuVariable
-{
-  Gpu_Mode_Relative = 0x0000,
-};
-
 #define CRT_W 640
 #define CRT_H 400
 #define CRT_DEPTH 3
@@ -75,56 +70,56 @@ typedef struct
 #define FAST_CLR(XY)       sSharedRamInt[XY>5] &= ~(1 << (XY&31))
 #define FAST_GET(XY)       (sSharedRamInt[XY>>5] & 1 << (XY&31))
 
-#define GPU_TXT_MODE(ID, COLS, ROWS, PLANES) \
+#define DEF_GPU_TXT_MODE(ID, COLS, ROWS, PLANES) \
   { COLS * 8, ROWS * 8, PLANES, CRT_W / (COLS * 8), CRT_H / (ROWS * 8), true }
 
-#define GPU_GFX_MODE(ID, W, H, PLANES) \
+#define DEF_GPU_GFX_MODE(ID, W, H, PLANES) \
   { W, H, PLANES, CRT_W / W, CRT_H / H, false }
 
 #define START_MODE 21
 GpuMode kModes[] = {
-  GPU_TXT_MODE(0, 20, 10, 4),
-  GPU_TXT_MODE(1, 40, 25, 4),
-  GPU_TXT_MODE(2, 80, 25, 2),
-  GPU_TXT_MODE(3, 80, 50, 2),
-  GPU_TXT_MODE(4, 80, 50, 1),
+  DEF_GPU_TXT_MODE(0, 20, 10, 4),
+  DEF_GPU_TXT_MODE(1, 40, 25, 4),
+  DEF_GPU_TXT_MODE(2, 80, 25, 2),
+  DEF_GPU_TXT_MODE(3, 80, 50, 2),
+  DEF_GPU_TXT_MODE(4, 80, 50, 1),
 
-  GPU_GFX_MODE(5, 80, 50, 8),
-  GPU_GFX_MODE(6, 80, 50, 4),
-  GPU_GFX_MODE(7, 80, 50, 2),
-  GPU_GFX_MODE(8, 80, 50, 1),
+  DEF_GPU_GFX_MODE(5, 80, 50, 8),
+  DEF_GPU_GFX_MODE(6, 80, 50, 4),
+  DEF_GPU_GFX_MODE(7, 80, 50, 2),
+  DEF_GPU_GFX_MODE(8, 80, 50, 1),
 
-  GPU_GFX_MODE(9,  128, 80, 8),
-  GPU_GFX_MODE(10, 128, 80, 4),
-  GPU_GFX_MODE(11, 128, 80, 2),
-  GPU_GFX_MODE(12, 128, 80, 1),
+  DEF_GPU_GFX_MODE(9,  128, 80, 8),
+  DEF_GPU_GFX_MODE(10, 128, 80, 4),
+  DEF_GPU_GFX_MODE(11, 128, 80, 2),
+  DEF_GPU_GFX_MODE(12, 128, 80, 1),
 
-  GPU_GFX_MODE(13, 160, 80, 8),
-  GPU_GFX_MODE(14, 160, 80, 4),
-  GPU_GFX_MODE(15, 160, 80, 2),
-  GPU_GFX_MODE(16, 160, 80, 1),
+  DEF_GPU_GFX_MODE(13, 160, 80, 8),
+  DEF_GPU_GFX_MODE(14, 160, 80, 4),
+  DEF_GPU_GFX_MODE(15, 160, 80, 2),
+  DEF_GPU_GFX_MODE(16, 160, 80, 1),
 
-  GPU_GFX_MODE(17, 160, 100, 8),
-  GPU_GFX_MODE(18, 160, 100, 4),
-  GPU_GFX_MODE(19, 160, 100, 2),
-  GPU_GFX_MODE(20, 160, 100, 1),
+  DEF_GPU_GFX_MODE(17, 160, 100, 8),
+  DEF_GPU_GFX_MODE(18, 160, 100, 4),
+  DEF_GPU_GFX_MODE(19, 160, 100, 2),
+  DEF_GPU_GFX_MODE(20, 160, 100, 1),
 
-  GPU_GFX_MODE(21, 320, 100, 8),
-  GPU_GFX_MODE(22, 320, 100, 4),
-  GPU_GFX_MODE(23, 320, 100, 2),
-  GPU_GFX_MODE(24, 320, 100, 1),
+  DEF_GPU_GFX_MODE(21, 320, 100, 8),
+  DEF_GPU_GFX_MODE(22, 320, 100, 4),
+  DEF_GPU_GFX_MODE(23, 320, 100, 2),
+  DEF_GPU_GFX_MODE(24, 320, 100, 1),
 
-  GPU_GFX_MODE(25, 320, 200, 8),
-  GPU_GFX_MODE(26, 320, 200, 4),
-  GPU_GFX_MODE(27, 320, 200, 2),
-  GPU_GFX_MODE(28, 320, 200, 1),
+  DEF_GPU_GFX_MODE(25, 320, 200, 8),
+  DEF_GPU_GFX_MODE(26, 320, 200, 4),
+  DEF_GPU_GFX_MODE(27, 320, 200, 2),
+  DEF_GPU_GFX_MODE(28, 320, 200, 1),
 
-  GPU_GFX_MODE(29, 640, 200, 4),
-  GPU_GFX_MODE(30, 640, 200, 2),
-  GPU_GFX_MODE(31, 640, 200, 1),
+  DEF_GPU_GFX_MODE(29, 640, 200, 4),
+  DEF_GPU_GFX_MODE(30, 640, 200, 2),
+  DEF_GPU_GFX_MODE(31, 640, 200, 1),
 
-  GPU_GFX_MODE(32, 640, 400, 2),
-  GPU_GFX_MODE(33, 640, 400, 1)
+  DEF_GPU_GFX_MODE(32, 640, 400, 2),
+  DEF_GPU_GFX_MODE(33, 640, 400, 1)
 };
 
 inline void SetCrt(int X, int Y, Byte R, Byte G, Byte B)
@@ -178,7 +173,7 @@ void Gpu_Setup()
   
   memset(sCrt, 0x00, CRT_W * CRT_H * CRT_DEPTH);
 
-  GpuMmu_Set(Gpu_Mode_Relative, START_MODE); // 80x50
+  GpuMmu_Set(Gpu_GFX_MODE_Relative, START_MODE); // 80x50
   
   GpuMode* mode = &kModes[START_MODE];
 
@@ -217,9 +212,11 @@ Byte GpuMmu_Get(Word address)
   return sGpuMem[address & GPU_MEM_SIZE];
 }
 
+Byte activity = 0;
+
 void Gpu_Cycle()
 {
-  Byte currentMode = GpuMmu_Get(Gpu_Mode_Relative);
+  Byte currentMode = GpuMmu_Get(Gpu_GFX_MODE_Relative);
 
   // Screen mode out of range.
   if (currentMode >= 33)
@@ -228,10 +225,7 @@ void Gpu_Cycle()
     {
       for (int jj = 0; jj < CRT_H; jj++)
       {
-        if ((ii + jj) % 2 == 0)
-          SetCrt(ii, jj, 255, 255, 255);
-        else
-          SetCrt(ii, jj, 0, 0, 0);
+        SetCrt(ii, jj, 255, 0, 0);
       }
     }
     sCrtDirty = true;
@@ -258,6 +252,13 @@ void Gpu_Cycle()
     }
   }
 
+  Byte ar = rand() % 255, ag = rand() % 255, ab = rand() % 255;
+
+  SetCrt(0, 0, ar, ag, ab);
+  SetCrt(0, 1, ar, ag, ab);
+  SetCrt(1, 0, ar, ag, ab);
+  SetCrt(1, 1, ar, ag, ab);
+  
   sCrtDirty = true;
 }
 

@@ -250,18 +250,18 @@ OP(ShiftRight, w, Opf_Single, 1, { DO_OP_SHIFT_RIGHT(REG_W); })
 OP(ShiftRight, a, Opf_Single, 1, { DO_OP_SHIFT_RIGHT(REG_A); })
 
 // Roll Left
-OP(RollLeft, x, Opf_Single, 1, { DO_OP_SHIFT_LEFT(REG_X); })
-OP(RollLeft, y, Opf_Single, 1, { DO_OP_SHIFT_LEFT(REG_Y); })
-OP(RollLeft, z, Opf_Single, 1, { DO_OP_SHIFT_LEFT(REG_Z); })
-OP(RollLeft, w, Opf_Single, 1, { DO_OP_SHIFT_LEFT(REG_W); })
-OP(RollLeft, a, Opf_Single, 1, { DO_OP_SHIFT_LEFT(REG_A); })
+OP(RollLeft, x, Opf_Single, 1, { DO_OP_ROLL_LEFT(REG_X); })
+OP(RollLeft, y, Opf_Single, 1, { DO_OP_ROLL_LEFT(REG_Y); })
+OP(RollLeft, z, Opf_Single, 1, { DO_OP_ROLL_LEFT(REG_Z); })
+OP(RollLeft, w, Opf_Single, 1, { DO_OP_ROLL_LEFT(REG_W); })
+OP(RollLeft, a, Opf_Single, 1, { DO_OP_ROLL_LEFT(REG_A); })
 
 // Roll Right
-OP(RollRight, x, Opf_Single, 1, { DO_OP_SHIFT_RIGHT(REG_X); })
-OP(RollRight, y, Opf_Single, 1, { DO_OP_SHIFT_RIGHT(REG_Y); })
-OP(RollRight, z, Opf_Single, 1, { DO_OP_SHIFT_RIGHT(REG_Z); })
-OP(RollRight, w, Opf_Single, 1, { DO_OP_SHIFT_RIGHT(REG_W); })
-OP(RollRight, a, Opf_Single, 1, { DO_OP_SHIFT_RIGHT(REG_A); })
+OP(RollRight, x, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_X); })
+OP(RollRight, y, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_Y); })
+OP(RollRight, z, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_Z); })
+OP(RollRight, w, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_W); })
+OP(RollRight, a, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_A); })
 
 // Jmp
 OP(Jmp, Address, Opf_Address, 2, { REG_PC = data.w & ~PROGRAM_SIZE; })
@@ -284,3 +284,6 @@ OP(JmpGt, Address, Opf_Address, 2, { DO_OP_JMP_GT(); })
 
 // Jmp Lt
 OP(JmpLt, Address, Opf_Address, 2, { DO_OP_JMP_LT(); })
+
+// Interrupt
+OP(Int, None, Opf_Byte, 4, { DO_OP_INT(); })

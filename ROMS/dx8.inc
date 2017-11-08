@@ -1,3 +1,19 @@
+; Common Addresses and Registers
+MMU_BANK = $4000
+MMU_B1 = $4010
+MMU_B2 = $4011
+MMU_W1 = $4012
+MMU_W2 = $4014
+MMU_W3 = $4016
+STACK_END = $4200
+GFX_MODE = $5000
+
+; Interrupts commands (int $01)
+INT_MMU_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length.
+INT_MMU_MEMCPY = $02    ; Copy Shared Memory: W1=dst W2=src W3=length.
+INT_MMU_RSTSFT = $FF    ; Soft Reset
+
+; X8 Processor Instructions
 macro nop [A, B] {
   ; [$00] nop
   db $00
@@ -18,6 +34,8 @@ macro push [A, B] {
   else if A eq a
     ; [$05] push a
     db $05
+  else
+    error SyntaxError
   end if
 }
 macro pop [A, B] {
@@ -36,6 +54,8 @@ macro pop [A, B] {
   else if A eq a
     ; [$0A] pop a
     db $0A
+  else
+    error SyntaxError
   end if
 }
 macro load [A, B] {
@@ -59,6 +79,8 @@ macro load [A, B] {
     ; [$0F] load a,$0000
     db $0F
     dw B
+  else
+    error SyntaxError
   end if
 }
 macro store [A, B] {
@@ -82,6 +104,8 @@ macro store [A, B] {
     ; [$14] store a,$0000
     db $14
     dw B
+  else
+    error SyntaxError
   end if
 }
 macro call [A, B] {
@@ -114,6 +138,8 @@ macro set [A, B] {
     ; [$1B] set a,#$00
     db $1B
     db B
+  else
+    error SyntaxError
   end if
 }
 macro add [A, B] {
@@ -192,6 +218,8 @@ macro add [A, B] {
   else if A eq a & B eq a
     ; [$34] add a,a
     db $34
+  else
+    error SyntaxError
   end if
 }
 macro sub [A, B] {
@@ -270,6 +298,8 @@ macro sub [A, B] {
   else if A eq a & B eq a
     ; [$4D] sub a,a
     db $4D
+  else
+    error SyntaxError
   end if
 }
 macro mul [A, B] {
@@ -348,6 +378,8 @@ macro mul [A, B] {
   else if A eq a & B eq a
     ; [$66] mul a,a
     db $66
+  else
+    error SyntaxError
   end if
 }
 macro and [A, B] {
@@ -411,6 +443,8 @@ macro and [A, B] {
   else if A eq a & B eq w
     ; [$98] and a,w
     db $98
+  else
+    error SyntaxError
   end if
 }
 macro or [A, B] {
@@ -474,6 +508,8 @@ macro or [A, B] {
   else if A eq a & B eq w
     ; [$AC] or a,w
     db $AC
+  else
+    error SyntaxError
   end if
 }
 macro xor [A, B] {
@@ -552,6 +588,8 @@ macro xor [A, B] {
   else if A eq a & B eq a
     ; [$CA] xor a,a
     db $CA
+  else
+    error SyntaxError
   end if
 }
 macro not [A, B] {
@@ -570,6 +608,8 @@ macro not [A, B] {
   else if A eq a
     ; [$B1] not a
     db $B1
+  else
+    error SyntaxError
   end if
 }
 macro shl [A, B] {
@@ -588,6 +628,8 @@ macro shl [A, B] {
   else if A eq a
     ; [$CF] shl a
     db $CF
+  else
+    error SyntaxError
   end if
 }
 macro shr [A, B] {
@@ -606,6 +648,8 @@ macro shr [A, B] {
   else if A eq a
     ; [$D4] shr a
     db $D4
+  else
+    error SyntaxError
   end if
 }
 macro rol [A, B] {
@@ -624,6 +668,8 @@ macro rol [A, B] {
   else if A eq a
     ; [$D9] rol a
     db $D9
+  else
+    error SyntaxError
   end if
 }
 macro ror [A, B] {
@@ -642,6 +688,8 @@ macro ror [A, B] {
   else if A eq a
     ; [$DE] ror a
     db $DE
+  else
+    error SyntaxError
   end if
 }
 macro cmp [A, B] {
@@ -720,6 +768,8 @@ macro cmp [A, B] {
   else if A eq a & B eq a
     ; [$7F] cmp a,a
     db $7F
+  else
+    error SyntaxError
   end if
 }
 macro cmpbit [A, B] {
@@ -743,6 +793,8 @@ macro cmpbit [A, B] {
     ; [$84] cmpbit a,#$00
     db $84
     db B
+  else
+    error SyntaxError
   end if
 }
 macro jmp [A, B] {
@@ -797,4 +849,9 @@ macro jmp.lt [A, B] {
   ; [$EA] jmp.lt $0000
   db $EA
   dw A
+}
+macro int [A, B] {
+  ; [$EB] int
+  db $EB
+  db B
 }
