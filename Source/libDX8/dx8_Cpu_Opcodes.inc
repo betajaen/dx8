@@ -123,6 +123,20 @@ OP(Mul, az, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_Z); })
 OP(Mul, aw, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_W); })
 OP(Mul, aa, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_A); })
 
+// Inc
+OP(Inc, x, Opf_Single, 1, {DO_OP_INC(REG_X);})
+OP(Inc, y, Opf_Single, 1, {DO_OP_INC(REG_Y);})
+OP(Inc, z, Opf_Single, 1, {DO_OP_INC(REG_Z);})
+OP(Inc, w, Opf_Single, 1, {DO_OP_INC(REG_W);})
+OP(Inc, a, Opf_Single, 1, {DO_OP_INC(REG_A);})
+
+// Dec
+OP(Dec, x, Opf_Single, 1, {DO_OP_DEC(REG_X);})
+OP(Dec, y, Opf_Single, 1, {DO_OP_DEC(REG_Y);})
+OP(Dec, z, Opf_Single, 1, {DO_OP_DEC(REG_Z);})
+OP(Dec, w, Opf_Single, 1, {DO_OP_DEC(REG_W);})
+OP(Dec, a, Opf_Single, 1, {DO_OP_DEC(REG_A);})
+
 // Cmp
 OP(Cmp, xx, Opf_Single, 3, { DO_OP_CMP(REG_X, REG_X); })
 OP(Cmp, xy, Opf_Single, 3, { DO_OP_CMP(REG_X, REG_Y); })
@@ -284,6 +298,9 @@ OP(JmpGt, A, Opf_Address, 2, { DO_OP_JMP_GT(); })
 
 // Jmp Lt
 OP(JmpLt, A, Opf_Address, 2, { DO_OP_JMP_LT(); })
+
+// Jmp If Zero
+OP(JmpZ, A, Opf_Address, 2, { DO_OP_JMP_Z(); })
 
 // Interrupt
 OP(Int, B, Opf_Byte, 4, { DO_OP_INT(); })

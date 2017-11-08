@@ -3,9 +3,16 @@ include "macros.inc"
 
 jmp MAIN
 
-include "logo.png.s"
-include "left.png.s"
-include "right.png.s"
+; Wait A cycles
+DELAY:
+        jmp.z DELAY_DONE
+        dec a
+        jmp.z DELAY_DONE
+        nop
+        jmp DELAY
+
+        DELAY_DONE:
+return
 
 ; Clear Display 0
 ; A = Pattern, 0x00 black, $FF white, $55/$AA dotted, etc.
@@ -16,6 +23,9 @@ CLS0:
         APOKE      MMU_W2,         $00           ; lo -- Length = $1000
         APOKE      MMU_W2+1,       $10           ; hi ..
         int        INT_MMU_MEMSET
+
+        set        a,              32
+        call       DELAY
 return
 
 ; Clear Display 1
@@ -57,23 +67,29 @@ return
 MAIN:
         APOKE    GFX_MODE, 5
 
-        set      x, IMG_LEFT_ADDR_LO
-        set      y, IMG_LEFT_ADDR_HI
-        set      z, IMG_LEFT_SIZE_LO
-        set      w, IMG_LEFT_SIZE_HI
-        call     PASTE0
-
-        ;set      a, $AA
-        ;call     CLS1
+        ;set      x, IMG_LEFT_ADDR_LO
+        ;set      y, IMG_LEFT_ADDR_HI
+        ;set      z, IMG_LEFT_SIZE_LO
+        ;set      w, IMG_LEFT_SIZE_HI
+        ;call     PASTE0
 
 
-        set      x, IMG_RIGHT_ADDR_LO
-        set      y, IMG_RIGHT_ADDR_HI
-        set      z, IMG_RIGHT_SIZE_LO
-        set      w, IMG_RIGHT_SIZE_HI
-        call     PASTE1
+        ;set      x, IMG_RIGHT_ADDR_LO
+        ;set      y, IMG_RIGHT_ADDR_HI
+        ;set      z, IMG_RIGHT_SIZE_LO
+        ;set      w, IMG_RIGHT_SIZE_HI
+        ;call     PASTE1
 
+        set      x, $00
 L1:
-        nop
+        inc      x
+        COPY     a, x
+        call     CLS0
         jmp L1
 
+
+
+
+include "logo.png.s"
+include "left.png.s"
+include "right.png.s"

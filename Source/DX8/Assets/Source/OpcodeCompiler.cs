@@ -30,6 +30,8 @@ namespace DX8
       Add,
       Sub,
       Mul,
+      Inc,
+      Dec,
       And,
       Or,
       Xor,
@@ -45,6 +47,7 @@ namespace DX8
       JmpNeq,
       JmpGt,
       JmpLt,
+      JmpZ,
       Int,
       COUNT
     }
@@ -61,6 +64,8 @@ namespace DX8
       "add",
       "sub",
       "mul",
+      "inc",
+      "dec",
       "and",
       "or",
       "xor",
@@ -76,6 +81,7 @@ namespace DX8
       "jmp.neq",
       "jmp.gt",
       "jmp.lt",
+      "jmp.z",
       "int"
     };
 

@@ -320,3 +320,214 @@ Byte Mmu_Get(Word address)
   }
   return 0;
 }
+
+typedef enum
+{
+  MmuOp_SharedMemSet,
+  MmuOp_SharedMemCopy,
+  MmuOp_Prog2SharedMemCopy,
+}  Mmu_Op;
+
+typedef struct
+{
+  Byte op;  // See Interrupts
+  Byte state;
+  Word cycles;
+  union
+  {
+    struct
+    {
+      Word dst, len;
+      Byte val;
+    } opMemSet;
+    struct
+    {
+      Word dst, src, len;
+    } opMemCpy;
+    struct
+    {
+      Word dst, src, len;
+    } opPrgCpy;
+  };
+} Mmu_CoroutineData;
+
+Mmu_CoroutineData mmuCoroutineData;
+
+#define MMU_DATA       mmuCoroutineData
+#define MMU_YIELD      return 2;
+#define MMU_RETURN     MMU_DATA.op = 0xFF; LOGF("Returned Coop");return 1;
+#define MMU_YIELD_FAIL MMU_DATA.state = 0xFF; MMU_DATA.op = 0xFF; LOGF("Failed Coop"); return -1;
+
+int Mmu_Coroutine_Start(Byte type)
+{
+  MMU_DATA.op = type;
+  MMU_DATA.cycles = 0;
+  MMU_DATA.state  = 0;
+
+  LOGF("op = %i", MMU_DATA.op);
+  LOGF("cycles = %i", MMU_DATA.cycles);
+  LOGF("state = %i", MMU_DATA.state);
+
+  switch(MMU_DATA.op)
+  {
+    case INT_MMU_MEMCPY:
+    {
+      MMU_DATA.cycles += 2;
+      MMU_DATA.opMemCpy.dst = ChipRam_GetWord(Chip_MMU_W1_Relative);
+      MMU_DATA.opMemCpy.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
+      MMU_DATA.opMemCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~SHARED_SIZE;
+
+      LOGF("ogMemCpy.dst = %i", MMU_DATA.opMemCpy.dst);
+      LOGF("ogMemCpy.src = %i", MMU_DATA.opMemCpy.src);
+      LOGF("ogMemCpy.len = %i", MMU_DATA.opMemCpy.len);
+
+      if (MMU_DATA.opMemCpy.src < SHARED_BANK_0 || 
+          MMU_DATA.opMemCpy.dst < SHARED_BANK_0)
+      {
+        MMU_YIELD_FAIL;
+      }
+
+      MMU_DATA.opMemCpy.src -= SHARED_BANK_0;
+      MMU_DATA.opMemCpy.dst -= SHARED_BANK_0;
+
+      MMU_YIELD;
+    }
+    break;
+    case INT_MMU_MEMSET:
+    {
+      MMU_DATA.cycles += 2;
+      MMU_DATA.opMemSet.dst = ChipRam_GetWord(Chip_MMU_W1_Relative);
+      MMU_DATA.opMemSet.len = ChipRam_GetWord(Chip_MMU_W2_Relative) & ~SHARED_SIZE;
+      MMU_DATA.opMemSet.val = ChipRam_Get(Chip_MMU_B1_Relative);
+
+      LOGF("ogMemSet.dst = %i", MMU_DATA.opPrgCpy.dst);
+      LOGF("ogMemSet.src = %i", MMU_DATA.opPrgCpy.src);
+      LOGF("ogMemSet.len = %i", MMU_DATA.opPrgCpy.len);
+
+      if (MMU_DATA.opMemSet.dst < SHARED_BANK_0)
+      {
+        MMU_YIELD_FAIL;
+      }
+
+      MMU_DATA.opMemSet.dst -= SHARED_BANK_0;
+
+      MMU_YIELD;
+    }
+    break;
+    case INT_MMU_PRGCPY:
+    {
+      MMU_DATA.cycles += 2;
+      MMU_DATA.opPrgCpy.dst = ChipRam_GetWord(Chip_MMU_W1_Relative) & ~PROGRAM_SIZE;
+      MMU_DATA.opPrgCpy.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
+      MMU_DATA.opPrgCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~SHARED_SIZE;
+
+      LOGF("ogPrgCpy.dst = %i", MMU_DATA.opPrgCpy.dst);
+      LOGF("ogPrgCpy.src = %i", MMU_DATA.opPrgCpy.src);
+      LOGF("ogPrgCpy.len = %i", MMU_DATA.opPrgCpy.len);
+
+      if (MMU_DATA.opPrgCpy.dst < SHARED_BANK_0 || 
+          MMU_DATA.opPrgCpy.src > PROGRAM_SIZE)
+      {
+        MMU_YIELD_FAIL;
+      }
+
+      MMU_DATA.opPrgCpy.dst -= SHARED_BANK_0;
+
+      MMU_YIELD;
+    }
+    break;
+  }
+  return 0;
+}
+
+int Mmu_Coroutine()
+{
+  if (MMU_DATA.op == 0xFF)
+    return 0;
+
+  switch(MMU_DATA.op)
+  {
+    case INT_MMU_MEMSET:
+    {
+      int subCycles = 64;
+
+      while(MMU_DATA.opMemSet.len > 0 || subCycles > 0)
+      {
+        sSharedRam[MMU_DATA.opMemSet.dst++] = MMU_DATA.opMemSet.val;
+        --subCycles;
+        --MMU_DATA.opMemSet.len;
+      }
+      
+      MMU_DATA.cycles++;
+      
+      if (MMU_DATA.opMemSet.len <= 0)
+      {
+        MMU_RETURN;
+      }
+
+      MMU_YIELD;
+    }
+    break;
+    case INT_MMU_MEMCPY:
+    {
+      int subCycles = 64;
+      
+      while (MMU_DATA.opMemCpy.len > 0 || subCycles > 0)
+      {
+        sSharedRam[MMU_DATA.opMemCpy.dst++] = sSharedRam[MMU_DATA.opMemCpy.src++];
+        --subCycles;
+        --MMU_DATA.opMemCpy.len;
+      }
+
+      MMU_DATA.cycles++;
+
+      if (MMU_DATA.opMemCpy.len <= 0)
+      {
+        MMU_RETURN;
+      }
+
+      MMU_YIELD;
+    }
+    break;
+    case INT_MMU_PRGCPY:
+    {
+      int subCycles = 32;
+      
+      while (MMU_DATA.opPrgCpy.len > 0 || subCycles > 0)
+      {
+        sSharedRam[MMU_DATA.opPrgCpy.dst++] = sProgramRam[MMU_DATA.opPrgCpy.src++];
+        --subCycles;
+        --MMU_DATA.opPrgCpy.len;
+      }
+      
+      MMU_DATA.cycles++;
+
+      if (MMU_DATA.opPrgCpy.len <= 0)
+      {
+        MMU_RETURN;
+      }
+
+      MMU_YIELD;
+
+    }
+    break;
+  }
+
+  MMU_RETURN;
+}
+
+
+void Mmu_Interrupt(Byte interrupt)
+{
+  Mmu_Coroutine_Start(interrupt);
+}
+
+void Mmu_Step(int steps)
+{
+  for(int ii=0;ii < steps;ii++)
+  {
+    if (MMU_DATA.op == 0xFF)
+      return;
+    Mmu_Coroutine();
+  }
+}

@@ -112,26 +112,29 @@ void Cpu_Reset(bool soft)
 #define DO_OP_STORE(R0)             StoreToMemory(data.w, R0);        REG_PC += Opf_Address;
 #define DO_OP_CALL()                Do_Call(Opf_Address, data.w);
 #define DO_OP_RETURN()              Return(cpu);
-#define DO_OP_SET(R0)               R0 = data.lo;                     REG_PC += Opf_Byte;
-#define DO_OP_ADD(R0, R1)           R0 += R1;             REG_PC += Opf_Single;
-#define DO_OP_SUB(R0, R1)           R0 -= R1;                         REG_PC += Opf_Single;
-#define DO_OP_MUL(R0, R1)           R0 *= R1;                         REG_PC += Opf_Single;
-#define DO_OP_AND(R0, R1)           R0 &= R1;                         REG_PC += Opf_Single;
-#define DO_OP_OR(R0, R1)            R0 |= R1;                         REG_PC += Opf_Single;
-#define DO_OP_XOR(R0, R1)           R0 ^= R1;                       REG_PC += Opf_Single;
-#define DO_OP_NOT(R0)               R0 = ~R0;                         REG_PC += Opf_Single;
-#define DO_OP_SHIFT_LEFT(R0)        R0 <<= 1;                         REG_PC += Opf_Byte;  
-#define DO_OP_SHIFT_RIGHT(R0)       R0 >>= 1;                         REG_PC += Opf_Byte;  
-#define DO_OP_ROLL_LEFT(R0)         /*  */                            REG_PC += Opf_Single;
-#define DO_OP_ROLL_RIGHT(R0)        /*  */                            REG_PC += Opf_Single;
-#define DO_OP_CMP(R0, R1)           Compare(R0, R1);             REG_PC += Opf_Single;
-#define DO_OP_CMP_BIT(R0)           CompareBit(R0, data.lo);     REG_PC += Opf_Byte;  
+#define DO_OP_SET(R0)               R0 = data.lo;                      REG_PC += Opf_Byte;
+#define DO_OP_ADD(R0, R1)           R0 = FlagsOp(R0 + R1);             REG_PC += Opf_Single;
+#define DO_OP_SUB(R0, R1)           R0 = FlagsOp(R0 - R1);             REG_PC += Opf_Single;
+#define DO_OP_MUL(R0, R1)           R0 = FlagsOp(R0 * R1);             REG_PC += Opf_Single;
+#define DO_OP_INC(R0)               R0 = FlagsOp(R0 + 1);              REG_PC += Opf_Single;
+#define DO_OP_DEC(R0)               R0 = FlagsOp(R0 - 1);              REG_PC += Opf_Single;
+#define DO_OP_AND(R0, R1)           R0 &= R1;                          REG_PC += Opf_Single;
+#define DO_OP_OR(R0, R1)            R0 |= R1;                          REG_PC += Opf_Single;
+#define DO_OP_XOR(R0, R1)           R0 ^= R1;                          REG_PC += Opf_Single;
+#define DO_OP_NOT(R0)               R0 = ~R0;                          REG_PC += Opf_Single;
+#define DO_OP_SHIFT_LEFT(R0)        R0 <<= 1;                          REG_PC += Opf_Byte;  
+#define DO_OP_SHIFT_RIGHT(R0)       R0 >>= 1;                          REG_PC += Opf_Byte;  
+#define DO_OP_ROLL_LEFT(R0)         /*  */                             REG_PC += Opf_Single;
+#define DO_OP_ROLL_RIGHT(R0)        /*  */                             REG_PC += Opf_Single;
+#define DO_OP_CMP(R0, R1)           Compare(R0, R1);                   REG_PC += Opf_Single;
+#define DO_OP_CMP_BIT(R0)           CompareBit(R0, data.lo);           REG_PC += Opf_Byte;  
 #define DO_OP_JMP_ADD(LO, HI)       JumpAdd(data.w, LO, HI);
 #define DO_OP_JMP_ABS(LO, HI)       JumpAbs(LO, HI);
 #define DO_OP_JMP_EQ()              JumpCond(FL_Z == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_NEQ()             JumpCond(FL_Z == 0, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_GT()              JumpCond(FL_N == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_LT()              JumpCond(FL_C == 1, data.w, REG_PC + Opf_Address);
+#define DO_OP_JMP_Z()               JumpCond(FL_Z == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_INT()                 DoInterrupt(data.lo);              REG_PC += Opf_Byte;
 
 inline void PushToStack(Byte value)
@@ -173,6 +176,14 @@ inline Byte LoadFromMemory(Word address)
 inline void StoreToMemory(Word address, Byte value)
 {
   Mmu_Set(address, value);
+}
+
+inline Byte FlagsOp(int value)
+{
+  cpu.flags.bZero     = (value == 0);
+  cpu.flags.bNegative = (value < 0);
+  cpu.flags.bCarry    = (value > 0xFF);
+  return value & 0xFF;
 }
 
 inline void Compare(Byte lhs, Byte rhs)
@@ -232,13 +243,9 @@ inline void DoInterrupt(Byte name)
   switch(name)
   {
     case INT_MMU_MEMCPY:
-      Mmu_Int_MemCpy();
-      return;
     case INT_MMU_MEMSET:
-      Mmu_Int_MemSet();
-      return;
     case INT_MMU_PRGCPY:
-      Mmu_Int_PrgCpy();
+      Mmu_Interrupt(name);
       return;
     case INT_CPU_RESET:
       Cpu_Reset(true);
@@ -383,6 +390,8 @@ int Cpu_Cycle(int ms)
   if (ms < 0)
   {
     Cpu_Step();
+    Mmu_Step(1);
+
     count = 1;
   }
   else
@@ -391,9 +400,10 @@ int Cpu_Cycle(int ms)
     for(int i=0;i < 1000;i++)
     {
       Cpu_Step();
+      Mmu_Step(1);
     }
   }
-  
+
   Gpu_Cycle();
   return count;
 }

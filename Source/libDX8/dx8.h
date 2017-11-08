@@ -144,6 +144,10 @@ Byte IoMmu_Get(Word address);
 
 bool Mmu_CopyToProgramRam(void* data, int length);
 
+void Mmu_Interrupt(Byte interrupt);
+
+void Mmu_Step(int steps);
+
 #define Program_Begin (0x0000)
 #define Chip_Begin    (0x4000)
 #define Shared_Begin  (0x8000)

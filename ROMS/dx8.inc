@@ -7,6 +7,21 @@ MMU_W2 = $4014
 MMU_W3 = $4016
 STACK_END = $4200
 GFX_MODE = $5000
+GFX_BGCOLR = $5001
+GFX_BGCOLG = $5002
+GFX_BGCOLB = $5003
+GFX_SCNW0R = $5004
+GFX_SCNW0G = $5005
+GFX_SCNW0B = $5006
+GFX_SCNW1R = $5007
+GFX_SCNW1G = $5008
+GFX_SCNW1B = $5009
+GFX_SCNW2R = $500A
+GFX_SCNW2G = $500B
+GFX_SCNW2B = $500C
+GFX_SCNW3R = $500D
+GFX_SCNW3G = $500E
+GFX_SCNW3B = $500F
 
 ; Interrupts commands (int $01)
 INT_MMU_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length
@@ -383,471 +398,516 @@ macro mul [A, B] {
     error SyntaxError
   end if
 }
+macro inc [A, B] {
+  if A eq x
+    ; [$67] inc x
+    db $67
+  else if A eq y
+    ; [$68] inc y
+    db $68
+  else if A eq z
+    ; [$69] inc z
+    db $69
+  else if A eq w
+    ; [$6A] inc w
+    db $6A
+  else if A eq a
+    ; [$6B] inc a
+    db $6B
+  else
+    error SyntaxError
+  end if
+}
+macro dec [A, B] {
+  if A eq x
+    ; [$6C] dec x
+    db $6C
+  else if A eq y
+    ; [$6D] dec y
+    db $6D
+  else if A eq z
+    ; [$6E] dec z
+    db $6E
+  else if A eq w
+    ; [$6F] dec w
+    db $6F
+  else if A eq a
+    ; [$70] dec a
+    db $70
+  else
+    error SyntaxError
+  end if
+}
 macro and [A, B] {
   if A eq x & B eq y
-    ; [$85] and x,y
-    db $85
-  else if A eq x & B eq z
-    ; [$86] and x,z
-    db $86
-  else if A eq x & B eq w
-    ; [$87] and x,w
-    db $87
-  else if A eq x & B eq a
-    ; [$88] and x,a
-    db $88
-  else if A eq y & B eq x
-    ; [$89] and y,x
-    db $89
-  else if A eq y & B eq z
-    ; [$8A] and y,z
-    db $8A
-  else if A eq y & B eq w
-    ; [$8B] and y,w
-    db $8B
-  else if A eq y & B eq a
-    ; [$8C] and y,a
-    db $8C
-  else if A eq z & B eq x
-    ; [$8D] and z,x
-    db $8D
-  else if A eq z & B eq y
-    ; [$8E] and z,y
-    db $8E
-  else if A eq z & B eq w
-    ; [$8F] and z,w
+    ; [$8F] and x,y
     db $8F
-  else if A eq z & B eq a
-    ; [$90] and z,a
+  else if A eq x & B eq z
+    ; [$90] and x,z
     db $90
-  else if A eq w & B eq x
-    ; [$91] and w,x
+  else if A eq x & B eq w
+    ; [$91] and x,w
     db $91
-  else if A eq w & B eq y
-    ; [$92] and w,y
+  else if A eq x & B eq a
+    ; [$92] and x,a
     db $92
-  else if A eq w & B eq z
-    ; [$93] and w,z
+  else if A eq y & B eq x
+    ; [$93] and y,x
     db $93
-  else if A eq w & B eq a
-    ; [$94] and w,a
+  else if A eq y & B eq z
+    ; [$94] and y,z
     db $94
-  else if A eq a & B eq x
-    ; [$95] and a,x
+  else if A eq y & B eq w
+    ; [$95] and y,w
     db $95
-  else if A eq a & B eq y
-    ; [$96] and a,y
+  else if A eq y & B eq a
+    ; [$96] and y,a
     db $96
-  else if A eq a & B eq z
-    ; [$97] and a,z
+  else if A eq z & B eq x
+    ; [$97] and z,x
     db $97
-  else if A eq a & B eq w
-    ; [$98] and a,w
+  else if A eq z & B eq y
+    ; [$98] and z,y
     db $98
+  else if A eq z & B eq w
+    ; [$99] and z,w
+    db $99
+  else if A eq z & B eq a
+    ; [$9A] and z,a
+    db $9A
+  else if A eq w & B eq x
+    ; [$9B] and w,x
+    db $9B
+  else if A eq w & B eq y
+    ; [$9C] and w,y
+    db $9C
+  else if A eq w & B eq z
+    ; [$9D] and w,z
+    db $9D
+  else if A eq w & B eq a
+    ; [$9E] and w,a
+    db $9E
+  else if A eq a & B eq x
+    ; [$9F] and a,x
+    db $9F
+  else if A eq a & B eq y
+    ; [$A0] and a,y
+    db $A0
+  else if A eq a & B eq z
+    ; [$A1] and a,z
+    db $A1
+  else if A eq a & B eq w
+    ; [$A2] and a,w
+    db $A2
   else
     error SyntaxError
   end if
 }
 macro or [A, B] {
   if A eq x & B eq y
-    ; [$99] or x,y
-    db $99
-  else if A eq x & B eq z
-    ; [$9A] or x,z
-    db $9A
-  else if A eq x & B eq w
-    ; [$9B] or x,w
-    db $9B
-  else if A eq x & B eq a
-    ; [$9C] or x,a
-    db $9C
-  else if A eq y & B eq x
-    ; [$9D] or y,x
-    db $9D
-  else if A eq y & B eq z
-    ; [$9E] or y,z
-    db $9E
-  else if A eq y & B eq w
-    ; [$9F] or y,w
-    db $9F
-  else if A eq y & B eq a
-    ; [$A0] or y,a
-    db $A0
-  else if A eq z & B eq x
-    ; [$A1] or z,x
-    db $A1
-  else if A eq z & B eq y
-    ; [$A2] or z,y
-    db $A2
-  else if A eq z & B eq w
-    ; [$A3] or z,w
+    ; [$A3] or x,y
     db $A3
-  else if A eq z & B eq a
-    ; [$A4] or z,a
+  else if A eq x & B eq z
+    ; [$A4] or x,z
     db $A4
-  else if A eq w & B eq x
-    ; [$A5] or w,x
+  else if A eq x & B eq w
+    ; [$A5] or x,w
     db $A5
-  else if A eq w & B eq y
-    ; [$A6] or w,y
+  else if A eq x & B eq a
+    ; [$A6] or x,a
     db $A6
-  else if A eq w & B eq z
-    ; [$A7] or w,z
+  else if A eq y & B eq x
+    ; [$A7] or y,x
     db $A7
-  else if A eq w & B eq a
-    ; [$A8] or w,a
+  else if A eq y & B eq z
+    ; [$A8] or y,z
     db $A8
-  else if A eq a & B eq x
-    ; [$A9] or a,x
+  else if A eq y & B eq w
+    ; [$A9] or y,w
     db $A9
-  else if A eq a & B eq y
-    ; [$AA] or a,y
+  else if A eq y & B eq a
+    ; [$AA] or y,a
     db $AA
-  else if A eq a & B eq z
-    ; [$AB] or a,z
+  else if A eq z & B eq x
+    ; [$AB] or z,x
     db $AB
-  else if A eq a & B eq w
-    ; [$AC] or a,w
+  else if A eq z & B eq y
+    ; [$AC] or z,y
     db $AC
+  else if A eq z & B eq w
+    ; [$AD] or z,w
+    db $AD
+  else if A eq z & B eq a
+    ; [$AE] or z,a
+    db $AE
+  else if A eq w & B eq x
+    ; [$AF] or w,x
+    db $AF
+  else if A eq w & B eq y
+    ; [$B0] or w,y
+    db $B0
+  else if A eq w & B eq z
+    ; [$B1] or w,z
+    db $B1
+  else if A eq w & B eq a
+    ; [$B2] or w,a
+    db $B2
+  else if A eq a & B eq x
+    ; [$B3] or a,x
+    db $B3
+  else if A eq a & B eq y
+    ; [$B4] or a,y
+    db $B4
+  else if A eq a & B eq z
+    ; [$B5] or a,z
+    db $B5
+  else if A eq a & B eq w
+    ; [$B6] or a,w
+    db $B6
   else
     error SyntaxError
   end if
 }
 macro xor [A, B] {
   if A eq x & B eq x
-    ; [$B2] xor x,x
-    db $B2
-  else if A eq x & B eq y
-    ; [$B3] xor x,y
-    db $B3
-  else if A eq x & B eq z
-    ; [$B4] xor x,z
-    db $B4
-  else if A eq x & B eq w
-    ; [$B5] xor x,w
-    db $B5
-  else if A eq x & B eq a
-    ; [$B6] xor x,a
-    db $B6
-  else if A eq y & B eq x
-    ; [$B7] xor y,x
-    db $B7
-  else if A eq y & B eq y
-    ; [$B8] xor y,y
-    db $B8
-  else if A eq y & B eq z
-    ; [$B9] xor y,z
-    db $B9
-  else if A eq y & B eq w
-    ; [$BA] xor y,w
-    db $BA
-  else if A eq y & B eq a
-    ; [$BB] xor y,a
-    db $BB
-  else if A eq z & B eq x
-    ; [$BC] xor z,x
+    ; [$BC] xor x,x
     db $BC
-  else if A eq z & B eq y
-    ; [$BD] xor z,y
+  else if A eq x & B eq y
+    ; [$BD] xor x,y
     db $BD
-  else if A eq z & B eq z
-    ; [$BE] xor z,z
+  else if A eq x & B eq z
+    ; [$BE] xor x,z
     db $BE
-  else if A eq z & B eq w
-    ; [$BF] xor z,w
+  else if A eq x & B eq w
+    ; [$BF] xor x,w
     db $BF
-  else if A eq z & B eq a
-    ; [$C0] xor z,a
+  else if A eq x & B eq a
+    ; [$C0] xor x,a
     db $C0
-  else if A eq w & B eq x
-    ; [$C1] xor w,x
+  else if A eq y & B eq x
+    ; [$C1] xor y,x
     db $C1
-  else if A eq w & B eq y
-    ; [$C2] xor w,y
+  else if A eq y & B eq y
+    ; [$C2] xor y,y
     db $C2
-  else if A eq w & B eq z
-    ; [$C3] xor w,z
+  else if A eq y & B eq z
+    ; [$C3] xor y,z
     db $C3
-  else if A eq w & B eq w
-    ; [$C4] xor w,w
+  else if A eq y & B eq w
+    ; [$C4] xor y,w
     db $C4
-  else if A eq w & B eq a
-    ; [$C5] xor w,a
+  else if A eq y & B eq a
+    ; [$C5] xor y,a
     db $C5
-  else if A eq a & B eq x
-    ; [$C6] xor a,x
+  else if A eq z & B eq x
+    ; [$C6] xor z,x
     db $C6
-  else if A eq a & B eq y
-    ; [$C7] xor a,y
+  else if A eq z & B eq y
+    ; [$C7] xor z,y
     db $C7
-  else if A eq a & B eq z
-    ; [$C8] xor a,z
+  else if A eq z & B eq z
+    ; [$C8] xor z,z
     db $C8
-  else if A eq a & B eq w
-    ; [$C9] xor a,w
+  else if A eq z & B eq w
+    ; [$C9] xor z,w
     db $C9
-  else if A eq a & B eq a
-    ; [$CA] xor a,a
+  else if A eq z & B eq a
+    ; [$CA] xor z,a
     db $CA
+  else if A eq w & B eq x
+    ; [$CB] xor w,x
+    db $CB
+  else if A eq w & B eq y
+    ; [$CC] xor w,y
+    db $CC
+  else if A eq w & B eq z
+    ; [$CD] xor w,z
+    db $CD
+  else if A eq w & B eq w
+    ; [$CE] xor w,w
+    db $CE
+  else if A eq w & B eq a
+    ; [$CF] xor w,a
+    db $CF
+  else if A eq a & B eq x
+    ; [$D0] xor a,x
+    db $D0
+  else if A eq a & B eq y
+    ; [$D1] xor a,y
+    db $D1
+  else if A eq a & B eq z
+    ; [$D2] xor a,z
+    db $D2
+  else if A eq a & B eq w
+    ; [$D3] xor a,w
+    db $D3
+  else if A eq a & B eq a
+    ; [$D4] xor a,a
+    db $D4
   else
     error SyntaxError
   end if
 }
 macro not [A, B] {
   if A eq x
-    ; [$AD] not x
-    db $AD
+    ; [$B7] not x
+    db $B7
   else if A eq y
-    ; [$AE] not y
-    db $AE
+    ; [$B8] not y
+    db $B8
   else if A eq z
-    ; [$AF] not z
-    db $AF
+    ; [$B9] not z
+    db $B9
   else if A eq w
-    ; [$B0] not w
-    db $B0
+    ; [$BA] not w
+    db $BA
   else if A eq a
-    ; [$B1] not a
-    db $B1
+    ; [$BB] not a
+    db $BB
   else
     error SyntaxError
   end if
 }
 macro shl [A, B] {
   if A eq x
-    ; [$CB] shl x
-    db $CB
+    ; [$D5] shl x
+    db $D5
   else if A eq y
-    ; [$CC] shl y
-    db $CC
+    ; [$D6] shl y
+    db $D6
   else if A eq z
-    ; [$CD] shl z
-    db $CD
+    ; [$D7] shl z
+    db $D7
   else if A eq w
-    ; [$CE] shl w
-    db $CE
+    ; [$D8] shl w
+    db $D8
   else if A eq a
-    ; [$CF] shl a
-    db $CF
+    ; [$D9] shl a
+    db $D9
   else
     error SyntaxError
   end if
 }
 macro shr [A, B] {
   if A eq x
-    ; [$D0] shr x
-    db $D0
+    ; [$DA] shr x
+    db $DA
   else if A eq y
-    ; [$D1] shr y
-    db $D1
+    ; [$DB] shr y
+    db $DB
   else if A eq z
-    ; [$D2] shr z
-    db $D2
+    ; [$DC] shr z
+    db $DC
   else if A eq w
-    ; [$D3] shr w
-    db $D3
+    ; [$DD] shr w
+    db $DD
   else if A eq a
-    ; [$D4] shr a
-    db $D4
+    ; [$DE] shr a
+    db $DE
   else
     error SyntaxError
   end if
 }
 macro rol [A, B] {
   if A eq x
-    ; [$D5] rol x
-    db $D5
+    ; [$DF] rol x
+    db $DF
   else if A eq y
-    ; [$D6] rol y
-    db $D6
+    ; [$E0] rol y
+    db $E0
   else if A eq z
-    ; [$D7] rol z
-    db $D7
+    ; [$E1] rol z
+    db $E1
   else if A eq w
-    ; [$D8] rol w
-    db $D8
+    ; [$E2] rol w
+    db $E2
   else if A eq a
-    ; [$D9] rol a
-    db $D9
+    ; [$E3] rol a
+    db $E3
   else
     error SyntaxError
   end if
 }
 macro ror [A, B] {
   if A eq x
-    ; [$DA] ror x
-    db $DA
+    ; [$E4] ror x
+    db $E4
   else if A eq y
-    ; [$DB] ror y
-    db $DB
+    ; [$E5] ror y
+    db $E5
   else if A eq z
-    ; [$DC] ror z
-    db $DC
+    ; [$E6] ror z
+    db $E6
   else if A eq w
-    ; [$DD] ror w
-    db $DD
+    ; [$E7] ror w
+    db $E7
   else if A eq a
-    ; [$DE] ror a
-    db $DE
+    ; [$E8] ror a
+    db $E8
   else
     error SyntaxError
   end if
 }
 macro cmp [A, B] {
   if A eq x & B eq x
-    ; [$67] cmp x,x
-    db $67
-  else if A eq x & B eq y
-    ; [$68] cmp x,y
-    db $68
-  else if A eq x & B eq z
-    ; [$69] cmp x,z
-    db $69
-  else if A eq x & B eq w
-    ; [$6A] cmp x,w
-    db $6A
-  else if A eq x & B eq a
-    ; [$6B] cmp x,a
-    db $6B
-  else if A eq y & B eq x
-    ; [$6C] cmp y,x
-    db $6C
-  else if A eq y & B eq y
-    ; [$6D] cmp y,y
-    db $6D
-  else if A eq y & B eq z
-    ; [$6E] cmp y,z
-    db $6E
-  else if A eq y & B eq w
-    ; [$6F] cmp y,w
-    db $6F
-  else if A eq y & B eq a
-    ; [$70] cmp y,a
-    db $70
-  else if A eq z & B eq x
-    ; [$71] cmp z,x
+    ; [$71] cmp x,x
     db $71
-  else if A eq z & B eq y
-    ; [$72] cmp z,y
+  else if A eq x & B eq y
+    ; [$72] cmp x,y
     db $72
-  else if A eq z & B eq z
-    ; [$73] cmp z,z
+  else if A eq x & B eq z
+    ; [$73] cmp x,z
     db $73
-  else if A eq z & B eq w
-    ; [$74] cmp z,w
+  else if A eq x & B eq w
+    ; [$74] cmp x,w
     db $74
-  else if A eq z & B eq a
-    ; [$75] cmp z,a
+  else if A eq x & B eq a
+    ; [$75] cmp x,a
     db $75
-  else if A eq w & B eq x
-    ; [$76] cmp w,x
+  else if A eq y & B eq x
+    ; [$76] cmp y,x
     db $76
-  else if A eq w & B eq y
-    ; [$77] cmp w,y
+  else if A eq y & B eq y
+    ; [$77] cmp y,y
     db $77
-  else if A eq w & B eq z
-    ; [$78] cmp w,z
+  else if A eq y & B eq z
+    ; [$78] cmp y,z
     db $78
-  else if A eq w & B eq w
-    ; [$79] cmp w,w
+  else if A eq y & B eq w
+    ; [$79] cmp y,w
     db $79
-  else if A eq w & B eq a
-    ; [$7A] cmp w,a
+  else if A eq y & B eq a
+    ; [$7A] cmp y,a
     db $7A
-  else if A eq a & B eq x
-    ; [$7B] cmp a,x
+  else if A eq z & B eq x
+    ; [$7B] cmp z,x
     db $7B
-  else if A eq a & B eq y
-    ; [$7C] cmp a,y
+  else if A eq z & B eq y
+    ; [$7C] cmp z,y
     db $7C
-  else if A eq a & B eq z
-    ; [$7D] cmp a,z
+  else if A eq z & B eq z
+    ; [$7D] cmp z,z
     db $7D
-  else if A eq a & B eq w
-    ; [$7E] cmp a,w
+  else if A eq z & B eq w
+    ; [$7E] cmp z,w
     db $7E
-  else if A eq a & B eq a
-    ; [$7F] cmp a,a
+  else if A eq z & B eq a
+    ; [$7F] cmp z,a
     db $7F
+  else if A eq w & B eq x
+    ; [$80] cmp w,x
+    db $80
+  else if A eq w & B eq y
+    ; [$81] cmp w,y
+    db $81
+  else if A eq w & B eq z
+    ; [$82] cmp w,z
+    db $82
+  else if A eq w & B eq w
+    ; [$83] cmp w,w
+    db $83
+  else if A eq w & B eq a
+    ; [$84] cmp w,a
+    db $84
+  else if A eq a & B eq x
+    ; [$85] cmp a,x
+    db $85
+  else if A eq a & B eq y
+    ; [$86] cmp a,y
+    db $86
+  else if A eq a & B eq z
+    ; [$87] cmp a,z
+    db $87
+  else if A eq a & B eq w
+    ; [$88] cmp a,w
+    db $88
+  else if A eq a & B eq a
+    ; [$89] cmp a,a
+    db $89
   else
     error SyntaxError
   end if
 }
 macro cmpbit [A, B] {
   if A eq x
-    ; [$80] cmpbit x
-    db $80
+    ; [$8A] cmpbit x
+    db $8A
   else if A eq y
-    ; [$81] cmpbit y
-    db $81
+    ; [$8B] cmpbit y
+    db $8B
   else if A eq z
-    ; [$82] cmpbit z
-    db $82
+    ; [$8C] cmpbit z
+    db $8C
   else if A eq w
-    ; [$83] cmpbit w
-    db $83
+    ; [$8D] cmpbit w
+    db $8D
   else if A eq a
-    ; [$84] cmpbit a
-    db $84
+    ; [$8E] cmpbit a
+    db $8E
   else
     error SyntaxError
   end if
 }
 macro jmp [A, B] {
   if A eq x & B eq y
-    ; [$E0] jmp x,y
-    db $E0
+    ; [$EA] jmp x,y
+    db $EA
   else if A eq z & B eq w
-    ; [$E1] jmp z,w
-    db $E1
+    ; [$EB] jmp z,w
+    db $EB
   else if B eq x
-    ; [$E2] jmp $0000,x
-    db $E2
+    ; [$EC] jmp $0000,x
+    db $EC
     dw A
   else if B eq y
-    ; [$E3] jmp $0000,y
-    db $E3
+    ; [$ED] jmp $0000,y
+    db $ED
     dw A
   else if B eq z
-    ; [$E4] jmp $0000,z
-    db $E4
+    ; [$EE] jmp $0000,z
+    db $EE
     dw A
   else if B eq w
-    ; [$E5] jmp $0000,w
-    db $E5
+    ; [$EF] jmp $0000,w
+    db $EF
     dw A
   else if B eq a
-    ; [$E6] jmp $0000,a
-    db $E6
+    ; [$F0] jmp $0000,a
+    db $F0
     dw A
   else
-    ; [$DF] jmp $0000
-    db $DF
+    ; [$E9] jmp $0000
+    db $E9
     dw A
   end if
 }
 macro jmp.eq [A, B] {
-  ; [$E7] jmp.eq $0000
-  db $E7
+  ; [$F1] jmp.eq $0000
+  db $F1
   dw A
 }
 macro jmp.neq [A, B] {
-  ; [$E8] jmp.neq $0000
-  db $E8
+  ; [$F2] jmp.neq $0000
+  db $F2
   dw A
 }
 macro jmp.gt [A, B] {
-  ; [$E9] jmp.gt $0000
-  db $E9
+  ; [$F3] jmp.gt $0000
+  db $F3
   dw A
 }
 macro jmp.lt [A, B] {
-  ; [$EA] jmp.lt $0000
-  db $EA
+  ; [$F4] jmp.lt $0000
+  db $F4
+  dw A
+}
+macro jmp.z [A, B] {
+  ; [$F5] jmp.z $0000
+  db $F5
   dw A
 }
 macro int [A, B] {
-  ; [$EB] int #$00
-  db $EB
+  ; [$F6] int #$00
+  db $F6
   db A
 }
