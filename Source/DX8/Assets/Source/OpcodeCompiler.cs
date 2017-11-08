@@ -281,42 +281,37 @@ namespace DX8
         sb.AppendFormat(op.Length == 2 ? "db A" : "dw A");
         sb.AppendLine();
       }
-      else if (op.Operand2 != Operand.None)
+
+      if (op.Operand2 == Operand.Address || op.Operand2 == Operand.Byte)
       {
-        if (op.Operand2 == Operand.Address || op.Operand2 == Operand.Byte)
-        {
-          sb.Append(indent == 1 ? "  " : "    ");
-          sb.AppendFormat(op.Length == 2 ? "db B" : "dw B");
-          sb.AppendLine();
-        }
+        sb.Append(indent == 1 ? "  " : "    ");
+        sb.AppendFormat(op.Length == 2 ? "db B" : "dw B");
+        sb.AppendLine();
       }
       
     }
 
     public static void ConditionForOpcode(ref System.Text.StringBuilder sb, Op op)
     {
-      sb.Append("A eq ");
+      bool op1 = false;
       switch(op.Operand1)
       {
-        case Operand.X: sb.Append("x"); break;
-        case Operand.Y: sb.Append("y"); break;
-        case Operand.Z: sb.Append("z"); break;
-        case Operand.W: sb.Append("w"); break;
-        case Operand.A: sb.Append("a"); break;
+        case Operand.X: sb.Append("A eq x"); op1 = true; break;
+        case Operand.Y: sb.Append("A eq y"); op1 = true; break;
+        case Operand.Z: sb.Append("A eq z"); op1 = true; break;
+        case Operand.W: sb.Append("A eq w"); op1 = true; break;
+        case Operand.A: sb.Append("A eq a"); op1 = true; break;
       }
-
-      if (op.Operand2 != Operand.None && op.Operand2 != Operand.Byte && op.Operand2 != Operand.Address)
+      
+      switch(op.Operand2)
       {
-        sb.Append(" & B eq ");
-        switch(op.Operand2)
-        {
-          case Operand.X: sb.Append("x"); break;
-          case Operand.Y: sb.Append("y"); break;
-          case Operand.Z: sb.Append("z"); break;
-          case Operand.W: sb.Append("w"); break;
-          case Operand.A: sb.Append("a"); break;
-        }
+        case Operand.X: if (op1) { sb.Append(" & "); } sb.Append("B eq x"); break;
+        case Operand.Y: if (op1) { sb.Append(" & "); } sb.Append("B eq y"); break;
+        case Operand.Z: if (op1) { sb.Append(" & "); } sb.Append("B eq z"); break;
+        case Operand.W: if (op1) { sb.Append(" & "); } sb.Append("B eq w"); break;
+        case Operand.A: if (op1) { sb.Append(" & "); } sb.Append("B eq a"); break;
       }
+      
       
     }
 
@@ -522,60 +517,46 @@ namespace DX8
             {
               switch(operands[0])
               {
-                case 'X': case 'x': operand1 = Operand.X; break;
-                case 'Y': case 'y': operand1 = Operand.Y; break;
-                case 'Z': case 'z': operand1 = Operand.Z; break;
-                case 'W': case 'w': operand1 = Operand.W; break;
-                case 'A': case 'a': operand1 = Operand.A; break;
+                case 'x': operand1 = Operand.X; break;
+                case 'y': operand1 = Operand.Y; break;
+                case 'z': operand1 = Operand.Z; break;
+                case 'w': operand1 = Operand.W; break;
+                case 'a': operand1 = Operand.A; break;
+                case 'A': operand1 = Operand.Address; break;
+                case 'B': operand1 = Operand.Byte; break;
+
               }
             }
             else if (operands.Length == 2)
             {
               switch(operands[0])
               {
-                case 'X': case 'x': operand1 = Operand.X; break;
-                case 'Y': case 'y': operand1 = Operand.Y; break;
-                case 'Z': case 'z': operand1 = Operand.Z; break;
-                case 'W': case 'w': operand1 = Operand.W; break;
-                case 'A': case 'a': operand1 = Operand.A; break;
+                case 'x': operand1 = Operand.X; break;
+                case 'y': operand1 = Operand.Y; break;
+                case 'z': operand1 = Operand.Z; break;
+                case 'w': operand1 = Operand.W; break;
+                case 'a': operand1 = Operand.A; break;
+                case 'A': operand1 = Operand.Address; break;
+                case 'B': operand1 = Operand.Byte; break;
               }
               switch(operands[1])
               {
-                case 'X': case 'x': operand2 = Operand.X; break;
-                case 'Y': case 'y': operand2 = Operand.Y; break;
-                case 'Z': case 'z': operand2 = Operand.Z; break;
-                case 'W': case 'w': operand2 = Operand.W; break;
-                case 'A': case 'a': operand2 = Operand.A; break;
-              }
-            }
-            else
-            {
-              if (operands == "Address")
-              {
-                operand1 = Operand.Address;
-              }
-              else if (operands == "Byte")
-              {
-                operand1 = Operand.Byte;
+                case 'x': operand2 = Operand.X; break;
+                case 'y': operand2 = Operand.Y; break;
+                case 'z': operand2 = Operand.Z; break;
+                case 'w': operand2 = Operand.W; break;
+                case 'a': operand2 = Operand.A; break;
+                case 'A': operand2 = Operand.Address; break;
+                case 'B': operand2 = Operand.Byte; break;
               }
             }
 
             if (format == "Address")
             {
-              if (operand1 != Operand.Address && operand2 == Operand.None)
-              {
-                operand2 = Operand.Address;
-              }
-
               length = 3;
             }
             else if (format == "Byte")
             {
-              if (operand1 != Operand.Byte && operand2 == Operand.None)
-              {
-                operand2 = Operand.Byte;
-              }
-              
               length = 2;
             }
             

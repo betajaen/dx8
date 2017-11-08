@@ -4,14 +4,14 @@ include "macros.inc"
 jmp MAIN
 
 ; Clear Display
-; A = Pattern, 0x00 black, $AA white, $55/$AA dotted, etc.
+; A = Pattern, 0x00 black, $FF white, $55/$AA dotted, etc.
 CLS:
-        store      a,              MMU_B1        ; Value
+        store      MMU_B1,         a             ; Value
         APOKE      MMU_W1,         $00           ; lo -- Target = $8000
         APOKE      MMU_W1+1,       $80           ; hi --
         APOKE      MMU_W2,         $00           ; lo -- Length = $1000
         APOKE      MMU_W2+1,       $10           ; hi ..
-        interrupt  INT_MMU_MEMSET
+        int        INT_MMU_MEMSET
 return
 
 MAIN:

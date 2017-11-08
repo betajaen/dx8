@@ -16,31 +16,31 @@ OP(Pop, w, Opf_Single, 3,   { DO_OP_POP(REG_W) })
 OP(Pop, a, Opf_Single, 3,   { DO_OP_POP(REG_A) })
 
 // Load
-OP(Load, x, Opf_Address, 4, { DO_OP_LOAD(REG_X); })
-OP(Load, y, Opf_Address, 4, { DO_OP_LOAD(REG_Y); })
-OP(Load, z, Opf_Address, 4, { DO_OP_LOAD(REG_Z); })
-OP(Load, w, Opf_Address, 4, { DO_OP_LOAD(REG_W); })
-OP(Load, a, Opf_Address, 4, { DO_OP_LOAD(REG_A); })
+OP(Load, xA, Opf_Address, 4, { DO_OP_LOAD(REG_X); })
+OP(Load, yA, Opf_Address, 4, { DO_OP_LOAD(REG_Y); })
+OP(Load, zA, Opf_Address, 4, { DO_OP_LOAD(REG_Z); })
+OP(Load, wA, Opf_Address, 4, { DO_OP_LOAD(REG_W); })
+OP(Load, aA, Opf_Address, 4, { DO_OP_LOAD(REG_A); })
 
 // Store
-OP(Store, x, Opf_Address, 4, { DO_OP_STORE(REG_X); })
-OP(Store, y, Opf_Address, 4, { DO_OP_STORE(REG_Y); })
-OP(Store, z, Opf_Address, 4, { DO_OP_STORE(REG_Z); })
-OP(Store, w, Opf_Address, 4, { DO_OP_STORE(REG_W); })
-OP(Store, a, Opf_Address, 4, { DO_OP_STORE(REG_A); })
+OP(Store, Ax, Opf_Address, 4, { DO_OP_STORE(REG_X); })
+OP(Store, Ay, Opf_Address, 4, { DO_OP_STORE(REG_Y); })
+OP(Store, Az, Opf_Address, 4, { DO_OP_STORE(REG_Z); })
+OP(Store, Aw, Opf_Address, 4, { DO_OP_STORE(REG_W); })
+OP(Store, Aa, Opf_Address, 4, { DO_OP_STORE(REG_A); })
 
 // Call
-OP(Call, Address, Opf_Address, 4, { DO_OP_CALL();  })
+OP(Call, A, Opf_Address, 4, { DO_OP_CALL();  })
 
 // Return
 OP(Return, None, Opf_Single, 4,   { DO_OP_RETURN(); })
 
 // Set
-OP(Set, x, Opf_Byte, 3, { DO_OP_SET(REG_X); })
-OP(Set, y, Opf_Byte, 3, { DO_OP_SET(REG_Y); })
-OP(Set, z, Opf_Byte, 3, { DO_OP_SET(REG_Z); })
-OP(Set, w, Opf_Byte, 3, { DO_OP_SET(REG_W); })
-OP(Set, a, Opf_Byte, 3, { DO_OP_SET(REG_A); })
+OP(Set, xB, Opf_Byte, 3, { DO_OP_SET(REG_X); })
+OP(Set, yB, Opf_Byte, 3, { DO_OP_SET(REG_Y); })
+OP(Set, zB, Opf_Byte, 3, { DO_OP_SET(REG_Z); })
+OP(Set, wB, Opf_Byte, 3, { DO_OP_SET(REG_W); })
+OP(Set, aB, Opf_Byte, 3, { DO_OP_SET(REG_A); })
 
 // Add
 OP(Add, xx, Opf_Single, 3, { DO_OP_ADD(REG_X, REG_X); })
@@ -264,26 +264,26 @@ OP(RollRight, w, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_W); })
 OP(RollRight, a, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_A); })
 
 // Jmp
-OP(Jmp, Address, Opf_Address, 2, { REG_PC = data.w & ~PROGRAM_SIZE; })
+OP(Jmp, A, Opf_Address, 2, { REG_PC = data.w & ~PROGRAM_SIZE; })
 OP(Jmp, xy, Opf_Single, 3, { DO_OP_JMP_ABS(REG_X, REG_Y); })
 OP(Jmp, zw, Opf_Single, 3, { DO_OP_JMP_ABS(REG_Z, REG_W); })
-OP(Jmp, x, Opf_Address, 4, { DO_OP_JMP_ADD(REG_X, 0); })
-OP(Jmp, y, Opf_Address, 4, { DO_OP_JMP_ADD(REG_Y, 0); })
-OP(Jmp, z, Opf_Address, 4, { DO_OP_JMP_ADD(REG_Z, 0); })
-OP(Jmp, w, Opf_Address, 4, { DO_OP_JMP_ADD(REG_W, 0); })
-OP(Jmp, a, Opf_Address, 4, { DO_OP_JMP_ADD(REG_A, 0); })
+OP(Jmp, Ax, Opf_Address, 4, { DO_OP_JMP_ADD(REG_X, 0); })
+OP(Jmp, Ay, Opf_Address, 4, { DO_OP_JMP_ADD(REG_Y, 0); })
+OP(Jmp, Az, Opf_Address, 4, { DO_OP_JMP_ADD(REG_Z, 0); })
+OP(Jmp, Aw, Opf_Address, 4, { DO_OP_JMP_ADD(REG_W, 0); })
+OP(Jmp, Aa, Opf_Address, 4, { DO_OP_JMP_ADD(REG_A, 0); })
 
 // Jmp Eq
-OP(JmpEq, Address, Opf_Address, 2, { DO_OP_JMP_EQ(); })
+OP(JmpEq, A, Opf_Address, 2, { DO_OP_JMP_EQ(); })
 
 // Jmp Neq
-OP(JmpNeq, Address, Opf_Address, 2, { DO_OP_JMP_NEQ(); })
+OP(JmpNeq, A, Opf_Address, 2, { DO_OP_JMP_NEQ(); })
 
 // Jmp Gt
-OP(JmpGt, Address, Opf_Address, 2, { DO_OP_JMP_GT(); })
+OP(JmpGt, A, Opf_Address, 2, { DO_OP_JMP_GT(); })
 
 // Jmp Lt
-OP(JmpLt, Address, Opf_Address, 2, { DO_OP_JMP_LT(); })
+OP(JmpLt, A, Opf_Address, 2, { DO_OP_JMP_LT(); })
 
 // Interrupt
-OP(Int, None, Opf_Byte, 4, { DO_OP_INT(); })
+OP(Int, B, Opf_Byte, 4, { DO_OP_INT(); })

@@ -84,26 +84,26 @@ macro load [A, B] {
   end if
 }
 macro store [A, B] {
-  if A eq x
-    ; [$10] store x,$0000
+  if B eq x
+    ; [$10] store $0000,x
     db $10
-    dw B
-  else if A eq y
-    ; [$11] store y,$0000
+    dw A
+  else if B eq y
+    ; [$11] store $0000,y
     db $11
-    dw B
-  else if A eq z
-    ; [$12] store z,$0000
+    dw A
+  else if B eq z
+    ; [$12] store $0000,z
     db $12
-    dw B
-  else if A eq w
-    ; [$13] store w,$0000
+    dw A
+  else if B eq w
+    ; [$13] store $0000,w
     db $13
-    dw B
-  else if A eq a
-    ; [$14] store a,$0000
+    dw A
+  else if B eq a
+    ; [$14] store $0000,a
     db $14
-    dw B
+    dw A
   else
     error SyntaxError
   end if
@@ -774,25 +774,20 @@ macro cmp [A, B] {
 }
 macro cmpbit [A, B] {
   if A eq x
-    ; [$80] cmpbit x,#$00
+    ; [$80] cmpbit x
     db $80
-    db B
   else if A eq y
-    ; [$81] cmpbit y,#$00
+    ; [$81] cmpbit y
     db $81
-    db B
   else if A eq z
-    ; [$82] cmpbit z,#$00
+    ; [$82] cmpbit z
     db $82
-    db B
   else if A eq w
-    ; [$83] cmpbit w,#$00
+    ; [$83] cmpbit w
     db $83
-    db B
   else if A eq a
-    ; [$84] cmpbit a,#$00
+    ; [$84] cmpbit a
     db $84
-    db B
   else
     error SyntaxError
   end if
@@ -804,26 +799,26 @@ macro jmp [A, B] {
   else if A eq z & B eq w
     ; [$E1] jmp z,w
     db $E1
-  else if A eq x
-    ; [$E2] jmp x+$0000
+  else if B eq x
+    ; [$E2] jmp $0000,x
     db $E2
-    dw B
-  else if A eq y
-    ; [$E3] jmp y+$0000
+    dw A
+  else if B eq y
+    ; [$E3] jmp $0000,y
     db $E3
-    dw B
-  else if A eq z
-    ; [$E4] jmp z+$0000
+    dw A
+  else if B eq z
+    ; [$E4] jmp $0000,z
     db $E4
-    dw B
-  else if A eq w
-    ; [$E5] jmp w+$0000
+    dw A
+  else if B eq w
+    ; [$E5] jmp $0000,w
     db $E5
-    dw B
-  else if A eq a
-    ; [$E6] jmp a+$0000
+    dw A
+  else if B eq a
+    ; [$E6] jmp $0000,a
     db $E6
-    dw B
+    dw A
   else
     ; [$DF] jmp $0000
     db $DF
@@ -851,7 +846,7 @@ macro jmp.lt [A, B] {
   dw A
 }
 macro int [A, B] {
-  ; [$EB] int
+  ; [$EB] int #$00
   db $EB
-  db B
+  db A
 }

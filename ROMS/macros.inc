@@ -1,7 +1,7 @@
 
 macro APOKE [ADDR, VALUE] {
       set a, VALUE
-      store a, ADDR
+      store ADDR, a
 }
 
 macro APEEK [ADDR] {
