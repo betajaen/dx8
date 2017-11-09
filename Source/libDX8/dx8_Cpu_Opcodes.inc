@@ -304,3 +304,6 @@ OP(JmpZ, A, Opf_Address, 2, { DO_OP_JMP_Z(); })
 
 // Interrupt
 OP(Int, B, Opf_Byte, 4, { DO_OP_INT(); })
+
+// Resume
+OP(Resume, None, Opf_Byte, 4, { DO_OP_RESUME(); })

@@ -136,6 +136,7 @@ void Cpu_Reset(bool soft)
 #define DO_OP_JMP_LT()              JumpCond(FL_C == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_Z()               JumpCond(FL_Z == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_INT()                 DoInterrupt(data.lo);              REG_PC += Opf_Byte;
+#define DO_OP_RESUME()              Cpu_ResumeInterrupt()                  
 
 inline void PushToStack(Byte value)
 {
@@ -231,6 +232,30 @@ inline void BranchCond(bool cond, Word ifTrue, Word ifFalse)
   {
     cpu.pc.w = ifFalse & PROGRAM_SIZE;
   }
+}
+
+
+void Cpu_Interrupt(Byte name)
+{
+  if (cpu.flags.bInterrupt)
+  {
+    LOGF("Interupt already happening!!");
+    return;
+  }
+
+  PushToStack(REG_A);
+  cpu.flags.bInterrupt = true;
+  REG_A = name;
+
+  Do_Call(0, 0);
+}
+
+void Cpu_ResumeInterrupt()
+{
+  Return();
+
+  cpu.flags._data = PopFromStack();
+  REG_A = PopFromStack();
 }
 
 void Mmu_Int_MemCpy();
@@ -380,30 +405,4 @@ Byte Cpu_GetStackRegister()
 void Cpu_SetStackRegister(Byte value)
 {
   cpu.stack;
-}
-
-void Gpu_Cycle();
-
-int Cpu_Cycle(int ms)
-{
-  int count = 0;
-  if (ms < 0)
-  {
-    Cpu_Step();
-    Mmu_Step(1);
-
-    count = 1;
-  }
-  else
-  {
-    // Temp. Will need to call this multiple times, based on time passed
-    for(int i=0;i < 1000;i++)
-    {
-      Cpu_Step();
-      Mmu_Step(1);
-    }
-  }
-
-  Gpu_Cycle();
-  return count;
 }

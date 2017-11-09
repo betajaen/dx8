@@ -200,7 +200,7 @@ namespace DX8
     
     void Awake()
     {
-      Crt = new Texture2D(640, 400, TextureFormat.RGB24, false);
+      Crt = new Texture2D(320, 256, TextureFormat.RGB24, false);
       Crt.filterMode = FilterMode.Point;
     }
 
@@ -267,19 +267,24 @@ namespace DX8
       {
         RunOnce(-1.0f);
       }
+      
+      if (!IsRunning && GUI.RepeatButton(new Rect(200,25,100,25), "FWD"))
+      {
+        RunOnce(-1.0f);
+      }
 
       if (GUI.Button(new Rect(300, 0, 100, 25), "Load"))
       {
         LoadProgram();
       }
       
-      if (GUI.Button(new Rect(400, 0, 100, 25), "Save Crt"))
+      if (GUI.Button(new Rect(256, 0, 100, 25), "Save Crt"))
       {
         System.IO.File.WriteAllBytes("crt.png", Crt.EncodeToPNG());
       }
 
-      GUI.Label(new Rect(0, 25, Screen.width, 25), String.Format(
-        "A={0:X2} X={1:X2} Y={2:X2} Z={3:X2} W={4:X2} Pc={5:X4}, St={6:X2}, Fl={7:X2}, Steps={8}, Opcode={9:X2}, Operand={10:X4}",
+      GUI.Label(new Rect(0, 25, Screen.width, 60), String.Format(
+        "A={0:X2} X={1:X2} Y={2:X2} Z={3:X2} W={4:X2} Pc={5:X4}, St={6:X2}, Fl={7:X2}, Steps={8}, Opcode={9:X2}, Operand={10:X4} GpuTimer={11}",
           Library.GetValue(Api.A),
           Library.GetValue(Api.X),
           Library.GetValue(Api.Y),
@@ -290,10 +295,14 @@ namespace DX8
           Library.GetValue(Api.Flags),
           LastSteps,
           Library.GetValue(Api.LastOpcode),
-          Library.GetValue(Api.LastOperand)
+          Library.GetValue(Api.LastOperand),
+          Library.GetValue(Api.GpuTimer)
        ));
 
-        GUI.DrawTexture(new Rect(Screen.width / 2 - 640 / 2, Screen.height / 2 + 400 / 2, 640, -400), Crt);
+       int s = 2;
+       int sw = 320 * s;
+       int sh = 256 * s;
+        GUI.DrawTexture(new Rect(Screen.width / 2 - sw / 2, Screen.height / 2 + sh / 2, sw, -sh), Crt);
     }
 
     void RunOnce(float timeSec)
@@ -313,7 +322,7 @@ namespace DX8
       if (Library.GetValue(Api.CrtDirty) == 1)
       {
         IntPtr crt = Library.GetCrt();
-        Crt.LoadRawTextureData(crt, 640 * 400 * 3);
+        Crt.LoadRawTextureData(crt, 320 * 256 * 3);
         Crt.Apply();
       }
     }

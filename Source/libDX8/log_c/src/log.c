@@ -127,6 +127,7 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
     vfprintf(L.fp, fmt, args);
     va_end(args);
     fprintf(L.fp, "\n");
+    fflush(L.fp);
   }
 
   /* Release lock */

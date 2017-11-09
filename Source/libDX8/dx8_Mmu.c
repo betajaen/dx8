@@ -33,6 +33,7 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 #include "log_c/src/log.h"
 
@@ -112,86 +113,6 @@ Byte* Shared_GetPtr()
   return sSharedRam;
 }
 
-void Mmu_Int_MemCpy()
-{
-  Word dst, src, length;
-  dst    = ChipRam_GetWord(Chip_MMU_W1_Relative);
-  src    = ChipRam_GetWord(Chip_MMU_W2_Relative);
-  length = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~SHARED_SIZE;
-
-  //LOGF("Mmu_Int_MemCpy: Dst=%4x Src=%4x Length=%4x", dst, src, length);
-
-  if (dst < SHARED_BANK_0 || src < SHARED_BANK_0)
-  {
-    LOGF("Mmu_Int_MemCpy: ** Not in shared ram!");
-    // Memcpy only on shared ram.
-    return;
-  }
-
-  dst -= SHARED_BANK_0;
-  src -= SHARED_BANK_0;
-
-  for(Word ii=0;ii < length;ii++)
-  {
-    sSharedRam[dst] = sSharedRam[src];
-    ++dst;
-    ++src;
-  }
-}
-
-void Mmu_Int_PrgCpy()
-{
-  Word dst, src, length;
-  dst = ChipRam_GetWord(Chip_MMU_W1_Relative) & ~PROGRAM_SIZE;
-  src = ChipRam_GetWord(Chip_MMU_W2_Relative);
-  length = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~SHARED_SIZE;
-
-  LOGF("Mmu_Int_PrgCpy: Dst=%4x Src=%4x Length=%4x", dst, src, length);
-
-  if (src > PROGRAM_SIZE || dst < SHARED_BANK_0)
-  {
-    LOGF("Mmu_Int_PrgCpy: ** Not in shared ram!");
-    return;
-  }
-
-  dst -= SHARED_BANK_0;
-
-  for (Word ii = 0; ii < length; ii++)
-  {
-    sSharedRam[dst] = sProgramRam[src];
-    ++dst;
-    ++src;
-  }
-}
-
-void Mmu_Int_MemSet()
-{
-  
-  Word dst, length;
-  Byte value;
-  
-  value  = ChipRam_Get(Chip_MMU_B1_Relative);
-  dst    = ChipRam_GetWord(Chip_MMU_W1_Relative);
-  length = ChipRam_GetWord(Chip_MMU_W2_Relative) & ~SHARED_SIZE;
-
- // LOGF("Mmu_Int_MemSet: Value=%2x Dst=%4x Length=%i", value, dst, length);
-
-  if (dst < SHARED_BANK_0)
-  {
-    LOGF("Mmu_Int_MemSet: ** Not in shared ram!");
-    // Memset only on shared ram.
-    return;
-  }
-
-  dst -= SHARED_BANK_0;
-
-  for (Word ii = 0; ii < length; ii++)
-  {
-    sSharedRam[dst] = value;
-    ++dst;
-  }
-}
-
 void Mmu_Setup()
 {
   sChipRam = malloc(CHIP_SIZE);
@@ -202,6 +123,10 @@ void Mmu_Setup()
   memset(sSharedRam, 0, SHARED_SIZE);
 
   Bank_SetMask(0);
+
+  LOGF("Mmu Chip Ptr=%p Size=%i", sChipRam, CHIP_SIZE);
+  LOGF("Mmu Program Ptr=%p Size=%i", sProgramRam, PROGRAM_SIZE);
+  LOGF("Mmu Shared Ptr=%p Size=%i", sSharedRam, SHARED_SIZE);
 }
 
 void Mmu_Teardown()
@@ -216,6 +141,7 @@ void Mmu_Reset()
   memset(sChipRam, 0, CHIP_SIZE);
   memset(sProgramRam, 0, PROGRAM_SIZE);
   memset(sSharedRam, 0, SHARED_SIZE);
+  LOGF("Mmu Reset");
 }
 
 bool Mmu_CopyToProgramRam(void* data, int length)
@@ -226,10 +152,10 @@ bool Mmu_CopyToProgramRam(void* data, int length)
 
     memcpy(sProgramRam, data, len);
     
-    FILE* f = fopen("test.dat", "wb");
-    fwrite(&len, 4, 1, f);
-    fwrite(sProgramRam, len, 1, f);
-    fclose(f);
+    // FILE* f = fopen("program.dat", "wb");
+    // fwrite(&len, 4, 1, f);
+    // fwrite(sProgramRam, len, 1, f);
+    // fclose(f);
     
     return true;
   }
@@ -294,6 +220,8 @@ Byte Mmu_Get(Word address)
     case Program_Begin + 0x3000:
       return Program_Get(address);
     case Chip_Begin:
+      case Chip_RAND:
+        return rand() & 0xFF;
       return ChipRam_Get(address & 0xBFFF);
     case Gpu_Begin:
       return GpuMmu_Get(address & 0xAFFF);
@@ -320,13 +248,6 @@ Byte Mmu_Get(Word address)
   }
   return 0;
 }
-
-typedef enum
-{
-  MmuOp_SharedMemSet,
-  MmuOp_SharedMemCopy,
-  MmuOp_Prog2SharedMemCopy,
-}  Mmu_Op;
 
 typedef struct
 {
@@ -364,10 +285,6 @@ int Mmu_Coroutine_Start(Byte type)
   MMU_DATA.cycles = 0;
   MMU_DATA.state  = 0;
 
-  LOGF("op = %i", MMU_DATA.op);
-  LOGF("cycles = %i", MMU_DATA.cycles);
-  LOGF("state = %i", MMU_DATA.state);
-
   switch(MMU_DATA.op)
   {
     case INT_MMU_MEMCPY:
@@ -380,6 +297,12 @@ int Mmu_Coroutine_Start(Byte type)
       LOGF("ogMemCpy.dst = %i", MMU_DATA.opMemCpy.dst);
       LOGF("ogMemCpy.src = %i", MMU_DATA.opMemCpy.src);
       LOGF("ogMemCpy.len = %i", MMU_DATA.opMemCpy.len);
+
+      if (MMU_DATA.opMemCpy.len == 0)
+      {
+        LOGF("Failed. Length zero.");
+        MMU_YIELD_FAIL;
+      }
 
       if (MMU_DATA.opMemCpy.src < SHARED_BANK_0 || 
           MMU_DATA.opMemCpy.dst < SHARED_BANK_0)
@@ -403,6 +326,12 @@ int Mmu_Coroutine_Start(Byte type)
       LOGF("ogMemSet.dst = %i", MMU_DATA.opPrgCpy.dst);
       LOGF("ogMemSet.src = %i", MMU_DATA.opPrgCpy.src);
       LOGF("ogMemSet.len = %i", MMU_DATA.opPrgCpy.len);
+      
+      if (MMU_DATA.opMemSet.len == 0)
+      {
+        LOGF("Failed. Length zero.");
+        MMU_YIELD_FAIL;
+      }
 
       if (MMU_DATA.opMemSet.dst < SHARED_BANK_0)
       {
@@ -419,17 +348,29 @@ int Mmu_Coroutine_Start(Byte type)
       MMU_DATA.cycles += 2;
       MMU_DATA.opPrgCpy.dst = ChipRam_GetWord(Chip_MMU_W1_Relative) & ~PROGRAM_SIZE;
       MMU_DATA.opPrgCpy.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
-      MMU_DATA.opPrgCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~SHARED_SIZE;
+      MMU_DATA.opPrgCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~PROGRAM_SIZE;
 
       LOGF("ogPrgCpy.dst = %i", MMU_DATA.opPrgCpy.dst);
       LOGF("ogPrgCpy.src = %i", MMU_DATA.opPrgCpy.src);
       LOGF("ogPrgCpy.len = %i", MMU_DATA.opPrgCpy.len);
 
+      if (MMU_DATA.opPrgCpy.len == 0)
+      {
+        LOGF("Failed. Length zero.");
+        MMU_YIELD_FAIL;
+      }
+
       if (MMU_DATA.opPrgCpy.dst < SHARED_BANK_0 || 
           MMU_DATA.opPrgCpy.src > PROGRAM_SIZE)
       {
+        LOGF("Failed. (MMU_DATA.opPrgCpy.dst < SHARED_BANK_0) == %i, MMU_DATA.opPrgCpy.src > PROGRAM_SIZE == %i",
+          MMU_DATA.opPrgCpy.dst < SHARED_BANK_0,
+          MMU_DATA.opPrgCpy.src > PROGRAM_SIZE
+        );
         MMU_YIELD_FAIL;
       }
+
+      LOGF("ogPrgCpy seems to be okay");
 
       MMU_DATA.opPrgCpy.dst -= SHARED_BANK_0;
 

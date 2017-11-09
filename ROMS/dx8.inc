@@ -1,5 +1,6 @@
 ; Common Addresses and Registers
 MMU_BANK = $4000
+RAND = $4001
 MMU_B1 = $4010
 MMU_B2 = $4011
 MMU_W1 = $4012
@@ -22,12 +23,16 @@ GFX_SCNW2B = $500C
 GFX_SCNW3R = $500D
 GFX_SCNW3G = $500E
 GFX_SCNW3B = $500F
+GFX_SCNLNE = $5020
 
 ; Interrupts commands (int $01)
 INT_MMU_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length
 INT_MMU_MEMCPY = $02    ; Copy Shared Memory: W1=dst W2=src W3=length
 INT_MMU_PRGCPY = $03    ; Copy Program Memory to Shared Memory: W1=dst W2=src W3=length
 INT_CPU_RESET = $FF    ; Soft Reset
+CPU_RESET = $01    ; Reset
+CPU_HBLANK = $02    ; HBlank
+CPU_VBLANK = $03    ; VBlank
 
 ; X8 Processor Instructions
 macro nop [A, B] {
@@ -910,4 +915,8 @@ macro int [A, B] {
   ; [$F6] int #$00
   db $F6
   db A
+}
+macro resume [A, B] {
+  ; [$F7] resume
+  db $F7
 }

@@ -43,10 +43,6 @@
 
 #define GPU_MEM_SIZE 0x100
 
-#define CRT_W 640
-#define CRT_H 400
-#define CRT_DEPTH 3
-
 Byte* sCrt;
 bool  sCrtDirty;
 Byte* sGpuMem;
@@ -78,45 +74,22 @@ typedef struct
 #define DEF_GPU_GFX_MODE(ID, W, H, PLANES) \
   { W, H, PLANES, CRT_W / W, CRT_H / H, false }
 
-#define START_MODE 21
+#define START_MODE 6
 GpuMode kModes[] = {
-  DEF_GPU_TXT_MODE(0, 20, 10, 4),
-  DEF_GPU_TXT_MODE(1, 40, 25, 4),
-  DEF_GPU_TXT_MODE(2, 80, 25, 2),
-  DEF_GPU_TXT_MODE(3, 80, 50, 2),
-  DEF_GPU_TXT_MODE(4, 80, 50, 1),
-
-  DEF_GPU_GFX_MODE(5, 80, 50, 4),
-  DEF_GPU_GFX_MODE(6, 80, 50, 2),
-  DEF_GPU_GFX_MODE(7, 80, 50, 1),
-
-  DEF_GPU_GFX_MODE(8, 128, 80, 4),
-  DEF_GPU_GFX_MODE(9, 128, 80, 2),
-  DEF_GPU_GFX_MODE(10, 128, 80, 1),
-
-  DEF_GPU_GFX_MODE(11, 160, 80, 4),
-  DEF_GPU_GFX_MODE(12, 160, 80, 2),
-  DEF_GPU_GFX_MODE(13, 160, 80, 1),
-
-  DEF_GPU_GFX_MODE(14, 160, 100, 4),
-  DEF_GPU_GFX_MODE(15, 160, 100, 2),
-  DEF_GPU_GFX_MODE(16, 160, 100, 1),
-
-  DEF_GPU_GFX_MODE(17, 320, 100, 4),
-  DEF_GPU_GFX_MODE(18, 320, 100, 2),
-  DEF_GPU_GFX_MODE(19, 320, 100, 1),
-
-  DEF_GPU_GFX_MODE(20, 320, 200, 4),
-  DEF_GPU_GFX_MODE(21, 320, 200, 2),
-  DEF_GPU_GFX_MODE(22, 320, 200, 1),
-
-  DEF_GPU_GFX_MODE(23, 640, 200, 4),
-  DEF_GPU_GFX_MODE(25, 640, 200, 2),
-  DEF_GPU_GFX_MODE(26, 640, 200, 1),
-
-  DEF_GPU_GFX_MODE(27, 640, 400, 2),
-  DEF_GPU_GFX_MODE(28, 640, 400, 1)
+  DEF_GPU_TXT_MODE(0,  10,   8,  2),
+  DEF_GPU_TXT_MODE(1,  10,  16,  2),
+  DEF_GPU_TXT_MODE(3,  20,  32,  2),
+  DEF_GPU_GFX_MODE(4,  80,  64,  1),
+  DEF_GPU_GFX_MODE(5,  80,  64,  2),
+  DEF_GPU_GFX_MODE(6,  80,  64,  4),
+  DEF_GPU_GFX_MODE(7,  160, 128, 1),
+  DEF_GPU_GFX_MODE(8,  160, 128, 2),
+  DEF_GPU_GFX_MODE(8,  160, 128, 4),
+  DEF_GPU_GFX_MODE(10, 320, 256, 1),
+  DEF_GPU_GFX_MODE(11, 320, 256, 2),
+  DEF_GPU_GFX_MODE(12, 320, 256, 4),
 };
+#define MAX_GFX_MODES 13
 
 inline void SetCrt(int X, int Y, Byte R, Byte G, Byte B)
 {
@@ -196,7 +169,7 @@ void Gpu_Setup()
   
   memset(sCrt, 0x00, CRT_W * CRT_H * CRT_DEPTH);
 
-  GpuMmu_Set(Gpu_GFX_MODE_Relative, START_MODE); // 80x50
+  GpuMmu_Set(Gpu_GFX_MODE_Relative, START_MODE);
   GpuMmu_Set(Gpu_GFX_BGCOLR_Relative, 0x00);
   GpuMmu_Set(Gpu_GFX_BGCOLG_Relative, 0x00);
   GpuMmu_Set(Gpu_GFX_BGCOLB_Relative, 0x00);
@@ -217,23 +190,8 @@ void Gpu_Setup()
   GpuMmu_Set(Gpu_GFX_SCNW3G_Relative, 0x00);
   GpuMmu_Set(Gpu_GFX_SCNW3B_Relative, 0xFF);
 
-  GpuMode* mode = &kModes[START_MODE];
-
-  int modeW = mode->width;
-  int modeH = mode->height;
-
-  int addr = 0;
-  for(int jj=0;jj < modeH;jj++)
-  {
-    for(int ii=0;ii < modeW;ii++)
-    {
-      if ((ii + jj) % 2 == 0)
-      {
-        int xy = FAST_XY(ii, jj, modeW);
-        FAST_SET(xy);
-      }
-    }
-  }
+  LOGF("GPU Crt = Ptr=%p Size=%ix%ix%i", sCrt, CRT_W, CRT_H, CRT_DEPTH);
+  LOGF("GPU ScaneLine = Ptr=%p Size=%i", sScanLine, CRT_W * 3);
 
   sCrtDirty = true;
 }
@@ -257,7 +215,7 @@ Byte GpuMmu_Get(Word address)
 
 Byte activity = 0;
 
-void Gpu_Cycle()
+void Gpu_Cycle_Once()
 {
   Byte currentMode = GpuMmu_Get(Gpu_GFX_MODE_Relative);
 
@@ -294,7 +252,9 @@ void Gpu_Cycle()
     g = GpuMmu_Get(Gpu_GFX_BGCOLG_Relative);
     b = GpuMmu_Get(Gpu_GFX_BGCOLB_Relative);
 
+    
     // Background Colour.
+    lineIdx = 0;
     for (int ii = 0; ii < modeW; ii++)
     {
       sScanLine[lineIdx + 0] = r;
@@ -307,8 +267,7 @@ void Gpu_Cycle()
     {
       int planeLayer = numPlanes - 1 - planeIdx;
       int memOffset = (planeLayer * planeSize) / sizeof(int);
-
-      b = planeIdx * (256 / numPlanes);
+      //b = planeIdx * (256 / numPlanes);
       lineIdx = 0;
 
       switch(planeIdx)
@@ -335,13 +294,10 @@ void Gpu_Cycle()
           break;
       }
 
-      g -= jj;
-
       for(int ii=0;ii < modeW;ii++)
       {
         int xy = FAST_XY(ii, jj, modeW);
         int bit = !!(FAST_GETOFFSET(memOffset, xy));
-
 
         if (bit)
         {
@@ -376,4 +332,245 @@ EXPORT void* GetCrt()
 {
   sCrtDirty = false;
   return sCrt;
+}
+
+int GpuFrame = 0;  //
+int GpuTimer = 0;  //
+
+void Gpu_Coroutine()
+{
+  // 320x256 pixels
+  // upto 4  planes
+  // Screen mode is inconsistent.
+  // So we should go by scanline only, and probe per pixel in the depth buffer.
+  // Each crt pixel scan be 1, 2, or 4 pixels in size (resolution).
+  // Smaller resolutions is writing the pixel twice or four times in the row, and then coping the scanline downwards.
+  
+  // Pixels are square.
+  // 320x256/1 = 81,920
+  // 320x256/2 = 40,960
+  // 320x256/4 = 20,480
+
+  // 360*256 Operations
+  // 320 is the display resolution but there are 40 more cycles for the electron beam to get back to left down
+  // In those 40 cycles interrupt is called which can be used to changed colours, prepare ram, etc.
+  
+  Byte modeId = GpuMmu_Get(Gpu_GFX_MODE_Relative);
+  if (modeId >= MAX_GFX_MODES)
+  {
+    // Display resolution not supported.
+    return; // Don't display anything.
+  }
+  
+  GpuMode* mode = &kModes[modeId];
+  int pixelSize = mode->pixelW;
+  int scanline = GpuTimer / CRT_SCAN_H; // Y-pos in CRT.
+  int scanpos  = GpuTimer % CRT_SCAN_W; // X-pos in CRT.
+  
+  // V-Blank Phase.
+  if (scanline >= CRT_V_BLANK)
+  {
+    if (GpuTimer >= CRT_SCAN_TOTAL_TIME)
+    {
+      GpuTimer = GpuTimer % CRT_SCAN_TOTAL_TIME;
+    }
+    return;
+  }
+
+  int scanx = scanpos - CRT_H_BLANK;
+  int scany = scanline;
+
+  // H-Blank Phase
+  if (scanpos < CRT_H_BLANK)
+  {
+    switch(pixelSize)
+    {
+      case 1:
+       // memcpy(sCrt + (scany - 1) * CRT_W, sScanLine, CRT_W * 3);
+      break;
+      case 2:
+       // memcpy(sCrt + (scany - 1) * CRT_W, sScanLine, CRT_W * 3);
+        // Add wait cycles here to account for the extra work?
+      break;
+      case 4:
+       // memcpy(sCrt + (scany - 1) * CRT_W, sScanLine, CRT_W * 3);
+        // Add wait cycles here to account for the extra work?
+      break;
+    }
+    // Start of new line.
+    // @TODO Call interrupt!
+    return;
+  }
+  
+  int resx = scanx / pixelSize;
+  int resy = scany / pixelSize;
+
+  int xy = FAST_XY(resx, resy, mode->width);
+  int bit = !!(FAST_GETOFFSET(0, xy));
+
+  if (bit)
+  {
+    switch(pixelSize)
+    {
+      default:
+      case 1:
+        sScanLine[(scanx * 3) + 0] = 0xFF; // R
+        sScanLine[(scanx * 3) + 1] = 0xFF; // G
+        sScanLine[(scanx * 3) + 2] = 0xFF; // B
+      break;
+      case 2:
+        sScanLine[(scanx * 3) + 0] = 0xFF; // R
+        sScanLine[(scanx * 3) + 1] = 0xFF; // G
+        sScanLine[(scanx * 3) + 2] = 0xFF; // B
+        
+        sScanLine[(scanx * 3) + 3] = 0xFF; // R
+        sScanLine[(scanx * 3) + 4] = 0xFF; // G
+        sScanLine[(scanx * 3) + 5] = 0xFF; // B
+      break;
+      case 4:
+        sScanLine[(scanx * 3) + 0] = 0xFF; // R
+        sScanLine[(scanx * 3) + 1] = 0xFF; // G
+        sScanLine[(scanx * 3) + 2] = 0xFF; // B
+
+        sScanLine[(scanx * 3) + 3] = 0xFF; // R
+        sScanLine[(scanx * 3) + 4] = 0xFF; // G
+        sScanLine[(scanx * 3) + 5] = 0xFF; // B
+        
+        sScanLine[(scanx * 3) + 6] = 0xFF; // R
+        sScanLine[(scanx * 3) + 7] = 0xFF; // G
+        sScanLine[(scanx * 3) + 8] = 0xFF; // B
+        
+        sScanLine[(scanx * 3) + 9] = 0xFF; // R
+        sScanLine[(scanx * 3) +10] = 0xFF; // G
+        sScanLine[(scanx * 3) +11] = 0xFF; // B
+      break;
+    }
+  }
+}
+
+Word     frame, currentFrame;
+GpuMode* currentMode;
+Byte     lineR, lineG, lineB;
+
+void Gpu_FrameStart()
+{
+  Byte modeId = GpuMmu_Get(Gpu_GFX_MODE_Relative);
+  if (modeId >= MAX_GFX_MODES)
+  {
+    // ?????
+    // Display resolution not supported.
+    return; // Don't display anything.
+  }
+
+  currentMode = &kModes[modeId];
+}
+
+void Gpu_FrameEnd()
+{
+  sCrtDirty = true;
+  // Call VBlank interrupt here.
+}
+
+void SubmitLine(int line)
+{
+  int offset = (CRT_W * 3 * line);
+  memcpy(sCrt + offset, sScanLine, CRT_W * 3);
+  memset(sScanLine, 0, CRT_W * 3);
+
+  //memset(sScanLine, 0xFF, CRT_W * 3); // Temp
+  sCrtDirty = true; // Temp
+}
+
+void Gpu_Coroutine_1()
+{
+  if (GpuTimer == 0)
+  {
+    Gpu_FrameStart();
+    return;
+  }
+
+  if (GpuTimer >= (CRT_SCAN_TOTAL_TIME - (CRT_V_BLANK_TIME)))
+  {
+    if (GpuTimer == (CRT_SCAN_TOTAL_TIME - (CRT_V_BLANK_TIME)))
+    {
+      Cpu_Interrupt(CPU_VBLANK);
+      // Copy previous scanline to CRT.
+      SubmitLine(CRT_H - 1);
+      Gpu_FrameEnd();
+    }
+
+    // Otherwise Wait.
+    return;
+  }
+
+
+  int scanline = GpuTimer / CRT_SCAN_W; // Y-pos in CRT.
+  int scanpos = GpuTimer % CRT_SCAN_W; // X-pos in CRT.
+
+  if (scanpos == 0)
+  {
+    // Copy previous Scanline to CRT if scanline + 1.
+    if (scanline > 0)
+    {
+      SubmitLine(scanline - 1);
+    }
+
+    GpuMmu_Set(Gpu_GFX_SCNW0R_Relative, scanline);
+    Cpu_Interrupt(CPU_HBLANK);
+
+    // Call HBlank interrupt here.
+    // Call interrupts and wait CRT_H_BLANK cycles
+  }
+
+  if (scanpos < CRT_H_BLANK)
+  {
+    // Wait. Cpu can be doing things here.
+    return;
+  }
+
+  // Okay draw.
+  int x = scanpos - CRT_H_BLANK;
+  int y = scanline;
+
+  if (x == 0)
+  {
+    lineR = GpuMmu_Get(Gpu_GFX_SCNW0R_Relative);
+    lineG = GpuMmu_Get(Gpu_GFX_SCNW0G_Relative);
+    lineB = GpuMmu_Get(Gpu_GFX_SCNW0B_Relative);
+  }
+
+  int xy = FAST_XY(x, y, currentMode->width);
+  int bit = !!(FAST_GETOFFSET(0, xy));
+
+  if (bit)
+  {
+    sScanLine[(x * 3) + 0] = lineR;
+    sScanLine[(x * 3) + 1] = lineG;
+    sScanLine[(x * 3) + 2] = lineB;
+  }
+}
+
+void Gpu_Coroutine_2()
+{
+}
+
+void Gpu_Coroutine_4()
+{
+}
+
+void Gpu_Clock()
+{
+  Gpu_Coroutine_1();
+  GpuTimer++;
+  if (GpuTimer == CRT_SCAN_TOTAL_TIME)
+  {
+    GpuTimer = 0;
+    frame++;
+  }
+  // Gpu_Cycle_Once();
+}
+
+int Gpu_GetTimer()
+{
+  return GpuTimer;
 }

@@ -37,9 +37,22 @@
 
 #define PROGRAM_SIZE 0x4000
 #define CHIP_SIZE    0x400
-#define SHARED_SIZE  0x8000
-#define HALF_SHARED_SIZE (SHARED_SIZE / 2)
+#define SHARED_SIZE  0xFFFF
+#define HALF_SHARED_SIZE 0x8000
 #define BANK_SIZE    0x1000
+
+#define CRT_W 320
+#define CRT_H 256
+#define CRT_DEPTH 3
+
+#define CRT_H_BLANK 40  // 'Pixels/Cycles'
+#define CRT_V_BLANK 10  // 'Lines'
+#define CRT_V_BLANK_TIME (CRT_V_BLANK * CRT_W)
+
+#define CRT_SCAN_W (CRT_H_BLANK + CRT_W)
+#define CRT_SCAN_H (CRT_H)
+#define CRT_SCAN_TOTAL_TIME ((CRT_SCAN_W * CRT_SCAN_H) + CRT_V_BLANK_TIME)
+
 
 typedef uint8_t  Byte;
 typedef uint16_t Word;
@@ -61,7 +74,7 @@ typedef struct {
       Byte  bZero : 1;
       Byte  bNegative : 1;
       Byte  bCarry : 1;
-      Byte  flag4 : 1;
+      Byte  bInterrupt : 1;
       Byte  flag5 : 1;
       Byte  flag6 : 1;
       Byte  flag7 : 1;
@@ -75,11 +88,13 @@ typedef struct {
   Word lastOperand;
 } Cpu;
 
-int  Cpu_Cycle(int ms);
+int Clock(int ms);
 
 void Cpu_Reset(bool soft);
 
 int Cpu_Step();
+
+void Cpu_Interrupt(Byte name);
 
 Byte Cpu_GetARegister();
 

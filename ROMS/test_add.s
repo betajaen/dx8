@@ -1,7 +1,19 @@
 include "dx8.inc"
 include "macros.inc"
 
-jmp MAIN
+INTERRUPTS:
+        ; Is H-Blank?
+        set x, CPU_HBLANK
+        cmp a, x
+        jmp.eq HBLANK
+
+        ; Else If V-Blank?
+        set x, CPU_VBLANK
+        cmp a, x
+        jmp.eq VBLANK
+
+        ; Else
+        jmp MAIN
 
 ; Wait A cycles
 DELAY:
@@ -65,31 +77,55 @@ PASTE1:
 return
 
 MAIN:
-        APOKE    GFX_MODE, 5
+        APOKE    GFX_MODE, 11
 
-        ;set      x, IMG_LEFT_ADDR_LO
-        ;set      y, IMG_LEFT_ADDR_HI
-        ;set      z, IMG_LEFT_SIZE_LO
-        ;set      w, IMG_LEFT_SIZE_HI
-        ;call     PASTE0
+        APOKE    GFX_SCNW0R, 0
+        APOKE    GFX_SCNW0G, 255
+        APOKE    GFX_SCNW0B, 255
 
-
-        ;set      x, IMG_RIGHT_ADDR_LO
-        ;set      y, IMG_RIGHT_ADDR_HI
-        ;set      z, IMG_RIGHT_SIZE_LO
-        ;set      w, IMG_RIGHT_SIZE_HI
-        ;call     PASTE1
+        set      x, IMG_COBRA_ADDR_LO
+        set      y, IMG_COBRA_ADDR_HI
+        set      z, IMG_COBRA_SIZE_LO
+        set      w, IMG_COBRA_SIZE_HI
+        call     PASTE0
 
         set      x, $00
+        set      y, $00
+        set      z, $00
+        set      w, $00
 L1:
-        inc      x
-        COPY     a, x
-        call     CLS0
         jmp L1
 
+MAIN1:
+        APOKE    GFX_MODE, 11
+        set     x, $00
+        set     y, $22
+        set     z, $55
 
+L2:
+        store   GFX_BGCOLR, x
+        store   GFX_BGCOLG, y
+        store   GFX_BGCOLB, z
 
+        inc      x
+        dec      y
+        inc      z
 
-include "logo.png.s"
-include "left.png.s"
+        jmp L2
+
+HBLANK:
+        load  z, RAND
+        store GFX_SCNW0R, z
+        load  z, RAND
+        store GFX_SCNW0G, z
+        load  z, RAND
+        store GFX_SCNW0B, z
+resume
+
+VBLANK:
+        inc w
+resume
+
+include "cobra.png.s"
 include "right.png.s"
+

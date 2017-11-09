@@ -51,6 +51,7 @@ void Gpu_Setup();
 void Gpu_Teardown();
 
 bool Crt_IsDirty();
+int  Gpu_GetTimer();
 
 FILE* logFp;
 
@@ -98,6 +99,8 @@ EXPORT int GetValue(int name)
       return Cpu_GetLastOperand();
     case Api_CrtDirty:
       return Crt_IsDirty();
+    case Api_GpuTimer:
+      return Gpu_GetTimer();
   }
   return 0;
 }
@@ -156,7 +159,7 @@ EXPORT int Call(int name, int value)
   switch(name)
   {
     case Api_CycleFn:
-      return Cpu_Cycle(value);
+      return Clock(value);
     case Api_SoftReset:
       Cpu_Reset(true);
       return 0;

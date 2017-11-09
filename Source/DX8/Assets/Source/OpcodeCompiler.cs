@@ -49,6 +49,7 @@ namespace DX8
       JmpLt,
       JmpZ,
       Int,
+      Resume,
       COUNT
     }
 
@@ -82,7 +83,8 @@ namespace DX8
       "jmp.gt",
       "jmp.lt",
       "jmp.z",
-      "int"
+      "int",
+      "resume"
     };
 
     public enum Operand
