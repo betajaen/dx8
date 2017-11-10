@@ -53,79 +53,6 @@ Byte*  sGpuMemLines;
 
 Byte* Shared_GetPtr();
 
-typedef struct 
-{
-  int  width;
-  int  height;
-  int  planes;
-  int  pixelW;
-  int  pixelH;
-  bool isText;
-  int  planeSize;
-} GpuMode;
-
-#define FAST_XY(X, Y, W)   (X + (Y * W))
-#define FAST_SET(XY)       sSharedRamInt[XY>>5] |= (1 << (XY&31))
-#define FAST_CLR(XY)       sSharedRamInt[XY>5] &= ~(1 << (XY&31))
-#define FAST_GET(XY)       (sSharedRamInt[XY>>5] & 1 << (XY&31))
-#define FAST_GETOFFSET(OFFSET,XY)       (sSharedRamInt[OFFSET + (XY>>5)] & 1 << (XY&31))
-
-#define DEF_GPU_TXT_MODE(ID, COLS, ROWS, PLANES) \
-  { COLS * 8, ROWS * 8, PLANES, CRT_W / (COLS * 8), CRT_H / (ROWS * 8), true, 8 * COLS * ROWS }
-
-#define DEF_GPU_GFX_MODE(ID, W, H, PLANES) \
-  { W, H, PLANES, CRT_W / W, CRT_H / H, false, (W * H / 8)}
-
-#define START_MODE 3
-GpuMode kModes[] = {
-  DEF_GPU_TXT_MODE(0,  10,   8,  2),
-  DEF_GPU_TXT_MODE(1,  10,  16,  2),
-  DEF_GPU_TXT_MODE(2,  20,  32,  2),
-  DEF_GPU_GFX_MODE(3,  320, 256, 4),
-};
-#define MAX_GFX_MODES 4
-
-inline void SetCrt(int X, int Y, Byte R, Byte G, Byte B)
-{
-  sCrt[(X*3) + (Y * 3 * CRT_W) + 0] = R;
-  sCrt[(X*3) + (Y * 3 * CRT_W) + 1] = G;
-  sCrt[(X*3) + (Y * 3 * CRT_W) + 2] = B;
-}
-
-inline void SetCrtScale(int X, int Y, Byte R, Byte G, Byte B, Byte px, Byte py)
-{
-  int xx = X * px;
-  int yy = Y * py;
-  for (int jj = 0; jj < py;jj++)
-  {
-    for(int ii=0;ii < px;ii++)
-    {
-      SetCrt(xx + ii, yy + jj, R, G, B);
-    }
-  }
-}
-
-inline void CrtCommitLine(int jj, int ww, int px, int py)
-{
-  int yOffset = jj * py;
-
-  // Scale Horz (expand across)
-  for(int x=0;x < ww;x++)
-  {
-    Byte r = sScanLine[(x * 3) + 0], g = sScanLine[(x * 3) + 1], b = sScanLine[(x * 3) + 2];
-    for(int subX=0;subX < px;subX++)
-    {
-      SetCrt((x * px) + subX, yOffset, r, g, b);
-    }
-  }
-
-  // Scale Vert (copy down)
-  for(int y=1;y < py;y++)
-  {
-    memcpy(sCrt + (((y + yOffset) * 3 * CRT_W)), sCrt + (((0 + yOffset) * 3 * CRT_W)), CRT_W * 3);
-  }
-}
-
 inline void SetBitPixel(int offset, int x, int y, int w, int h)
 {
   int addr = offset + (x / 8) + (y * w);
@@ -164,7 +91,7 @@ void Gpu_Setup()
   
   memset(sCrt, 0x00, CRT_W * CRT_H * CRT_DEPTH);
 
-  GpuMmu_Set(Gpu_GFX_MODE_Relative, START_MODE);
+  GpuMmu_Set(Gpu_GFX_PLANES_Relative, 0x01);
   GpuMmu_Set(Gpu_GFX_BGCOLR_Relative, 0x3B);
   GpuMmu_Set(Gpu_GFX_BGCOLG_Relative, 0x3F);
   GpuMmu_Set(Gpu_GFX_BGCOLB_Relative, 0x42);
@@ -227,23 +154,12 @@ EXPORT void* GetCrt()
 int GpuFrame = 0;  //
 int GpuTimer = 0;  //
 Word     frame, currentFrame;
-GpuMode* currentMode;
 Byte     lineR[16], lineG[16], lineB[16];
 int      scanpos, scanline;
+int      numPlanes;
 
 void Gpu_FrameStart()
 {
-  Byte modeId = GpuMmu_Get(Gpu_GFX_MODE_Relative);
-  if (modeId >= MAX_GFX_MODES)
-  {
-    // ?????
-    // Display resolution not supported.
-    LOGF("Unknown Display Mode!!! %i", modeId);
-    return; // Don't display anything.
-  }
-
-  currentMode = &kModes[modeId];
-
   // Reset Colours
   GpuMmu_Set(Gpu_GFX_BGCOLR_Relative, 0x3B);
   GpuMmu_Set(Gpu_GFX_BGCOLG_Relative, 0x3F);
@@ -264,6 +180,23 @@ void Gpu_FrameStart()
   GpuMmu_Set(Gpu_GFX_SCNW3R_Relative, 0x56);
   GpuMmu_Set(Gpu_GFX_SCNW3G_Relative, 0xB9);
   GpuMmu_Set(Gpu_GFX_SCNW3B_Relative, 0xD0);
+
+  numPlanes = GpuMmu_Get(Gpu_GFX_PLANES_Relative);
+
+  switch(numPlanes)
+  {
+    case 1:
+    case 2:
+    case 4:
+      break;
+    default:
+    {
+      LOGF("Invalid Plane value!!! %i", numPlanes);
+      numPlanes = 1;
+    }
+    break;
+  }
+
 }
 
 void Gpu_FrameEnd()
@@ -321,10 +254,31 @@ inline bool Gpu_Coroutine_Common()
 
     // Fetch current Graphics mem, and cache it.
     // Graphics and Text mode stuff here, so we don't have to do it per coroutine.
-    memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (currentMode->planeSize * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
-    memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sSharedRam + (currentMode->planeSize * 1) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
-    memcpy(sGpuMemLines + (2 * GPU_BUFFER_W), sSharedRam + (currentMode->planeSize * 2) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
-    memcpy(sGpuMemLines + (3 * GPU_BUFFER_W), sSharedRam + (currentMode->planeSize * 3) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+    switch(numPlanes)
+    {
+      case 1:
+      {
+        memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+      }
+      case 2:
+      {
+        memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 1) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+      }
+      case 4:
+      {
+        memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 1) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sGpuMemLines + (2 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 2) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sGpuMemLines + (3 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 3) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+
+        // LOGF("[0] %4X", 0x8000 + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W));
+        // LOGF("[1] %4X", 0x8000 + (GPU_PLANE_SIZE * 1) + (scanline * GPU_BUFFER_W));
+        // LOGF("[2] %4X", 0x8000 + (GPU_PLANE_SIZE * 2) + (scanline * GPU_BUFFER_W));
+        // LOGF("[3] %4X", 0x8000 + (GPU_PLANE_SIZE * 3) + (scanline * GPU_BUFFER_W));
+      }
+      break;
+    }
   }
 
   if (scanpos < CRT_H_BLANK)
@@ -392,10 +346,28 @@ void Gpu_Coroutine_1()
   int bitShift = (1 << (x & 7));
   
   int col = 0;
-  col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 0) + offset] & bitShift)));
-  col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 1) + offset] & bitShift))) << 1;
-  col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 2) + offset] & bitShift))) << 2;
-  col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 3) + offset] & bitShift))) << 3;
+  switch(numPlanes)
+  {
+    case 1:
+    {
+      col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 0) + offset] & bitShift)));
+    }
+    break;
+    case 2:
+    {
+      col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 0) + offset] & bitShift)));
+      col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 1) + offset] & bitShift))) << 1;
+    }
+    break;
+    case 4:
+    {
+      col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 0) + offset] & bitShift)));
+      col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 1) + offset] & bitShift))) << 1;
+      col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 2) + offset] & bitShift))) << 2;
+      col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 3) + offset] & bitShift))) << 3;
+    }
+    break;
+  }
 
   sScanLine[(x * 3) + 0] = lineR[col];
   sScanLine[(x * 3) + 1] = lineG[col];

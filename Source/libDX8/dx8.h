@@ -53,6 +53,7 @@
 #define CRT_SCAN_H (CRT_H)
 #define CRT_SCAN_TOTAL_TIME ((CRT_SCAN_W * CRT_SCAN_H) + CRT_V_BLANK_TIME)
 
+#define GPU_PLANE_SIZE ((CRT_W * CRT_H) / 8)
 
 typedef uint8_t  Byte;
 typedef uint16_t Word;

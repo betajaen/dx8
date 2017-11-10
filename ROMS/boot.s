@@ -117,6 +117,38 @@ PASTE1:
         call       DELAY
 return
 
+
+PASTE2:
+        APOKE      MMU_W1,         $00           ; lo -- Target = $A800
+        APOKE      MMU_W1+1,       $D0           ; hi --
+        store     MMU_W2,         x             ; Img addr lo
+        store     MMU_W2+1,       y             ; Img addr hi
+        store     MMU_W3,         z             ; Img size lo
+        store     MMU_W3+1,       w             ; Img size hi
+        int       INT_MMU_PRGCPY
+
+        set        a,              $FF
+        call       DELAY
+        set        a,              $FF
+        call       DELAY
+return
+
+
+PASTE3:
+        APOKE      MMU_W1,         $00           ; lo -- Target = $A800
+        APOKE      MMU_W1+1,       $F8           ; hi --
+        store     MMU_W2,         x             ; Img addr lo
+        store     MMU_W2+1,       y             ; Img addr hi
+        store     MMU_W3,         z             ; Img size lo
+        store     MMU_W3+1,       w             ; Img size hi
+        int       INT_MMU_PRGCPY
+
+        set        a,              $FF
+        call       DELAY
+        set        a,              $FF
+        call       DELAY
+return
+
 ; Wait A cycles
 DELAY:
         jmp.z DELAY_DONE
@@ -131,7 +163,7 @@ return
 ; =============================================================
 
 MAIN:
-        APOKE    GFX_MODE, 3
+        APOKE    GFX_PLANES, 4
 
         ;set       a, $03
         ;call      CLS0
@@ -140,7 +172,7 @@ MAIN:
         set      y, IMG_COBRA_ADDR_HI
         set      z, IMG_COBRA_SIZE_LO
         set      w, IMG_COBRA_SIZE_HI
-        call     PASTE0
+        call     PASTE3
 
         ;set       a, $0C
         ;call      CLS1

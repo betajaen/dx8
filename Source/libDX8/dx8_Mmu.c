@@ -300,9 +300,9 @@ int Mmu_Coroutine_Start(Byte type)
       MMU_DATA.opMemCpy.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
       MMU_DATA.opMemCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~SHARED_SIZE;
 
-      LOGF("ogMemCpy.dst = %i", MMU_DATA.opMemCpy.dst);
-      LOGF("ogMemCpy.src = %i", MMU_DATA.opMemCpy.src);
-      LOGF("ogMemCpy.len = %i", MMU_DATA.opMemCpy.len);
+      LOGF("ogMemCpy.dst = %4X", MMU_DATA.opMemCpy.dst);
+      LOGF("ogMemCpy.src = %4X", MMU_DATA.opMemCpy.src);
+      LOGF("ogMemCpy.len = %4X", MMU_DATA.opMemCpy.len);
 
       if (MMU_DATA.opMemCpy.len == 0)
       {
@@ -329,9 +329,9 @@ int Mmu_Coroutine_Start(Byte type)
       MMU_DATA.opMemSet.len = ChipRam_GetWord(Chip_MMU_W2_Relative) & ~HALF_SHARED_SIZE;
       MMU_DATA.opMemSet.val = ChipRam_Get(Chip_MMU_B1_Relative);
 
-      LOGF("ogMemSet.dst = %i", MMU_DATA.opMemSet.dst);
-      LOGF("ogMemSet.len = %i", MMU_DATA.opMemSet.len);
-      LOGF("ogMemSet.val = %i", MMU_DATA.opMemSet.val);
+      LOGF("ogMemSet.dst = %4X", MMU_DATA.opMemSet.dst);
+      LOGF("ogMemSet.len = %4X", MMU_DATA.opMemSet.len);
+      LOGF("ogMemSet.val = %0X", MMU_DATA.opMemSet.val);
       
       if (MMU_DATA.opMemSet.len == 0)
       {
@@ -352,13 +352,13 @@ int Mmu_Coroutine_Start(Byte type)
     case INT_MMU_PRGCPY:
     {
       MMU_DATA.cycles += 2;
-      MMU_DATA.opPrgCpy.dst = ChipRam_GetWord(Chip_MMU_W1_Relative) & ~PROGRAM_SIZE;
+      MMU_DATA.opPrgCpy.dst = ChipRam_GetWord(Chip_MMU_W1_Relative); //& ~PROGRAM_SIZE;
       MMU_DATA.opPrgCpy.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
-      MMU_DATA.opPrgCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~PROGRAM_SIZE;
+      MMU_DATA.opPrgCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative); //& ~PROGRAM_SIZE;
 
-      LOGF("ogPrgCpy.dst = %i", MMU_DATA.opPrgCpy.dst);
-      LOGF("ogPrgCpy.src = %i", MMU_DATA.opPrgCpy.src);
-      LOGF("ogPrgCpy.len = %i", MMU_DATA.opPrgCpy.len);
+      LOGF("ogPrgCpy.dst = %4X", MMU_DATA.opPrgCpy.dst);
+      LOGF("ogPrgCpy.src = %4X", MMU_DATA.opPrgCpy.src);
+      LOGF("ogPrgCpy.len = %4X", MMU_DATA.opPrgCpy.len);
 
       if (MMU_DATA.opPrgCpy.len == 0)
       {
@@ -390,9 +390,9 @@ int Mmu_Coroutine_Start(Byte type)
       MMU_DATA.opBitExp.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
       MMU_DATA.opBitExp.len = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~PROGRAM_SIZE;
 
-      LOGF("ogRleCpy.dst = %i", MMU_DATA.opBitExp.dst);
-      LOGF("ogRleCpy.src = %i", MMU_DATA.opBitExp.src);
-      LOGF("ogRleCpy.len = %i", MMU_DATA.opBitExp.len);
+      LOGF("ogRleCpy.dst = %4X", MMU_DATA.opBitExp.dst);
+      LOGF("ogRleCpy.src = %4X", MMU_DATA.opBitExp.src);
+      LOGF("ogRleCpy.len = %4X", MMU_DATA.opBitExp.len);
 
       if (MMU_DATA.opBitExp.len == 0)
       {
