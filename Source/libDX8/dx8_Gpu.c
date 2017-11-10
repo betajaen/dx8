@@ -49,6 +49,7 @@ Byte* sGpuMem;
 Byte* sSharedRam;
 int*  sSharedRamInt;
 Byte* sScanLine;
+Byte*  sGpuMemLines;
 
 Byte* Shared_GetPtr();
 
@@ -60,6 +61,7 @@ typedef struct
   int  pixelW;
   int  pixelH;
   bool isText;
+  int  planeSize;
 } GpuMode;
 
 #define FAST_XY(X, Y, W)   (X + (Y * W))
@@ -69,27 +71,19 @@ typedef struct
 #define FAST_GETOFFSET(OFFSET,XY)       (sSharedRamInt[OFFSET + (XY>>5)] & 1 << (XY&31))
 
 #define DEF_GPU_TXT_MODE(ID, COLS, ROWS, PLANES) \
-  { COLS * 8, ROWS * 8, PLANES, CRT_W / (COLS * 8), CRT_H / (ROWS * 8), true }
+  { COLS * 8, ROWS * 8, PLANES, CRT_W / (COLS * 8), CRT_H / (ROWS * 8), true, 8 * COLS * ROWS }
 
 #define DEF_GPU_GFX_MODE(ID, W, H, PLANES) \
-  { W, H, PLANES, CRT_W / W, CRT_H / H, false }
+  { W, H, PLANES, CRT_W / W, CRT_H / H, false, (W * H / 8)}
 
-#define START_MODE 6
+#define START_MODE 3
 GpuMode kModes[] = {
   DEF_GPU_TXT_MODE(0,  10,   8,  2),
   DEF_GPU_TXT_MODE(1,  10,  16,  2),
-  DEF_GPU_TXT_MODE(3,  20,  32,  2),
-  DEF_GPU_GFX_MODE(4,  80,  64,  1),
-  DEF_GPU_GFX_MODE(5,  80,  64,  2),
-  DEF_GPU_GFX_MODE(6,  80,  64,  4),
-  DEF_GPU_GFX_MODE(7,  160, 128, 1),
-  DEF_GPU_GFX_MODE(8,  160, 128, 2),
-  DEF_GPU_GFX_MODE(8,  160, 128, 4),
-  DEF_GPU_GFX_MODE(10, 320, 256, 1),
-  DEF_GPU_GFX_MODE(11, 320, 256, 2),
-  DEF_GPU_GFX_MODE(12, 320, 256, 4),
+  DEF_GPU_TXT_MODE(2,  20,  32,  2),
+  DEF_GPU_GFX_MODE(3,  320, 256, 4),
 };
-#define MAX_GFX_MODES 13
+#define MAX_GFX_MODES 4
 
 inline void SetCrt(int X, int Y, Byte R, Byte G, Byte B)
 {
@@ -165,6 +159,7 @@ void Gpu_Setup()
   sSharedRam = Shared_GetPtr();
   sSharedRamInt = (int*) sSharedRam;
   sScanLine = malloc(CRT_W * 3);
+  sGpuMemLines = malloc((CRT_W * 4) / 8);
   memset(sScanLine, 0, CRT_W * 3);
   
   memset(sCrt, 0x00, CRT_W * CRT_H * CRT_DEPTH);
@@ -198,6 +193,7 @@ void Gpu_Setup()
 
 void Gpu_Teardown()
 {
+  free(sGpuMemLines);
   free(sScanLine);
   free(sCrt);
   free(sGpuMem);
@@ -286,7 +282,7 @@ void Gpu_Cycle_Once()
           r = GpuMmu_Get(Gpu_GFX_SCNW2R_Relative);
           g = GpuMmu_Get(Gpu_GFX_SCNW2G_Relative);
           b = GpuMmu_Get(Gpu_GFX_SCNW2B_Relative);
-          break;
+        break;
         case 3:
           r = GpuMmu_Get(Gpu_GFX_SCNW3R_Relative);
           g = GpuMmu_Get(Gpu_GFX_SCNW3G_Relative);
@@ -450,7 +446,8 @@ void Gpu_Coroutine()
 
 Word     frame, currentFrame;
 GpuMode* currentMode;
-Byte     lineR, lineG, lineB;
+Byte     lineR[16], lineG[16], lineB[16];
+int      scanpos, scanline;
 
 void Gpu_FrameStart()
 {
@@ -459,10 +456,14 @@ void Gpu_FrameStart()
   {
     // ?????
     // Display resolution not supported.
+    LOGF("Unknown Display Mode!!! %i", modeId);
     return; // Don't display anything.
   }
 
   currentMode = &kModes[modeId];
+
+  LOGF("Mode = %i", GpuMmu_Get(Gpu_GFX_MODE_Relative));
+  LOGF("Plane Size = %i", currentMode->planeSize);
 }
 
 void Gpu_FrameEnd()
@@ -481,12 +482,14 @@ void SubmitLine(int line)
   sCrtDirty = true; // Temp
 }
 
-void Gpu_Coroutine_1()
+#define GPU_BUFFER_W (CRT_W / 8)
+
+inline bool Gpu_Coroutine_Common()
 {
   if (GpuTimer == 0)
   {
     Gpu_FrameStart();
-    return;
+    return false;
   }
 
   if (GpuTimer >= (CRT_SCAN_TOTAL_TIME - (CRT_V_BLANK_TIME)))
@@ -500,12 +503,11 @@ void Gpu_Coroutine_1()
     }
 
     // Otherwise Wait.
-    return;
+    return false;
   }
 
-
-  int scanline = GpuTimer / CRT_SCAN_W; // Y-pos in CRT.
-  int scanpos = GpuTimer % CRT_SCAN_W; // X-pos in CRT.
+  scanline = GpuTimer / CRT_SCAN_W; // Y-pos in CRT.
+  scanpos = GpuTimer % CRT_SCAN_W; // X-pos in CRT.
 
   if (scanpos == 0)
   {
@@ -518,15 +520,28 @@ void Gpu_Coroutine_1()
     GpuMmu_Set(Gpu_GFX_SCNW0R_Relative, scanline);
     Cpu_Interrupt(CPU_HBLANK);
 
-    // Call HBlank interrupt here.
-    // Call interrupts and wait CRT_H_BLANK cycles
+    // Fetch current Graphics mem, and cache it.
+    // Graphics and Text mode stuff here, so we don't have to do it per coroutine.
+    memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (currentMode->planeSize * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+    memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sSharedRam + (currentMode->planeSize * 1) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+    memcpy(sGpuMemLines + (2 * GPU_BUFFER_W), sSharedRam + (currentMode->planeSize * 2) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+    memcpy(sGpuMemLines + (3 * GPU_BUFFER_W), sSharedRam + (currentMode->planeSize * 3) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+
   }
 
   if (scanpos < CRT_H_BLANK)
   {
     // Wait. Cpu can be doing things here.
-    return;
+    return false;
   }
+
+  return true;
+}
+
+void Gpu_Coroutine_1()
+{
+  if (Gpu_Coroutine_Common() == false)
+    return;
 
   // Okay draw.
   int x = scanpos - CRT_H_BLANK;
@@ -534,28 +549,59 @@ void Gpu_Coroutine_1()
 
   if (x == 0)
   {
-    lineR = GpuMmu_Get(Gpu_GFX_SCNW0R_Relative);
-    lineG = GpuMmu_Get(Gpu_GFX_SCNW0G_Relative);
-    lineB = GpuMmu_Get(Gpu_GFX_SCNW0B_Relative);
+    int lineR1 = 0xFF; // GpuMmu_Get(Gpu_GFX_SCNW0R_Relative);
+    int lineG1 = 0x00; // GpuMmu_Get(Gpu_GFX_SCNW0G_Relative);
+    int lineB1 = 0x00; // GpuMmu_Get(Gpu_GFX_SCNW0B_Relative);
+    int lineR2 = 0x00; // GpuMmu_Get(Gpu_GFX_SCNW1R_Relative);
+    int lineG2 = 0xFF; // GpuMmu_Get(Gpu_GFX_SCNW1G_Relative);
+    int lineB2 = 0x00; // GpuMmu_Get(Gpu_GFX_SCNW1B_Relative);
+    int lineR3 = 0x00; // GpuMmu_Get(Gpu_GFX_SCNW2R_Relative);
+    int lineG3 = 0x00; // GpuMmu_Get(Gpu_GFX_SCNW2G_Relative);
+    int lineB3 = 0xFF; // GpuMmu_Get(Gpu_GFX_SCNW2B_Relative);
+    int lineR4 = 0xFF; // GpuMmu_Get(Gpu_GFX_SCNW3R_Relative);
+    int lineG4 = 0x00; // GpuMmu_Get(Gpu_GFX_SCNW3G_Relative);
+    int lineB4 = 0xFF; // GpuMmu_Get(Gpu_GFX_SCNW3B_Relative);
+    int backR  = 0x00; // GpuMmu_Get(Gpu_GFX_BGCOLR_Relative);
+    int backG  = 0x00; // GpuMmu_Get(Gpu_GFX_BGCOLG_Relative);
+    int backB  = 0x00; // GpuMmu_Get(Gpu_GFX_BGCOLB_Relative);
+
+    #define COLOUR_MASK(IDX, R, G, B) \
+      lineR[IDX] = R; \
+      lineG[IDX] = G; \
+      lineB[IDX] = B;
+    
+    // This is the nearest set bit to the right corresponds to the top-most colour.
+    //                                           4321
+    COLOUR_MASK(0,  backR,  backG,  backB);   // 0000
+    COLOUR_MASK(1,  lineR1, lineG1, lineB1);  // 0001
+    COLOUR_MASK(2,  lineR2, lineG2, lineB2);  // 0010
+    COLOUR_MASK(3,  lineR1, lineG1, lineB1);  // 0011
+    COLOUR_MASK(4,  lineR3, lineG3, lineB3);  // 0100
+    COLOUR_MASK(5,  lineR1, lineG1, lineB1);  // 0101
+    COLOUR_MASK(6,  lineR2, lineG2, lineB2);  // 0110
+    COLOUR_MASK(7,  lineR1, lineG1, lineB1);  // 0111
+    COLOUR_MASK(8,  lineR4, lineG4, lineB4);  // 1000
+    COLOUR_MASK(9,  lineR1, lineG1, lineB1);  // 1001
+    COLOUR_MASK(10, lineR2, lineG2, lineB2);  // 1010
+    COLOUR_MASK(11, lineR1, lineG1, lineB1);  // 1011
+    COLOUR_MASK(12, lineR3, lineG3, lineB3);  // 1100
+    COLOUR_MASK(13, lineR1, lineG1, lineB1);  // 1101
+    COLOUR_MASK(14, lineR2, lineG2, lineB2);  // 1110
+    COLOUR_MASK(15, lineR1, lineG1, lineB1);  // 1111
   }
 
-  int xy = FAST_XY(x, y, currentMode->width);
-  int bit = !!(FAST_GETOFFSET(0, xy));
+  int offset   = (x >> 3);
+  int bitShift = (1 << (x & 7));
+  
+  int col = 0;
+  col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 0) + offset] & bitShift)));
+  col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 1) + offset] & bitShift))) << 1;
+  col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 2) + offset] & bitShift))) << 2;
+  col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 3) + offset] & bitShift))) << 3;
 
-  if (bit)
-  {
-    sScanLine[(x * 3) + 0] = lineR;
-    sScanLine[(x * 3) + 1] = lineG;
-    sScanLine[(x * 3) + 2] = lineB;
-  }
-}
-
-void Gpu_Coroutine_2()
-{
-}
-
-void Gpu_Coroutine_4()
-{
+  sScanLine[(x * 3) + 0] = lineR[col];
+  sScanLine[(x * 3) + 1] = lineG[col];
+  sScanLine[(x * 3) + 2] = lineB[col];
 }
 
 void Gpu_Clock()

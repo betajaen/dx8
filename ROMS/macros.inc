@@ -17,3 +17,14 @@ macro COPY [DST, SRC] {
       xor DST, DST
       add DST, SRC
 }
+
+macro INTERRUPT_TABLE RESET_ADDR, HBLANK_ADDR, VBLANK_ADDR {
+      dw RESET_ADDR
+      dw HBLANK_ADDR
+      dw VBLANK_ADDR
+      dw 0
+      dw 0
+      dw 0
+      dw 0
+      dw 0
+}

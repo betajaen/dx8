@@ -83,11 +83,12 @@ MAIN:
         APOKE    GFX_SCNW0G, 255
         APOKE    GFX_SCNW0B, 255
 
-        set      x, IMG_COBRA_ADDR_LO
-        set      y, IMG_COBRA_ADDR_HI
-        set      z, IMG_COBRA_SIZE_LO
-        set      w, IMG_COBRA_SIZE_HI
+        set      x, IMG_L1_ADDR_LO
+        set      y, IMG_L1_ADDR_HI
+        set      z, IMG_L1_SIZE_LO
+        set      w, IMG_L1_SIZE_HI
         call     PASTE0
+        ; call     PASTE1
 
         set      x, $00
         set      y, $00
@@ -120,12 +121,11 @@ HBLANK:
         store GFX_SCNW0G, z
         load  z, RAND
         store GFX_SCNW0B, z
+        inc z
 resume
 
 VBLANK:
         inc w
 resume
 
-include "cobra.png.s"
-include "right.png.s"
-
+include "l1.png.s"

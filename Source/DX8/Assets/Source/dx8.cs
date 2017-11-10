@@ -103,7 +103,7 @@ namespace DX8
     public  bool                   ReloadNeeded;
     public  bool                   IsOpen;
     public  bool                   IsRunning;
-    public  string                 RomPath = @"C:\dev\dx8\ROMS\test_add.bin";
+    public  string                 RomPath = @"C:\dev\dx8\ROMS\boot.bin";
     public  int                    LastSteps = 0;
     public  Texture2D              Crt;
     public  bool FirstCycle = false;

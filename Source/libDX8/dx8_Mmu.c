@@ -120,7 +120,7 @@ void Mmu_Setup()
   sProgramRam = malloc(PROGRAM_SIZE);
   memset(sProgramRam, 0, PROGRAM_SIZE);
   sSharedRam = malloc(SHARED_SIZE);
-  memset(sSharedRam, 0, SHARED_SIZE);
+  memset(sSharedRam, 0xAA, SHARED_SIZE);
 
   Bank_SetMask(0);
 
@@ -151,7 +151,9 @@ bool Mmu_CopyToProgramRam(void* data, int length)
     int len = length & ~PROGRAM_SIZE;
 
     memcpy(sProgramRam, data, len);
-    
+    LOGF("Loaded Program ROM Length=%i", len);
+    Cpu_Reset(true);
+
     // FILE* f = fopen("program.dat", "wb");
     // fwrite(&len, 4, 1, f);
     // fwrite(sProgramRam, len, 1, f);
@@ -221,7 +223,7 @@ Byte Mmu_Get(Word address)
       return Program_Get(address);
     case Chip_Begin:
       case Chip_RAND:
-        return rand() & 0xFF;
+        return rand() & 0xFF;   // TODO: Make this more authentic. Use clocks, etc. 
       return ChipRam_Get(address & 0xBFFF);
     case Gpu_Begin:
       return GpuMmu_Get(address & 0xAFFF);
@@ -269,6 +271,10 @@ typedef struct
     {
       Word dst, src, len;
     } opPrgCpy;
+    struct
+    {
+      Word dst, src, len;
+    } opBitExp;
   };
 } Mmu_CoroutineData;
 
@@ -320,12 +326,12 @@ int Mmu_Coroutine_Start(Byte type)
     {
       MMU_DATA.cycles += 2;
       MMU_DATA.opMemSet.dst = ChipRam_GetWord(Chip_MMU_W1_Relative);
-      MMU_DATA.opMemSet.len = ChipRam_GetWord(Chip_MMU_W2_Relative) & ~SHARED_SIZE;
+      MMU_DATA.opMemSet.len = ChipRam_GetWord(Chip_MMU_W2_Relative) & ~HALF_SHARED_SIZE;
       MMU_DATA.opMemSet.val = ChipRam_Get(Chip_MMU_B1_Relative);
 
-      LOGF("ogMemSet.dst = %i", MMU_DATA.opPrgCpy.dst);
-      LOGF("ogMemSet.src = %i", MMU_DATA.opPrgCpy.src);
-      LOGF("ogMemSet.len = %i", MMU_DATA.opPrgCpy.len);
+      LOGF("ogMemSet.dst = %i", MMU_DATA.opMemSet.dst);
+      LOGF("ogMemSet.len = %i", MMU_DATA.opMemSet.len);
+      LOGF("ogMemSet.val = %i", MMU_DATA.opMemSet.val);
       
       if (MMU_DATA.opMemSet.len == 0)
       {
@@ -373,6 +379,40 @@ int Mmu_Coroutine_Start(Byte type)
       LOGF("ogPrgCpy seems to be okay");
 
       MMU_DATA.opPrgCpy.dst -= SHARED_BANK_0;
+
+      MMU_YIELD;
+    }
+    break;
+    case INT_MMU_BITEXP:
+    {
+      MMU_DATA.cycles += 2;
+      MMU_DATA.opBitExp.dst = ChipRam_GetWord(Chip_MMU_W1_Relative) & ~PROGRAM_SIZE;
+      MMU_DATA.opBitExp.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
+      MMU_DATA.opBitExp.len = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~PROGRAM_SIZE;
+
+      LOGF("ogRleCpy.dst = %i", MMU_DATA.opBitExp.dst);
+      LOGF("ogRleCpy.src = %i", MMU_DATA.opBitExp.src);
+      LOGF("ogRleCpy.len = %i", MMU_DATA.opBitExp.len);
+
+      if (MMU_DATA.opBitExp.len == 0)
+      {
+        LOGF("Failed. Length zero.");
+        MMU_YIELD_FAIL;
+      }
+
+      if (MMU_DATA.opBitExp.dst < SHARED_BANK_0 ||
+        MMU_DATA.opBitExp.src > PROGRAM_SIZE)
+      {
+        LOGF("Failed. (MMU_DATA.opBitExp.dst < SHARED_BANK_0) == %i, MMU_DATA.opBitExp.src > PROGRAM_SIZE == %i",
+          MMU_DATA.opBitExp.dst < SHARED_BANK_0,
+          MMU_DATA.opBitExp.src > PROGRAM_SIZE
+        );
+        MMU_YIELD_FAIL;
+      }
+
+      LOGF("ogRleCpy seems to be okay");
+
+      MMU_DATA.opBitExp.dst -= SHARED_BANK_0;
 
       MMU_YIELD;
     }
@@ -444,6 +484,38 @@ int Mmu_Coroutine()
       MMU_DATA.cycles++;
 
       if (MMU_DATA.opPrgCpy.len <= 0)
+      {
+        MMU_RETURN;
+      }
+
+      MMU_YIELD;
+
+    }
+    break;
+    case INT_MMU_BITEXP:
+    {
+      int subCycles = 8;
+
+      while (MMU_DATA.opBitExp.len > 0 || subCycles > 0)
+      {
+        // Simple bit-length compression.
+        // 7th bit is 0 or 1 (data)
+        // 6-0 bits is length (max of 126)
+        Byte m = sProgramRam[MMU_DATA.opBitExp.src++];
+        Byte len = m & 0x7F;
+        Byte v = (m & 0x80) >> 7;
+        
+        //for (Byte i = 0; i < len; i++)
+        // {
+        //  sSharedRam[MMU_DATA.opBitExp.dst] |= ;
+        //}
+        --subCycles;
+        --MMU_DATA.opBitExp.len;
+      }
+
+      MMU_DATA.cycles++;
+
+      if (MMU_DATA.opBitExp.len <= 0)
       {
         MMU_RETURN;
       }

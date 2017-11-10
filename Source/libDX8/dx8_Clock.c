@@ -31,6 +31,8 @@
 
 #include "dx8.h"
 
+#define SLOWDOWN_RATE 128
+
 void Gpu_Clock();
 
 int Clock(int ms)
@@ -47,7 +49,7 @@ int Clock(int ms)
   else
   {
     // Temp. Will need to call this multiple times, based on time passed
-    for (int i = 0; i < CRT_SCAN_TOTAL_TIME; i++)
+    for (int i = 0; i < (CRT_SCAN_TOTAL_TIME / SLOWDOWN_RATE); i++)
     {
       Cpu_Step();
       Mmu_Step(1);

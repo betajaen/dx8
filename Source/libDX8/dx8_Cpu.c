@@ -75,6 +75,18 @@ void Cpu_Reset(bool soft)
   {
     Mmu_Reset();
   }
+
+  LOGF("Mem[0] $%02X", Mmu_Get(0));
+  LOGF("Mem[1] $%02X", Mmu_Get(1));
+  LOGF("Mem[2] $%02X", Mmu_Get(2));
+  LOGF("Mem[3] $%02X", Mmu_Get(3));
+  LOGF("Mem[4] $%02X", Mmu_Get(4));
+  LOGF("Mem[5] $%02X", Mmu_Get(5));
+  
+  cpu.pc.lo = Mmu_Get(0);
+  cpu.pc.hi = Mmu_Get(1);
+
+  LOGF("Entry point $%4X", cpu.pc.w);
 }
 
 
@@ -239,23 +251,54 @@ void Cpu_Interrupt(Byte name)
 {
   if (cpu.flags.bInterrupt)
   {
-    LOGF("Interupt already happening!!");
+    LOGF("Interupt already happening $%2X!!!", name);
     return;
   }
+
+  LOGF("Interrupt $%2X", name);
 
   PushToStack(REG_A);
   cpu.flags.bInterrupt = true;
   REG_A = name;
 
-  Do_Call(0, 0);
+  // Grab interrupt address
+  Word interruptAddress;
+  switch(name)
+  {
+    case CPU_RESET:
+      interruptAddress = Mmu_Get(0);
+      interruptAddress |= Mmu_Get(1) << 8;
+    break;
+    case CPU_HBLANK:
+      interruptAddress = Mmu_Get(2);
+      interruptAddress |= Mmu_Get(3) << 8;
+    break;
+    case CPU_VBLANK:
+      interruptAddress = Mmu_Get(4);
+      interruptAddress |= Mmu_Get(5) << 8;
+    break;
+  }
+ 
+  LOGF("Interrupt address = $%4X", interruptAddress);
+
+  Do_Call(0, interruptAddress);
 }
 
 void Cpu_ResumeInterrupt()
 {
+  if (!cpu.flags.bInterrupt)
+  {
+    LOGF("Interupt not happening!!!");
+    return;
+  }
+
+  LOGF("Resume from interrupt");
+
   Return();
 
   cpu.flags._data = PopFromStack();
   REG_A = PopFromStack();
+  cpu.flags.bInterrupt = false;
 }
 
 void Mmu_Int_MemCpy();
