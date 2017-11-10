@@ -350,6 +350,43 @@ namespace DX8
       }
       
       sb.AppendLine();
+      
+      // Op Constants
+      
+      sb.AppendLine("; Interrupts commands (int $01)");
+
+      foreach(var interrupt in interrupts)
+      {
+        sb.AppendFormat("{0} = ${1:X2}    ; {2}", interrupt.Key, interrupt.Value.Key, interrupt.Value.Value);
+        sb.AppendLine();
+      }
+      
+      sb.AppendLine();
+      
+      // Ops
+      #if PROBABLY_NOT
+      sb.AppendLine("; X8 Processor Instructions");
+      
+      for(int ii=0;ii < opcodes.Count;ii++)
+      {
+        Op op = opcodes[ii];
+        sb.AppendFormat("OP_{0}", op.Opcode.ToString().ToUpper());
+
+        if (op.Operand1 != Operand.None)
+        {
+          sb.AppendFormat("{0}", op.Operand1);
+        }
+        
+        if (op.Operand2 != Operand.None)
+        {
+          sb.AppendFormat("{0}", op.Operand2);
+        }
+
+        sb.AppendFormat(" = ${0:X2}", ii);
+        
+        sb.AppendLine();
+      }
+      #endif
 
       // Macros
       

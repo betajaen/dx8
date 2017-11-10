@@ -274,6 +274,10 @@ typedef struct
     struct
     {
       Word dst, src, len;
+    } opGpuCpy;
+    struct
+    {
+      Word dst, src, len;
     } opBitExp;
   };
 } Mmu_CoroutineData;
@@ -298,7 +302,7 @@ int Mmu_Coroutine_Start(Byte type)
       MMU_DATA.cycles += 2;
       MMU_DATA.opMemCpy.dst = ChipRam_GetWord(Chip_MMU_W1_Relative);
       MMU_DATA.opMemCpy.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
-      MMU_DATA.opMemCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~SHARED_SIZE;
+      MMU_DATA.opMemCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative); // & ~SHARED_SIZE;
 
       LOGF("ogMemCpy.dst = %4X", MMU_DATA.opMemCpy.dst);
       LOGF("ogMemCpy.src = %4X", MMU_DATA.opMemCpy.src);

@@ -210,9 +210,6 @@ void SubmitLine(int line)
   int offset = (CRT_W * 3 * line);
   memcpy(sCrt + offset, sScanLine, CRT_W * 3);
   memset(sScanLine, 0, CRT_W * 3);
-
-  //memset(sScanLine, 0xFF, CRT_W * 3); // Temp
-  //sCrtDirty = true; // Temp
 }
 
 #define GPU_BUFFER_W (CRT_W / 8)
@@ -290,7 +287,7 @@ inline bool Gpu_Coroutine_Common()
   return true;
 }
 
-void Gpu_Coroutine_1()
+void Gpu_ElectronBeam()
 {
   if (Gpu_Coroutine_Common() == false)
     return;
@@ -374,9 +371,166 @@ void Gpu_Coroutine_1()
   sScanLine[(x * 3) + 2] = lineB[col];
 }
 
+
+typedef struct
+{
+  Byte op;  // See Interrupts
+  Byte state;
+  Word cycles;
+  union
+  {
+    struct
+    {
+      Word dst, len;
+      Byte val;
+    } opGpuSet;
+    struct
+    {
+      Word dst, src, len;
+    } opGpuCpy;
+  };
+} Gpu_CoroutineData;
+
+Gpu_CoroutineData gpuCoroutineData;
+
+#define GPU_DATA       gpuCoroutineData
+#define GPU_YIELD      return 2;
+#define GPU_RETURN     GPU_DATA.op = 0xFF; LOGF("Returned Gpu Coop");return 1;
+#define GPU_YIELD_FAIL GPU_DATA.state = 0xFF; GPU_DATA.op = 0xFF; LOGF("Failed Gpu Coop"); return -1;
+
+int Gpu_Start_Coroutine(int type)
+{
+  GPU_DATA.op = type;
+  GPU_DATA.cycles = 0;
+  GPU_DATA.state = 0;
+
+  switch (GPU_DATA.op)
+  {
+    case INT_GPU_MEMCPY:
+    {
+      GPU_DATA.cycles += 2;
+      GPU_DATA.opGpuCpy.dst = ChipRam_GetWord(Gpu_GFX_W1_Relative);
+      GPU_DATA.opGpuCpy.src = ChipRam_GetWord(Gpu_GFX_W2_Relative);
+      GPU_DATA.opGpuCpy.len = ChipRam_GetWord(Gpu_GFX_W3_Relative) & ~SHARED_SIZE;
+
+      LOGF("ogGpuCpy.dst = %4X", GPU_DATA.opGpuCpy.dst);
+      LOGF("ogGpuCpy.src = %4X", GPU_DATA.opGpuCpy.src);
+      LOGF("ogGpuCpy.len = %4X", GPU_DATA.opGpuCpy.len);
+
+      if (GPU_DATA.opGpuCpy.len == 0)
+      {
+        LOGF("Failed. Length zero.");
+        GPU_YIELD_FAIL;
+      }
+
+      if (GPU_DATA.opGpuCpy.dst < Gpu_Begin || GPU_DATA.opGpuCpy.dst > (Gpu_Begin + 0x1000))
+      {
+        LOGF("Failed. Dst out of bounds!");
+        GPU_YIELD_FAIL;
+      }
+
+      GPU_DATA.opGpuCpy.dst -= Gpu_Begin;
+
+      GPU_YIELD;
+    }
+    break;
+    case INT_GPU_MEMSET:
+    {
+      GPU_DATA.cycles += 2;
+      GPU_DATA.opGpuSet.dst = ChipRam_GetWord(Gpu_GFX_W1_Relative);
+      GPU_DATA.opGpuSet.len = ChipRam_GetWord(Gpu_GFX_W2_Relative) & ~HALF_SHARED_SIZE;
+      GPU_DATA.opGpuSet.val = ChipRam_Get(Gpu_GFX_B1_Relative);
+
+      LOGF("ogGpuSet.dst = %4X", GPU_DATA.opGpuSet.dst);
+      LOGF("ogGpuSet.len = %4X", GPU_DATA.opGpuSet.len);
+      LOGF("ogGpuSet.val = %0X", GPU_DATA.opGpuSet.val);
+
+      if (GPU_DATA.opGpuSet.len == 0)
+      {
+        LOGF("Failed. Length zero.");
+        GPU_YIELD_FAIL;
+      }
+
+      if (GPU_DATA.opGpuSet.dst < Gpu_Begin || GPU_DATA.opGpuSet.dst >(Gpu_Begin + 0x1000))
+      {
+        LOGF("Failed. Dst out of bounds!");
+        GPU_YIELD_FAIL;
+      }
+
+      GPU_DATA.opGpuSet.dst -= Gpu_Begin;
+
+      GPU_YIELD;
+    }
+    break;
+  }
+  return 0;
+
+}
+
+int Gpu_Coroutine()
+{
+  // We can only do this in a HBLANK or VBLANK
+  if ( !(scanpos < CRT_H_BLANK || GpuTimer >= (CRT_SCAN_TOTAL_TIME - (CRT_V_BLANK_TIME))) )
+  {
+    return 0;
+  }
+
+  if (GPU_DATA.op == 0xFF)
+    return 0;
+
+  switch (GPU_DATA.op)
+  {
+    case INT_GPU_MEMSET:
+    {
+      int subCycles = 16;
+
+      while (GPU_DATA.opGpuSet.len > 0 || subCycles > 0)
+      {
+        sGpuMem[GPU_DATA.opGpuSet.dst++] = GPU_DATA.opGpuSet.val;
+        --subCycles;
+        --GPU_DATA.opGpuSet.len;
+      }
+
+      GPU_DATA.cycles++;
+
+      if (GPU_DATA.opGpuSet.len <= 0)
+      {
+        GPU_RETURN;
+      }
+
+      GPU_YIELD;
+    }
+    break;
+    case INT_GPU_MEMCPY:
+    {
+      int subCycles = 16;
+
+      while (GPU_DATA.opGpuCpy.len > 0 || subCycles > 0)
+      {
+        sGpuMem[GPU_DATA.opGpuCpy.dst++] = Mmu_Get(GPU_DATA.opGpuCpy.src++);
+        --subCycles;
+        --GPU_DATA.opGpuCpy.len;
+      }
+
+      GPU_DATA.cycles++;
+
+      if (GPU_DATA.opGpuCpy.len <= 0)
+      {
+        GPU_RETURN;
+      }
+
+      GPU_YIELD;
+    }
+    break;
+  }
+
+  GPU_RETURN;
+}
+
 void Gpu_Clock()
 {
-  Gpu_Coroutine_1();
+  Gpu_ElectronBeam();
+  Gpu_Coroutine();
   GpuTimer++;
   if (GpuTimer == CRT_SCAN_TOTAL_TIME)
   {

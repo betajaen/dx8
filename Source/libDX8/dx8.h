@@ -145,6 +145,9 @@ void Shared_Set(Word absoluteAddress, Byte value);
 
 Byte Shared_Get(Word absoluteAddress);
 
+Byte ChipRam_Get(Word address);
+
+Word ChipRam_GetWord(Word address);
 
 void GpuMmu_Set(Word address, Byte value);
 

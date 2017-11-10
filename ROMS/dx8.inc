@@ -24,13 +24,37 @@ GFX_SCNW3R = $500D
 GFX_SCNW3G = $500E
 GFX_SCNW3B = $500F
 GFX_SCNLNE = $5020
+GFX_B1 = $5030
+GFX_B2 = $5031
+GFX_W1 = $5032
+GFX_W2 = $5034
+GFX_W3 = $5036
 GFX_TILES = $5800
+GFX_PLANE0 = $8000
+GFX_PLANE1 = $A800
+GFX_PLANE2 = $D000
+GFX_PLANE3 = $F800
+GFX_PSIZE = $2800
 
 ; Interrupts commands (int $01)
 INT_MMU_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length
 INT_MMU_MEMCPY = $02    ; Copy Shared Memory: W1=dst W2=src W3=length
 INT_MMU_PRGCPY = $03    ; Copy Program Memory to Shared Memory: W1=dst W2=src W3=length
 INT_MMU_BITEXP = $04    ; Copy RLE Program Memory to Shared Memory and expand: W1=dst W2=src W3=length
+INT_GPU_MEMSET = $10    ; Set GPU Memory:  B1=value W1=address W2=length
+INT_GPU_MEMCPY = $02    ; Copy Memory to GPU Memory: W1=dst W2=src W3=length
+INT_CPU_RESET = $FF    ; Soft Reset
+CPU_RESET = $01    ; Reset
+CPU_HBLANK = $02    ; HBlank
+CPU_VBLANK = $03    ; VBlank
+
+; Interrupts commands (int $01)
+INT_MMU_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length
+INT_MMU_MEMCPY = $02    ; Copy Shared Memory: W1=dst W2=src W3=length
+INT_MMU_PRGCPY = $03    ; Copy Program Memory to Shared Memory: W1=dst W2=src W3=length
+INT_MMU_BITEXP = $04    ; Copy RLE Program Memory to Shared Memory and expand: W1=dst W2=src W3=length
+INT_GPU_MEMSET = $10    ; Set GPU Memory:  B1=value W1=address W2=length
+INT_GPU_MEMCPY = $02    ; Copy Memory to GPU Memory: W1=dst W2=src W3=length
 INT_CPU_RESET = $FF    ; Soft Reset
 CPU_RESET = $01    ; Reset
 CPU_HBLANK = $02    ; HBlank

@@ -1,35 +1,36 @@
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:127: Mmu Chip Ptr=000000003F26B120 Size=1024
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:128: Mmu Program Ptr=000000001296FCC0 Size=16384
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:129: Mmu Shared Ptr=000000003F7084F0 Size=65535
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:72: Cpu Reset. Soft = 1
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:79: Mem[0] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:80: Mem[1] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:81: Mem[2] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:82: Mem[3] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:83: Mem[4] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:84: Mem[5] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:89: Entry point $   0
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:72: Cpu Reset. Soft = 0
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:144: Mmu Reset
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:79: Mem[0] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:80: Mem[1] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:81: Mem[2] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:82: Mem[3] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:83: Mem[4] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:84: Mem[5] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:89: Entry point $   0
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:154: Loaded Program ROM Length=10557
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:72: Cpu Reset. Soft = 1
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:79: Mem[0] $10
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:80: Mem[1] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:81: Mem[2] $13
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:82: Mem[3] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:83: Mem[4] $16
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:84: Mem[5] $00
-2017-11-10 17:31:12 INFO  dx8_Cpu.c:89: Entry point $  10
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:529: Returned Coop
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:359: ogPrgCpy.dst = F800
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:360: ogPrgCpy.src =  13D
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:361: ogPrgCpy.len = 2800
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:379: ogPrgCpy seems to be okay
-2017-11-10 17:31:12 INFO  dx8_Mmu.c:488: Returned Coop
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:127: Mmu Chip Ptr=000000003EDF5720 Size=1024
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:128: Mmu Program Ptr=000000003EF5BD40 Size=16384
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:129: Mmu Shared Ptr=000000003FA54180 Size=65535
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:72: Cpu Reset. Soft = 1
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:79: Mem[0] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:80: Mem[1] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:81: Mem[2] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:82: Mem[3] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:83: Mem[4] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:84: Mem[5] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:89: Entry point $   0
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:72: Cpu Reset. Soft = 0
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:144: Mmu Reset
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:79: Mem[0] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:80: Mem[1] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:81: Mem[2] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:82: Mem[3] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:83: Mem[4] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:84: Mem[5] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:89: Entry point $   0
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:154: Loaded Program ROM Length=10337
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:72: Cpu Reset. Soft = 1
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:79: Mem[0] $10
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:80: Mem[1] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:81: Mem[2] $13
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:82: Mem[3] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:83: Mem[4] $28
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:84: Mem[5] $00
+2017-11-10 22:54:24 INFO  dx8_Cpu.c:89: Entry point $  10
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:533: Returned Coop
+2017-11-10 22:54:24 INFO  dx8_Gpu.c:527: Returned Gpu Coop
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:363: ogPrgCpy.dst = 8000
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:364: ogPrgCpy.src =   61
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:365: ogPrgCpy.len = 2800
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:383: ogPrgCpy seems to be okay
+2017-11-10 22:54:24 INFO  dx8_Mmu.c:492: Returned Coop

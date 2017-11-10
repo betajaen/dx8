@@ -322,8 +322,5 @@ IMG_COBRA_DATA:
     db $24, $A5, $92, $4A, $A2, $44, $2A, $49, $52, $84, $88, $24, $89, $08, $0A, $41, $A2, $28, $2A, $89, $40, $02, $FC, $FF, $48, $11, $41, $51, $85, $80, $A2, $08
     db $50, $20, $0A, $48, $92, $A4, $24, $51, $92, $10, $49, $92, $2A, $29, $91, $24, $09, $29, $52, $92, $24, $A5, $20, $14, $09, $82, $00, $44, $04, $91, $FC, $FF
 
-IMG_COBRA_ADDR_LO = IMG_COBRA_DATA and $FF
-IMG_COBRA_ADDR_HI = IMG_COBRA_DATA shr 8
-IMG_COBRA_SIZE_LO = $00
-IMG_COBRA_SIZE_HI = $28
+IMG_COBRA_ADDR = IMG_COBRA_DATA
 IMG_COBRA_SIZE = $2800
