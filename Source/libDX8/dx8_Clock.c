@@ -31,7 +31,7 @@
 
 #include "dx8.h"
 
-#define SLOWDOWN_RATE 128
+#define SLOWDOWN_RATE 1
 
 void Gpu_Clock();
 

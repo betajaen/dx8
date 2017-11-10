@@ -342,14 +342,14 @@ namespace DX8
         for(int j=0;j < 8;j++)
         {
           int line = 0;
-          line |= (tex.GetPixel(offset + 1 + 0, 1 + j).r > 0.0) ? 1   : 0;
-          line |= (tex.GetPixel(offset + 1 + 1, 1 + j).r > 0.0) ? 2   : 0;
-          line |= (tex.GetPixel(offset + 1 + 2, 1 + j).r > 0.0) ? 4   : 0;
-          line |= (tex.GetPixel(offset + 1 + 3, 1 + j).r > 0.0) ? 8   : 0;
-          line |= (tex.GetPixel(offset + 1 + 4, 1 + j).r > 0.0) ? 16  : 0;
-          line |= (tex.GetPixel(offset + 1 + 5, 1 + j).r > 0.0) ? 32  : 0;
-          line |= (tex.GetPixel(offset + 1 + 6, 1 + j).r > 0.0) ? 64  : 0;
-          line |= (tex.GetPixel(offset + 1 + 7, 1 + j).r > 0.0) ? 128 : 0;
+          line |= (tex.GetPixel(offset + 1 + 7, 7 - j).r > 0.0) ? 1   : 0;
+          line |= (tex.GetPixel(offset + 1 + 6, 7 - j).r > 0.0) ? 2   : 0;
+          line |= (tex.GetPixel(offset + 1 + 5, 7 - j).r > 0.0) ? 4   : 0;
+          line |= (tex.GetPixel(offset + 1 + 4, 7 - j).r > 0.0) ? 8   : 0;
+          line |= (tex.GetPixel(offset + 1 + 3, 7 - j).r > 0.0) ? 16  : 0;
+          line |= (tex.GetPixel(offset + 1 + 2, 7 - j).r > 0.0) ? 32  : 0;
+          line |= (tex.GetPixel(offset + 1 + 1, 7 - j).r > 0.0) ? 64  : 0;
+          line |= (tex.GetPixel(offset + 1 + 0, 7 - j).r > 0.0) ? 128 : 0;
           d[j] = (byte) line;
         }
         glyphs.Add(d);
@@ -382,6 +382,25 @@ namespace DX8
         sb.AppendLine();
       }
       
+      sb.AppendLine();
+      sb.AppendLine();
+      sb.AppendFormat("{0}_ADDR_LO = {0}_DATA and $FF", name);
+      sb.AppendLine();
+      
+      sb.AppendFormat("{0}_ADDR_HI = {0}_DATA shr 8", name);
+      sb.AppendLine();
+
+      int length = count * 8;
+      
+      sb.AppendFormat("{0}_SIZE_LO = ${1:X2}", name, length & 0xFF);
+      sb.AppendLine();
+      
+      sb.AppendFormat("{0}_SIZE_HI = ${1:X2}", name, length >> 8);
+      sb.AppendLine();
+      
+      sb.AppendFormat("{0}_SIZE = ${1:X4}", name, length);
+      sb.AppendLine();
+
       System.IO.File.WriteAllText(path + ".s", sb.ToString());
       // System.IO.File.WriteAllBytes(path + ".raw", data);
     }

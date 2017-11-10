@@ -251,15 +251,13 @@ void Cpu_Interrupt(Byte name)
 {
   if (cpu.flags.bInterrupt)
   {
-    LOGF("Interupt already happening $%2X!!!", name);
+    //LOGF("Interupt already happening $%2X!!!", name);
     return;
   }
 
-  LOGF("Interrupt $%2X", name);
+  //LOGF("Interrupt $%2X", name);
 
-  PushToStack(REG_A);
   cpu.flags.bInterrupt = true;
-  REG_A = name;
 
   // Grab interrupt address
   Word interruptAddress;
@@ -279,7 +277,7 @@ void Cpu_Interrupt(Byte name)
     break;
   }
  
-  LOGF("Interrupt address = $%4X", interruptAddress);
+  //LOGF("Interrupt address = $%4X", interruptAddress);
 
   Do_Call(0, interruptAddress);
 }
@@ -288,16 +286,14 @@ void Cpu_ResumeInterrupt()
 {
   if (!cpu.flags.bInterrupt)
   {
-    LOGF("Interupt not happening!!!");
+    //LOGF("Interupt not happening!!!");
     return;
   }
 
-  LOGF("Resume from interrupt");
-
   Return();
 
-  cpu.flags._data = PopFromStack();
-  REG_A = PopFromStack();
+  //LOGF("Resume from interrupt $%04X", cpu.pc.w);
+
   cpu.flags.bInterrupt = false;
 }
 

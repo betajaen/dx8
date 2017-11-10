@@ -11,7 +11,7 @@ ENTRY_POINT:
         jmp MAIN
 
 HBLANK:
-        nop
+        push z
         ;load  z, RAND
         ;store GFX_SCNW0R, z
         ;load  z, RAND
@@ -19,11 +19,13 @@ HBLANK:
         ;load  z, RAND
         ;store GFX_SCNW0B, z
         ;load  z, RAND
-        ;store GFX_BGCOLR, z
-        ;load  z, RAND
-        ;store GFX_BGCOLG, z
-        ;load  z, RAND
-        ;store GFX_BGCOLB, z
+       ; store GFX_BGCOLR, z
+       ; load  z, RAND
+       ; store GFX_BGCOLG, z
+       ; load  z, RAND
+       ; store GFX_BGCOLB, z
+
+       pop z
 resume
 
 VBLANK:
@@ -131,23 +133,23 @@ return
 MAIN:
         APOKE    GFX_MODE, 3
 
-        set       a, $03
-        call      CLS0
+        ;set       a, $03
+        ;call      CLS0
 
         set      x, IMG_COBRA_ADDR_LO
         set      y, IMG_COBRA_ADDR_HI
         set      z, IMG_COBRA_SIZE_LO
         set      w, IMG_COBRA_SIZE_HI
-        call     PASTE1
+        call     PASTE0
 
         ;set       a, $0C
         ;call      CLS1
 
-        set       a, $30
-        call      CLS2
+        ;set       a, $30
+        ;call      CLS2
 
-        set       a, $C0
-        call      CLS3
+        ;set       a, $C0
+        ;call      CLS3
 IDLE:
         nop
         inc x
@@ -158,3 +160,4 @@ IDLE:
 ; =============================================================
 
 include "cobra.png.s"
+;include "victoria.png.s"
