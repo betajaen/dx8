@@ -41,13 +41,3 @@ solution "DX8"
   }
   configuration     { "vs*" }
     postbuildcommands   { "copy /Y \"$(TargetDir)$(TargetName).dll\" \"C:/dev/dx8/Source/dx8/Assets/Plugins/libDX8-DevKit.dll\"" }
-
-  project "DX8-Test"
-    kind            "ConsoleApp"
-    language        "C"
-    objdir          ".Obj"
-    flags           { "FatalWarnings" }
-    defines         ( "DX8_TESTS")
-    files           {
-      "dx8_Tests.c",
-  }

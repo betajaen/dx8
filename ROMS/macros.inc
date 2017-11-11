@@ -26,14 +26,14 @@ macro COPY [DST, SRC] {
 }
 
 macro INTERRUPT_TABLE RESET_ADDR, HBLANK_ADDR, VBLANK_ADDR {
-      dw RESET_ADDR
-      dw HBLANK_ADDR
-      dw VBLANK_ADDR
-      dw 0
-      dw 0
-      dw 0
-      dw 0
-      dw 0
+      dw RESET_ADDR           ; Reset
+      dw HBLANK_ADDR          ; HBlank
+      dw VBLANK_ADDR          ; VBlank
+      dw 0                    ; 4
+      dw 0                    ; 5
+      dw 0                    ; 6
+      dw 0                    ; 7
+      dw 0                    ; 8
 }
 
 macro SLEEP [N] {
@@ -47,46 +47,73 @@ macro SLEEP [N] {
       pop a
 }
 
-macro MMU_MEMSET DST, VAL, LEN {
+macro MEMSET DST, VAL, LEN {
       push a
       APOKE       MMU_B1, VAL
       APOKE_WORD  MMU_W1, DST
       APOKE_WORD  MMU_W2, LEN
-      int         INT_MMU_MEMSET
+      int         INT_MEMSET
 
       SLEEP 200
 
       pop a
 }
 
-macro MMU_MEMCPY DST, SRC, LEN {
+macro MEMCPY DST, SRC, LEN {
       push a
       APOKE_WORD  MMU_W1, DST
       APOKE_WORD  MMU_W2, SRC
       APOKE_WORD  MMU_W3, LEN
-      int         INT_MMU_MEMCPY
+      int         INT_MEMCPY
 
       SLEEP 200
 
       pop a
 }
 
-macro MMU_PRGCPY DST, SRC, LEN {
+macro PRG2MEM    DST, SRC, LEN {
       push a
       APOKE_WORD  MMU_W1, DST
       APOKE_WORD  MMU_W2, SRC
       APOKE_WORD  MMU_W3, LEN
-      int         INT_MMU_PRGCPY
+      int         INT_PRG2MEM
 
       SLEEP 200
 
       pop a
 }
 
-macro CLS PLANE, PATTERN {
-      MMU_MEMSET (GFX_PLANE0 + (GFX_PSIZE * PLANE)), PATTERN, GFX_PSIZE
+macro PRG2GPU    DST, SRC, LEN {
+      push a
+      APOKE_WORD  GFX_W1, DST
+      APOKE_WORD  GFX_W2, SRC
+      APOKE_WORD  GFX_W3, LEN
+      int         INT_PRG2GPU
+
+      SLEEP 200
+      pop a
+}
+
+macro CLS   PLANE, PATTERN {
+      MEMSET (GFX_PLANE0 + (GFX_PSIZE * PLANE)), PATTERN, GFX_PSIZE
 }
 
 macro SPLAT PLANE, IMAGE {
-      MMU_PRGCPY (GFX_PLANE0 + (GFX_PSIZE * PLANE)), (IMAGE), GFX_PSIZE
+      PRG2MEM (GFX_PLANE0 + (GFX_PSIZE * PLANE)), (IMAGE), GFX_PSIZE
+}
+
+macro BEGIN NAME {
+      NAME:
+}
+
+macro END {
+      return
+}
+
+macro APUTCHAR P, X, Y, C {
+      APOKE ((GFX_PLANE0 + (GFX_PSIZE * P)) + X + (Y * 40)), C
+}
+
+macro APUTCHAR1 P, X, Y, C {
+      APOKE ((GFX_PLANE1) + X + (Y * 40)), C
 }

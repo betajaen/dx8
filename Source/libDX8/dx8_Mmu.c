@@ -84,8 +84,18 @@ Byte Bank_Get(Byte bank, Word address)
 
 void Bank_Set(Byte bank, Word address, Byte value)
 {
-  address = (((Bank_GetMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
-  sSharedRam[address & ~SHARED_SIZE] = value;
+  Word originalAddress = address;
+  
+  //LOGF("Bank Mask = $%2X", Bank_GetMask());
+
+  if ((Bank_GetMask() & (1 << bank)) != 0)
+  {
+    address += 0x8000;
+    bank += 8;
+  }
+  
+  // LOGF("Bank = $%2X, Original = $%4X, Calculate = $%4X, Value = $%4X", bank, originalAddress, address, value);
+  sSharedRam[address] = value;
 }
 
 void Stack_Set(Byte offset, Byte value)
@@ -186,28 +196,28 @@ void Mmu_Set(Word address, Byte value)
       IoMmu_Set(address & 0x8FFF, value);
       return;
     case 0x8000:
-      Bank_Set(0, address & 0x7FFF, value);
+      Bank_Set(0, address - 0x8000, value);
       return;
     case 0x9000:
-      Bank_Set(1, address & 0x6FFF, value);
+      Bank_Set(1, address - 0x8000, value);
       return;
     case 0xA000:
-      Bank_Set(2, address & 0x5FFF, value);
+      Bank_Set(2, address - 0x8000, value);
       return;
     case 0xB000:
-      Bank_Set(3, address & 0x4FFF, value);
+      Bank_Set(3, address - 0x8000, value);
       return;
     case 0xC000:
-      Bank_Set(4, address & 0x3FFF, value);
+      Bank_Set(4, address - 0x8000, value);
       return;
     case 0xD000:
-      Bank_Set(5, address & 0x2FFF, value);
+      Bank_Set(5, address - 0x8000, value);
       return;
     case 0xE000:
-      Bank_Set(6, address & 0x1FFF, value);
+      Bank_Set(6, address - 0x8000, value);
       return;
     case 0xF000:
-      Bank_Set(7, address & 0x0FFF, value);
+      Bank_Set(7, address - 0x8000, value);
       return;
   }
 }
@@ -297,7 +307,7 @@ int Mmu_Coroutine_Start(Byte type)
 
   switch(MMU_DATA.op)
   {
-    case INT_MMU_MEMCPY:
+    case INT_MEMCPY:
     {
       MMU_DATA.cycles += 2;
       MMU_DATA.opMemCpy.dst = ChipRam_GetWord(Chip_MMU_W1_Relative);
@@ -326,7 +336,7 @@ int Mmu_Coroutine_Start(Byte type)
       MMU_YIELD;
     }
     break;
-    case INT_MMU_MEMSET:
+    case INT_MEMSET:
     {
       MMU_DATA.cycles += 2;
       MMU_DATA.opMemSet.dst = ChipRam_GetWord(Chip_MMU_W1_Relative);
@@ -353,7 +363,7 @@ int Mmu_Coroutine_Start(Byte type)
       MMU_YIELD;
     }
     break;
-    case INT_MMU_PRGCPY:
+    case INT_PRG2MEM:
     {
       MMU_DATA.cycles += 2;
       MMU_DATA.opPrgCpy.dst = ChipRam_GetWord(Chip_MMU_W1_Relative); //& ~PROGRAM_SIZE;
@@ -387,7 +397,7 @@ int Mmu_Coroutine_Start(Byte type)
       MMU_YIELD;
     }
     break;
-    case INT_MMU_BITEXP:
+    case INT_DEFLATE:
     {
       MMU_DATA.cycles += 2;
       MMU_DATA.opBitExp.dst = ChipRam_GetWord(Chip_MMU_W1_Relative) & ~PROGRAM_SIZE;
@@ -432,7 +442,7 @@ int Mmu_Coroutine()
 
   switch(MMU_DATA.op)
   {
-    case INT_MMU_MEMSET:
+    case INT_MEMSET:
     {
       int subCycles = 64;
 
@@ -453,7 +463,7 @@ int Mmu_Coroutine()
       MMU_YIELD;
     }
     break;
-    case INT_MMU_MEMCPY:
+    case INT_MEMCPY:
     {
       int subCycles = 64;
       
@@ -474,7 +484,7 @@ int Mmu_Coroutine()
       MMU_YIELD;
     }
     break;
-    case INT_MMU_PRGCPY:
+    case INT_PRG2MEM:
     {
       int subCycles = 32;
       
@@ -496,7 +506,7 @@ int Mmu_Coroutine()
 
     }
     break;
-    case INT_MMU_BITEXP:
+    case INT_DEFLATE:
     {
       int subCycles = 8;
 
@@ -539,8 +549,12 @@ void Mmu_Interrupt(Byte interrupt)
   Mmu_Coroutine_Start(interrupt);
 }
 
+bool IsInterrupt();
+
 void Mmu_Step(int steps)
 {
+  if (IsInterrupt())
+    return;
   for(int ii=0;ii < steps;ii++)
   {
     if (MMU_DATA.op == 0xFF)

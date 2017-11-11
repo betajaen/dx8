@@ -1,163 +1,212 @@
-0000: store $1300, x      ; 10 00 13
-0003: nop                 ; 00
-0004: return              ; 16
-0005: nop                 ; 00
-0006: nop                 ; 00
-0007: nop                 ; 00
-0008: nop                 ; 00
-0009: nop                 ; 00
-000A: nop                 ; 00
-000B: nop                 ; 00
-000C: nop                 ; 00
-000D: nop                 ; 00
-000E: nop                 ; 00
-000F: nop                 ; 00
-0010: jmp $0128           ; E9 28 01
-0013: push z              ; 03
-0014: pop z               ; 08
-0015: resume              ; F7 00
-0017: resume              ; F7 14
-0019: store $1B40, x      ; 10 40 1B
-001C: nop                 ; 00
-001D: store $4012, a      ; 14 12 40
-0020: set a, $80          ; 1B 80
-0022: store $4013, a      ; 14 13 40
-0025: set a, $00          ; 1B 00
-0027: store $4014, a      ; 14 14 40
-002A: set a, $28          ; 1B 28
-002C: store $4015, a      ; 14 15 40
-002F: int $01             ; F6 01
-0031: set a, $FF          ; 1B FF
-0033: call $0120          ; 15 20 01
-0036: return              ; 16
-0037: store $4010, a      ; 14 10 40
-003A: set a, $00          ; 1B 00
-003C: store $4012, a      ; 14 12 40
-003F: set a, $A8          ; 1B A8
-0041: store $4013, a      ; 14 13 40
-0044: set a, $00          ; 1B 00
-0046: store $4014, a      ; 14 14 40
-0049: set a, $28          ; 1B 28
-004B: store $4015, a      ; 14 15 40
-004E: int $01             ; F6 01
-0050: set a, $FF          ; 1B FF
-0052: call $0120          ; 15 20 01
-0055: return              ; 16
-0056: store $4010, a      ; 14 10 40
-0059: set a, $00          ; 1B 00
-005B: store $4012, a      ; 14 12 40
-005E: set a, $D0          ; 1B D0
-0060: store $4013, a      ; 14 13 40
-0063: set a, $00          ; 1B 00
-0065: store $4014, a      ; 14 14 40
-0068: set a, $28          ; 1B 28
-006A: store $4015, a      ; 14 15 40
-006D: int $01             ; F6 01
-006F: set a, $FF          ; 1B FF
-0071: call $0120          ; 15 20 01
-0074: return              ; 16
-0075: store $4010, a      ; 14 10 40
-0078: set a, $00          ; 1B 00
-007A: store $4012, a      ; 14 12 40
-007D: set a, $F8          ; 1B F8
-007F: store $4013, a      ; 14 13 40
-0082: set a, $00          ; 1B 00
-0084: store $4014, a      ; 14 14 40
-0087: set a, $28          ; 1B 28
-0089: store $4015, a      ; 14 15 40
-008C: int $01             ; F6 01
-008E: set a, $FF          ; 1B FF
-0090: call $0120          ; 15 20 01
-0093: return              ; 16
-0094: set a, $00          ; 1B 00
-0096: store $4012, a      ; 14 12 40
-0099: set a, $80          ; 1B 80
-009B: store $4013, a      ; 14 13 40
-009E: store $4014, x      ; 10 14 40
-00A1: store $4015, y      ; 11 15 40
-00A4: store $4016, z      ; 12 16 40
-00A7: store $4017, w      ; 13 17 40
-00AA: int $03             ; F6 03
-00AC: set a, $FF          ; 1B FF
-00AE: call $0120          ; 15 20 01
-00B1: set a, $FF          ; 1B FF
-00B3: call $0120          ; 15 20 01
-00B6: return              ; 16
-00B7: set a, $00          ; 1B 00
-00B9: store $4012, a      ; 14 12 40
-00BC: set a, $A8          ; 1B A8
-00BE: store $4013, a      ; 14 13 40
-00C1: store $4014, x      ; 10 14 40
-00C4: store $4015, y      ; 11 15 40
-00C7: store $4016, z      ; 12 16 40
-00CA: store $4017, w      ; 13 17 40
-00CD: int $03             ; F6 03
-00CF: set a, $FF          ; 1B FF
-00D1: call $0120          ; 15 20 01
-00D4: set a, $FF          ; 1B FF
-00D6: call $0120          ; 15 20 01
-00D9: return              ; 16
-00DA: set a, $00          ; 1B 00
-00DC: store $4012, a      ; 14 12 40
-00DF: set a, $D0          ; 1B D0
-00E1: store $4013, a      ; 14 13 40
-00E4: store $4014, x      ; 10 14 40
-00E7: store $4015, y      ; 11 15 40
-00EA: store $4016, z      ; 12 16 40
-00ED: store $4017, w      ; 13 17 40
-00F0: int $03             ; F6 03
-00F2: set a, $FF          ; 1B FF
-00F4: call $0120          ; 15 20 01
-00F7: set a, $FF          ; 1B FF
-00F9: call $0120          ; 15 20 01
-00FC: return              ; 16
-00FD: set a, $00          ; 1B 00
-00FF: store $4012, a      ; 14 12 40
-0102: set a, $F8          ; 1B F8
-0104: store $4013, a      ; 14 13 40
-0107: store $4014, x      ; 10 14 40
-010A: store $4015, y      ; 11 15 40
-010D: store $4016, z      ; 12 16 40
-0110: store $4017, w      ; 13 17 40
-0113: int $03             ; F6 03
-0115: set a, $FF          ; 1B FF
-0117: call $0120          ; 15 20 01
-011A: set a, $FF          ; 1B FF
-011C: call $0120          ; 15 20 01
-011F: return              ; 16
-0120: jmp.z $0127         ; F5 27 01
-0123: dec a               ; 70
-0124: jmp $0120           ; E9 20 01
-0127: return              ; 16
-0128: set a, $04          ; 1B 04
-012A: store $5000, a      ; 14 00 50
-012D: push a              ; 05
-012E: set a, $55          ; 1B 55
-0130: store $4010, a      ; 14 10 40
-0133: set a, $00          ; 1B 00
-0135: store $4012, a      ; 14 12 40
-0138: set a, $80          ; 1B 80
-013A: store $4013, a      ; 14 13 40
-013D: set a, $00          ; 1B 00
-013F: store $4014, a      ; 14 14 40
-0142: set a, $28          ; 1B 28
-0144: store $4015, a      ; 14 15 40
-0147: int $01             ; F6 01
-0149: push a              ; 05
-014A: set a, $C8          ; 1B C8
-014C: jmp.z $0153         ; F5 53 01
-014F: dec a               ; 70
-0150: jmp $014C           ; E9 4C 01
-0153: pop a               ; 0A
-0154: pop a               ; 0A
+Interrupt[$00] = $0010
+Interrupt[$01] = $0013
+Interrupt[$02] = $0015
+Interrupt[$03] = $0000
+Interrupt[$04] = $0000
+Interrupt[$05] = $0000
+Interrupt[$06] = $0000
+Interrupt[$07] = $0000
+
+0010: jmp $0036           ; 93 36 00
+0013: nop                 ; 00
+0014: resume              ; A1
+0015: nop                 ; 00
+0016: resume              ; A1
+0017: set a, $44          ; 1F 44
+0019: store $80A4, a      ; 18 A4 80
+001C: set a, $58          ; 1F 58
+001E: store $80A5, a      ; 18 A5 80
+0021: set a, $38          ; 1F 38
+0023: store $80A6, a      ; 18 A6 80
+0026: set a, $2F          ; 1F 2F
+0028: store $A8A8, a      ; 18 A8 A8
+002B: set a, $2F          ; 1F 2F
+002D: store $D0A9, a      ; 18 A9 D0
+0030: set a, $2F          ; 1F 2F
+0032: store $F8AA, a      ; 18 AA F8
+0035: return              ; 1A
+0036: set a, $04          ; 1F 04
+0038: store $5000, a      ; 18 00 50
+003B: push a              ; 05
+003C: set a, $00          ; 1F 00
+003E: store $5032, a      ; 18 32 50
+0041: set a, $58          ; 1F 58
+0043: store $5033, a      ; 18 33 50
+0046: set a, $0F          ; 1F 0F
+0048: store $5034, a      ; 18 34 50
+004B: set a, $29          ; 1F 29
+004D: store $5035, a      ; 18 35 50
+0050: set a, $00          ; 1F 00
+0052: store $5036, a      ; 18 36 50
+0055: set a, $03          ; 1F 03
+0057: store $5037, a      ; 18 37 50
+005A: int $11             ; A0 11
+005C: push a              ; 05
+005D: set a, $C8          ; 1F C8
+005F: jmp.z $0066         ; 9F 66 00
+0062: dec a               ; 50
+0063: jmp $005F           ; 93 5F 00
+0066: pop a               ; 0C
+0067: pop a               ; 0C
+0068: push a              ; 05
+0069: set a, $20          ; 1F 20
+006B: store $4010, a      ; 18 10 40
+006E: set a, $00          ; 1F 00
+0070: store $4012, a      ; 18 12 40
+0073: set a, $80          ; 1F 80
+0075: store $4013, a      ; 18 13 40
+0078: set a, $00          ; 1F 00
+007A: store $4014, a      ; 18 14 40
+007D: set a, $28          ; 1F 28
+007F: store $4015, a      ; 18 15 40
+0082: int $01             ; A0 01
+0084: push a              ; 05
+0085: set a, $C8          ; 1F C8
+0087: jmp.z $008E         ; 9F 8E 00
+008A: dec a               ; 50
+008B: jmp $0087           ; 93 87 00
+008E: pop a               ; 0C
+008F: pop a               ; 0C
+0090: push a              ; 05
+0091: set a, $20          ; 1F 20
+0093: store $4010, a      ; 18 10 40
+0096: set a, $00          ; 1F 00
+0098: store $4012, a      ; 18 12 40
+009B: set a, $A8          ; 1F A8
+009D: store $4013, a      ; 18 13 40
+00A0: set a, $00          ; 1F 00
+00A2: store $4014, a      ; 18 14 40
+00A5: set a, $28          ; 1F 28
+00A7: store $4015, a      ; 18 15 40
+00AA: int $01             ; A0 01
+00AC: push a              ; 05
+00AD: set a, $C8          ; 1F C8
+00AF: jmp.z $00B6         ; 9F B6 00
+00B2: dec a               ; 50
+00B3: jmp $00AF           ; 93 AF 00
+00B6: pop a               ; 0C
+00B7: pop a               ; 0C
+00B8: push a              ; 05
+00B9: set a, $20          ; 1F 20
+00BB: store $4010, a      ; 18 10 40
+00BE: set a, $00          ; 1F 00
+00C0: store $4012, a      ; 18 12 40
+00C3: set a, $D0          ; 1F D0
+00C5: store $4013, a      ; 18 13 40
+00C8: set a, $00          ; 1F 00
+00CA: store $4014, a      ; 18 14 40
+00CD: set a, $28          ; 1F 28
+00CF: store $4015, a      ; 18 15 40
+00D2: int $01             ; A0 01
+00D4: push a              ; 05
+00D5: set a, $C8          ; 1F C8
+00D7: jmp.z $00DE         ; 9F DE 00
+00DA: dec a               ; 50
+00DB: jmp $00D7           ; 93 D7 00
+00DE: pop a               ; 0C
+00DF: pop a               ; 0C
+00E0: push a              ; 05
+00E1: set a, $20          ; 1F 20
+00E3: store $4010, a      ; 18 10 40
+00E6: set a, $00          ; 1F 00
+00E8: store $4012, a      ; 18 12 40
+00EB: set a, $F8          ; 1F F8
+00ED: store $4013, a      ; 18 13 40
+00F0: set a, $00          ; 1F 00
+00F2: store $4014, a      ; 18 14 40
+00F5: set a, $28          ; 1F 28
+00F7: store $4015, a      ; 18 15 40
+00FA: int $01             ; A0 01
+00FC: push a              ; 05
+00FD: set a, $C8          ; 1F C8
+00FF: jmp.z $0106         ; 9F 06 01
+0102: dec a               ; 50
+0103: jmp $00FF           ; 93 FF 00
+0106: pop a               ; 0C
+0107: pop a               ; 0C
+0108: call $0017          ; 19 17 00
+010B: nop                 ; 00
+010C: jmp $010B           ; 93 0B 01
+010F: nop                 ; 00
+0110: nop                 ; 00
+0111: nop                 ; 00
+0112: nop                 ; 00
+0113: nop                 ; 00
+0114: nop                 ; 00
+0115: nop                 ; 00
+0116: nop                 ; 00
+0117: nop                 ; 00
+0118: nop                 ; 00
+0119: nop                 ; 00
+011A: nop                 ; 00
+011B: nop                 ; 00
+011C: nop                 ; 00
+011D: nop                 ; 00
+011E: nop                 ; 00
+011F: nop                 ; 00
+0120: nop                 ; 00
+0121: nop                 ; 00
+0122: nop                 ; 00
+0123: nop                 ; 00
+0124: nop                 ; 00
+0125: nop                 ; 00
+0126: nop                 ; 00
+0127: nop                 ; 00
+0128: nop                 ; 00
+0129: nop                 ; 00
+012A: nop                 ; 00
+012B: nop                 ; 00
+012C: nop                 ; 00
+012D: nop                 ; 00
+012E: nop                 ; 00
+012F: nop                 ; 00
+0130: nop                 ; 00
+0131: nop                 ; 00
+0132: nop                 ; 00
+0133: nop                 ; 00
+0134: nop                 ; 00
+0135: nop                 ; FC
+0136: nop                 ; FF
+0137: nop                 ; 00
+0138: nop                 ; 00
+0139: nop                 ; 00
+013A: nop                 ; 00
+013B: nop                 ; 00
+013C: nop                 ; 00
+013D: nop                 ; 00
+013E: nop                 ; 00
+013F: nop                 ; 00
+0140: nop                 ; 00
+0141: nop                 ; 00
+0142: nop                 ; 00
+0143: nop                 ; 00
+0144: nop                 ; 00
+0145: nop                 ; 00
+0146: nop                 ; 00
+0147: nop                 ; 00
+0148: nop                 ; 00
+0149: nop                 ; 00
+014A: nop                 ; 00
+014B: nop                 ; 00
+014C: nop                 ; 00
+014D: nop                 ; 00
+014E: nop                 ; 00
+014F: nop                 ; 00
+0150: nop                 ; 00
+0151: nop                 ; 00
+0152: nop                 ; 00
+0153: nop                 ; 00
+0154: nop                 ; 00
 0155: nop                 ; 00
-0156: inc x               ; 67
-0157: jmp $0155           ; E9 55 01
+0156: nop                 ; 00
+0157: nop                 ; 00
+0158: nop                 ; 00
+0159: nop                 ; 00
 015A: nop                 ; 00
 015B: nop                 ; 00
 015C: nop                 ; 00
-015D: nop                 ; 00
-015E: nop                 ; 00
+015D: nop                 ; FC
+015E: nop                 ; FF
 015F: nop                 ; 00
 0160: nop                 ; 00
 0161: nop                 ; 00
@@ -169,7 +218,7 @@
 0167: nop                 ; 00
 0168: nop                 ; 00
 0169: nop                 ; 00
-016A: nop                 ; 00
+016A: push y              ; 02
 016B: nop                 ; 00
 016C: nop                 ; 00
 016D: nop                 ; 00
@@ -191,13 +240,13 @@
 017D: nop                 ; 00
 017E: nop                 ; 00
 017F: nop                 ; 00
-0180: nop                 ; FC
-0181: nop                 ; FF
+0180: nop                 ; 00
+0181: nop                 ; 00
 0182: nop                 ; 00
 0183: nop                 ; 00
 0184: nop                 ; 00
-0185: nop                 ; 00
-0186: nop                 ; 00
+0185: nop                 ; FC
+0186: nop                 ; FF
 0187: nop                 ; 00
 0188: nop                 ; 00
 0189: nop                 ; 00
@@ -231,20 +280,20 @@
 01A5: nop                 ; 00
 01A6: nop                 ; 00
 01A7: nop                 ; 00
-01A8: nop                 ; FC
-01A9: nop                 ; FF
+01A8: nop                 ; 00
+01A9: nop                 ; 00
 01AA: nop                 ; 00
 01AB: nop                 ; 00
 01AC: nop                 ; 00
-01AD: nop                 ; 00
-01AE: nop                 ; 00
+01AD: nop                 ; FC
+01AE: nop                 ; FF
 01AF: nop                 ; 00
 01B0: nop                 ; 00
 01B1: nop                 ; 00
 01B2: nop                 ; 00
 01B3: nop                 ; 00
 01B4: nop                 ; 00
-01B5: push y              ; 02
+01B5: nop                 ; 00
 01B6: nop                 ; 00
 01B7: nop                 ; 00
 01B8: nop                 ; 00
@@ -271,13 +320,13 @@
 01CD: nop                 ; 00
 01CE: nop                 ; 00
 01CF: nop                 ; 00
-01D0: nop                 ; FC
-01D1: nop                 ; FF
+01D0: nop                 ; 00
+01D1: nop                 ; 00
 01D2: nop                 ; 00
 01D3: nop                 ; 00
 01D4: nop                 ; 00
-01D5: nop                 ; 00
-01D6: nop                 ; 00
+01D5: nop                 ; FC
+01D6: nop                 ; FF
 01D7: nop                 ; 00
 01D8: nop                 ; 00
 01D9: nop                 ; 00
@@ -311,13 +360,13 @@
 01F5: nop                 ; 00
 01F6: nop                 ; 00
 01F7: nop                 ; 00
-01F8: nop                 ; FC
-01F9: nop                 ; FF
+01F8: nop                 ; 00
+01F9: nop                 ; 00
 01FA: nop                 ; 00
 01FB: nop                 ; 00
 01FC: nop                 ; 00
-01FD: nop                 ; 00
-01FE: nop                 ; 00
+01FD: nop                 ; FC
+01FE: nop                 ; FF
 01FF: nop                 ; 00
 0200: nop                 ; 00
 0201: nop                 ; 00
@@ -351,13 +400,13 @@
 021D: nop                 ; 00
 021E: nop                 ; 00
 021F: nop                 ; 00
-0220: nop                 ; FC
-0221: nop                 ; FF
+0220: nop                 ; 00
+0221: nop                 ; 00
 0222: nop                 ; 00
 0223: nop                 ; 00
 0224: nop                 ; 00
-0225: nop                 ; 00
-0226: nop                 ; 00
+0225: nop                 ; FC
+0226: nop                 ; FF
 0227: nop                 ; 00
 0228: nop                 ; 00
 0229: nop                 ; 00
@@ -391,13 +440,13 @@
 0245: nop                 ; 00
 0246: nop                 ; 00
 0247: nop                 ; 00
-0248: nop                 ; FC
-0249: nop                 ; FF
+0248: nop                 ; 00
+0249: nop                 ; 00
 024A: nop                 ; 00
 024B: nop                 ; 00
 024C: nop                 ; 00
-024D: nop                 ; 00
-024E: nop                 ; 00
+024D: nop                 ; FC
+024E: nop                 ; FF
 024F: nop                 ; 00
 0250: nop                 ; 00
 0251: nop                 ; 00
@@ -431,13 +480,13 @@
 026D: nop                 ; 00
 026E: nop                 ; 00
 026F: nop                 ; 00
-0270: nop                 ; FC
-0271: nop                 ; FF
+0270: nop                 ; 00
+0271: nop                 ; 00
 0272: nop                 ; 00
 0273: nop                 ; 00
 0274: nop                 ; 00
-0275: nop                 ; 00
-0276: nop                 ; 00
+0275: nop                 ; FC
+0276: nop                 ; FF
 0277: nop                 ; 00
 0278: nop                 ; 00
 0279: nop                 ; 00
@@ -471,13 +520,13 @@
 0295: nop                 ; 00
 0296: nop                 ; 00
 0297: nop                 ; 00
-0298: nop                 ; FC
-0299: nop                 ; FF
+0298: nop                 ; 00
+0299: nop                 ; 00
 029A: nop                 ; 00
 029B: nop                 ; 00
 029C: nop                 ; 00
-029D: nop                 ; 00
-029E: nop                 ; 00
+029D: nop                 ; FC
+029E: nop                 ; FF
 029F: nop                 ; 00
 02A0: nop                 ; 00
 02A1: nop                 ; 00
@@ -511,13 +560,13 @@
 02BD: nop                 ; 00
 02BE: nop                 ; 00
 02BF: nop                 ; 00
-02C0: nop                 ; FC
-02C1: nop                 ; FF
+02C0: nop                 ; 00
+02C1: nop                 ; 00
 02C2: nop                 ; 00
 02C3: nop                 ; 00
 02C4: nop                 ; 00
-02C5: nop                 ; 00
-02C6: nop                 ; 00
+02C5: nop                 ; FC
+02C6: nop                 ; FF
 02C7: nop                 ; 00
 02C8: nop                 ; 00
 02C9: nop                 ; 00
@@ -551,13 +600,13 @@
 02E5: nop                 ; 00
 02E6: nop                 ; 00
 02E7: nop                 ; 00
-02E8: nop                 ; FC
-02E9: nop                 ; FF
+02E8: nop                 ; 00
+02E9: nop                 ; 00
 02EA: nop                 ; 00
 02EB: nop                 ; 00
 02EC: nop                 ; 00
-02ED: nop                 ; 00
-02EE: nop                 ; 00
+02ED: nop                 ; FC
+02EE: nop                 ; FF
 02EF: nop                 ; 00
 02F0: nop                 ; 00
 02F1: nop                 ; 00
@@ -591,13 +640,13 @@
 030D: nop                 ; 00
 030E: nop                 ; 00
 030F: nop                 ; 00
-0310: nop                 ; FC
-0311: nop                 ; FF
+0310: nop                 ; 00
+0311: nop                 ; 00
 0312: nop                 ; 00
 0313: nop                 ; 00
 0314: nop                 ; 00
-0315: nop                 ; 00
-0316: nop                 ; 00
+0315: nop                 ; FC
+0316: nop                 ; FF
 0317: nop                 ; 00
 0318: nop                 ; 00
 0319: nop                 ; 00
@@ -631,13 +680,13 @@
 0335: nop                 ; 00
 0336: nop                 ; 00
 0337: nop                 ; 00
-0338: nop                 ; FC
-0339: nop                 ; FF
+0338: nop                 ; 00
+0339: nop                 ; 00
 033A: nop                 ; 00
 033B: nop                 ; 00
 033C: nop                 ; 00
-033D: nop                 ; 00
-033E: nop                 ; 00
+033D: nop                 ; FC
+033E: nop                 ; FF
 033F: nop                 ; 00
 0340: nop                 ; 00
 0341: nop                 ; 00
@@ -671,13 +720,13 @@
 035D: nop                 ; 00
 035E: nop                 ; 00
 035F: nop                 ; 00
-0360: nop                 ; FC
-0361: nop                 ; FF
+0360: nop                 ; 00
+0361: nop                 ; 00
 0362: nop                 ; 00
 0363: nop                 ; 00
 0364: nop                 ; 00
-0365: nop                 ; 00
-0366: nop                 ; 00
+0365: nop                 ; FC
+0366: nop                 ; FF
 0367: nop                 ; 00
 0368: nop                 ; 00
 0369: nop                 ; 00
@@ -711,13 +760,13 @@
 0385: nop                 ; 00
 0386: nop                 ; 00
 0387: nop                 ; 00
-0388: nop                 ; FC
-0389: nop                 ; FF
+0388: nop                 ; 00
+0389: nop                 ; 00
 038A: nop                 ; 00
 038B: nop                 ; 00
 038C: nop                 ; 00
-038D: nop                 ; 00
-038E: nop                 ; 00
+038D: nop                 ; FC
+038E: nop                 ; FF
 038F: nop                 ; 00
 0390: nop                 ; 00
 0391: nop                 ; 00
@@ -751,13 +800,13 @@
 03AD: nop                 ; 00
 03AE: nop                 ; 00
 03AF: nop                 ; 00
-03B0: nop                 ; FC
-03B1: nop                 ; FF
+03B0: nop                 ; 00
+03B1: nop                 ; 00
 03B2: nop                 ; 00
 03B3: nop                 ; 00
 03B4: nop                 ; 00
-03B5: nop                 ; 00
-03B6: nop                 ; 00
+03B5: nop                 ; FC
+03B6: nop                 ; FF
 03B7: nop                 ; 00
 03B8: nop                 ; 00
 03B9: nop                 ; 00
@@ -791,13 +840,13 @@
 03D5: nop                 ; 00
 03D6: nop                 ; 00
 03D7: nop                 ; 00
-03D8: nop                 ; FC
-03D9: nop                 ; FF
+03D8: nop                 ; 00
+03D9: nop                 ; 00
 03DA: nop                 ; 00
 03DB: nop                 ; 00
 03DC: nop                 ; 00
-03DD: nop                 ; 00
-03DE: nop                 ; 00
+03DD: nop                 ; FC
+03DE: nop                 ; FF
 03DF: nop                 ; 00
 03E0: nop                 ; 00
 03E1: nop                 ; 00
@@ -831,13 +880,13 @@
 03FD: nop                 ; 00
 03FE: nop                 ; 00
 03FF: nop                 ; 00
-0400: nop                 ; FC
-0401: nop                 ; FF
+0400: nop                 ; 00
+0401: nop                 ; 00
 0402: nop                 ; 00
 0403: nop                 ; 00
 0404: nop                 ; 00
-0405: nop                 ; 00
-0406: nop                 ; 00
+0405: nop                 ; FC
+0406: nop                 ; FF
 0407: nop                 ; 00
 0408: nop                 ; 00
 0409: nop                 ; 00
@@ -871,13 +920,13 @@
 0425: nop                 ; 00
 0426: nop                 ; 00
 0427: nop                 ; 00
-0428: nop                 ; FC
-0429: nop                 ; FF
+0428: nop                 ; 00
+0429: nop                 ; 00
 042A: nop                 ; 00
 042B: nop                 ; 00
 042C: nop                 ; 00
-042D: nop                 ; 00
-042E: nop                 ; 00
+042D: nop                 ; FC
+042E: nop                 ; FF
 042F: nop                 ; 00
 0430: nop                 ; 00
 0431: nop                 ; 00
@@ -911,13 +960,13 @@
 044D: nop                 ; 00
 044E: nop                 ; 00
 044F: nop                 ; 00
-0450: nop                 ; FC
-0451: nop                 ; FF
+0450: nop                 ; 00
+0451: nop                 ; 00
 0452: nop                 ; 00
 0453: nop                 ; 00
 0454: nop                 ; 00
-0455: nop                 ; 00
-0456: nop                 ; 00
+0455: nop                 ; FC
+0456: nop                 ; FF
 0457: nop                 ; 00
 0458: nop                 ; 00
 0459: nop                 ; 00
@@ -951,13 +1000,13 @@
 0475: nop                 ; 00
 0476: nop                 ; 00
 0477: nop                 ; 00
-0478: nop                 ; FC
-0479: nop                 ; FF
+0478: nop                 ; 00
+0479: nop                 ; 00
 047A: nop                 ; 00
 047B: nop                 ; 00
 047C: nop                 ; 00
-047D: nop                 ; 00
-047E: nop                 ; 00
+047D: nop                 ; FC
+047E: nop                 ; FF
 047F: nop                 ; 00
 0480: nop                 ; 00
 0481: nop                 ; 00
@@ -991,13 +1040,13 @@
 049D: nop                 ; 00
 049E: nop                 ; 00
 049F: nop                 ; 00
-04A0: nop                 ; FC
-04A1: nop                 ; FF
+04A0: nop                 ; 00
+04A1: nop                 ; 00
 04A2: nop                 ; 00
 04A3: nop                 ; 00
 04A4: nop                 ; 00
-04A5: nop                 ; 00
-04A6: nop                 ; 00
+04A5: nop                 ; FC
+04A6: nop                 ; FF
 04A7: nop                 ; 00
 04A8: nop                 ; 00
 04A9: nop                 ; 00
@@ -1031,13 +1080,13 @@
 04C5: nop                 ; 00
 04C6: nop                 ; 00
 04C7: nop                 ; 00
-04C8: nop                 ; FC
-04C9: nop                 ; FF
+04C8: nop                 ; 00
+04C9: nop                 ; 00
 04CA: nop                 ; 00
 04CB: nop                 ; 00
 04CC: nop                 ; 00
-04CD: nop                 ; 00
-04CE: nop                 ; 00
+04CD: nop                 ; FC
+04CE: nop                 ; FF
 04CF: nop                 ; 00
 04D0: nop                 ; 00
 04D1: nop                 ; 00
@@ -1071,13 +1120,13 @@
 04ED: nop                 ; 00
 04EE: nop                 ; 00
 04EF: nop                 ; 00
-04F0: nop                 ; FC
-04F1: nop                 ; FF
+04F0: nop                 ; 00
+04F1: nop                 ; 00
 04F2: nop                 ; 00
 04F3: nop                 ; 00
 04F4: nop                 ; 00
-04F5: nop                 ; 00
-04F6: nop                 ; 00
+04F5: nop                 ; FC
+04F6: nop                 ; FF
 04F7: nop                 ; 00
 04F8: nop                 ; 00
 04F9: nop                 ; 00
@@ -1111,13 +1160,13 @@
 0515: nop                 ; 00
 0516: nop                 ; 00
 0517: nop                 ; 00
-0518: nop                 ; FC
-0519: nop                 ; FF
+0518: nop                 ; 00
+0519: nop                 ; 00
 051A: nop                 ; 00
 051B: nop                 ; 00
 051C: nop                 ; 00
-051D: nop                 ; 00
-051E: nop                 ; 00
+051D: nop                 ; FC
+051E: nop                 ; FF
 051F: nop                 ; 00
 0520: nop                 ; 00
 0521: nop                 ; 00
@@ -1151,13 +1200,13 @@
 053D: nop                 ; 00
 053E: nop                 ; 00
 053F: nop                 ; 00
-0540: nop                 ; FC
-0541: nop                 ; FF
+0540: nop                 ; 00
+0541: nop                 ; 00
 0542: nop                 ; 00
 0543: nop                 ; 00
 0544: nop                 ; 00
-0545: nop                 ; 00
-0546: nop                 ; 00
+0545: nop                 ; FC
+0546: nop                 ; FF
 0547: nop                 ; 00
 0548: nop                 ; 00
 0549: nop                 ; 00
@@ -1191,13 +1240,13 @@
 0565: nop                 ; 00
 0566: nop                 ; 00
 0567: nop                 ; 00
-0568: nop                 ; FC
-0569: nop                 ; FF
+0568: nop                 ; 00
+0569: nop                 ; 00
 056A: nop                 ; 00
 056B: nop                 ; 00
 056C: nop                 ; 00
-056D: nop                 ; 00
-056E: nop                 ; 00
+056D: nop                 ; FC
+056E: nop                 ; FF
 056F: nop                 ; 00
 0570: nop                 ; 00
 0571: nop                 ; 00
@@ -1231,13 +1280,13 @@
 058D: nop                 ; 00
 058E: nop                 ; 00
 058F: nop                 ; 00
-0590: nop                 ; FC
-0591: nop                 ; FF
+0590: nop                 ; 00
+0591: nop                 ; 00
 0592: nop                 ; 00
 0593: nop                 ; 00
 0594: nop                 ; 00
-0595: nop                 ; 00
-0596: nop                 ; 00
+0595: nop                 ; FC
+0596: nop                 ; FF
 0597: nop                 ; 00
 0598: nop                 ; 00
 0599: nop                 ; 00
@@ -1246,9 +1295,7 @@
 059C: nop                 ; 00
 059D: nop                 ; 00
 059E: nop                 ; 00
-059F: nop                 ; 00
-05A0: nop                 ; 00
-05A1: nop                 ; 00
+059F: load y, $0000       ; 10 00 00
 05A2: nop                 ; 00
 05A3: nop                 ; 00
 05A4: nop                 ; 00
@@ -1271,13 +1318,13 @@
 05B5: nop                 ; 00
 05B6: nop                 ; 00
 05B7: nop                 ; 00
-05B8: nop                 ; FC
-05B9: nop                 ; FF
+05B8: nop                 ; 00
+05B9: nop                 ; 00
 05BA: nop                 ; 00
 05BB: nop                 ; 00
 05BC: nop                 ; 00
-05BD: nop                 ; 00
-05BE: nop                 ; 00
+05BD: nop                 ; FC
+05BE: nop                 ; FF
 05BF: nop                 ; 00
 05C0: nop                 ; 00
 05C1: nop                 ; 00
@@ -1311,17 +1358,19 @@
 05DD: nop                 ; 00
 05DE: nop                 ; 00
 05DF: nop                 ; 00
-05E0: nop                 ; FC
-05E1: nop                 ; FF
+05E0: nop                 ; 00
+05E1: nop                 ; 00
 05E2: nop                 ; 00
 05E3: nop                 ; 00
 05E4: nop                 ; 00
-05E5: nop                 ; 00
-05E6: nop                 ; 00
+05E5: nop                 ; FC
+05E6: nop                 ; FF
 05E7: nop                 ; 00
 05E8: nop                 ; 00
 05E9: nop                 ; 00
-05EA: store $0000, x      ; 10 00 00
+05EA: nop                 ; 00
+05EB: nop                 ; 00
+05EC: nop                 ; 00
 05ED: nop                 ; 00
 05EE: nop                 ; 00
 05EF: nop                 ; 00
@@ -1349,13 +1398,13 @@
 0605: nop                 ; 00
 0606: nop                 ; 00
 0607: nop                 ; 00
-0608: nop                 ; FC
-0609: nop                 ; FF
+0608: nop                 ; 00
+0609: nop                 ; 00
 060A: nop                 ; 00
 060B: nop                 ; 00
 060C: nop                 ; 00
-060D: nop                 ; 00
-060E: nop                 ; 00
+060D: nop                 ; FC
+060E: nop                 ; FF
 060F: nop                 ; 00
 0610: nop                 ; 00
 0611: nop                 ; 00
@@ -1364,7 +1413,7 @@
 0614: nop                 ; 00
 0615: nop                 ; 00
 0616: nop                 ; 00
-0617: nop                 ; 00
+0617: push x              ; 01
 0618: nop                 ; 00
 0619: nop                 ; 00
 061A: nop                 ; 00
@@ -1389,13 +1438,13 @@
 062D: nop                 ; 00
 062E: nop                 ; 00
 062F: nop                 ; 00
-0630: nop                 ; FC
-0631: nop                 ; FF
+0630: nop                 ; 00
+0631: nop                 ; 00
 0632: nop                 ; 00
 0633: nop                 ; 00
 0634: nop                 ; 00
-0635: nop                 ; 00
-0636: nop                 ; 00
+0635: nop                 ; FC
+0636: nop                 ; FF
 0637: nop                 ; 00
 0638: nop                 ; 00
 0639: nop                 ; 00
@@ -1403,7 +1452,7 @@
 063B: nop                 ; 00
 063C: nop                 ; 00
 063D: nop                 ; 00
-063E: nop                 ; 00
+063E: add a, x            ; 20
 063F: nop                 ; 00
 0640: nop                 ; 00
 0641: nop                 ; 00
@@ -1429,19 +1478,19 @@
 0655: nop                 ; 00
 0656: nop                 ; 00
 0657: nop                 ; 00
-0658: nop                 ; FC
-0659: nop                 ; FF
+0658: nop                 ; 00
+0659: nop                 ; 00
 065A: nop                 ; 00
 065B: nop                 ; 00
 065C: nop                 ; 00
-065D: nop                 ; 00
-065E: nop                 ; 00
+065D: nop                 ; FC
+065E: nop                 ; FF
 065F: nop                 ; 00
 0660: nop                 ; 00
 0661: nop                 ; 00
-0662: push x              ; 01
-0663: nop                 ; 00
-0664: nop                 ; 00
+0662: nop                 ; F4
+0663: nop                 ; B7
+0664: push y              ; 02
 0665: nop                 ; 00
 0666: nop                 ; 00
 0667: nop                 ; 00
@@ -1469,21 +1518,19 @@
 067D: nop                 ; 00
 067E: nop                 ; 00
 067F: nop                 ; 00
-0680: nop                 ; FC
-0681: nop                 ; FF
+0680: nop                 ; 00
+0681: nop                 ; 00
 0682: nop                 ; 00
 0683: nop                 ; 00
 0684: nop                 ; 00
-0685: nop                 ; 00
-0686: nop                 ; 00
+0685: nop                 ; FC
+0686: nop                 ; FF
 0687: nop                 ; 00
 0688: nop                 ; 00
-0689: add x, a            ; 20
-068A: nop                 ; 00
-068B: nop                 ; 00
-068C: nop                 ; 00
-068D: nop                 ; 00
-068E: nop                 ; 00
+0689: shl y, $BA          ; 80 BA
+068B: nop                 ; DD
+068C: nop                 ; FA
+068D: cmpbit y            ; 5B 41
 068F: nop                 ; 00
 0690: nop                 ; 00
 0691: nop                 ; 00
@@ -1509,20 +1556,20 @@
 06A5: nop                 ; 00
 06A6: nop                 ; 00
 06A7: nop                 ; 00
-06A8: nop                 ; FC
-06A9: nop                 ; FF
+06A8: nop                 ; 00
+06A9: nop                 ; 00
 06AA: nop                 ; 00
 06AB: nop                 ; 00
 06AC: nop                 ; 00
-06AD: jmp.lt $02B7        ; F4 B7 02
+06AD: nop                 ; FC
+06AE: nop                 ; FF
+06AF: nop                 ; 00
 06B0: nop                 ; 00
-06B1: nop                 ; 00
-06B2: nop                 ; 00
-06B3: nop                 ; 00
-06B4: nop                 ; 00
-06B5: nop                 ; 00
-06B6: nop                 ; 00
-06B7: nop                 ; 00
+06B1: nop                 ; E0
+06B2: nop                 ; FF
+06B3: load w, $F7ED       ; 12 ED F7
+06B6: nop                 ; BE
+06B7: adc a, x            ; 2A
 06B8: nop                 ; 00
 06B9: nop                 ; 00
 06BA: nop                 ; 00
@@ -1547,23 +1594,21 @@
 06CD: nop                 ; 00
 06CE: nop                 ; 00
 06CF: nop                 ; 00
-06D0: nop                 ; FC
-06D1: nop                 ; FF
+06D0: nop                 ; 00
+06D1: nop                 ; 00
 06D2: nop                 ; 00
 06D3: nop                 ; 00
-06D4: cmp w, x            ; 80
-06D5: not w               ; BA
-06D6: shr w               ; DD
-06D7: nop                 ; FA
-06D8: mul z, w            ; 5B
-06D9: sub z, z            ; 41
-06DA: nop                 ; 00
+06D4: nop                 ; 00
+06D5: nop                 ; FC
+06D6: nop                 ; FF
+06D7: nop                 ; 00
+06D8: nop                 ; 00
+06D9: nop                 ; 00
+06DA: and a, x            ; 5F
 06DB: nop                 ; 00
-06DC: nop                 ; 00
-06DD: nop                 ; 00
-06DE: nop                 ; 00
-06DF: nop                 ; 00
-06E0: nop                 ; 00
+06DC: nop                 ; F0
+06DD: cmpbit x            ; 5A AB
+06DF: cmp x, $95          ; 55 95
 06E1: nop                 ; 00
 06E2: nop                 ; 00
 06E3: nop                 ; 00
@@ -1587,23 +1632,24 @@
 06F5: nop                 ; 00
 06F6: nop                 ; 00
 06F7: nop                 ; 00
-06F8: nop                 ; FC
-06F9: nop                 ; FF
+06F8: nop                 ; 00
+06F9: nop                 ; 00
 06FA: nop                 ; 00
 06FB: nop                 ; 00
-06FC: rol y               ; E0
-06FD: nop                 ; FF
-06FE: store $F7ED, z      ; 12 ED F7
-0701: xor x, z            ; BE
-0702: add z, a            ; 2A
-0703: nop                 ; 00
-0704: nop                 ; 00
-0705: nop                 ; 00
+06FC: nop                 ; 00
+06FD: nop                 ; FC
+06FE: nop                 ; FF
+06FF: nop                 ; 00
+0700: nop                 ; 00
+0701: nop                 ; 00
+0702: nop                 ; F0
+0703: nop                 ; FF
+0704: adc x, $00          ; 2F 00
 0706: nop                 ; 00
 0707: nop                 ; 00
-0708: nop                 ; 00
-0709: nop                 ; 00
-070A: nop                 ; 00
+0708: cmp a, y            ; 52
+0709: nop                 ; AD
+070A: pop z               ; 0A
 070B: nop                 ; 00
 070C: nop                 ; 00
 070D: nop                 ; 00
@@ -1625,25 +1671,24 @@
 071D: nop                 ; 00
 071E: nop                 ; 00
 071F: nop                 ; 00
-0720: nop                 ; FC
-0721: nop                 ; FF
+0720: nop                 ; 00
+0721: nop                 ; 00
 0722: nop                 ; 00
 0723: nop                 ; 00
 0724: nop                 ; 00
-0725: mul w, z            ; 5F
-0726: nop                 ; 00
-0727: jmp $AB5A, a        ; F0 5A AB
-072A: mul y, z            ; 55
-072B: and y, w            ; 95
-072C: nop                 ; 00
+0725: nop                 ; FC
+0726: nop                 ; FF
+0727: mul a, w            ; 40
+0728: nop                 ; 00
+0729: nop                 ; 00
+072A: mul a, w            ; 40
+072B: adc x, $00          ; 2F 00
 072D: nop                 ; 00
 072E: nop                 ; 00
 072F: nop                 ; 00
 0730: nop                 ; 00
-0731: nop                 ; 00
-0732: nop                 ; 00
-0733: nop                 ; 00
-0734: nop                 ; 00
+0731: int $EA             ; A0 EA
+0733: cmp x, $01          ; 55 01
 0735: nop                 ; 00
 0736: nop                 ; 00
 0737: nop                 ; 00
@@ -1663,26 +1708,24 @@
 0745: nop                 ; 00
 0746: nop                 ; 00
 0747: nop                 ; 00
-0748: nop                 ; FC
-0749: nop                 ; FF
+0748: nop                 ; 00
+0749: nop                 ; 00
 074A: nop                 ; 00
 074B: nop                 ; 00
 074C: nop                 ; 00
-074D: jmp $2FFF, a        ; F0 FF 2F
-0750: nop                 ; 00
-0751: nop                 ; 00
+074D: nop                 ; FC
+074E: nop                 ; FF
+074F: load y, $0805       ; 10 05 08
 0752: nop                 ; 00
-0753: mul x, a            ; 52
-0754: or z, w             ; AD
-0755: pop a               ; 0A
-0756: nop                 ; 00
-0757: nop                 ; 00
+0753: nop                 ; E8
+0754: push a              ; 05
+0755: shl w, $24          ; 82 24
+0757: inc y               ; 48
 0758: nop                 ; 00
 0759: nop                 ; 00
 075A: nop                 ; 00
-075B: nop                 ; 00
-075C: nop                 ; 00
-075D: nop                 ; 00
+075B: int $7E             ; A0 7E
+075D: push a              ; 05
 075E: nop                 ; 00
 075F: nop                 ; 00
 0760: nop                 ; 00
@@ -1701,29 +1744,24 @@
 076D: nop                 ; 00
 076E: nop                 ; 00
 076F: nop                 ; 00
-0770: nop                 ; FC
-0771: nop                 ; FF
-0772: sub z, y            ; 40
+0770: nop                 ; 00
+0771: nop                 ; 00
+0772: nop                 ; 00
 0773: nop                 ; 00
 0774: nop                 ; 00
-0775: sub z, y            ; 40
-0776: add w, a            ; 2F
-0777: nop                 ; 00
-0778: nop                 ; 00
+0775: nop                 ; FC
+0776: nop                 ; FF
+0777: mul x, $00          ; 42 00
 0779: nop                 ; 00
 077A: nop                 ; 00
-077B: nop                 ; 00
-077C: and a, y            ; A0
-077D: jmp x, y            ; EA
-077E: mul y, z            ; 55
-077F: push x              ; 01
-0780: nop                 ; 00
-0781: nop                 ; 00
+077B: dec a               ; 50
+077C: nop                 ; BF
+077D: load y, $B580       ; 10 80 B5
+0780: cmp z, $05          ; 57 05
 0782: nop                 ; 00
 0783: nop                 ; 00
-0784: nop                 ; 00
-0785: nop                 ; 00
-0786: nop                 ; 00
+0784: shl z, $A8          ; 81 A8
+0786: pop z               ; 0A
 0787: nop                 ; 00
 0788: nop                 ; 00
 0789: nop                 ; 00
@@ -1741,28 +1779,28 @@
 0795: nop                 ; 00
 0796: nop                 ; 00
 0797: nop                 ; 00
-0798: nop                 ; FC
-0799: nop                 ; FF
-079A: store $0805, x      ; 10 05 08
-079D: nop                 ; 00
-079E: ror a               ; E8
-079F: push a              ; 05
-07A0: cmp w, z            ; 82
-07A1: add y, w            ; 24
-07A2: sub w, a            ; 48
+0798: nop                 ; 00
+0799: nop                 ; 00
+079A: nop                 ; 00
+079B: nop                 ; 00
+079C: nop                 ; 00
+079D: nop                 ; FC
+079E: nop                 ; FF
+079F: nop                 ; D0
+07A0: push y              ; 02
+07A1: nop                 ; 00
+07A2: nop                 ; 00
 07A3: nop                 ; 00
-07A4: nop                 ; 00
-07A5: nop                 ; 00
-07A6: and a, y            ; A0
-07A7: cmp z, w            ; 7E
-07A8: push a              ; 05
-07A9: nop                 ; 00
-07AA: nop                 ; 00
-07AB: nop                 ; 00
-07AC: nop                 ; 00
-07AD: nop                 ; 00
+07A4: nop                 ; EA
+07A5: shr w, $7A          ; 87 7A
+07A7: or w, $FD           ; 6F FD
+07A9: nop                 ; FF
+07AA: adc a, x            ; 2A
+07AB: mul a, w            ; 40
+07AC: and a, x            ; 5F
+07AD: nop                 ; AA
 07AE: nop                 ; 00
-07AF: nop                 ; 00
+07AF: add a, x            ; 20
 07B0: nop                 ; 00
 07B1: nop                 ; 00
 07B2: nop                 ; 00
@@ -1779,31 +1817,27 @@
 07BD: nop                 ; 00
 07BE: nop                 ; 00
 07BF: nop                 ; 00
-07C0: nop                 ; FC
-07C1: nop                 ; FF
-07C2: sub z, w            ; 42
+07C0: nop                 ; 00
+07C1: nop                 ; 00
+07C2: nop                 ; 00
 07C3: nop                 ; 00
 07C4: nop                 ; 00
-07C5: nop                 ; 00
-07C6: mul x, z            ; 50
-07C7: xor x, w            ; BF
-07C8: store $B580, x      ; 10 80 B5
-07CB: mul y, a            ; 57
-07CC: push a              ; 05
-07CD: nop                 ; 00
-07CE: nop                 ; 00
-07CF: cmp w, y            ; 81
-07D0: or y, z             ; A8
-07D1: pop a               ; 0A
-07D2: nop                 ; 00
-07D3: nop                 ; 00
-07D4: nop                 ; 00
-07D5: nop                 ; 00
-07D6: nop                 ; 00
-07D7: nop                 ; 00
-07D8: nop                 ; 00
-07D9: nop                 ; 00
-07DA: nop                 ; 00
+07C5: nop                 ; FC
+07C6: nop                 ; FF
+07C7: nop                 ; E4
+07C8: push y              ; 02
+07C9: load y, $0004       ; 10 04 00
+07CC: nop                 ; E9
+07CD: nop                 ; FE
+07CE: nop                 ; AF
+07CF: nop                 ; BD
+07D0: store $ABA9, w      ; 17 A9 AB
+07D3: nop                 ; AF
+07D4: int $25             ; A0 25
+07D6: nop                 ; A9
+07D7: inc w               ; 4A
+07D8: cmp x, $55          ; 55 55
+07DA: push x              ; 01
 07DB: nop                 ; 00
 07DC: nop                 ; 00
 07DD: nop                 ; 00
@@ -1817,33 +1851,28 @@
 07E5: nop                 ; 00
 07E6: nop                 ; 00
 07E7: nop                 ; 00
-07E8: nop                 ; FC
-07E9: nop                 ; FF
-07EA: xor a, x            ; D0
-07EB: push y              ; 02
+07E8: nop                 ; 00
+07E9: nop                 ; 00
+07EA: nop                 ; 00
+07EB: nop                 ; 00
 07EC: nop                 ; 00
-07ED: nop                 ; 00
-07EE: nop                 ; 00
-07EF: jmp x, y            ; EA
-07F0: cmp a, z            ; 87
-07F1: cmp y, a            ; 7A
-07F2: dec w               ; 6F
-07F3: nop                 ; FD
-07F4: nop                 ; FF
-07F5: add z, a            ; 2A
-07F6: sub z, y            ; 40
-07F7: mul w, z            ; 5F
-07F8: or y, a             ; AA
-07F9: nop                 ; 00
-07FA: add x, a            ; 20
-07FB: nop                 ; 00
-07FC: nop                 ; 00
-07FD: nop                 ; 00
-07FE: nop                 ; 00
-07FF: nop                 ; 00
-0800: nop                 ; 00
-0801: nop                 ; 00
-0802: nop                 ; 00
+07ED: nop                 ; FC
+07EE: nop                 ; FF
+07EF: nop                 ; C8
+07F0: push a              ; 05
+07F1: mul a, w            ; 40
+07F2: shl y, $04          ; 80 04
+07F4: shl y, $55          ; 80 55
+07F6: nop                 ; F5
+07F7: or a, w             ; 6B
+07F8: nop                 ; E9
+07F9: cmp y, $4A          ; 56 4A
+07FB: cmp a, $5D          ; 59 5D
+07FD: cmp x, $02          ; 55 02
+07FF: cmp a, x            ; 51
+0800: push y              ; 02
+0801: add a, x            ; 20
+0802: push y              ; 02
 0803: nop                 ; 00
 0804: nop                 ; 00
 0805: nop                 ; 00
@@ -1857,27 +1886,31 @@
 080D: nop                 ; 00
 080E: nop                 ; 00
 080F: nop                 ; 00
-0810: nop                 ; FC
-0811: nop                 ; FF
-0812: ror x               ; E4
-0813: push y              ; 02
-0814: store $0004, x      ; 10 04 00
-0817: jmp $AFFE           ; E9 FE AF
-081A: xor x, y            ; BD
-081B: set x, $A9          ; 17 A9
-081D: or z, x             ; AB
-081E: or w, x             ; AF
-081F: and a, y            ; A0
-0820: add y, a            ; 25
-0821: or y, w             ; A9
-0822: sub a, y            ; 4A
-0823: mul y, z            ; 55
-0824: mul y, z            ; 55
-0825: push x              ; 01
-0826: nop                 ; 00
-0827: nop                 ; 00
-0828: nop                 ; 00
-0829: nop                 ; 00
+0810: nop                 ; 00
+0811: nop                 ; 00
+0812: nop                 ; 00
+0813: nop                 ; 00
+0814: nop                 ; 00
+0815: nop                 ; FC
+0816: nop                 ; FF
+0817: add a, x            ; 20
+0818: nop                 ; 00
+0819: nop                 ; 00
+081A: add a, x            ; 20
+081B: add a, x            ; 20
+081C: add a, a            ; 24
+081D: inc w               ; 4A
+081E: and a, x            ; 5F
+081F: nop                 ; AD
+0820: nop                 ; AD
+0821: inc w               ; 4A
+0822: or a, y             ; 69
+0823: nop                 ; EF
+0824: cmp z, $05          ; 57 05
+0826: nop                 ; A9
+0827: dec x               ; 4C
+0828: nop                 ; A9
+0829: pop z               ; 0A
 082A: nop                 ; 00
 082B: nop                 ; 00
 082C: nop                 ; 00
@@ -1892,31 +1925,29 @@
 0835: nop                 ; 00
 0836: nop                 ; 00
 0837: nop                 ; 00
-0838: nop                 ; FC
-0839: nop                 ; FF
-083A: xor z, z            ; C8
-083B: push a              ; 05
-083C: sub z, y            ; 40
-083D: cmp w, x            ; 80
-083E: push w              ; 04
-083F: cmp w, x            ; 80
-0840: mul y, z            ; 55
-0841: jmp.z $E96B         ; F5 6B E9
-0844: mul y, w            ; 56
-0845: sub a, y            ; 4A
-0846: mul z, y            ; 59
-0847: mul w, x            ; 5D
-0848: mul y, z            ; 55
-0849: push y              ; 02
-084A: mul x, w            ; 51
-084B: push y              ; 02
-084C: add x, a            ; 20
-084D: push y              ; 02
-084E: nop                 ; 00
-084F: nop                 ; 00
-0850: nop                 ; 00
-0851: nop                 ; 00
-0852: nop                 ; 00
+0838: nop                 ; 00
+0839: nop                 ; 00
+083A: nop                 ; 00
+083B: nop                 ; 00
+083C: nop                 ; 00
+083D: nop                 ; FC
+083E: nop                 ; FF
+083F: mul a, w            ; 40
+0840: add a, y            ; 21
+0841: nop                 ; 00
+0842: pop x               ; 08
+0843: shl y, $48          ; 80 48
+0845: load y, $7BF5       ; 10 F5 7B
+0848: nop                 ; BB
+0849: cmp a, z            ; 53
+084A: nop                 ; FF
+084B: inc w               ; 4A
+084C: nop                 ; A5
+084D: nop                 ; D4
+084E: sub a, z            ; 36
+084F: add a, y            ; 21
+0850: cmp x, $25          ; 55 25
+0852: nop                 ; A8
 0853: nop                 ; 00
 0854: nop                 ; 00
 0855: nop                 ; 00
@@ -1930,32 +1961,30 @@
 085D: nop                 ; 00
 085E: nop                 ; 00
 085F: nop                 ; 00
-0860: nop                 ; FC
-0861: nop                 ; FF
-0862: add x, a            ; 20
+0860: nop                 ; 00
+0861: nop                 ; 00
+0862: nop                 ; 00
 0863: nop                 ; 00
 0864: nop                 ; 00
-0865: add x, a            ; 20
-0866: add x, a            ; 20
-0867: add y, w            ; 24
-0868: sub a, y            ; 4A
-0869: mul w, z            ; 5F
-086A: or z, w             ; AD
-086B: or z, w             ; AD
-086C: sub a, y            ; 4A
-086D: inc z               ; 69
-086E: jmp $0557, w        ; EF 57 05
-0871: or y, w             ; A9
-0872: sub a, w            ; 4C
-0873: or y, w             ; A9
-0874: pop a               ; 0A
-0875: nop                 ; 00
-0876: nop                 ; 00
-0877: nop                 ; 00
-0878: nop                 ; 00
-0879: nop                 ; 00
-087A: nop                 ; 00
-087B: nop                 ; 00
+0865: nop                 ; FC
+0866: nop                 ; FF
+0867: add a, x            ; 20
+0868: nop                 ; 00
+0869: add a, x            ; 20
+086A: nop                 ; EA
+086B: pop z               ; 0A
+086C: push y              ; 02
+086D: mul a, a            ; 41
+086E: cmpbit x            ; 5A DF
+0870: or y, $FD           ; 6D FD
+0872: adc a, w            ; 2D
+0873: nop                 ; A4
+0874: cmp x, $BB          ; 55 BB
+0876: rol y               ; 8A
+0877: jmp x, y            ; 94
+0878: add a, a            ; 24
+0879: ror a               ; 92
+087A: shl w, $0A          ; 82 0A
 087C: nop                 ; 00
 087D: nop                 ; 00
 087E: nop                 ; 00
@@ -1968,32 +1997,30 @@
 0885: nop                 ; 00
 0886: nop                 ; 00
 0887: nop                 ; 00
-0888: nop                 ; FC
-0889: nop                 ; FF
-088A: sub z, y            ; 40
-088B: add y, x            ; 21
+0888: nop                 ; 00
+0889: nop                 ; 00
+088A: nop                 ; 00
+088B: nop                 ; 00
 088C: nop                 ; 00
-088D: pop z               ; 08
-088E: cmp w, x            ; 80
-088F: sub w, a            ; 48
-0890: store $7BF5, x      ; 10 F5 7B
-0893: not a               ; BB
-0894: mul y, x            ; 53
-0895: nop                 ; FF
-0896: sub a, y            ; 4A
-0897: or x, w             ; A5
-0898: xor a, a            ; D4
-0899: sub x, y            ; 36
-089A: add y, x            ; 21
-089B: mul y, z            ; 55
-089C: add y, a            ; 25
-089D: or y, z             ; A8
-089E: nop                 ; 00
-089F: nop                 ; 00
-08A0: nop                 ; 00
-08A1: nop                 ; 00
-08A2: nop                 ; 00
-08A3: nop                 ; 00
+088D: nop                 ; FC
+088E: nop                 ; FF
+088F: shl y, $00          ; 80 00
+0891: nop                 ; 00
+0892: cmp w, $55          ; 58 55
+0894: dec a               ; 50
+0895: shr a, $D0          ; 88 D0
+0897: nop                 ; B5
+0898: nop                 ; D6
+0899: pop w               ; 0B
+089A: dec a               ; 50
+089B: nop                 ; BB
+089C: nop                 ; B6
+089D: nop                 ; AA
+089E: sub a, y            ; 35
+089F: add a, z            ; 22
+08A0: nop                 ; A9
+08A1: add a, a            ; 24
+08A2: add w, $00          ; 28 00
 08A4: nop                 ; 00
 08A5: nop                 ; 00
 08A6: nop                 ; 00
@@ -2006,34 +2033,29 @@
 08AD: nop                 ; 00
 08AE: nop                 ; 00
 08AF: nop                 ; 00
-08B0: nop                 ; FC
-08B1: nop                 ; FF
-08B2: add x, a            ; 20
+08B0: nop                 ; 00
+08B1: nop                 ; 00
+08B2: nop                 ; 00
 08B3: nop                 ; 00
-08B4: add x, a            ; 20
-08B5: jmp x, y            ; EA
-08B6: pop a               ; 0A
-08B7: push y              ; 02
-08B8: sub z, z            ; 41
-08B9: mul z, z            ; 5A
-08BA: rol x               ; DF
-08BB: dec y               ; 6D
-08BC: nop                 ; FD
-08BD: add w, z            ; 2D
-08BE: or x, z             ; A4
-08BF: mul y, z            ; 55
-08C0: not a               ; BB
-08C1: cmpbit x            ; 8A 94
-08C3: add y, w            ; 24
-08C4: and x, a            ; 92
-08C5: cmp w, z            ; 82
-08C6: pop a               ; 0A
-08C7: nop                 ; 00
-08C8: nop                 ; 00
-08C9: nop                 ; 00
+08B4: nop                 ; 00
+08B5: nop                 ; FC
+08B6: nop                 ; FF
+08B7: nop                 ; 00
+08B8: nop                 ; 00
+08B9: shl y, $D4          ; 80 D4
+08BB: push y              ; 02
+08BC: push a              ; 05
+08BD: push y              ; 02
+08BE: push y              ; 02
+08BF: nop                 ; AA
+08C0: sub w, $00          ; 3B 00
+08C2: push x              ; 01
+08C3: int $DA             ; A0 DA
+08C5: cmp y, $55          ; 56 55
+08C7: shr a, $00          ; 88 00
+08C9: ror z               ; 90
 08CA: nop                 ; 00
-08CB: nop                 ; 00
-08CC: nop                 ; 00
+08CB: shr x, $00          ; 84 00
 08CD: nop                 ; 00
 08CE: nop                 ; 00
 08CF: nop                 ; 00
@@ -2045,34 +2067,32 @@
 08D5: nop                 ; 00
 08D6: nop                 ; 00
 08D7: nop                 ; 00
-08D8: nop                 ; FC
-08D9: nop                 ; FF
-08DA: cmp w, x            ; 80
+08D8: nop                 ; 00
+08D9: nop                 ; 00
+08DA: nop                 ; 00
 08DB: nop                 ; 00
 08DC: nop                 ; 00
-08DD: mul z, x            ; 58
-08DE: mul y, z            ; 55
-08DF: mul x, z            ; 50
-08E0: cmp a, w            ; 88
-08E1: xor a, x            ; D0
-08E2: or a, z             ; B5
-08E3: shl y               ; D6
-08E4: load x, $BB50       ; 0B 50 BB
-08E7: or a, w             ; B6
-08E8: or y, a             ; AA
-08E9: sub x, x            ; 35
-08EA: add y, y            ; 22
-08EB: or y, w             ; A9
-08EC: add y, w            ; 24
-08ED: add z, z            ; 28
-08EE: nop                 ; 00
-08EF: nop                 ; 00
+08DD: nop                 ; FC
+08DE: nop                 ; FF
+08DF: nop                 ; 00
+08E0: nop                 ; 00
+08E1: push w              ; 04
+08E2: or a, x             ; 68
+08E3: and a, x            ; 5F
+08E4: nop                 ; 00
+08E5: int $A8             ; A0 A8
+08E7: inc w               ; 4A
+08E8: inc w               ; 4A
+08E9: or a, y             ; 69
+08EA: nop                 ; AD
+08EB: and a, y            ; 60
+08EC: shr y, $AD          ; 85 AD
+08EE: rol y               ; 8A
+08EF: add a, z            ; 22
 08F0: nop                 ; 00
 08F1: nop                 ; 00
 08F2: nop                 ; 00
-08F3: nop                 ; 00
-08F4: nop                 ; 00
-08F5: nop                 ; 00
+08F3: load z, $0000       ; 11 00 00
 08F6: nop                 ; 00
 08F7: nop                 ; 00
 08F8: nop                 ; 00
@@ -2083,34 +2103,32 @@
 08FD: nop                 ; 00
 08FE: nop                 ; 00
 08FF: nop                 ; 00
-0900: nop                 ; FC
-0901: nop                 ; FF
+0900: nop                 ; 00
+0901: nop                 ; 00
 0902: nop                 ; 00
 0903: nop                 ; 00
-0904: cmp w, x            ; 80
-0905: xor a, a            ; D4
-0906: push y              ; 02
-0907: push a              ; 05
-0908: push y              ; 02
-0909: push y              ; 02
-090A: or y, a             ; AA
-090B: sub y, y            ; 3B
-090C: nop                 ; 00
-090D: push x              ; 01
-090E: and a, y            ; A0
-090F: shr x               ; DA
-0910: mul y, w            ; 56
-0911: mul y, z            ; 55
-0912: cmp a, w            ; 88
-0913: nop                 ; 00
-0914: and x, z            ; 90
-0915: nop                 ; 00
-0916: cmp w, a            ; 84
-0917: nop                 ; 00
+0904: nop                 ; 00
+0905: nop                 ; FC
+0906: nop                 ; FF
+0907: nop                 ; 00
+0908: nop                 ; 00
+0909: add a, y            ; 21
+090A: nop                 ; DE
+090B: not a               ; 75
+090C: nop                 ; A9
+090D: pop z               ; 0A
+090E: push y              ; 02
+090F: add a, x            ; 20
+0910: add a, y            ; 21
+0911: nop                 ; AA
+0912: cmp a, y            ; 52
+0913: nop                 ; AB
+0914: jmp x, y            ; 94
+0915: jmp $9020, y        ; 97 20 90
 0918: nop                 ; 00
 0919: nop                 ; 00
-091A: nop                 ; 00
-091B: nop                 ; 00
+091A: ror a               ; 92
+091B: push w              ; 04
 091C: nop                 ; 00
 091D: nop                 ; 00
 091E: nop                 ; 00
@@ -2123,30 +2141,29 @@
 0925: nop                 ; 00
 0926: nop                 ; 00
 0927: nop                 ; 00
-0928: nop                 ; FC
-0929: nop                 ; FF
+0928: nop                 ; 00
+0929: nop                 ; 00
 092A: nop                 ; 00
 092B: nop                 ; 00
-092C: push w              ; 04
-092D: inc y               ; 68
-092E: mul w, z            ; 5F
+092C: nop                 ; 00
+092D: nop                 ; FC
+092E: nop                 ; FF
 092F: nop                 ; 00
-0930: and a, y            ; A0
-0931: or y, z             ; A8
-0932: sub a, y            ; 4A
-0933: sub a, y            ; 4A
-0934: inc z               ; 69
-0935: or z, w             ; AD
-0936: mul w, w            ; 60
-0937: cmp a, x            ; 85
-0938: or z, w             ; AD
-0939: cmpbit x            ; 8A 22
-093B: nop                 ; 00
-093C: nop                 ; 00
-093D: nop                 ; 00
-093E: store $0000, y      ; 11 00 00
-0941: nop                 ; 00
-0942: nop                 ; 00
+0930: add a, x            ; 20
+0931: mul a, w            ; 40
+0932: nop                 ; B0
+0933: nop                 ; DE
+0934: push w              ; 04
+0935: int $AA             ; A0 AA
+0937: pop z               ; 0A
+0938: inc w               ; 4A
+0939: cmp x, $AD          ; 55 AD
+093B: nop                 ; A6
+093C: adc a, x            ; 2A
+093D: cmp a, w            ; 54
+093E: inc w               ; 4A
+093F: add x, $05          ; 25 05
+0941: shl y, $A4          ; 80 A4
 0943: nop                 ; 00
 0944: nop                 ; 00
 0945: nop                 ; 00
@@ -2160,35 +2177,30 @@
 094D: nop                 ; 00
 094E: nop                 ; 00
 094F: nop                 ; 00
-0950: nop                 ; FC
-0951: nop                 ; FF
+0950: nop                 ; 00
+0951: nop                 ; 00
 0952: nop                 ; 00
 0953: nop                 ; 00
-0954: add y, x            ; 21
-0955: shr a               ; DE
-0956: cmp x, a            ; 75
-0957: or y, w             ; A9
-0958: pop a               ; 0A
-0959: push y              ; 02
-095A: add x, a            ; 20
-095B: add y, x            ; 21
-095C: or y, a             ; AA
-095D: mul x, a            ; 52
-095E: or z, x             ; AB
-095F: and y, z            ; 94
-0960: and z, x            ; 97
-0961: add x, a            ; 20
-0962: and x, z            ; 90
-0963: nop                 ; 00
-0964: nop                 ; 00
-0965: and x, a            ; 92
-0966: push w              ; 04
-0967: nop                 ; 00
-0968: nop                 ; 00
-0969: nop                 ; 00
-096A: nop                 ; 00
-096B: nop                 ; 00
-096C: nop                 ; 00
+0954: nop                 ; 00
+0955: nop                 ; FC
+0956: nop                 ; FF
+0957: nop                 ; 00
+0958: nop                 ; 00
+0959: push w              ; 04
+095A: nop                 ; DD
+095B: or a, w             ; 6B
+095C: nop                 ; D5
+095D: cmp z, $55          ; 57 55
+095F: sec                 ; A2
+0960: nop                 ; 00
+0961: nop                 ; AD
+0962: or a, z             ; 6A
+0963: add a, $95          ; 29 95
+0965: inc w               ; 4A
+0966: add a, $92          ; 29 92
+0968: nop                 ; A8
+0969: adc a, x            ; 2A
+096A: load w, $0000       ; 12 00 00
 096D: nop                 ; 00
 096E: nop                 ; 00
 096F: nop                 ; 00
@@ -2200,35 +2212,30 @@
 0975: nop                 ; 00
 0976: nop                 ; 00
 0977: nop                 ; 00
-0978: nop                 ; FC
-0979: nop                 ; FF
+0978: nop                 ; 00
+0979: nop                 ; 00
 097A: nop                 ; 00
-097B: add x, a            ; 20
-097C: sub z, y            ; 40
-097D: or w, y             ; B0
-097E: shr a               ; DE
-097F: push w              ; 04
-0980: and a, y            ; A0
-0981: or y, a             ; AA
-0982: pop a               ; 0A
-0983: sub a, y            ; 4A
-0984: mul y, z            ; 55
-0985: or z, w             ; AD
-0986: or x, a             ; A6
-0987: add z, a            ; 2A
-0988: mul y, y            ; 54
-0989: sub a, y            ; 4A
-098A: add y, a            ; 25
-098B: push a              ; 05
-098C: cmp w, x            ; 80
-098D: or x, z             ; A4
-098E: nop                 ; 00
-098F: nop                 ; 00
-0990: nop                 ; 00
-0991: nop                 ; 00
-0992: nop                 ; 00
-0993: nop                 ; 00
-0994: nop                 ; 00
+097B: nop                 ; 00
+097C: nop                 ; 00
+097D: nop                 ; FC
+097E: nop                 ; FF
+097F: nop                 ; 00
+0980: shl y, $20          ; 80 20
+0982: nop                 ; B4
+0983: nop                 ; DE
+0984: adc a, x            ; 2A
+0985: nop                 ; FF
+0986: nop                 ; BF
+0987: pop z               ; 0A
+0988: cmp x, $AA          ; 55 AA
+098A: nop                 ; B6
+098B: shl w, $AA          ; 82 AA
+098D: ror a               ; 92
+098E: shr x, $24          ; 84 24
+0990: push y              ; 02
+0991: shl y, $04          ; 80 04
+0993: mul a, w            ; 40
+0994: push y              ; 02
 0995: nop                 ; 00
 0996: nop                 ; 00
 0997: nop                 ; 00
@@ -2240,34 +2247,30 @@
 099D: nop                 ; 00
 099E: nop                 ; 00
 099F: nop                 ; 00
-09A0: nop                 ; FC
-09A1: nop                 ; FF
+09A0: nop                 ; 00
+09A1: nop                 ; 00
 09A2: nop                 ; 00
 09A3: nop                 ; 00
-09A4: push w              ; 04
-09A5: shr w               ; DD
-09A6: inc a               ; 6B
-09A7: shl x               ; D5
-09A8: mul y, a            ; 57
-09A9: mul y, z            ; 55
-09AA: and a, w            ; A2
-09AB: nop                 ; 00
-09AC: or z, w             ; AD
-09AD: inc w               ; 6A
-09AE: add z, w            ; 29
-09AF: and y, w            ; 95
-09B0: sub a, y            ; 4A
-09B1: add z, w            ; 29
-09B2: and x, a            ; 92
-09B3: or y, z             ; A8
-09B4: add z, a            ; 2A
-09B5: store $0000, z      ; 12 00 00
-09B8: nop                 ; 00
-09B9: nop                 ; 00
-09BA: nop                 ; 00
-09BB: nop                 ; 00
-09BC: nop                 ; 00
-09BD: nop                 ; 00
+09A4: nop                 ; 00
+09A5: nop                 ; FC
+09A6: nop                 ; FF
+09A7: nop                 ; 00
+09A8: nop                 ; 00
+09A9: load y, $7BD5       ; 10 D5 7B
+09AC: nop                 ; D2
+09AD: nop                 ; FF
+09AE: nop                 ; FF
+09AF: cmp x, $20          ; 55 20
+09B1: nop                 ; A9
+09B2: dec y               ; 4D
+09B3: or a, y             ; 69
+09B4: nop                 ; FD
+09B5: dec y               ; 4D
+09B6: cmp a, y            ; 52
+09B7: ror a               ; 92
+09B8: cmp a, w            ; 54
+09B9: cmpbit y            ; 5B 42
+09BB: store $0029, y      ; 15 29 00
 09BE: nop                 ; 00
 09BF: nop                 ; 00
 09C0: nop                 ; 00
@@ -2278,35 +2281,30 @@
 09C5: nop                 ; 00
 09C6: nop                 ; 00
 09C7: nop                 ; 00
-09C8: nop                 ; FC
-09C9: nop                 ; FF
+09C8: nop                 ; 00
+09C9: nop                 ; 00
 09CA: nop                 ; 00
-09CB: cmp w, x            ; 80
-09CC: add x, a            ; 20
-09CD: or a, y             ; B4
-09CE: shr a               ; DE
-09CF: add z, a            ; 2A
-09D0: nop                 ; FF
-09D1: xor x, w            ; BF
-09D2: pop a               ; 0A
-09D3: mul y, z            ; 55
-09D4: or y, a             ; AA
-09D5: or a, w             ; B6
-09D6: cmp w, z            ; 82
-09D7: or y, a             ; AA
-09D8: and x, a            ; 92
-09D9: cmp w, a            ; 84
-09DA: add y, w            ; 24
-09DB: push y              ; 02
-09DC: cmp w, x            ; 80
-09DD: push w              ; 04
-09DE: sub z, y            ; 40
-09DF: push y              ; 02
-09E0: nop                 ; 00
-09E1: nop                 ; 00
-09E2: nop                 ; 00
-09E3: nop                 ; 00
-09E4: nop                 ; 00
+09CB: nop                 ; 00
+09CC: nop                 ; 00
+09CD: nop                 ; FC
+09CE: nop                 ; FF
+09CF: nop                 ; 00
+09D0: nop                 ; 00
+09D1: mul x, $B8          ; 42 B8
+09D3: nop                 ; AE
+09D4: nop                 ; AD
+09D5: nop                 ; FF
+09D6: nop                 ; FF
+09D7: nop                 ; EF
+09D8: inc w               ; 4A
+09D9: cmp a, y            ; 52
+09DA: cmp a, z            ; 53
+09DB: nop                 ; AA
+09DC: cmp y, $BB          ; 56 BB
+09DE: jmp x, y            ; 94
+09DF: mul z, $82          ; 44 82
+09E1: nop                 ; A4
+09E2: store $84A8, x      ; 14 A8 84
 09E5: nop                 ; 00
 09E6: nop                 ; 00
 09E7: nop                 ; 00
@@ -2318,32 +2316,30 @@
 09ED: nop                 ; 00
 09EE: nop                 ; 00
 09EF: nop                 ; 00
-09F0: nop                 ; FC
-09F1: nop                 ; FF
+09F0: nop                 ; 00
+09F1: nop                 ; 00
 09F2: nop                 ; 00
 09F3: nop                 ; 00
-09F4: store $7BD5, x      ; 10 D5 7B
-09F7: xor a, z            ; D2
-09F8: nop                 ; FF
-09F9: nop                 ; FF
-09FA: mul y, z            ; 55
-09FB: add x, a            ; 20
-09FC: or y, w             ; A9
-09FD: sub a, a            ; 4D
-09FE: inc z               ; 69
-09FF: nop                 ; FD
-0A00: sub a, a            ; 4D
-0A01: mul x, a            ; 52
-0A02: and x, a            ; 92
-0A03: mul y, y            ; 54
-0A04: mul z, w            ; 5B
-0A05: sub z, w            ; 42
-0A06: call $0029          ; 15 29 00
-0A09: nop                 ; 00
-0A0A: nop                 ; 00
-0A0B: nop                 ; 00
-0A0C: nop                 ; 00
-0A0D: nop                 ; 00
+09F4: nop                 ; 00
+09F5: nop                 ; FC
+09F6: nop                 ; FF
+09F7: nop                 ; 00
+09F8: inc y               ; 48
+09F9: pop x               ; 08
+09FA: nop                 ; ED
+09FB: cmpbit y            ; 5B F5
+09FD: nop                 ; FF
+09FE: nop                 ; FF
+09FF: nop                 ; FF
+0A00: clc                 ; A3
+0A01: cmp x, $4D          ; 55 4D
+0A03: cmpbit w            ; 5D FB
+0A05: cmp y, $21          ; 56 21
+0A07: add a, $A9          ; 29 A9
+0A09: inc w               ; 4A
+0A0A: cmp x, $2B          ; 55 2B
+0A0C: nop                 ; D2
+0A0D: push y              ; 02
 0A0E: nop                 ; 00
 0A0F: nop                 ; 00
 0A10: nop                 ; 00
@@ -2354,32 +2350,32 @@
 0A15: nop                 ; 00
 0A16: nop                 ; 00
 0A17: nop                 ; 00
-0A18: nop                 ; FC
-0A19: nop                 ; FF
+0A18: nop                 ; 00
+0A19: nop                 ; 00
 0A1A: nop                 ; 00
 0A1B: nop                 ; 00
-0A1C: sub z, w            ; 42
-0A1D: not y               ; B8
-0A1E: or z, a             ; AE
-0A1F: or z, w             ; AD
-0A20: nop                 ; FF
-0A21: nop                 ; FF
-0A22: jmp $524A, w        ; EF 4A 52
-0A25: mul y, x            ; 53
-0A26: or y, a             ; AA
-0A27: mul y, w            ; 56
-0A28: not a               ; BB
-0A29: and y, z            ; 94
-0A2A: sub w, x            ; 44
-0A2B: cmp w, z            ; 82
-0A2C: or x, z             ; A4
-0A2D: store $84A8, a      ; 14 A8 84
-0A30: nop                 ; 00
-0A31: nop                 ; 00
-0A32: nop                 ; 00
-0A33: nop                 ; 00
-0A34: nop                 ; 00
-0A35: nop                 ; 00
+0A1C: nop                 ; 00
+0A1D: nop                 ; FC
+0A1E: nop                 ; FF
+0A1F: nop                 ; 00
+0A20: nop                 ; 00
+0A21: cmp a, x            ; 51
+0A22: not y               ; 72
+0A23: nop                 ; F7
+0A24: nop                 ; DE
+0A25: nop                 ; FF
+0A26: nop                 ; FF
+0A27: nop                 ; FF
+0A28: jmp $5097, y        ; 97 97 50
+0A2B: or a, w             ; 6B
+0A2C: nop                 ; AD
+0A2D: nop                 ; AD
+0A2E: jmp x, y            ; 94
+0A2F: inc w               ; 4A
+0A30: add a, z            ; 22
+0A31: add a, $49          ; 29 49
+0A33: ror a               ; 92
+0A34: add x, $0D          ; 25 0D
 0A36: nop                 ; 00
 0A37: nop                 ; 00
 0A38: nop                 ; 00
@@ -2390,34 +2386,31 @@
 0A3D: nop                 ; 00
 0A3E: nop                 ; 00
 0A3F: nop                 ; 00
-0A40: nop                 ; FC
-0A41: nop                 ; FF
+0A40: nop                 ; 00
+0A41: nop                 ; 00
 0A42: nop                 ; 00
-0A43: sub w, a            ; 48
-0A44: pop z               ; 08
-0A45: jmp $F55B, y        ; ED 5B F5
-0A48: nop                 ; FF
-0A49: nop                 ; FF
-0A4A: nop                 ; FF
-0A4B: or x, y             ; A3
-0A4C: mul y, z            ; 55
-0A4D: sub a, a            ; 4D
-0A4E: mul w, x            ; 5D
-0A4F: nop                 ; FB
-0A50: mul y, w            ; 56
-0A51: add y, x            ; 21
-0A52: add z, w            ; 29
-0A53: or y, w             ; A9
-0A54: sub a, y            ; 4A
-0A55: mul y, z            ; 55
-0A56: add w, x            ; 2B
-0A57: xor a, z            ; D2
-0A58: push y              ; 02
-0A59: nop                 ; 00
-0A5A: nop                 ; 00
-0A5B: nop                 ; 00
-0A5C: nop                 ; 00
-0A5D: nop                 ; 00
+0A43: nop                 ; 00
+0A44: nop                 ; 00
+0A45: nop                 ; FC
+0A46: nop                 ; FF
+0A47: mul a, w            ; 40
+0A48: load w, $AAA4       ; 12 A4 AA
+0A4B: cmpbit w            ; 5D FB
+0A4D: nop                 ; FF
+0A4E: nop                 ; FF
+0A4F: nop                 ; FF
+0A50: resume              ; A1
+0A51: and a, x            ; 5F
+0A52: nop                 ; EA
+0A53: nop                 ; AA
+0A54: nop                 ; B6
+0A55: load w, $AEEA       ; 12 EA AE
+0A58: jmp x, y            ; 94
+0A59: or a, z             ; 6A
+0A5A: nop                 ; A5
+0A5B: nop                 ; FA
+0A5C: rol y               ; 8A
+0A5D: cmp a, w            ; 54
 0A5E: nop                 ; 00
 0A5F: nop                 ; 00
 0A60: nop                 ; 00
@@ -2428,34 +2421,33 @@
 0A65: nop                 ; 00
 0A66: nop                 ; 00
 0A67: nop                 ; 00
-0A68: nop                 ; FC
-0A69: nop                 ; FF
+0A68: nop                 ; 00
+0A69: nop                 ; 00
 0A6A: nop                 ; 00
 0A6B: nop                 ; 00
-0A6C: mul x, w            ; 51
-0A6D: cmp x, y            ; 72
-0A6E: resume              ; F7 DE
-0A70: nop                 ; FF
-0A71: nop                 ; FF
-0A72: nop                 ; FF
-0A73: and z, x            ; 97
-0A74: and z, x            ; 97
-0A75: mul x, z            ; 50
-0A76: inc a               ; 6B
-0A77: or z, w             ; AD
-0A78: or z, w             ; AD
-0A79: and y, z            ; 94
-0A7A: sub a, y            ; 4A
-0A7B: add y, y            ; 22
-0A7C: add z, w            ; 29
-0A7D: sub a, x            ; 49
-0A7E: and x, a            ; 92
-0A7F: add y, a            ; 25
-0A80: load z, $0000       ; 0D 00 00
-0A83: nop                 ; 00
-0A84: nop                 ; 00
-0A85: nop                 ; 00
-0A86: nop                 ; 00
+0A6C: nop                 ; 00
+0A6D: nop                 ; FC
+0A6E: nop                 ; FF
+0A6F: pop x               ; 08
+0A70: int $92             ; A0 92
+0A72: nop                 ; EA
+0A73: nop                 ; F7
+0A74: nop                 ; FF
+0A75: nop                 ; FF
+0A76: nop                 ; FF
+0A77: nop                 ; FF
+0A78: inc w               ; 4A
+0A79: xor z, $85          ; 7C 85
+0A7B: nop                 ; AD
+0A7C: nop                 ; D5
+0A7D: nop                 ; A4
+0A7E: cmp x, $DB          ; 55 DB
+0A80: nop                 ; A5
+0A81: nop                 ; DE
+0A82: nop                 ; DB
+0A83: nop                 ; AE
+0A84: sub a, w            ; 37
+0A85: add a, $01          ; 29 01
 0A87: nop                 ; 00
 0A88: nop                 ; 00
 0A89: nop                 ; 00
@@ -2465,32 +2457,31 @@
 0A8D: nop                 ; 00
 0A8E: nop                 ; 00
 0A8F: nop                 ; 00
-0A90: nop                 ; FC
-0A91: nop                 ; FF
-0A92: sub z, y            ; 40
-0A93: store $AAA4, z      ; 12 A4 AA
-0A96: mul w, x            ; 5D
-0A97: nop                 ; FB
-0A98: nop                 ; FF
-0A99: nop                 ; FF
-0A9A: nop                 ; FF
-0A9B: and a, z            ; A1
-0A9C: mul w, z            ; 5F
-0A9D: jmp x, y            ; EA
-0A9E: or y, a             ; AA
-0A9F: or a, w             ; B6
-0AA0: store $AEEA, z      ; 12 EA AE
-0AA3: and y, z            ; 94
-0AA4: inc w               ; 6A
-0AA5: or x, w             ; A5
-0AA6: nop                 ; FA
-0AA7: cmpbit x            ; 8A 54
-0AA9: nop                 ; 00
-0AAA: nop                 ; 00
-0AAB: nop                 ; 00
-0AAC: nop                 ; 00
-0AAD: nop                 ; 00
-0AAE: nop                 ; 00
+0A90: nop                 ; 00
+0A91: nop                 ; 00
+0A92: nop                 ; 00
+0A93: nop                 ; 00
+0A94: nop                 ; 00
+0A95: nop                 ; FC
+0A96: nop                 ; FF
+0A97: add a, x            ; 20
+0A98: store $BD6C, y      ; 15 6C BD
+0A9B: nop                 ; FE
+0A9C: nop                 ; FF
+0A9D: nop                 ; FF
+0A9E: nop                 ; FF
+0A9F: adc x, $20          ; 2F 20
+0AA1: nop                 ; F5
+0AA2: cmp a, x            ; 51
+0AA3: nop                 ; EB
+0AA4: or w, $6B           ; 6F 6B
+0AA6: nop                 ; DB
+0AA7: nop                 ; AA
+0AA8: nop                 ; BF
+0AA9: xor y, $6D          ; 7B 6D
+0AAB: xor y, $49          ; 7B 49
+0AAD: cmp a, w            ; 54
+0AAE: push a              ; 05
 0AAF: nop                 ; 00
 0AB0: nop                 ; 00
 0AB1: nop                 ; 00
@@ -2500,36 +2491,32 @@
 0AB5: nop                 ; 00
 0AB6: nop                 ; 00
 0AB7: nop                 ; 00
-0AB8: nop                 ; FC
-0AB9: nop                 ; FF
-0ABA: pop z               ; 08
-0ABB: and a, y            ; A0
-0ABC: and x, a            ; 92
-0ABD: jmp x, y            ; EA
-0ABE: resume              ; F7 FF
-0AC0: nop                 ; FF
-0AC1: nop                 ; FF
-0AC2: nop                 ; FF
-0AC3: sub a, y            ; 4A
-0AC4: cmp z, y            ; 7C
-0AC5: cmp a, x            ; 85
-0AC6: or z, w             ; AD
-0AC7: shl x               ; D5
-0AC8: or x, z             ; A4
-0AC9: mul y, z            ; 55
-0ACA: shr y               ; DB
-0ACB: or x, w             ; A5
-0ACC: shr a               ; DE
-0ACD: shr y               ; DB
-0ACE: or z, a             ; AE
-0ACF: sub x, z            ; 37
-0AD0: add z, w            ; 29
-0AD1: push x              ; 01
-0AD2: nop                 ; 00
-0AD3: nop                 ; 00
-0AD4: nop                 ; 00
-0AD5: nop                 ; 00
-0AD6: nop                 ; 00
+0AB8: nop                 ; 00
+0AB9: nop                 ; 00
+0ABA: nop                 ; 00
+0ABB: nop                 ; 00
+0ABC: nop                 ; 00
+0ABD: nop                 ; FC
+0ABE: nop                 ; FF
+0ABF: mul z, $A0          ; 44 A0
+0AC1: cmp a, y            ; 52
+0AC2: nop                 ; EB
+0AC3: nop                 ; DD
+0AC4: nop                 ; FF
+0AC5: nop                 ; FF
+0AC6: nop                 ; FF
+0AC7: cmp z, $45          ; 57 45
+0AC9: nop                 ; D4
+0ACA: shr w, $F6          ; 87 F6
+0ACC: nop                 ; BA
+0ACD: nop                 ; DA
+0ACE: nop                 ; B6
+0ACF: nop                 ; AD
+0AD0: or a, z             ; 6A
+0AD1: mul a, w            ; 40
+0AD2: nop                 ; FD
+0AD3: nop                 ; AE
+0AD4: store $14A5, x      ; 14 A5 14
 0AD7: nop                 ; 00
 0AD8: nop                 ; 00
 0AD9: nop                 ; 00
@@ -2539,35 +2526,31 @@
 0ADD: nop                 ; 00
 0ADE: nop                 ; 00
 0ADF: nop                 ; 00
-0AE0: nop                 ; FC
-0AE1: nop                 ; FF
-0AE2: add x, a            ; 20
-0AE3: call $BD6C          ; 15 6C BD
-0AE6: nop                 ; FE
-0AE7: nop                 ; FF
-0AE8: nop                 ; FF
-0AE9: nop                 ; FF
-0AEA: add w, a            ; 2F
-0AEB: add x, a            ; 20
-0AEC: jmp.z $EB51         ; F5 51 EB
-0AEF: dec w               ; 6F
-0AF0: inc a               ; 6B
-0AF1: shr y               ; DB
-0AF2: or y, a             ; AA
-0AF3: xor x, w            ; BF
-0AF4: cmp z, x            ; 7B
-0AF5: dec y               ; 6D
-0AF6: cmp z, x            ; 7B
-0AF7: sub a, x            ; 49
-0AF8: mul y, y            ; 54
-0AF9: push a              ; 05
-0AFA: nop                 ; 00
-0AFB: nop                 ; 00
-0AFC: nop                 ; 00
-0AFD: nop                 ; 00
-0AFE: nop                 ; 00
-0AFF: nop                 ; 00
-0B00: nop                 ; 00
+0AE0: nop                 ; 00
+0AE1: nop                 ; 00
+0AE2: nop                 ; 00
+0AE3: nop                 ; 00
+0AE4: nop                 ; 00
+0AE5: nop                 ; FC
+0AE6: nop                 ; FF
+0AE7: load z, $ED55       ; 11 55 ED
+0AEA: nop                 ; FD
+0AEB: nop                 ; FF
+0AEC: nop                 ; FF
+0AED: nop                 ; FF
+0AEE: nop                 ; FF
+0AEF: pop y               ; 09
+0AF0: load z, $11A1       ; 11 A1 11
+0AF3: nop                 ; DB
+0AF4: nop                 ; D7
+0AF5: cmp y, $4B          ; 56 4B
+0AF7: nop                 ; F5
+0AF8: nop                 ; BF
+0AF9: nop                 ; 00
+0AFA: nop                 ; D4
+0AFB: xor y, $55          ; 7B 55
+0AFD: nop                 ; A8
+0AFE: load w, $0000       ; 12 00 00
 0B01: nop                 ; 00
 0B02: nop                 ; 00
 0B03: nop                 ; 00
@@ -2575,33 +2558,31 @@
 0B05: nop                 ; 00
 0B06: nop                 ; 00
 0B07: nop                 ; 00
-0B08: nop                 ; FC
-0B09: nop                 ; FF
-0B0A: sub w, x            ; 44
-0B0B: and a, y            ; A0
-0B0C: mul x, a            ; 52
-0B0D: jmp z, w            ; EB
-0B0E: shr w               ; DD
-0B0F: nop                 ; FF
-0B10: nop                 ; FF
-0B11: nop                 ; FF
-0B12: mul y, a            ; 57
-0B13: sub w, y            ; 45
-0B14: xor a, a            ; D4
-0B15: cmp a, z            ; 87
-0B16: int $BA             ; F6 BA
-0B18: shr x               ; DA
-0B19: or a, w             ; B6
-0B1A: or z, w             ; AD
-0B1B: inc w               ; 6A
-0B1C: sub z, y            ; 40
+0B08: nop                 ; 00
+0B09: nop                 ; 00
+0B0A: nop                 ; 00
+0B0B: nop                 ; 00
+0B0C: nop                 ; 00
+0B0D: nop                 ; FC
+0B0E: nop                 ; FF
+0B0F: mul z, $AA          ; 44 AA
+0B11: cmpbit x            ; 5A FF
+0B13: nop                 ; FF
+0B14: nop                 ; FF
+0B15: nop                 ; FF
+0B16: nop                 ; FF
+0B17: cmp y, $44          ; 56 44
+0B19: pop x               ; 08
+0B1A: mul z, $7C          ; 44 7C
+0B1C: nop                 ; AD
 0B1D: nop                 ; FD
-0B1E: or z, a             ; AE
-0B1F: store $14A5, a      ; 14 A5 14
-0B22: nop                 ; 00
-0B23: nop                 ; 00
-0B24: nop                 ; 00
-0B25: nop                 ; 00
+0B1E: xor a, y            ; 77
+0B1F: nop                 ; EF
+0B20: or a, w             ; 6B
+0B21: push x              ; 01
+0B22: shl y, $D6          ; 80 D6
+0B24: ror a               ; 92
+0B25: cmp a, y            ; 52
 0B26: nop                 ; 00
 0B27: nop                 ; 00
 0B28: nop                 ; 00
@@ -2612,27 +2593,30 @@
 0B2D: nop                 ; 00
 0B2E: nop                 ; 00
 0B2F: nop                 ; 00
-0B30: nop                 ; FC
-0B31: nop                 ; FF
-0B32: store $ED55, y      ; 11 55 ED
-0B35: nop                 ; FD
+0B30: nop                 ; 00
+0B31: nop                 ; 00
+0B32: nop                 ; 00
+0B33: nop                 ; 00
+0B34: nop                 ; 00
+0B35: nop                 ; FC
 0B36: nop                 ; FF
-0B37: nop                 ; FF
-0B38: nop                 ; FF
-0B39: nop                 ; FF
-0B3A: pop w               ; 09
-0B3B: store $11A1, y      ; 11 A1 11
-0B3E: shr y               ; DB
-0B3F: shl z               ; D7
-0B40: mul y, w            ; 56
-0B41: sub a, z            ; 4B
-0B42: jmp.z $00BF         ; F5 BF 00
-0B45: xor a, a            ; D4
-0B46: cmp z, x            ; 7B
-0B47: mul y, z            ; 55
-0B48: or y, z             ; A8
-0B49: store $0000, z      ; 12 00 00
-0B4C: nop                 ; 00
+0B37: cmp a, x            ; 51
+0B38: cmp x, $EB          ; 55 EB
+0B3A: nop                 ; FF
+0B3B: nop                 ; FF
+0B3C: nop                 ; FF
+0B3D: nop                 ; FF
+0B3E: shl x, $A9          ; 7F A9
+0B40: load w, $12A5       ; 12 A5 12
+0B43: cmp a, y            ; 52
+0B44: not a               ; 75
+0B45: nop                 ; B7
+0B46: nop                 ; EE
+0B47: nop                 ; BD
+0B48: nop                 ; FF
+0B49: push x              ; 01
+0B4A: nop                 ; 00
+0B4B: sub z, $25          ; 3A 25
 0B4D: nop                 ; 00
 0B4E: nop                 ; 00
 0B4F: nop                 ; 00
@@ -2644,34 +2628,33 @@
 0B55: nop                 ; 00
 0B56: nop                 ; 00
 0B57: nop                 ; 00
-0B58: nop                 ; FC
-0B59: nop                 ; FF
-0B5A: sub w, x            ; 44
-0B5B: or y, a             ; AA
-0B5C: mul z, z            ; 5A
-0B5D: nop                 ; FF
+0B58: nop                 ; 00
+0B59: nop                 ; 00
+0B5A: nop                 ; 00
+0B5B: nop                 ; 00
+0B5C: nop                 ; 00
+0B5D: nop                 ; FC
 0B5E: nop                 ; FF
-0B5F: nop                 ; FF
-0B60: nop                 ; FF
-0B61: nop                 ; FF
-0B62: mul y, w            ; 56
-0B63: sub w, x            ; 44
-0B64: pop z               ; 08
-0B65: sub w, x            ; 44
-0B66: cmp z, y            ; 7C
-0B67: or z, w             ; AD
-0B68: nop                 ; FD
-0B69: cmp y, y            ; 77
-0B6A: jmp $016B, w        ; EF 6B 01
-0B6D: cmp w, x            ; 80
-0B6E: shl y               ; D6
-0B6F: and x, a            ; 92
-0B70: mul x, a            ; 52
-0B71: nop                 ; 00
+0B5F: cmp x, $D5          ; 55 D5
+0B61: nop                 ; FE
+0B62: nop                 ; FF
+0B63: nop                 ; FF
+0B64: nop                 ; FF
+0B65: nop                 ; FF
+0B66: and a, x            ; 5F
+0B67: not a               ; 75
+0B68: mul a, a            ; 41
+0B69: nop                 ; 00
+0B6A: nop                 ; 00
+0B6B: nop                 ; A8
+0B6C: nop                 ; DD
+0B6D: nop                 ; EE
+0B6E: cmpbit y            ; 5B F7
+0B70: xor w, $03          ; 7D 03
 0B72: nop                 ; 00
-0B73: nop                 ; 00
-0B74: nop                 ; 00
-0B75: nop                 ; 00
+0B73: nop                 ; A4
+0B74: cmp a, w            ; 54
+0B75: push a              ; 05
 0B76: nop                 ; 00
 0B77: nop                 ; 00
 0B78: nop                 ; 00
@@ -2682,32 +2665,31 @@
 0B7D: nop                 ; 00
 0B7E: nop                 ; 00
 0B7F: nop                 ; 00
-0B80: nop                 ; FC
-0B81: nop                 ; FF
-0B82: mul x, w            ; 51
-0B83: mul y, z            ; 55
-0B84: jmp z, w            ; EB
-0B85: nop                 ; FF
+0B80: nop                 ; 00
+0B81: nop                 ; 00
+0B82: nop                 ; 00
+0B83: nop                 ; 00
+0B84: nop                 ; 00
+0B85: nop                 ; FC
 0B86: nop                 ; FF
-0B87: nop                 ; FF
-0B88: nop                 ; FF
-0B89: cmp z, a            ; 7F
-0B8A: or y, w             ; A9
-0B8B: store $12A5, z      ; 12 A5 12
-0B8E: mul x, a            ; 52
-0B8F: cmp x, a            ; 75
-0B90: not x               ; B7
-0B91: jmp $FFBD, z        ; EE BD FF
-0B94: push x              ; 01
-0B95: nop                 ; 00
-0B96: sub y, x            ; 3A
-0B97: add y, a            ; 25
-0B98: nop                 ; 00
-0B99: nop                 ; 00
+0B87: nop                 ; AA
+0B88: xor x, $FF          ; 7A FF
+0B8A: nop                 ; FF
+0B8B: nop                 ; FF
+0B8C: nop                 ; FF
+0B8D: nop                 ; FF
+0B8E: nop                 ; BF
+0B8F: nop                 ; F2
+0B90: store $8845, y      ; 15 45 88
+0B93: nop                 ; F0
+0B94: nop                 ; F6
+0B95: nop                 ; BB
+0B96: nop                 ; ED
+0B97: cmpbit w            ; 5D D7
+0B99: push y              ; 02
 0B9A: nop                 ; 00
-0B9B: nop                 ; 00
-0B9C: nop                 ; 00
-0B9D: nop                 ; 00
+0B9B: inc y               ; 48
+0B9C: cmp x, $50          ; 55 50
 0B9E: nop                 ; 00
 0B9F: nop                 ; 00
 0BA0: nop                 ; 00
@@ -2718,104 +2700,106 @@
 0BA5: nop                 ; 00
 0BA6: nop                 ; 00
 0BA7: nop                 ; 00
-0BA8: nop                 ; FC
-0BA9: nop                 ; FF
-0BAA: mul y, z            ; 55
-0BAB: shl x               ; D5
-0BAC: nop                 ; FE
-0BAD: nop                 ; FF
+0BA8: nop                 ; 00
+0BA9: nop                 ; 00
+0BAA: nop                 ; 00
+0BAB: nop                 ; 00
+0BAC: nop                 ; 00
+0BAD: nop                 ; FC
 0BAE: nop                 ; FF
-0BAF: nop                 ; FF
-0BB0: nop                 ; FF
-0BB1: mul w, z            ; 5F
-0BB2: cmp x, a            ; 75
-0BB3: sub z, z            ; 41
-0BB4: nop                 ; 00
-0BB5: nop                 ; 00
-0BB6: or y, z             ; A8
-0BB7: shr w               ; DD
-0BB8: jmp $F75B, z        ; EE 5B F7
-0BBB: cmp z, z            ; 7D
-0BBC: push z              ; 03
-0BBD: nop                 ; 00
-0BBE: or x, z             ; A4
-0BBF: mul y, y            ; 54
-0BC0: push a              ; 05
-0BC1: nop                 ; 00
+0BAF: nop                 ; AA
+0BB0: nop                 ; D6
+0BB1: nop                 ; F7
+0BB2: nop                 ; FF
+0BB3: nop                 ; FF
+0BB4: nop                 ; FF
+0BB5: nop                 ; FF
+0BB6: cmp z, $F5          ; 57 F5
+0BB8: cmp a, x            ; 51
+0BB9: nop                 ; 00
+0BBA: nop                 ; 00
+0BBB: shl y, $DF          ; 80 DF
+0BBD: xor a, $77          ; 7E 77
+0BBF: nop                 ; F7
+0BC0: nop                 ; BA
+0BC1: push.f              ; 07
 0BC2: nop                 ; 00
-0BC3: nop                 ; 00
-0BC4: nop                 ; 00
-0BC5: nop                 ; 00
-0BC6: nop                 ; 00
-0BC7: nop                 ; 00
-0BC8: nop                 ; 00
-0BC9: nop                 ; 00
+0BC3: dec a               ; 50
+0BC4: ror a               ; 92
+0BC5: nop                 ; A5
+0BC6: nop                 ; AD
+0BC7: load w, $0000       ; 12 00 00
 0BCA: nop                 ; 00
 0BCB: nop                 ; 00
 0BCC: nop                 ; 00
 0BCD: nop                 ; 00
 0BCE: nop                 ; 00
 0BCF: nop                 ; 00
-0BD0: nop                 ; FC
-0BD1: nop                 ; FF
-0BD2: or y, a             ; AA
-0BD3: cmp y, a            ; 7A
-0BD4: nop                 ; FF
-0BD5: nop                 ; FF
+0BD0: nop                 ; 00
+0BD1: nop                 ; 00
+0BD2: nop                 ; 00
+0BD3: nop                 ; 00
+0BD4: nop                 ; 00
+0BD5: nop                 ; FC
 0BD6: nop                 ; FF
-0BD7: nop                 ; FF
-0BD8: nop                 ; FF
-0BD9: xor x, w            ; BF
-0BDA: jmp.neq $4515       ; F2 15 45
-0BDD: cmp a, w            ; 88
-0BDE: jmp $BBF6, a        ; F0 F6 BB
-0BE1: jmp $D75D, y        ; ED 5D D7
-0BE4: push y              ; 02
-0BE5: nop                 ; 00
-0BE6: sub w, a            ; 48
-0BE7: mul y, z            ; 55
-0BE8: mul x, z            ; 50
-0BE9: nop                 ; 00
+0BD7: nop                 ; BD
+0BD8: nop                 ; FB
+0BD9: nop                 ; FF
+0BDA: nop                 ; FF
+0BDB: nop                 ; FF
+0BDC: nop                 ; FF
+0BDD: nop                 ; FF
+0BDE: nop                 ; AD
+0BDF: nop                 ; F4
+0BE0: push a              ; 05
+0BE1: inc z               ; 49
+0BE2: add a, x            ; 20
+0BE3: and a, z            ; 61
+0BE4: xor y, $D7          ; 7B D7
+0BE6: nop                 ; DA
+0BE7: nop                 ; AD
+0BE8: nop                 ; ED
+0BE9: pop z               ; 0A
 0BEA: nop                 ; 00
-0BEB: nop                 ; 00
-0BEC: nop                 ; 00
-0BED: nop                 ; 00
-0BEE: nop                 ; 00
-0BEF: nop                 ; 00
-0BF0: nop                 ; 00
-0BF1: nop                 ; 00
-0BF2: nop                 ; 00
+0BEB: nop                 ; A8
+0BEC: cmp x, $22          ; 55 22
+0BEE: cmp a, y            ; 52
+0BEF: inc w               ; 4A
+0BF0: store $0000, y      ; 15 00 00
 0BF3: nop                 ; 00
 0BF4: nop                 ; 00
 0BF5: nop                 ; 00
 0BF6: nop                 ; 00
 0BF7: nop                 ; 00
-0BF8: nop                 ; FC
-0BF9: nop                 ; FF
-0BFA: or y, a             ; AA
-0BFB: shl y               ; D6
-0BFC: resume              ; F7 FF
+0BF8: nop                 ; 00
+0BF9: nop                 ; 00
+0BFA: nop                 ; 00
+0BFB: nop                 ; 00
+0BFC: nop                 ; 00
+0BFD: nop                 ; FC
 0BFE: nop                 ; FF
-0BFF: nop                 ; FF
-0C00: nop                 ; FF
-0C01: mul y, a            ; 57
-0C02: jmp.z $0051         ; F5 51 00
-0C05: nop                 ; 00
-0C06: cmp w, x            ; 80
-0C07: rol x               ; DF
-0C08: cmp z, w            ; 7E
-0C09: cmp y, y            ; 77
-0C0A: resume              ; F7 BA
-0C0C: pop y               ; 07
-0C0D: nop                 ; 00
-0C0E: mul x, z            ; 50
-0C0F: and x, a            ; 92
-0C10: or x, w             ; A5
-0C11: or z, w             ; AD
-0C12: store $0000, z      ; 12 00 00
-0C15: nop                 ; 00
-0C16: nop                 ; 00
-0C17: nop                 ; 00
+0BFF: nop                 ; EB
+0C00: nop                 ; EE
+0C01: nop                 ; FE
+0C02: nop                 ; FF
+0C03: nop                 ; FF
+0C04: nop                 ; FF
+0C05: shl x, $55          ; 7F 55
+0C07: nop                 ; F5
+0C08: add a, $80          ; 29 80
+0C0A: push y              ; 02
+0C0B: push w              ; 04
+0C0C: nop                 ; DE
+0C0D: nop                 ; B5
+0C0E: shl x, $5B          ; 7F 5B
+0C10: nop                 ; B7
+0C11: push.f              ; 07
+0C12: nop                 ; 00
+0C13: and a, y            ; 60
+0C14: nop                 ; AB
+0C15: nop                 ; CA
+0C16: nop                 ; AA
+0C17: cmp a, y            ; 52
 0C18: nop                 ; 00
 0C19: nop                 ; 00
 0C1A: nop                 ; 00
@@ -2824,33 +2808,36 @@
 0C1D: nop                 ; 00
 0C1E: nop                 ; 00
 0C1F: nop                 ; 00
-0C20: nop                 ; FC
-0C21: nop                 ; FF
-0C22: xor x, y            ; BD
-0C23: nop                 ; FB
-0C24: nop                 ; FF
-0C25: nop                 ; FF
+0C20: nop                 ; 00
+0C21: nop                 ; 00
+0C22: nop                 ; 00
+0C23: nop                 ; 00
+0C24: nop                 ; 00
+0C25: nop                 ; FC
 0C26: nop                 ; FF
-0C27: nop                 ; FF
+0C27: nop                 ; BD
 0C28: nop                 ; FF
-0C29: or z, w             ; AD
-0C2A: jmp.lt $4905        ; F4 05 49
-0C2D: add x, a            ; 20
-0C2E: mul w, a            ; 61
-0C2F: cmp z, x            ; 7B
-0C30: shl z               ; D7
-0C31: shr x               ; DA
-0C32: or z, w             ; AD
-0C33: jmp $000A, y        ; ED 0A 00
-0C36: or y, z             ; A8
-0C37: mul y, z            ; 55
-0C38: add y, y            ; 22
-0C39: mul x, a            ; 52
-0C3A: sub a, y            ; 4A
-0C3B: call $0000          ; 15 00 00
-0C3E: nop                 ; 00
-0C3F: nop                 ; 00
-0C40: nop                 ; 00
+0C29: nop                 ; FF
+0C2A: nop                 ; FF
+0C2B: nop                 ; FF
+0C2C: nop                 ; FF
+0C2D: nop                 ; BF
+0C2E: adc a, x            ; 2A
+0C2F: nop                 ; F9
+0C30: load w, $9004       ; 12 04 90
+0C33: nop                 ; 00
+0C34: not a               ; 75
+0C35: nop                 ; EF
+0C36: nop                 ; EA
+0C37: or y, $49           ; 6D 49
+0C39: pop x               ; 08
+0C3A: nop                 ; 00
+0C3B: nop                 ; B0
+0C3C: nop                 ; AD
+0C3D: push w              ; 04
+0C3E: nop                 ; A5
+0C3F: push w              ; 04
+0C40: push a              ; 05
 0C41: nop                 ; 00
 0C42: nop                 ; 00
 0C43: nop                 ; 00
@@ -2858,70 +2845,74 @@
 0C45: nop                 ; 00
 0C46: nop                 ; 00
 0C47: nop                 ; 00
-0C48: nop                 ; FC
-0C49: nop                 ; FF
-0C4A: jmp z, w            ; EB
-0C4B: jmp $FFFE, z        ; EE FE FF
+0C48: nop                 ; 00
+0C49: nop                 ; 00
+0C4A: nop                 ; 00
+0C4B: nop                 ; 00
+0C4C: nop                 ; 00
+0C4D: nop                 ; FC
 0C4E: nop                 ; FF
-0C4F: nop                 ; FF
-0C50: cmp z, a            ; 7F
-0C51: mul y, z            ; 55
-0C52: jmp.z $8029         ; F5 29 80
-0C55: push y              ; 02
-0C56: push w              ; 04
-0C57: shr a               ; DE
-0C58: or a, z             ; B5
-0C59: cmp z, a            ; 7F
-0C5A: mul z, w            ; 5B
-0C5B: not x               ; B7
-0C5C: pop y               ; 07
-0C5D: nop                 ; 00
-0C5E: mul w, w            ; 60
-0C5F: or z, x             ; AB
-0C60: xor z, a            ; CA
-0C61: or y, a             ; AA
-0C62: mul x, a            ; 52
-0C63: nop                 ; 00
-0C64: nop                 ; 00
-0C65: nop                 ; 00
-0C66: nop                 ; 00
-0C67: nop                 ; 00
+0C4F: nop                 ; EB
+0C50: nop                 ; FF
+0C51: nop                 ; FF
+0C52: nop                 ; FF
+0C53: nop                 ; FF
+0C54: nop                 ; FF
+0C55: nop                 ; AF
+0C56: inc w               ; 4A
+0C57: nop                 ; F2
+0C58: nop                 ; A5
+0C59: add a, x            ; 20
+0C5A: push a              ; 05
+0C5B: add a, z            ; 22
+0C5C: nop                 ; D4
+0C5D: nop                 ; AA
+0C5E: nop                 ; BF
+0C5F: nop                 ; B6
+0C60: load w, $0215       ; 12 15 02
+0C63: and a, y            ; 60
+0C64: nop                 ; BF
+0C65: nop                 ; AA
+0C66: jmp x, y            ; 94
+0C67: return              ; 1A
 0C68: nop                 ; 00
-0C69: nop                 ; 00
+0C69: pop x               ; 08
 0C6A: nop                 ; 00
 0C6B: nop                 ; 00
 0C6C: nop                 ; 00
 0C6D: nop                 ; 00
 0C6E: nop                 ; 00
 0C6F: nop                 ; 00
-0C70: nop                 ; FC
-0C71: nop                 ; FF
-0C72: xor x, y            ; BD
-0C73: nop                 ; FF
-0C74: nop                 ; FF
-0C75: nop                 ; FF
+0C70: nop                 ; 00
+0C71: nop                 ; 00
+0C72: nop                 ; 00
+0C73: nop                 ; 00
+0C74: nop                 ; 00
+0C75: nop                 ; FC
 0C76: nop                 ; FF
-0C77: nop                 ; FF
-0C78: xor x, w            ; BF
-0C79: add z, a            ; 2A
-0C7A: nop                 ; F9
-0C7B: store $9004, z      ; 12 04 90
-0C7E: nop                 ; 00
-0C7F: cmp x, a            ; 75
-0C80: jmp $6DEA, w        ; EF EA 6D
-0C83: sub a, x            ; 49
-0C84: pop z               ; 08
-0C85: nop                 ; 00
-0C86: or w, y             ; B0
-0C87: or z, w             ; AD
-0C88: push w              ; 04
-0C89: or x, w             ; A5
-0C8A: push w              ; 04
-0C8B: push a              ; 05
-0C8C: nop                 ; 00
-0C8D: nop                 ; 00
-0C8E: nop                 ; 00
-0C8F: nop                 ; 00
+0C77: nop                 ; FD
+0C78: nop                 ; FD
+0C79: nop                 ; FF
+0C7A: nop                 ; FF
+0C7B: nop                 ; FF
+0C7C: nop                 ; FF
+0C7D: nop                 ; A7
+0C7E: ror a               ; 92
+0C7F: nop                 ; F4
+0C80: inc y               ; 48
+0C81: nop                 ; 00
+0C82: add a, x            ; 20
+0C83: pop x               ; 08
+0C84: or a, x             ; 68
+0C85: nop                 ; DF
+0C86: or a, z             ; 6A
+0C87: nop                 ; AB
+0C88: nop                 ; C8
+0C89: return              ; 1A
+0C8A: nop                 ; 00
+0C8B: int $A5             ; A0 A5
+0C8D: add a, x            ; 20
+0C8E: cmp x, $29          ; 55 29
 0C90: nop                 ; 00
 0C91: nop                 ; 00
 0C92: nop                 ; 00
@@ -2930,71 +2921,69 @@
 0C95: nop                 ; 00
 0C96: nop                 ; 00
 0C97: nop                 ; 00
-0C98: nop                 ; FC
-0C99: nop                 ; FF
-0C9A: jmp z, w            ; EB
-0C9B: nop                 ; FF
-0C9C: nop                 ; FF
-0C9D: nop                 ; FF
+0C98: nop                 ; 00
+0C99: nop                 ; 00
+0C9A: nop                 ; 00
+0C9B: nop                 ; 00
+0C9C: nop                 ; 00
+0C9D: nop                 ; FC
 0C9E: nop                 ; FF
-0C9F: nop                 ; FF
-0CA0: or w, x             ; AF
-0CA1: sub a, y            ; 4A
-0CA2: jmp.neq $20A5       ; F2 A5 20
-0CA5: push a              ; 05
-0CA6: add y, y            ; 22
-0CA7: xor a, a            ; D4
-0CA8: or y, a             ; AA
-0CA9: xor x, w            ; BF
-0CAA: or a, w             ; B6
-0CAB: store $0215, z      ; 12 15 02
-0CAE: mul w, w            ; 60
-0CAF: xor x, w            ; BF
-0CB0: or y, a             ; AA
-0CB1: and y, z            ; 94
-0CB2: set w, $00          ; 1A 00
-0CB4: pop z               ; 08
-0CB5: nop                 ; 00
-0CB6: nop                 ; 00
-0CB7: nop                 ; 00
-0CB8: nop                 ; 00
-0CB9: nop                 ; 00
+0C9F: nop                 ; BF
+0CA0: nop                 ; FF
+0CA1: nop                 ; FF
+0CA2: nop                 ; FF
+0CA3: nop                 ; FF
+0CA4: nop                 ; FF
+0CA5: load x, $F224       ; 0F 24 F2
+0CA8: jmp $440A           ; 93 0A 44
+0CAB: push y              ; 02
+0CAC: nop                 ; C1
+0CAD: nop                 ; BB
+0CAE: nop                 ; DB
+0CAF: nop                 ; BA
+0CB0: not y               ; 72
+0CB1: adc x, $00          ; 2F 00
+0CB3: nop                 ; C0
+0CB4: inc w               ; 4A
+0CB5: cmpbit x            ; 5A 2E
+0CB7: nop                 ; A5
+0CB8: cmp x, $00          ; 55 00
 0CBA: nop                 ; 00
 0CBB: nop                 ; 00
 0CBC: nop                 ; 00
 0CBD: nop                 ; 00
 0CBE: nop                 ; 00
 0CBF: nop                 ; 00
-0CC0: nop                 ; FC
-0CC1: nop                 ; FF
-0CC2: nop                 ; FD
-0CC3: nop                 ; FD
-0CC4: nop                 ; FF
-0CC5: nop                 ; FF
+0CC0: nop                 ; 00
+0CC1: nop                 ; 00
+0CC2: nop                 ; 00
+0CC3: nop                 ; 00
+0CC4: nop                 ; 00
+0CC5: nop                 ; FC
 0CC6: nop                 ; FF
-0CC7: nop                 ; FF
-0CC8: or y, x             ; A7
-0CC9: and x, a            ; 92
-0CCA: jmp.lt $0048        ; F4 48 00
-0CCD: add x, a            ; 20
-0CCE: pop z               ; 08
-0CCF: inc y               ; 68
-0CD0: rol x               ; DF
-0CD1: inc w               ; 6A
-0CD2: or z, x             ; AB
-0CD3: xor z, z            ; C8
-0CD4: set w, $00          ; 1A 00
-0CD6: and a, y            ; A0
-0CD7: or x, w             ; A5
-0CD8: add x, a            ; 20
-0CD9: mul y, z            ; 55
-0CDA: add z, w            ; 29
+0CC7: nop                 ; F5
+0CC8: nop                 ; FF
+0CC9: nop                 ; FF
+0CCA: nop                 ; FF
+0CCB: nop                 ; FF
+0CCC: and a, x            ; 5F
+0CCD: nop                 ; A5
+0CCE: ror a               ; 92
+0CCF: nop                 ; F8
+0CD0: pop x               ; 08
+0CD1: mul a, a            ; 41
+0CD2: push y              ; 02
+0CD3: load z, $ED48       ; 11 48 ED
+0CD6: nop                 ; B6
+0CD7: or y, $4D           ; 6D 4D
+0CD9: sub a, y            ; 35
+0CDA: nop                 ; 00
 0CDB: nop                 ; 00
-0CDC: nop                 ; 00
-0CDD: nop                 ; 00
-0CDE: nop                 ; 00
-0CDF: nop                 ; 00
-0CE0: nop                 ; 00
+0CDC: or a, y             ; 69
+0CDD: nop                 ; EB
+0CDE: nop                 ; BA
+0CDF: inc w               ; 4A
+0CE0: pop z               ; 0A
 0CE1: nop                 ; 00
 0CE2: nop                 ; 00
 0CE3: nop                 ; 00
@@ -3002,37 +2991,32 @@
 0CE5: nop                 ; 00
 0CE6: nop                 ; 00
 0CE7: nop                 ; 00
-0CE8: nop                 ; FC
-0CE9: nop                 ; FF
-0CEA: xor x, w            ; BF
-0CEB: nop                 ; FF
-0CEC: nop                 ; FF
-0CED: nop                 ; FF
+0CE8: nop                 ; 00
+0CE9: nop                 ; 00
+0CEA: nop                 ; 00
+0CEB: nop                 ; 00
+0CEC: nop                 ; 00
+0CED: nop                 ; FC
 0CEE: nop                 ; FF
-0CEF: nop                 ; FF
-0CF0: load a, $F224       ; 0F 24 F2
-0CF3: and y, x            ; 93
-0CF4: pop a               ; 0A
-0CF5: sub w, x            ; 44
-0CF6: push y              ; 02
-0CF7: xor y, x            ; C1
-0CF8: not a               ; BB
-0CF9: shr y               ; DB
-0CFA: not w               ; BA
-0CFB: cmp x, y            ; 72
-0CFC: add w, a            ; 2F
-0CFD: nop                 ; 00
-0CFE: xor x, a            ; C0
-0CFF: sub a, y            ; 4A
-0D00: mul z, z            ; 5A
-0D01: add w, w            ; 2E
-0D02: or x, w             ; A5
-0D03: mul y, z            ; 55
-0D04: nop                 ; 00
-0D05: nop                 ; 00
-0D06: nop                 ; 00
-0D07: nop                 ; 00
-0D08: nop                 ; 00
+0CEF: nop                 ; EF
+0CF0: nop                 ; FF
+0CF1: nop                 ; FF
+0CF2: nop                 ; FF
+0CF3: nop                 ; FF
+0CF4: nop                 ; F7
+0CF5: pop w               ; 0B
+0CF6: add a, a            ; 24
+0CF7: nop                 ; F2
+0CF8: sec                 ; A2
+0CF9: store $4028, x      ; 14 28 40
+0CFC: load y, $6D5A       ; 10 5A 6D
+0CFF: cmp x, $5B          ; 55 5B
+0D01: and a, x            ; 5F
+0D02: nop                 ; 00
+0D03: shl y, $DA          ; 80 DA
+0D05: nop                 ; BD
+0D06: or y, $A9           ; 6D A9
+0D08: nop                 ; AA
 0D09: nop                 ; 00
 0D0A: nop                 ; 00
 0D0B: nop                 ; 00
@@ -3040,35 +3024,36 @@
 0D0D: nop                 ; 00
 0D0E: nop                 ; 00
 0D0F: nop                 ; 00
-0D10: nop                 ; FC
-0D11: nop                 ; FF
-0D12: jmp.z $FFFF         ; F5 FF FF
-0D15: nop                 ; FF
+0D10: nop                 ; 00
+0D11: nop                 ; 00
+0D12: nop                 ; 00
+0D13: nop                 ; 00
+0D14: nop                 ; 00
+0D15: nop                 ; FC
 0D16: nop                 ; FF
-0D17: mul w, z            ; 5F
-0D18: or x, w             ; A5
-0D19: and x, a            ; 92
-0D1A: nop                 ; F8
-0D1B: pop z               ; 08
-0D1C: sub z, z            ; 41
-0D1D: push y              ; 02
-0D1E: store $ED48, y      ; 11 48 ED
-0D21: or a, w             ; B6
-0D22: dec y               ; 6D
-0D23: sub a, a            ; 4D
-0D24: sub x, x            ; 35
-0D25: nop                 ; 00
-0D26: nop                 ; 00
-0D27: inc z               ; 69
-0D28: jmp z, w            ; EB
-0D29: not w               ; BA
-0D2A: sub a, y            ; 4A
-0D2B: pop a               ; 0A
-0D2C: nop                 ; 00
-0D2D: nop                 ; 00
-0D2E: nop                 ; 00
-0D2F: nop                 ; 00
-0D30: nop                 ; 00
+0D17: nop                 ; BD
+0D18: nop                 ; FD
+0D19: nop                 ; FF
+0D1A: nop                 ; EF
+0D1B: nop                 ; AD
+0D1C: cmpbit x            ; 5A AA
+0D1E: ror a               ; 92
+0D1F: nop                 ; F4
+0D20: pop z               ; 0A
+0D21: mul a, w            ; 40
+0D22: nop                 ; 00
+0D23: push w              ; 04
+0D24: mul a, a            ; 41
+0D25: nop                 ; F5
+0D26: nop                 ; F7
+0D27: nop                 ; D7
+0D28: nop                 ; B6
+0D29: cmp x, $00          ; 55 00
+0D2B: nop                 ; 00
+0D2C: or w, $AB           ; 6F AB
+0D2E: nop                 ; BA
+0D2F: adc a, x            ; 2A
+0D30: cmp a, x            ; 51
 0D31: nop                 ; 00
 0D32: nop                 ; 00
 0D33: nop                 ; 00
@@ -3076,174 +3061,171 @@
 0D35: nop                 ; 00
 0D36: nop                 ; 00
 0D37: nop                 ; 00
-0D38: nop                 ; FC
-0D39: nop                 ; FF
-0D3A: jmp $FFFF, w        ; EF FF FF
-0D3D: nop                 ; FF
+0D38: nop                 ; 00
+0D39: nop                 ; 00
+0D3A: nop                 ; 00
+0D3B: nop                 ; 00
+0D3C: nop                 ; 00
+0D3D: nop                 ; FC
 0D3E: nop                 ; FF
-0D3F: resume              ; F7 0B
-0D41: add y, w            ; 24
-0D42: jmp.neq $14A2       ; F2 A2 14
-0D45: add z, z            ; 28
-0D46: sub z, y            ; 40
-0D47: store $6D5A, x      ; 10 5A 6D
-0D4A: mul y, z            ; 55
-0D4B: mul z, w            ; 5B
-0D4C: mul w, z            ; 5F
-0D4D: nop                 ; 00
-0D4E: cmp w, x            ; 80
-0D4F: shr x               ; DA
-0D50: xor x, y            ; BD
-0D51: dec y               ; 6D
-0D52: or y, w             ; A9
-0D53: or y, a             ; AA
-0D54: nop                 ; 00
-0D55: nop                 ; 00
-0D56: nop                 ; 00
-0D57: nop                 ; 00
-0D58: nop                 ; 00
-0D59: nop                 ; 00
+0D3F: nop                 ; F7
+0D40: nop                 ; B7
+0D41: xor w, $7B          ; 7D 7B
+0D43: nop                 ; FB
+0D44: nop                 ; AF
+0D45: push a              ; 05
+0D46: nop                 ; 00
+0D47: nop                 ; F1
+0D48: cmp a, x            ; 51
+0D49: ror a               ; 92
+0D4A: push w              ; 04
+0D4B: add a, y            ; 21
+0D4C: push w              ; 04
+0D4D: store $5ABD, x      ; 14 BD 5A
+0D50: cmp x, $5F          ; 55 5F
+0D52: nop                 ; 00
+0D53: nop                 ; 00
+0D54: nop                 ; DA
+0D55: or a, w             ; 6B
+0D56: nop                 ; E7
+0D57: nop                 ; A4
+0D58: nop                 ; AA
+0D59: push y              ; 02
 0D5A: nop                 ; 00
 0D5B: nop                 ; 00
 0D5C: nop                 ; 00
 0D5D: nop                 ; 00
 0D5E: nop                 ; 00
 0D5F: nop                 ; 00
-0D60: nop                 ; FC
-0D61: nop                 ; FF
-0D62: xor x, y            ; BD
-0D63: nop                 ; FD
-0D64: nop                 ; FF
-0D65: jmp $5AAD, w        ; EF AD 5A
-0D68: or y, a             ; AA
-0D69: and x, a            ; 92
-0D6A: jmp.lt $400A        ; F4 0A 40
-0D6D: nop                 ; 00
-0D6E: push w              ; 04
-0D6F: sub z, z            ; 41
-0D70: jmp.z $D7F7         ; F5 F7 D7
-0D73: or a, w             ; B6
-0D74: mul y, z            ; 55
-0D75: nop                 ; 00
-0D76: nop                 ; 00
-0D77: dec w               ; 6F
-0D78: or z, x             ; AB
-0D79: not w               ; BA
-0D7A: add z, a            ; 2A
-0D7B: mul x, w            ; 51
-0D7C: nop                 ; 00
-0D7D: nop                 ; 00
-0D7E: nop                 ; 00
-0D7F: nop                 ; 00
-0D80: nop                 ; 00
-0D81: nop                 ; 00
+0D60: nop                 ; 00
+0D61: nop                 ; 00
+0D62: nop                 ; 00
+0D63: nop                 ; 00
+0D64: nop                 ; 00
+0D65: nop                 ; FC
+0D66: nop                 ; FF
+0D67: nop                 ; DD
+0D68: nop                 ; FE
+0D69: nop                 ; EF
+0D6A: nop                 ; AF
+0D6B: nop                 ; AD
+0D6C: cmp a, w            ; 54
+0D6D: ror a               ; 92
+0D6E: inc w               ; 4A
+0D6F: nop                 ; FC
+0D70: push w              ; 04
+0D71: pop x               ; 08
+0D72: add a, z            ; 22
+0D73: pop x               ; 08
+0D74: add a, x            ; 20
+0D75: nop                 ; D1
+0D76: nop                 ; D7
+0D77: nop                 ; AD
+0D78: nop                 ; FA
+0D79: nop                 ; B5
+0D7A: nop                 ; 00
+0D7B: nop                 ; 00
+0D7C: xor w, $AD          ; 7D AD
+0D7E: nop                 ; D5
+0D7F: nop                 ; AA
+0D80: add a, a            ; 24
+0D81: push x              ; 01
 0D82: nop                 ; 00
 0D83: nop                 ; 00
 0D84: nop                 ; 00
 0D85: nop                 ; 00
 0D86: nop                 ; 00
 0D87: nop                 ; 00
-0D88: nop                 ; FC
-0D89: nop                 ; FF
-0D8A: resume              ; F7 B7
-0D8C: cmp z, z            ; 7D
-0D8D: cmp z, x            ; 7B
-0D8E: nop                 ; FB
-0D8F: or w, x             ; AF
-0D90: push a              ; 05
-0D91: nop                 ; 00
-0D92: jmp.eq $9251        ; F1 51 92
-0D95: push w              ; 04
-0D96: add y, x            ; 21
-0D97: push w              ; 04
-0D98: store $5ABD, a      ; 14 BD 5A
-0D9B: mul y, z            ; 55
-0D9C: mul w, z            ; 5F
-0D9D: nop                 ; 00
-0D9E: nop                 ; 00
-0D9F: shr x               ; DA
-0DA0: inc a               ; 6B
-0DA1: ror w               ; E7
-0DA2: or x, z             ; A4
-0DA3: or y, a             ; AA
-0DA4: push y              ; 02
-0DA5: nop                 ; 00
-0DA6: nop                 ; 00
-0DA7: nop                 ; 00
-0DA8: nop                 ; 00
-0DA9: nop                 ; 00
+0D88: nop                 ; 00
+0D89: nop                 ; 00
+0D8A: nop                 ; 00
+0D8B: nop                 ; 00
+0D8C: nop                 ; 00
+0D8D: nop                 ; FC
+0D8E: nop                 ; FF
+0D8F: nop                 ; B7
+0D90: cmpbit y            ; 5B FB
+0D92: nop                 ; DA
+0D93: cmp y, $AB          ; 56 AB
+0D95: push a              ; 05
+0D96: load y, $11F1       ; 10 F1 11
+0D99: nop                 ; AA
+0D9A: shr a, $82          ; 88 82
+0D9C: pop z               ; 0A
+0D9D: load w, $AB7E       ; 12 7E AB
+0DA0: cmp y, $AF          ; 56 AF
+0DA2: push x              ; 01
+0DA3: nop                 ; 00
+0DA4: nop                 ; D4
+0DA5: or w, $BD           ; 6F BD
+0DA7: adc a, x            ; 2A
+0DA8: cmp x, $00          ; 55 00
 0DAA: nop                 ; 00
 0DAB: nop                 ; 00
 0DAC: nop                 ; 00
 0DAD: nop                 ; 00
 0DAE: nop                 ; 00
 0DAF: nop                 ; 00
-0DB0: nop                 ; FC
-0DB1: nop                 ; FF
-0DB2: shr w               ; DD
-0DB3: nop                 ; FE
-0DB4: jmp $ADAF, w        ; EF AF AD
-0DB7: mul y, y            ; 54
-0DB8: and x, a            ; 92
-0DB9: sub a, y            ; 4A
-0DBA: nop                 ; FC
-0DBB: push w              ; 04
-0DBC: pop z               ; 08
-0DBD: add y, y            ; 22
-0DBE: pop z               ; 08
-0DBF: add x, a            ; 20
-0DC0: xor a, y            ; D1
-0DC1: shl z               ; D7
-0DC2: or z, w             ; AD
-0DC3: nop                 ; FA
-0DC4: or a, z             ; B5
-0DC5: nop                 ; 00
-0DC6: nop                 ; 00
-0DC7: cmp z, z            ; 7D
-0DC8: or z, w             ; AD
-0DC9: shl x               ; D5
-0DCA: or y, a             ; AA
-0DCB: add y, w            ; 24
-0DCC: push x              ; 01
-0DCD: nop                 ; 00
-0DCE: nop                 ; 00
-0DCF: nop                 ; 00
-0DD0: nop                 ; 00
-0DD1: nop                 ; 00
+0DB0: nop                 ; 00
+0DB1: nop                 ; 00
+0DB2: nop                 ; 00
+0DB3: nop                 ; 00
+0DB4: nop                 ; 00
+0DB5: nop                 ; FC
+0DB6: nop                 ; FF
+0DB7: nop                 ; DD
+0DB8: nop                 ; EE
+0DB9: nop                 ; AD
+0DBA: or w, $A9           ; 6F A9
+0DBC: cmp a, w            ; 54
+0DBD: add a, z            ; 22
+0DBE: shl z, $F4          ; 81 F4
+0DC0: mul z, $05          ; 44 05
+0DC2: add a, z            ; 22
+0DC3: add w, $20          ; 28 20
+0DC5: nop                 ; E8
+0DC6: nop                 ; FB
+0DC7: nop                 ; D5
+0DC8: nop                 ; FB
+0DC9: cmp a, y            ; 52
+0DCA: nop                 ; 00
+0DCB: nop                 ; 00
+0DCC: not w               ; 74
+0DCD: nop                 ; AD
+0DCE: push y              ; 02
+0DCF: inc z               ; 49
+0DD0: cmp x, $00          ; 55 00
 0DD2: nop                 ; 00
 0DD3: nop                 ; 00
 0DD4: nop                 ; 00
 0DD5: nop                 ; 00
 0DD6: nop                 ; 00
 0DD7: nop                 ; 00
-0DD8: nop                 ; FC
-0DD9: nop                 ; FF
-0DDA: not x               ; B7
-0DDB: mul z, w            ; 5B
-0DDC: nop                 ; FB
-0DDD: shr x               ; DA
-0DDE: mul y, w            ; 56
-0DDF: or z, x             ; AB
-0DE0: push a              ; 05
-0DE1: store $11F1, x      ; 10 F1 11
-0DE4: or y, a             ; AA
-0DE5: cmp a, w            ; 88
-0DE6: cmp w, z            ; 82
-0DE7: pop a               ; 0A
-0DE8: store $AB7E, z      ; 12 7E AB
-0DEB: mul y, w            ; 56
-0DEC: or w, x             ; AF
+0DD8: nop                 ; 00
+0DD9: nop                 ; 00
+0DDA: nop                 ; 00
+0DDB: nop                 ; 00
+0DDC: nop                 ; 00
+0DDD: nop                 ; FC
+0DDE: nop                 ; FF
+0DDF: or a, z             ; 6A
+0DE0: cmpbit y            ; 5B FB
+0DE2: nop                 ; DA
+0DE3: inc w               ; 4A
+0DE4: cmp x, $09          ; 55 09
+0DE6: load w, $1170       ; 12 70 11
+0DE9: nop                 ; AA
+0DEA: jmp x, y            ; 94
+0DEB: push y              ; 02
+0DEC: inc z               ; 49
 0DED: push x              ; 01
-0DEE: nop                 ; 00
-0DEF: xor a, a            ; D4
-0DF0: dec w               ; 6F
-0DF1: xor x, y            ; BD
-0DF2: add z, a            ; 2A
-0DF3: mul y, z            ; 55
-0DF4: nop                 ; 00
-0DF5: nop                 ; 00
-0DF6: nop                 ; 00
-0DF7: nop                 ; 00
+0DEE: nop                 ; AD
+0DEF: nop                 ; BA
+0DF0: cmp y, $0F          ; 56 0F
+0DF2: nop                 ; 00
+0DF3: nop                 ; 00
+0DF4: nop                 ; D0
+0DF5: store $5454, w      ; 17 54 54
 0DF8: nop                 ; 00
 0DF9: nop                 ; 00
 0DFA: nop                 ; 00
@@ -3252,34 +3234,34 @@
 0DFD: nop                 ; 00
 0DFE: nop                 ; 00
 0DFF: nop                 ; 00
-0E00: nop                 ; FC
-0E01: nop                 ; FF
-0E02: shr w               ; DD
-0E03: jmp $6FAD, z        ; EE AD 6F
-0E06: or y, w             ; A9
-0E07: mul y, y            ; 54
-0E08: add y, y            ; 22
-0E09: cmp w, y            ; 81
-0E0A: jmp.lt $0544        ; F4 44 05
-0E0D: add y, y            ; 22
-0E0E: add z, z            ; 28
-0E0F: add x, a            ; 20
-0E10: ror a               ; E8
-0E11: nop                 ; FB
-0E12: shl x               ; D5
-0E13: nop                 ; FB
-0E14: mul x, a            ; 52
-0E15: nop                 ; 00
-0E16: nop                 ; 00
-0E17: cmp x, w            ; 74
-0E18: or z, w             ; AD
-0E19: push y              ; 02
-0E1A: sub a, x            ; 49
-0E1B: mul y, z            ; 55
-0E1C: nop                 ; 00
-0E1D: nop                 ; 00
-0E1E: nop                 ; 00
-0E1F: nop                 ; 00
+0E00: nop                 ; 00
+0E01: nop                 ; 00
+0E02: nop                 ; 00
+0E03: nop                 ; 00
+0E04: nop                 ; 00
+0E05: nop                 ; FC
+0E06: nop                 ; FF
+0E07: nop                 ; DB
+0E08: nop                 ; EA
+0E09: nop                 ; AD
+0E0A: or y, $93           ; 6D 93
+0E0C: ror z               ; 90
+0E0D: push w              ; 04
+0E0E: nop                 ; 00
+0E0F: store $8284, y      ; 15 84 82
+0E12: and a, w            ; 62
+0E13: nop                 ; A8
+0E14: push w              ; 04
+0E15: nop                 ; C4
+0E16: cmpbit x            ; 5A EF
+0E18: nop                 ; DB
+0E19: push x              ; 01
+0E1A: nop                 ; 00
+0E1B: nop                 ; 00
+0E1C: or a, x             ; 68
+0E1D: inc z               ; 49
+0E1E: ror w               ; 91
+0E1F: nop                 ; A8
 0E20: nop                 ; 00
 0E21: nop                 ; 00
 0E22: nop                 ; 00
@@ -3288,6563 +3270,6338 @@
 0E25: nop                 ; 00
 0E26: nop                 ; 00
 0E27: nop                 ; 00
-0E28: nop                 ; FC
-0E29: nop                 ; FF
-0E2A: inc w               ; 6A
-0E2B: mul z, w            ; 5B
-0E2C: nop                 ; FB
-0E2D: shr x               ; DA
-0E2E: sub a, y            ; 4A
-0E2F: mul y, z            ; 55
-0E30: pop w               ; 09
-0E31: store $1170, z      ; 12 70 11
-0E34: or y, a             ; AA
-0E35: and y, z            ; 94
-0E36: push y              ; 02
-0E37: sub a, x            ; 49
-0E38: push x              ; 01
-0E39: or z, w             ; AD
-0E3A: not w               ; BA
-0E3B: mul y, w            ; 56
-0E3C: load a, $0000       ; 0F 00 00
-0E3F: xor a, x            ; D0
-0E40: set x, $54          ; 17 54
-0E42: mul y, y            ; 54
+0E28: nop                 ; 00
+0E29: nop                 ; 00
+0E2A: nop                 ; 00
+0E2B: nop                 ; 00
+0E2C: nop                 ; 00
+0E2D: nop                 ; FC
+0E2E: nop                 ; FF
+0E2F: nop                 ; AA
+0E30: cmpbit w            ; 5D 5B
+0E32: cmpbit y            ; 5B 2D
+0E34: mul w, $AA          ; 45 AA
+0E36: mul z, $80          ; 44 80
+0E38: load y, $D429       ; 10 29 D4
+0E3B: load a, $1151       ; 13 51 11
+0E3E: nop                 ; D6
+0E3F: nop                 ; BB
+0E40: not w               ; 74
+0E41: nop                 ; 00
+0E42: nop                 ; 00
 0E43: nop                 ; 00
-0E44: nop                 ; 00
-0E45: nop                 ; 00
-0E46: nop                 ; 00
-0E47: nop                 ; 00
-0E48: nop                 ; 00
-0E49: nop                 ; 00
-0E4A: nop                 ; 00
+0E44: dec a               ; 50
+0E45: nop                 ; AA
+0E46: cmp y, $22          ; 56 22
+0E48: store $0000, y      ; 15 00 00
 0E4B: nop                 ; 00
 0E4C: nop                 ; 00
 0E4D: nop                 ; 00
 0E4E: nop                 ; 00
 0E4F: nop                 ; 00
-0E50: nop                 ; FC
-0E51: nop                 ; FF
-0E52: shr y               ; DB
-0E53: jmp x, y            ; EA
-0E54: or z, w             ; AD
-0E55: dec y               ; 6D
-0E56: and y, x            ; 93
-0E57: and x, z            ; 90
-0E58: push w              ; 04
-0E59: nop                 ; 00
-0E5A: call $8284          ; 15 84 82
-0E5D: mul a, x            ; 62
-0E5E: or y, z             ; A8
-0E5F: push w              ; 04
-0E60: xor y, w            ; C4
-0E61: mul z, z            ; 5A
-0E62: jmp $01DB, w        ; EF DB 01
-0E65: nop                 ; 00
-0E66: nop                 ; 00
-0E67: inc y               ; 68
-0E68: sub a, x            ; 49
-0E69: and x, w            ; 91
-0E6A: or y, z             ; A8
+0E50: nop                 ; 00
+0E51: nop                 ; 00
+0E52: nop                 ; 00
+0E53: nop                 ; 00
+0E54: nop                 ; 00
+0E55: nop                 ; FC
+0E56: nop                 ; FF
+0E57: nop                 ; B5
+0E58: cmp y, $55          ; 56 55
+0E5A: cmp x, $95          ; 55 95
+0E5C: load y, $0001       ; 10 01 00
+0E5F: inc y               ; 48
+0E60: mul z, $A2          ; 44 A2
+0E62: nop                 ; EA
+0E63: inc a               ; 4B
+0E64: push w              ; 04
+0E65: shr x, $7A          ; 84 7A
+0E67: or y, $0B           ; 6D 0B
+0E69: nop                 ; 00
+0E6A: mul a, w            ; 40
 0E6B: nop                 ; 00
-0E6C: nop                 ; 00
-0E6D: nop                 ; 00
-0E6E: nop                 ; 00
-0E6F: nop                 ; 00
-0E70: nop                 ; 00
-0E71: nop                 ; 00
-0E72: nop                 ; 00
+0E6C: nop                 ; B0
+0E6D: nop                 ; AA
+0E6E: jmp z, w            ; 95
+0E6F: inc w               ; 4A
+0E70: store $0000, y      ; 15 00 00
 0E73: nop                 ; 00
 0E74: nop                 ; 00
 0E75: nop                 ; 00
 0E76: nop                 ; 00
 0E77: nop                 ; 00
-0E78: nop                 ; FC
-0E79: nop                 ; FF
-0E7A: or y, a             ; AA
-0E7B: mul w, x            ; 5D
-0E7C: mul z, w            ; 5B
-0E7D: mul z, w            ; 5B
-0E7E: add w, z            ; 2D
-0E7F: sub w, y            ; 45
-0E80: or y, a             ; AA
-0E81: sub w, x            ; 44
-0E82: cmp w, x            ; 80
-0E83: store $D429, x      ; 10 29 D4
-0E86: store $1151, w      ; 13 51 11
-0E89: shl y               ; D6
-0E8A: not a               ; BB
-0E8B: cmp x, w            ; 74
-0E8C: nop                 ; 00
-0E8D: nop                 ; 00
-0E8E: nop                 ; 00
-0E8F: mul x, z            ; 50
-0E90: or y, a             ; AA
-0E91: mul y, w            ; 56
-0E92: add y, y            ; 22
-0E93: call $0000          ; 15 00 00
-0E96: nop                 ; 00
-0E97: nop                 ; 00
-0E98: nop                 ; 00
-0E99: nop                 ; 00
+0E78: nop                 ; 00
+0E79: nop                 ; 00
+0E7A: nop                 ; 00
+0E7B: nop                 ; 00
+0E7C: nop                 ; 00
+0E7D: nop                 ; FC
+0E7E: nop                 ; FF
+0E7F: nop                 ; AD
+0E80: nop                 ; D5
+0E81: nop                 ; AA
+0E82: nop                 ; AA
+0E83: or a, z             ; 6A
+0E84: mul z, $54          ; 44 54
+0E86: load z, $9102       ; 11 02 91
+0E89: jmp x, y            ; 94
+0E8A: nop                 ; D4
+0E8B: cmp z, $55          ; 57 55
+0E8D: add a, $D4          ; 29 D4
+0E8F: nop                 ; FF
+0E90: push x              ; 01
+0E91: nop                 ; 00
+0E92: push y              ; 02
+0E93: nop                 ; 00
+0E94: int $55             ; A0 55
+0E96: nop                 ; BD
+0E97: load y, $0025       ; 10 25 00
 0E9A: nop                 ; 00
 0E9B: nop                 ; 00
 0E9C: nop                 ; 00
 0E9D: nop                 ; 00
 0E9E: nop                 ; 00
 0E9F: nop                 ; 00
-0EA0: nop                 ; FC
-0EA1: nop                 ; FF
-0EA2: or a, z             ; B5
-0EA3: mul y, w            ; 56
-0EA4: mul y, z            ; 55
-0EA5: mul y, z            ; 55
-0EA6: and y, w            ; 95
-0EA7: store $0001, x      ; 10 01 00
-0EAA: sub w, a            ; 48
-0EAB: sub w, x            ; 44
-0EAC: and a, w            ; A2
-0EAD: jmp x, y            ; EA
-0EAE: sub a, z            ; 4B
-0EAF: push w              ; 04
-0EB0: cmp w, a            ; 84
-0EB1: cmp y, a            ; 7A
-0EB2: dec y               ; 6D
-0EB3: load x, $4000       ; 0B 00 40
-0EB6: nop                 ; 00
-0EB7: or w, y             ; B0
-0EB8: or y, a             ; AA
-0EB9: and y, w            ; 95
-0EBA: sub a, y            ; 4A
-0EBB: call $0000          ; 15 00 00
-0EBE: nop                 ; 00
-0EBF: nop                 ; 00
-0EC0: nop                 ; 00
-0EC1: nop                 ; 00
-0EC2: nop                 ; 00
+0EA0: nop                 ; 00
+0EA1: nop                 ; 00
+0EA2: nop                 ; 00
+0EA3: nop                 ; 00
+0EA4: nop                 ; 00
+0EA5: nop                 ; FC
+0EA6: nop                 ; FF
+0EA7: cmp x, $AD          ; 55 AD
+0EA9: nop                 ; AA
+0EAA: nop                 ; AA
+0EAB: nop                 ; AA
+0EAC: push y              ; 02
+0EAD: push x              ; 01
+0EAE: mul z, $11          ; 44 11
+0EB0: mul z, $52          ; 44 52
+0EB2: nop                 ; F5
+0EB3: nop                 ; AF
+0EB4: cmp a, w            ; 54
+0EB5: shl w, $50          ; 82 50
+0EB7: nop                 ; BD
+0EB8: nop                 ; 00
+0EB9: load y, $0000       ; 10 00 00
+0EBC: int $BA             ; A0 BA
+0EBE: adc a, y            ; 2B
+0EBF: inc w               ; 4A
+0EC0: load w, $0000       ; 12 00 00
 0EC3: nop                 ; 00
 0EC4: nop                 ; 00
 0EC5: nop                 ; 00
 0EC6: nop                 ; 00
 0EC7: nop                 ; 00
-0EC8: nop                 ; FC
-0EC9: nop                 ; FF
-0ECA: or z, w             ; AD
-0ECB: shl x               ; D5
-0ECC: or y, a             ; AA
-0ECD: or y, a             ; AA
-0ECE: inc w               ; 6A
-0ECF: sub w, x            ; 44
-0ED0: mul y, y            ; 54
-0ED1: store $9102, y      ; 11 02 91
-0ED4: and y, z            ; 94
-0ED5: xor a, a            ; D4
-0ED6: mul y, a            ; 57
-0ED7: mul y, z            ; 55
-0ED8: add z, w            ; 29
-0ED9: xor a, a            ; D4
-0EDA: nop                 ; FF
-0EDB: push x              ; 01
-0EDC: nop                 ; 00
-0EDD: push y              ; 02
-0EDE: nop                 ; 00
-0EDF: and a, y            ; A0
-0EE0: mul y, z            ; 55
-0EE1: xor x, y            ; BD
-0EE2: store $0025, x      ; 10 25 00
-0EE5: nop                 ; 00
-0EE6: nop                 ; 00
-0EE7: nop                 ; 00
+0EC8: nop                 ; 00
+0EC9: nop                 ; 00
+0ECA: nop                 ; 00
+0ECB: nop                 ; 00
+0ECC: nop                 ; 00
+0ECD: nop                 ; FC
+0ECE: nop                 ; FF
+0ECF: nop                 ; AA
+0ED0: or a, z             ; 6A
+0ED1: cmp x, $55          ; 55 55
+0ED3: add x, $21          ; 25 21
+0ED5: cmp a, w            ; 54
+0ED6: pop y               ; 09
+0ED7: shr x, $28          ; 84 28
+0ED9: inc z               ; 49
+0EDA: nop                 ; EA
+0EDB: and a, x            ; 5F
+0EDC: cmp a, z            ; 53
+0EDD: add a, $C2          ; 29 C2
+0EDF: nop                 ; FE
+0EE0: push.f              ; 07
+0EE1: nop                 ; 00
+0EE2: nop                 ; 00
+0EE3: nop                 ; 00
+0EE4: mul a, w            ; 40
+0EE5: nop                 ; D7
+0EE6: nop                 ; D6
+0EE7: ror a               ; 92
 0EE8: nop                 ; 00
 0EE9: nop                 ; 00
-0EEA: nop                 ; 00
+0EEA: push w              ; 04
 0EEB: nop                 ; 00
 0EEC: nop                 ; 00
 0EED: nop                 ; 00
 0EEE: nop                 ; 00
 0EEF: nop                 ; 00
-0EF0: nop                 ; FC
-0EF1: nop                 ; FF
-0EF2: mul y, z            ; 55
-0EF3: or z, w             ; AD
-0EF4: or y, a             ; AA
-0EF5: or y, a             ; AA
-0EF6: or y, a             ; AA
-0EF7: push y              ; 02
-0EF8: push x              ; 01
-0EF9: sub w, x            ; 44
-0EFA: store $5244, y      ; 11 44 52
-0EFD: jmp.z $54AF         ; F5 AF 54
-0F00: cmp w, z            ; 82
-0F01: mul x, z            ; 50
-0F02: xor x, y            ; BD
-0F03: nop                 ; 00
-0F04: store $0000, x      ; 10 00 00
-0F07: and a, y            ; A0
-0F08: not w               ; BA
-0F09: add w, x            ; 2B
-0F0A: sub a, y            ; 4A
-0F0B: store $0000, z      ; 12 00 00
-0F0E: nop                 ; 00
-0F0F: nop                 ; 00
-0F10: nop                 ; 00
-0F11: nop                 ; 00
-0F12: nop                 ; 00
+0EF0: nop                 ; 00
+0EF1: nop                 ; 00
+0EF2: nop                 ; 00
+0EF3: nop                 ; 00
+0EF4: nop                 ; 00
+0EF5: nop                 ; FC
+0EF6: nop                 ; FF
+0EF7: or a, z             ; 6A
+0EF8: jmp z, w            ; 95
+0EF9: nop                 ; AA
+0EFA: nop                 ; AA
+0EFB: nop                 ; AA
+0EFC: pop z               ; 0A
+0EFD: dec a               ; 50
+0EFE: add a, a            ; 24
+0EFF: cmp a, x            ; 51
+0F00: mul x, $55          ; 42 55
+0F02: nop                 ; F5
+0F03: nop                 ; FF
+0F04: nop                 ; AC
+0F05: inc w               ; 4A
+0F06: inc z               ; 49
+0F07: nop                 ; FD
+0F08: mul w, $04          ; 45 04
+0F0A: nop                 ; 00
+0F0B: pop x               ; 08
+0F0C: nop                 ; C0
+0F0D: nop                 ; B5
+0F0E: xor x, $24          ; 7A 24
+0F10: nop                 ; A4
+0F11: nop                 ; AA
+0F12: push a              ; 05
 0F13: nop                 ; 00
 0F14: nop                 ; 00
 0F15: nop                 ; 00
 0F16: nop                 ; 00
 0F17: nop                 ; 00
-0F18: nop                 ; FC
-0F19: nop                 ; FF
-0F1A: or y, a             ; AA
-0F1B: inc w               ; 6A
-0F1C: mul y, z            ; 55
-0F1D: mul y, z            ; 55
-0F1E: add y, a            ; 25
-0F1F: add y, x            ; 21
-0F20: mul y, y            ; 54
-0F21: pop w               ; 09
-0F22: cmp w, a            ; 84
-0F23: add z, z            ; 28
-0F24: sub a, x            ; 49
-0F25: jmp x, y            ; EA
-0F26: mul w, z            ; 5F
-0F27: mul y, x            ; 53
-0F28: add z, w            ; 29
-0F29: xor y, y            ; C2
-0F2A: nop                 ; FE
-0F2B: pop y               ; 07
-0F2C: nop                 ; 00
-0F2D: nop                 ; 00
-0F2E: nop                 ; 00
-0F2F: sub z, y            ; 40
-0F30: shl z               ; D7
-0F31: shl y               ; D6
-0F32: and x, a            ; 92
-0F33: nop                 ; 00
-0F34: nop                 ; 00
-0F35: push w              ; 04
-0F36: nop                 ; 00
-0F37: nop                 ; 00
-0F38: nop                 ; 00
-0F39: nop                 ; 00
-0F3A: nop                 ; 00
+0F18: nop                 ; 00
+0F19: nop                 ; 00
+0F1A: nop                 ; 00
+0F1B: nop                 ; 00
+0F1C: nop                 ; 00
+0F1D: nop                 ; FC
+0F1E: nop                 ; FF
+0F1F: jmp z, w            ; 95
+0F20: or a, z             ; 6A
+0F21: cmp x, $49          ; 55 49
+0F23: ror a               ; 92
+0F24: push w              ; 04
+0F25: push y              ; 02
+0F26: push x              ; 01
+0F27: shr x, $54          ; 84 54
+0F29: cmp x, $ED          ; 55 ED
+0F2B: nop                 ; FF
+0F2C: cmp z, $55          ; 57 55
+0F2E: ror a               ; 92
+0F2F: nop                 ; EA
+0F30: set a, $00          ; 1F 00
+0F32: load y, $8000       ; 10 00 80
+0F35: nop                 ; AE
+0F36: nop                 ; AD
+0F37: inc z               ; 49
+0F38: cmp a, x            ; 51
+0F39: add a, $14          ; 29 14
 0F3B: nop                 ; 00
 0F3C: nop                 ; 00
 0F3D: nop                 ; 00
 0F3E: nop                 ; 00
 0F3F: nop                 ; 00
-0F40: nop                 ; FC
-0F41: nop                 ; FF
-0F42: inc w               ; 6A
-0F43: and y, w            ; 95
-0F44: or y, a             ; AA
-0F45: or y, a             ; AA
-0F46: or y, a             ; AA
-0F47: pop a               ; 0A
-0F48: mul x, z            ; 50
-0F49: add y, w            ; 24
-0F4A: mul x, w            ; 51
-0F4B: sub z, w            ; 42
-0F4C: mul y, z            ; 55
-0F4D: jmp.z $ACFF         ; F5 FF AC
-0F50: sub a, y            ; 4A
-0F51: sub a, x            ; 49
-0F52: nop                 ; FD
-0F53: sub w, y            ; 45
-0F54: push w              ; 04
-0F55: nop                 ; 00
-0F56: pop z               ; 08
-0F57: xor x, a            ; C0
-0F58: or a, z             ; B5
-0F59: cmp y, a            ; 7A
-0F5A: add y, w            ; 24
-0F5B: or x, z             ; A4
-0F5C: or y, a             ; AA
-0F5D: push a              ; 05
-0F5E: nop                 ; 00
-0F5F: nop                 ; 00
-0F60: nop                 ; 00
-0F61: nop                 ; 00
-0F62: nop                 ; 00
-0F63: nop                 ; 00
-0F64: nop                 ; 00
+0F40: nop                 ; 00
+0F41: nop                 ; 00
+0F42: nop                 ; 00
+0F43: nop                 ; 00
+0F44: nop                 ; 00
+0F45: nop                 ; FC
+0F46: nop                 ; FF
+0F47: or a, z             ; 6A
+0F48: jmp z, w            ; 95
+0F49: nop                 ; AA
+0F4A: nop                 ; AA
+0F4B: nop                 ; AA
+0F4C: inc w               ; 4A
+0F4D: mul a, w            ; 40
+0F4E: add a, x            ; 20
+0F4F: dec a               ; 50
+0F50: adc a, x            ; 2A
+0F51: cmp x, $FB          ; 55 FB
+0F53: nop                 ; FF
+0F54: nop                 ; BB
+0F55: nop                 ; AA
+0F56: push w              ; 04
+0F57: nop                 ; F4
+0F58: adc x, $00          ; 2F 00
+0F5A: shl w, $00          ; 82 00
+0F5C: nop                 ; 00
+0F5D: nop                 ; EB
+0F5E: nop                 ; D6
+0F5F: ror a               ; 92
+0F60: mul z, $4A          ; 44 4A
+0F62: store $0000, y      ; 15 00 00
 0F65: nop                 ; 00
 0F66: nop                 ; 00
 0F67: nop                 ; 00
-0F68: nop                 ; FC
-0F69: nop                 ; FF
-0F6A: and y, w            ; 95
-0F6B: inc w               ; 6A
-0F6C: mul y, z            ; 55
-0F6D: sub a, x            ; 49
-0F6E: and x, a            ; 92
-0F6F: push w              ; 04
-0F70: push y              ; 02
-0F71: push x              ; 01
-0F72: cmp w, a            ; 84
-0F73: mul y, y            ; 54
-0F74: mul y, z            ; 55
-0F75: jmp $57FF, y        ; ED FF 57
-0F78: mul y, z            ; 55
-0F79: and x, a            ; 92
-0F7A: jmp x, y            ; EA
-0F7B: add x, w            ; 1F
-0F7C: nop                 ; 00
-0F7D: store $8000, x      ; 10 00 80
-0F80: or z, a             ; AE
-0F81: or z, w             ; AD
-0F82: sub a, x            ; 49
-0F83: mul x, w            ; 51
-0F84: add z, w            ; 29
-0F85: store $0000, a      ; 14 00 00
-0F88: nop                 ; 00
-0F89: nop                 ; 00
-0F8A: nop                 ; 00
+0F68: nop                 ; 00
+0F69: nop                 ; 00
+0F6A: nop                 ; 00
+0F6B: nop                 ; 00
+0F6C: nop                 ; 00
+0F6D: nop                 ; FC
+0F6E: nop                 ; FF
+0F6F: jmp z, w            ; 95
+0F70: nop                 ; AA
+0F71: nop                 ; AA
+0F72: add a, a            ; 24
+0F73: inc z               ; 49
+0F74: jmp z, w            ; 95
+0F75: return              ; 1A
+0F76: pop x               ; 08
+0F77: shr y, $CA          ; 85 CA
+0F79: nop                 ; AA
+0F7A: nop                 ; F6
+0F7B: nop                 ; FF
+0F7C: nop                 ; EF
+0F7D: nop                 ; AB
+0F7E: nop                 ; AD
+0F7F: shr a, $FF          ; 88 FF
+0F81: add a, x            ; 20
+0F82: nop                 ; 00
+0F83: nop                 ; 00
+0F84: nop                 ; 00
+0F85: jmp.gt $4AB5        ; 9D B5 4A
+0F88: load w, $0029       ; 12 29 00
 0F8B: nop                 ; 00
 0F8C: nop                 ; 00
 0F8D: nop                 ; 00
 0F8E: nop                 ; 00
 0F8F: nop                 ; 00
-0F90: nop                 ; FC
-0F91: nop                 ; FF
-0F92: inc w               ; 6A
-0F93: and y, w            ; 95
-0F94: or y, a             ; AA
-0F95: or y, a             ; AA
-0F96: or y, a             ; AA
-0F97: sub a, y            ; 4A
-0F98: sub z, y            ; 40
-0F99: add x, a            ; 20
-0F9A: mul x, z            ; 50
-0F9B: add z, a            ; 2A
-0F9C: mul y, z            ; 55
-0F9D: nop                 ; FB
-0F9E: nop                 ; FF
-0F9F: not a               ; BB
-0FA0: or y, a             ; AA
-0FA1: push w              ; 04
-0FA2: jmp.lt $002F        ; F4 2F 00
-0FA5: cmp w, z            ; 82
-0FA6: nop                 ; 00
-0FA7: nop                 ; 00
-0FA8: jmp z, w            ; EB
-0FA9: shl y               ; D6
-0FAA: and x, a            ; 92
-0FAB: sub w, x            ; 44
-0FAC: sub a, y            ; 4A
-0FAD: call $0000          ; 15 00 00
-0FB0: nop                 ; 00
-0FB1: nop                 ; 00
+0F90: nop                 ; 00
+0F91: nop                 ; 00
+0F92: nop                 ; 00
+0F93: nop                 ; 00
+0F94: nop                 ; 00
+0F95: nop                 ; FC
+0F96: nop                 ; FF
+0F97: nop                 ; AA
+0F98: nop                 ; AA
+0F99: inc w               ; 4A
+0F9A: cmp x, $55          ; 55 55
+0F9C: cmp a, y            ; 52
+0F9D: nop                 ; A5
+0F9E: mul z, $50          ; 44 50
+0FA0: add a, $F5          ; 29 F5
+0FA2: nop                 ; FD
+0FA3: nop                 ; FF
+0FA4: nop                 ; FF
+0FA5: nop                 ; FE
+0FA6: adc x, $AA          ; 2F AA
+0FA8: nop                 ; BE
+0FA9: push x              ; 01
+0FAA: nop                 ; 00
+0FAB: nop                 ; 00
+0FAC: nop                 ; 00
+0FAD: nop                 ; D6
+0FAE: or z, $15           ; 6E 15
+0FB0: inc z               ; 49
+0FB1: nop                 ; A5
 0FB2: nop                 ; 00
 0FB3: nop                 ; 00
 0FB4: nop                 ; 00
 0FB5: nop                 ; 00
 0FB6: nop                 ; 00
 0FB7: nop                 ; 00
-0FB8: nop                 ; FC
-0FB9: nop                 ; FF
-0FBA: and y, w            ; 95
-0FBB: or y, a             ; AA
-0FBC: or y, a             ; AA
-0FBD: add y, w            ; 24
-0FBE: sub a, x            ; 49
-0FBF: and y, w            ; 95
-0FC0: set w, $08          ; 1A 08
-0FC2: cmp a, x            ; 85
-0FC3: xor z, a            ; CA
-0FC4: or y, a             ; AA
-0FC5: int $FF             ; F6 FF
-0FC7: jmp $ADAB, w        ; EF AB AD
-0FCA: cmp a, w            ; 88
+0FB8: nop                 ; 00
+0FB9: nop                 ; 00
+0FBA: nop                 ; 00
+0FBB: nop                 ; 00
+0FBC: nop                 ; 00
+0FBD: nop                 ; FC
+0FBE: nop                 ; FF
+0FBF: nop                 ; AA
+0FC0: cmp a, y            ; 52
+0FC1: adc a, x            ; 2A
+0FC2: cmp x, $A5          ; 55 A5
+0FC4: nop                 ; AA
+0FC5: cmp a, w            ; 54
+0FC6: load z, $D525       ; 11 25 D5
+0FC9: cmpbit x            ; 5A FF
 0FCB: nop                 ; FF
-0FCC: add x, a            ; 20
-0FCD: nop                 ; 00
-0FCE: nop                 ; 00
-0FCF: nop                 ; 00
-0FD0: and w, z            ; 9D
-0FD1: or a, z             ; B5
-0FD2: sub a, y            ; 4A
-0FD3: store $0029, z      ; 12 29 00
-0FD6: nop                 ; 00
-0FD7: nop                 ; 00
-0FD8: nop                 ; 00
-0FD9: nop                 ; 00
-0FDA: nop                 ; 00
-0FDB: nop                 ; 00
+0FCC: nop                 ; FF
+0FCD: nop                 ; FF
+0FCE: jmp.z $7D10         ; 9F 10 7D
+0FD1: shr w, $00          ; 87 00
+0FD3: mul a, w            ; 40
+0FD4: nop                 ; 00
+0FD5: cmpbit z            ; 5C B5
+0FD7: and y, $12          ; 64 12
+0FD9: cmp a, w            ; 54
+0FDA: or a, z             ; 6A
+0FDB: push x              ; 01
 0FDC: nop                 ; 00
 0FDD: nop                 ; 00
 0FDE: nop                 ; 00
 0FDF: nop                 ; 00
-0FE0: nop                 ; FC
-0FE1: nop                 ; FF
-0FE2: or y, a             ; AA
-0FE3: or y, a             ; AA
-0FE4: sub a, y            ; 4A
-0FE5: mul y, z            ; 55
-0FE6: mul y, z            ; 55
-0FE7: mul x, a            ; 52
-0FE8: or x, w             ; A5
-0FE9: sub w, x            ; 44
-0FEA: mul x, z            ; 50
-0FEB: add z, w            ; 29
-0FEC: jmp.z $FFFD         ; F5 FD FF
-0FEF: nop                 ; FF
-0FF0: nop                 ; FE
-0FF1: add w, a            ; 2F
-0FF2: or y, a             ; AA
-0FF3: xor x, z            ; BE
-0FF4: push x              ; 01
-0FF5: nop                 ; 00
-0FF6: nop                 ; 00
-0FF7: nop                 ; 00
-0FF8: shl y               ; D6
-0FF9: dec z               ; 6E
-0FFA: call $A549          ; 15 49 A5
-0FFD: nop                 ; 00
-0FFE: nop                 ; 00
-0FFF: nop                 ; 00
-1000: nop                 ; 00
-1001: nop                 ; 00
-1002: nop                 ; 00
-1003: nop                 ; 00
+0FE0: nop                 ; 00
+0FE1: nop                 ; 00
+0FE2: nop                 ; 00
+0FE3: nop                 ; 00
+0FE4: nop                 ; 00
+0FE5: nop                 ; FC
+0FE6: nop                 ; FF
+0FE7: ror a               ; 92
+0FE8: cmp a, w            ; 54
+0FE9: nop                 ; A9
+0FEA: ror a               ; 92
+0FEB: cmp a, w            ; 54
+0FEC: jmp z, w            ; 95
+0FED: nop                 ; AA
+0FEE: inc w               ; 4A
+0FEF: inc w               ; 4A
+0FF0: cmp x, $EF          ; 55 EF
+0FF2: nop                 ; FF
+0FF3: nop                 ; FF
+0FF4: nop                 ; FF
+0FF5: nop                 ; FF
+0FF6: shl x, $A2          ; 7F A2
+0FF8: nop                 ; FC
+0FF9: push a              ; 05
+0FFA: nop                 ; 00
+0FFB: push x              ; 01
+0FFC: nop                 ; 00
+0FFD: nop                 ; B6
+0FFE: rol a               ; 8D
+0FFF: ror a               ; 92
+1000: mul z, $40          ; 44 40
+1002: add a, y            ; 21
+1003: push x              ; 01
 1004: nop                 ; 00
 1005: nop                 ; 00
 1006: nop                 ; 00
 1007: nop                 ; 00
-1008: nop                 ; FC
-1009: nop                 ; FF
-100A: or y, a             ; AA
-100B: mul x, a            ; 52
-100C: add z, a            ; 2A
-100D: mul y, z            ; 55
-100E: or x, w             ; A5
-100F: or y, a             ; AA
-1010: mul y, y            ; 54
-1011: store $D525, y      ; 11 25 D5
-1014: mul z, z            ; 5A
-1015: nop                 ; FF
-1016: nop                 ; FF
-1017: nop                 ; FF
-1018: nop                 ; FF
-1019: and a, x            ; 9F
-101A: store $877D, x      ; 10 7D 87
-101D: nop                 ; 00
-101E: sub z, y            ; 40
-101F: nop                 ; 00
-1020: mul z, a            ; 5C
-1021: or a, z             ; B5
-1022: mul a, z            ; 64
-1023: store $6A54, z      ; 12 54 6A
-1026: push x              ; 01
-1027: nop                 ; 00
-1028: nop                 ; 00
-1029: nop                 ; 00
-102A: nop                 ; 00
+1008: nop                 ; 00
+1009: nop                 ; 00
+100A: nop                 ; 00
+100B: nop                 ; 00
+100C: nop                 ; 00
+100D: nop                 ; FC
+100E: nop                 ; FF
+100F: cmp x, $95          ; 55 95
+1011: nop                 ; AA
+1012: nop                 ; AA
+1013: adc a, x            ; 2A
+1014: nop                 ; A9
+1015: nop                 ; AA
+1016: adc a, x            ; 2A
+1017: cmp a, x            ; 51
+1018: nop                 ; D5
+1019: nop                 ; BA
+101A: nop                 ; FF
+101B: nop                 ; FF
+101C: nop                 ; FF
+101D: nop                 ; FF
+101E: nop                 ; FF
+101F: pop y               ; 09
+1020: nop                 ; F1
+1021: adc x, $04          ; 2F 04
+1023: nop                 ; 00
+1024: nop                 ; 00
+1025: or x, $2B           ; 6C 2B
+1027: cmp a, w            ; 54
+1028: ror w               ; 91
+1029: pop x               ; 08
+102A: rol y               ; 8A
 102B: nop                 ; 00
 102C: nop                 ; 00
 102D: nop                 ; 00
 102E: nop                 ; 00
 102F: nop                 ; 00
-1030: nop                 ; FC
-1031: nop                 ; FF
-1032: and x, a            ; 92
-1033: mul y, y            ; 54
-1034: or y, w             ; A9
-1035: and x, a            ; 92
-1036: mul y, y            ; 54
-1037: and y, w            ; 95
-1038: or y, a             ; AA
-1039: sub a, y            ; 4A
-103A: sub a, y            ; 4A
-103B: mul y, z            ; 55
-103C: jmp $FFFF, w        ; EF FF FF
-103F: nop                 ; FF
-1040: nop                 ; FF
-1041: cmp z, a            ; 7F
-1042: and a, w            ; A2
-1043: nop                 ; FC
-1044: push a              ; 05
-1045: nop                 ; 00
-1046: push x              ; 01
-1047: nop                 ; 00
-1048: or a, w             ; B6
-1049: cmpbit w            ; 8D 92
-104B: sub w, x            ; 44
-104C: sub z, y            ; 40
-104D: add y, x            ; 21
-104E: push x              ; 01
-104F: nop                 ; 00
-1050: nop                 ; 00
+1030: nop                 ; 00
+1031: nop                 ; 00
+1032: nop                 ; 00
+1033: nop                 ; 00
+1034: nop                 ; 00
+1035: nop                 ; FC
+1036: nop                 ; FF
+1037: add a, a            ; 24
+1038: nop                 ; A9
+1039: nop                 ; AA
+103A: adc a, x            ; 2A
+103B: cmp x, $55          ; 55 55
+103D: cmp x, $D5          ; 55 D5
+103F: nop                 ; AA
+1040: xor x, $FF          ; 7A FF
+1042: nop                 ; FF
+1043: nop                 ; FF
+1044: nop                 ; FF
+1045: nop                 ; FF
+1046: nop                 ; FF
+1047: mul w, $E4          ; 45 E4
+1049: store $0000, w      ; 17 00 00
+104C: nop                 ; 00
+104D: nop                 ; A8
+104E: jmp $5522, x        ; 96 22 55
 1051: nop                 ; 00
-1052: nop                 ; 00
-1053: nop                 ; 00
+1052: nop                 ; A9
+1053: push y              ; 02
 1054: nop                 ; 00
 1055: nop                 ; 00
 1056: nop                 ; 00
 1057: nop                 ; 00
-1058: nop                 ; FC
-1059: nop                 ; FF
-105A: mul y, z            ; 55
-105B: and y, w            ; 95
-105C: or y, a             ; AA
-105D: or y, a             ; AA
-105E: add z, a            ; 2A
-105F: or y, w             ; A9
-1060: or y, a             ; AA
-1061: add z, a            ; 2A
-1062: mul x, w            ; 51
-1063: shl x               ; D5
-1064: not w               ; BA
-1065: nop                 ; FF
-1066: nop                 ; FF
-1067: nop                 ; FF
-1068: nop                 ; FF
+1058: nop                 ; 00
+1059: nop                 ; 00
+105A: nop                 ; 00
+105B: nop                 ; 00
+105C: nop                 ; 00
+105D: nop                 ; FC
+105E: nop                 ; FF
+105F: cmp x, $4A          ; 55 4A
+1061: cmp a, y            ; 52
+1062: nop                 ; AA
+1063: cmp a, y            ; 52
+1064: cmp x, $55          ; 55 55
+1066: nop                 ; B5
+1067: nop                 ; AA
+1068: nop                 ; D6
 1069: nop                 ; FF
-106A: pop w               ; 09
-106B: jmp.eq $042F        ; F1 2F 04
-106E: nop                 ; 00
-106F: nop                 ; 00
-1070: dec x               ; 6C
-1071: add w, x            ; 2B
-1072: mul y, y            ; 54
-1073: and x, w            ; 91
-1074: pop z               ; 08
-1075: cmpbit x            ; 8A 00
-1077: nop                 ; 00
-1078: nop                 ; 00
-1079: nop                 ; 00
-107A: nop                 ; 00
-107B: nop                 ; 00
+106A: nop                 ; FF
+106B: nop                 ; FF
+106C: nop                 ; FF
+106D: nop                 ; FF
+106E: nop                 ; FF
+106F: shl a, $88          ; 83 88
+1071: nop                 ; BF
+1072: load y, $0000       ; 10 00 00
+1075: nop                 ; D0
+1076: nop                 ; BA
+1077: inc y               ; 48
+1078: shr y, $00          ; 85 00
+107A: add a, z            ; 22
+107B: push x              ; 01
 107C: nop                 ; 00
 107D: nop                 ; 00
 107E: nop                 ; 00
 107F: nop                 ; 00
-1080: nop                 ; FC
-1081: nop                 ; FF
-1082: add y, w            ; 24
-1083: or y, w             ; A9
-1084: or y, a             ; AA
-1085: add z, a            ; 2A
-1086: mul y, z            ; 55
-1087: mul y, z            ; 55
-1088: mul y, z            ; 55
-1089: shl x               ; D5
-108A: or y, a             ; AA
-108B: cmp y, a            ; 7A
-108C: nop                 ; FF
-108D: nop                 ; FF
-108E: nop                 ; FF
-108F: nop                 ; FF
-1090: nop                 ; FF
+1080: nop                 ; 00
+1081: nop                 ; 00
+1082: nop                 ; 00
+1083: nop                 ; 00
+1084: nop                 ; 00
+1085: nop                 ; FC
+1086: nop                 ; FF
+1087: inc z               ; 49
+1088: nop                 ; A9
+1089: nop                 ; AA
+108A: nop                 ; AA
+108B: nop                 ; AA
+108C: nop                 ; AA
+108D: nop                 ; AA
+108E: nop                 ; D6
+108F: cmp y, $FB          ; 56 FB
 1091: nop                 ; FF
-1092: sub w, y            ; 45
-1093: ror x               ; E4
-1094: set x, $00          ; 17 00
-1096: nop                 ; 00
-1097: nop                 ; 00
-1098: or y, z             ; A8
-1099: and y, a            ; 96
-109A: add y, y            ; 22
-109B: mul y, z            ; 55
+1092: nop                 ; FF
+1093: nop                 ; FF
+1094: nop                 ; FF
+1095: nop                 ; FF
+1096: nop                 ; FF
+1097: push a              ; 05
+1098: mul x, $FF          ; 42 FF
+109A: push x              ; 01
+109B: mul a, w            ; 40
 109C: nop                 ; 00
-109D: or y, w             ; A9
-109E: push y              ; 02
-109F: nop                 ; 00
-10A0: nop                 ; 00
+109D: cmp a, y            ; 52
+109E: store $2952, y      ; 15 52 29
 10A1: nop                 ; 00
-10A2: nop                 ; 00
-10A3: nop                 ; 00
+10A2: shr a, $00          ; 88 00
 10A4: nop                 ; 00
 10A5: nop                 ; 00
 10A6: nop                 ; 00
 10A7: nop                 ; 00
-10A8: nop                 ; FC
-10A9: nop                 ; FF
-10AA: mul y, z            ; 55
-10AB: sub a, y            ; 4A
-10AC: mul x, a            ; 52
-10AD: or y, a             ; AA
-10AE: mul x, a            ; 52
-10AF: mul y, z            ; 55
-10B0: mul y, z            ; 55
-10B1: or a, z             ; B5
-10B2: or y, a             ; AA
-10B3: shl y               ; D6
-10B4: nop                 ; FF
-10B5: nop                 ; FF
-10B6: nop                 ; FF
-10B7: nop                 ; FF
-10B8: nop                 ; FF
+10A8: nop                 ; 00
+10A9: nop                 ; 00
+10AA: nop                 ; 00
+10AB: nop                 ; 00
+10AC: nop                 ; 00
+10AD: nop                 ; FC
+10AE: nop                 ; FF
+10AF: adc a, x            ; 2A
+10B0: add x, $95          ; 25 95
+10B2: nop                 ; AA
+10B3: nop                 ; AA
+10B4: nop                 ; AA
+10B5: nop                 ; AA
+10B6: nop                 ; B5
+10B7: nop                 ; FD
+10B8: nop                 ; DE
 10B9: nop                 ; FF
-10BA: cmp w, w            ; 83
-10BB: cmp a, w            ; 88
-10BC: xor x, w            ; BF
-10BD: store $0000, x      ; 10 00 00
-10C0: xor a, x            ; D0
-10C1: not w               ; BA
-10C2: sub w, a            ; 48
-10C3: cmp a, x            ; 85
+10BA: nop                 ; FF
+10BB: nop                 ; FF
+10BC: nop                 ; FF
+10BD: nop                 ; FF
+10BE: nop                 ; FF
+10BF: add a, y            ; 21
+10C0: push w              ; 04
+10C1: xor z, $07          ; 7C 07
+10C3: nop                 ; 00
 10C4: nop                 ; 00
-10C5: add y, y            ; 22
-10C6: push x              ; 01
-10C7: nop                 ; 00
-10C8: nop                 ; 00
-10C9: nop                 ; 00
-10CA: nop                 ; 00
-10CB: nop                 ; 00
+10C5: int $EB             ; A0 EB
+10C7: mul z, $AA          ; 44 AA
+10C9: push x              ; 01
+10CA: add x, $05          ; 25 05
 10CC: nop                 ; 00
 10CD: nop                 ; 00
 10CE: nop                 ; 00
 10CF: nop                 ; 00
-10D0: nop                 ; FC
-10D1: nop                 ; FF
-10D2: sub a, x            ; 49
-10D3: or y, w             ; A9
-10D4: or y, a             ; AA
-10D5: or y, a             ; AA
-10D6: or y, a             ; AA
-10D7: or y, a             ; AA
-10D8: or y, a             ; AA
-10D9: shl y               ; D6
-10DA: mul y, w            ; 56
-10DB: nop                 ; FB
-10DC: nop                 ; FF
-10DD: nop                 ; FF
-10DE: nop                 ; FF
-10DF: nop                 ; FF
-10E0: nop                 ; FF
+10D0: nop                 ; 00
+10D1: nop                 ; 00
+10D2: nop                 ; 00
+10D3: nop                 ; 00
+10D4: nop                 ; 00
+10D5: nop                 ; FC
+10D6: nop                 ; FF
+10D7: cmp a, y            ; 52
+10D8: cmp x, $A9          ; 55 A9
+10DA: nop                 ; AA
+10DB: inc w               ; 4A
+10DC: cmp x, $B5          ; 55 B5
+10DE: nop                 ; D6
+10DF: cmp y, $F7          ; 56 F7
 10E1: nop                 ; FF
-10E2: push a              ; 05
-10E3: sub z, w            ; 42
+10E2: nop                 ; FF
+10E3: nop                 ; FF
 10E4: nop                 ; FF
-10E5: push x              ; 01
-10E6: sub z, y            ; 40
-10E7: nop                 ; 00
-10E8: mul x, a            ; 52
-10E9: call $2952          ; 15 52 29
+10E5: nop                 ; FF
+10E6: and a, x            ; 5F
+10E7: shr x, $90          ; 84 90
+10E9: nop                 ; FA
+10EA: pop.a               ; 0D
+10EB: nop                 ; 00
 10EC: nop                 ; 00
-10ED: cmp a, w            ; 88
-10EE: nop                 ; 00
-10EF: nop                 ; 00
-10F0: nop                 ; 00
-10F1: nop                 ; 00
-10F2: nop                 ; 00
-10F3: nop                 ; 00
+10ED: nop                 ; B0
+10EE: sub z, $92          ; 3A 92
+10F0: xor x, $03          ; 7A 03
+10F2: ror z               ; 90
+10F3: push y              ; 02
 10F4: nop                 ; 00
 10F5: nop                 ; 00
 10F6: nop                 ; 00
 10F7: nop                 ; 00
-10F8: nop                 ; FC
-10F9: nop                 ; FF
-10FA: add z, a            ; 2A
-10FB: add y, a            ; 25
-10FC: and y, w            ; 95
-10FD: or y, a             ; AA
-10FE: or y, a             ; AA
-10FF: or y, a             ; AA
-1100: or y, a             ; AA
-1101: or a, z             ; B5
-1102: nop                 ; FD
-1103: shr a               ; DE
-1104: nop                 ; FF
-1105: nop                 ; FF
-1106: nop                 ; FF
-1107: nop                 ; FF
+10F8: nop                 ; 00
+10F9: nop                 ; 00
+10FA: nop                 ; 00
+10FB: nop                 ; 00
+10FC: nop                 ; 00
+10FD: nop                 ; FC
+10FE: nop                 ; FF
+10FF: jmp z, w            ; 95
+1100: ror a               ; 92
+1101: nop                 ; AA
+1102: inc w               ; 4A
+1103: cmp x, $55          ; 55 55
+1105: or y, $BB           ; 6D BB
+1107: nop                 ; FD
 1108: nop                 ; FF
 1109: nop                 ; FF
-110A: add y, x            ; 21
-110B: push w              ; 04
-110C: cmp z, y            ; 7C
-110D: pop y               ; 07
-110E: nop                 ; 00
-110F: nop                 ; 00
-1110: and a, y            ; A0
-1111: jmp z, w            ; EB
-1112: sub w, x            ; 44
-1113: or y, a             ; AA
-1114: push x              ; 01
-1115: add y, a            ; 25
-1116: push a              ; 05
-1117: nop                 ; 00
-1118: nop                 ; 00
-1119: nop                 ; 00
-111A: nop                 ; 00
-111B: nop                 ; 00
+110A: nop                 ; FF
+110B: nop                 ; FF
+110C: nop                 ; FF
+110D: nop                 ; FF
+110E: adc x, $01          ; 2F 01
+1110: adc w, $E0          ; 32 E0
+1112: sub a, w            ; 37
+1113: nop                 ; 00
+1114: nop                 ; 00
+1115: int $4B             ; A0 4B
+1117: inc z               ; 49
+1118: nop                 ; D7
+1119: pop.f               ; 0E
+111A: inc w               ; 4A
+111B: push a              ; 05
 111C: nop                 ; 00
 111D: nop                 ; 00
 111E: nop                 ; 00
 111F: nop                 ; 00
-1120: nop                 ; FC
-1121: nop                 ; FF
-1122: mul x, a            ; 52
-1123: mul y, z            ; 55
-1124: or y, w             ; A9
-1125: or y, a             ; AA
-1126: sub a, y            ; 4A
-1127: mul y, z            ; 55
-1128: or a, z             ; B5
-1129: shl y               ; D6
-112A: mul y, w            ; 56
-112B: resume              ; F7 FF
-112D: nop                 ; FF
-112E: nop                 ; FF
-112F: nop                 ; FF
+1120: nop                 ; 00
+1121: nop                 ; 00
+1122: nop                 ; 00
+1123: nop                 ; 00
+1124: nop                 ; 00
+1125: nop                 ; FC
+1126: nop                 ; FF
+1127: cmp a, w            ; 54
+1128: nop                 ; AA
+1129: cmp a, y            ; 52
+112A: nop                 ; AA
+112B: nop                 ; AA
+112C: nop                 ; AA
+112D: nop                 ; D5
+112E: nop                 ; EE
+112F: nop                 ; FE
 1130: nop                 ; FF
-1131: mul w, z            ; 5F
-1132: cmp w, a            ; 84
-1133: and x, z            ; 90
-1134: nop                 ; FA
-1135: load z, $0000       ; 0D 00 00
-1138: or w, y             ; B0
-1139: sub y, x            ; 3A
-113A: and x, a            ; 92
-113B: cmp y, a            ; 7A
-113C: push z              ; 03
-113D: and x, z            ; 90
-113E: push y              ; 02
-113F: nop                 ; 00
-1140: nop                 ; 00
-1141: nop                 ; 00
-1142: nop                 ; 00
-1143: nop                 ; 00
+1131: nop                 ; FF
+1132: nop                 ; FF
+1133: nop                 ; FF
+1134: nop                 ; FF
+1135: nop                 ; FF
+1136: jmp $1110, y        ; 97 10 11
+1139: nop                 ; E8
+113A: and a, x            ; 5F
+113B: nop                 ; 00
+113C: nop                 ; 00
+113D: nop                 ; AA
+113E: add y, $A4          ; 26 A4
+1140: nop                 ; FD
+1141: store $07B4, y      ; 15 B4 07
 1144: nop                 ; 00
 1145: nop                 ; 00
 1146: nop                 ; 00
 1147: nop                 ; 00
-1148: nop                 ; FC
-1149: nop                 ; FF
-114A: and y, w            ; 95
-114B: and x, a            ; 92
-114C: or y, a             ; AA
-114D: sub a, y            ; 4A
-114E: mul y, z            ; 55
-114F: mul y, z            ; 55
-1150: dec y               ; 6D
-1151: not a               ; BB
-1152: nop                 ; FD
-1153: nop                 ; FF
-1154: nop                 ; FF
-1155: nop                 ; FF
-1156: nop                 ; FF
-1157: nop                 ; FF
+1148: nop                 ; 00
+1149: nop                 ; 00
+114A: nop                 ; 00
+114B: nop                 ; 00
+114C: nop                 ; 00
+114D: nop                 ; FC
+114E: nop                 ; FF
+114F: inc w               ; 4A
+1150: nop                 ; A5
+1151: cmp a, w            ; 54
+1152: cmp x, $55          ; 55 55
+1154: cmp x, $BB          ; 55 BB
+1156: nop                 ; B5
+1157: nop                 ; DB
 1158: nop                 ; FF
-1159: add w, a            ; 2F
-115A: push x              ; 01
-115B: add a, z            ; 32
-115C: rol y               ; E0
-115D: sub x, z            ; 37
-115E: nop                 ; 00
-115F: nop                 ; 00
-1160: and a, y            ; A0
-1161: sub a, z            ; 4B
-1162: sub a, x            ; 49
-1163: shl z               ; D7
-1164: load w, $054A       ; 0E 4A 05
-1167: nop                 ; 00
-1168: nop                 ; 00
-1169: nop                 ; 00
-116A: nop                 ; 00
-116B: nop                 ; 00
+1159: nop                 ; FF
+115A: nop                 ; FF
+115B: nop                 ; FF
+115C: nop                 ; FF
+115D: nop                 ; FF
+115E: add x, $02          ; 25 02
+1160: shr x, $00          ; 84 00
+1162: nop                 ; FF
+1163: push x              ; 01
+1164: shl y, $D6          ; 80 D6
+1166: rol x               ; 89
+1167: cmpbit x            ; 5A 5B
+1169: sub a, w            ; 37
+116A: nop                 ; EC
+116B: pop z               ; 0A
 116C: nop                 ; 00
 116D: nop                 ; 00
 116E: nop                 ; 00
 116F: nop                 ; 00
-1170: nop                 ; FC
-1171: nop                 ; FF
-1172: mul y, y            ; 54
-1173: or y, a             ; AA
-1174: mul x, a            ; 52
-1175: or y, a             ; AA
-1176: or y, a             ; AA
-1177: or y, a             ; AA
-1178: shl x               ; D5
-1179: jmp $FFFE, z        ; EE FE FF
-117C: nop                 ; FF
-117D: nop                 ; FF
-117E: nop                 ; FF
+1170: nop                 ; 00
+1171: nop                 ; 00
+1172: nop                 ; 00
+1173: nop                 ; 00
+1174: nop                 ; 00
+1175: nop                 ; FC
+1176: nop                 ; FF
+1177: cmp x, $29          ; 55 29
+1179: cmp x, $55          ; 55 55
+117B: cmp x, $B5          ; 55 B5
+117D: nop                 ; D6
+117E: nop                 ; DE
 117F: nop                 ; FF
 1180: nop                 ; FF
-1181: and z, x            ; 97
-1182: store $E811, x      ; 10 11 E8
-1185: mul w, z            ; 5F
-1186: nop                 ; 00
-1187: nop                 ; 00
-1188: or y, a             ; AA
-1189: add z, x            ; 26
-118A: or x, z             ; A4
-118B: nop                 ; FD
-118C: call $07B4          ; 15 B4 07
-118F: nop                 ; 00
-1190: nop                 ; 00
-1191: nop                 ; 00
-1192: nop                 ; 00
-1193: nop                 ; 00
+1181: nop                 ; FF
+1182: nop                 ; FF
+1183: nop                 ; FF
+1184: nop                 ; FF
+1185: nop                 ; FF
+1186: cmp x, $81          ; 55 81
+1188: nop                 ; 00
+1189: mul a, w            ; 40
+118A: nop                 ; BF
+118B: push y              ; 02
+118C: and a, y            ; 60
+118D: mul a, x            ; 3D
+118E: cmp a, y            ; 52
+118F: nop                 ; EA
+1190: nop                 ; ED
+1191: nop                 ; AD
+1192: nop                 ; B4
+1193: push.a              ; 06
 1194: nop                 ; 00
 1195: nop                 ; 00
 1196: nop                 ; 00
 1197: nop                 ; 00
-1198: nop                 ; FC
-1199: nop                 ; FF
-119A: sub a, y            ; 4A
-119B: or x, w             ; A5
-119C: mul y, y            ; 54
-119D: mul y, z            ; 55
-119E: mul y, z            ; 55
-119F: mul y, z            ; 55
-11A0: not a               ; BB
-11A1: or a, z             ; B5
-11A2: shr y               ; DB
-11A3: nop                 ; FF
-11A4: nop                 ; FF
-11A5: nop                 ; FF
-11A6: nop                 ; FF
-11A7: nop                 ; FF
+1198: nop                 ; 00
+1199: nop                 ; 00
+119A: nop                 ; 00
+119B: nop                 ; 00
+119C: nop                 ; 00
+119D: nop                 ; FC
+119E: nop                 ; FF
+119F: cmp a, y            ; 52
+11A0: nop                 ; AA
+11A1: inc w               ; 4A
+11A2: cmp x, $55          ; 55 55
+11A4: or y, $BB           ; 6D BB
+11A6: nop                 ; F5
+11A7: nop                 ; FE
 11A8: nop                 ; FF
-11A9: add y, a            ; 25
-11AA: push y              ; 02
-11AB: cmp w, a            ; 84
-11AC: nop                 ; 00
-11AD: nop                 ; FF
-11AE: push x              ; 01
-11AF: cmp w, x            ; 80
-11B0: shl y               ; D6
-11B1: cmp a, a            ; 89
-11B2: mul z, z            ; 5A
-11B3: mul z, w            ; 5B
-11B4: sub x, z            ; 37
-11B5: jmp $000A, x        ; EC 0A 00
-11B8: nop                 ; 00
-11B9: nop                 ; 00
-11BA: nop                 ; 00
-11BB: nop                 ; 00
+11A9: nop                 ; FF
+11AA: nop                 ; FF
+11AB: nop                 ; FF
+11AC: nop                 ; FF
+11AD: shl x, $C1          ; 7F C1
+11AF: pop x               ; 08
+11B0: add x, $02          ; 25 02
+11B2: nop                 ; FC
+11B3: push.f              ; 07
+11B4: cmp a, w            ; 54
+11B5: nop                 ; CB
+11B6: nop                 ; A4
+11B7: not a               ; 75
+11B8: shl x, $5B          ; 7F 5B
+11BA: nop                 ; AD
+11BB: pop.a               ; 0D
 11BC: nop                 ; 00
 11BD: nop                 ; 00
 11BE: nop                 ; 00
 11BF: nop                 ; 00
-11C0: nop                 ; FC
-11C1: nop                 ; FF
-11C2: mul y, z            ; 55
-11C3: add z, w            ; 29
-11C4: mul y, z            ; 55
-11C5: mul y, z            ; 55
-11C6: mul y, z            ; 55
-11C7: or a, z             ; B5
-11C8: shl y               ; D6
-11C9: shr a               ; DE
-11CA: nop                 ; FF
-11CB: nop                 ; FF
-11CC: nop                 ; FF
-11CD: nop                 ; FF
-11CE: nop                 ; FF
+11C0: nop                 ; 00
+11C1: nop                 ; 00
+11C2: nop                 ; 00
+11C3: nop                 ; 00
+11C4: nop                 ; 00
+11C5: nop                 ; FC
+11C6: nop                 ; FF
+11C7: nop                 ; AA
+11C8: inc w               ; 4A
+11C9: cmp x, $55          ; 55 55
+11CB: nop                 ; B5
+11CC: nop                 ; AA
+11CD: nop                 ; ED
+11CE: nop                 ; BE
 11CF: nop                 ; FF
 11D0: nop                 ; FF
-11D1: mul y, z            ; 55
-11D2: cmp w, y            ; 81
-11D3: nop                 ; 00
-11D4: sub z, y            ; 40
-11D5: xor x, w            ; BF
-11D6: push y              ; 02
-11D7: mul w, w            ; 60
-11D8: sub y, w            ; 3D
-11D9: mul x, a            ; 52
-11DA: jmp x, y            ; EA
-11DB: jmp $B4AD, y        ; ED AD B4
-11DE: pop x               ; 06
-11DF: nop                 ; 00
-11E0: nop                 ; 00
-11E1: nop                 ; 00
-11E2: nop                 ; 00
-11E3: nop                 ; 00
+11D1: nop                 ; FF
+11D2: nop                 ; FF
+11D3: nop                 ; FF
+11D4: nop                 ; FF
+11D5: nop                 ; BF
+11D6: nop                 ; F4
+11D7: push z              ; 03
+11D8: nop                 ; 00
+11D9: nop                 ; 00
+11DA: nop                 ; FA
+11DB: dec y               ; 4D
+11DC: nop                 ; EA
+11DD: cmp x, $DA          ; 55 DA
+11DF: nop                 ; DA
+11E0: nop                 ; D5
+11E1: or w, $B5           ; 6F B5
+11E3: pop z               ; 0A
 11E4: nop                 ; 00
 11E5: nop                 ; 00
 11E6: nop                 ; 00
 11E7: nop                 ; 00
-11E8: nop                 ; FC
-11E9: nop                 ; FF
-11EA: mul x, a            ; 52
-11EB: or y, a             ; AA
-11EC: sub a, y            ; 4A
-11ED: mul y, z            ; 55
-11EE: mul y, z            ; 55
-11EF: dec y               ; 6D
-11F0: not a               ; BB
-11F1: jmp.z $FFFE         ; F5 FE FF
-11F4: nop                 ; FF
-11F5: nop                 ; FF
-11F6: nop                 ; FF
+11E8: nop                 ; 00
+11E9: nop                 ; 00
+11EA: nop                 ; 00
+11EB: nop                 ; 00
+11EC: nop                 ; 00
+11ED: nop                 ; FC
+11EE: nop                 ; FF
+11EF: jmp x, y            ; 94
+11F0: nop                 ; AA
+11F1: cmp a, w            ; 54
+11F2: cmp x, $AD          ; 55 AD
+11F4: or y, $BB           ; 6D BB
+11F6: nop                 ; F7
 11F7: nop                 ; FF
-11F8: cmp z, a            ; 7F
-11F9: xor y, x            ; C1
-11FA: pop z               ; 08
-11FB: add y, a            ; 25
-11FC: push y              ; 02
-11FD: nop                 ; FC
-11FE: pop y               ; 07
-11FF: mul y, y            ; 54
-1200: xor w, x            ; CB
-1201: or x, z             ; A4
-1202: cmp x, a            ; 75
-1203: cmp z, a            ; 7F
-1204: mul z, w            ; 5B
-1205: or z, w             ; AD
-1206: load z, $0000       ; 0D 00 00
-1209: nop                 ; 00
-120A: nop                 ; 00
-120B: nop                 ; 00
-120C: nop                 ; 00
+11F8: nop                 ; FF
+11F9: nop                 ; FF
+11FA: nop                 ; FF
+11FB: nop                 ; FF
+11FC: nop                 ; FE
+11FD: and a, x            ; 5F
+11FE: nop                 ; C1
+11FF: store $0085, w      ; 17 85 00
+1202: nop                 ; E0
+1203: cmpbit y            ; 5B 51
+1205: cmp x, $B5          ; 55 B5
+1207: xor a, y            ; 77
+1208: nop                 ; FF
+1209: nop                 ; FA
+120A: nop                 ; EE
+120B: set w, $00          ; 1E 00
 120D: nop                 ; 00
 120E: nop                 ; 00
 120F: nop                 ; 00
-1210: nop                 ; FC
-1211: nop                 ; FF
-1212: or y, a             ; AA
-1213: sub a, y            ; 4A
-1214: mul y, z            ; 55
-1215: mul y, z            ; 55
-1216: or a, z             ; B5
-1217: or y, a             ; AA
-1218: jmp $FFBE, y        ; ED BE FF
-121B: nop                 ; FF
-121C: nop                 ; FF
-121D: nop                 ; FF
-121E: nop                 ; FF
+1210: nop                 ; 00
+1211: nop                 ; 00
+1212: nop                 ; 00
+1213: nop                 ; 00
+1214: nop                 ; 00
+1215: nop                 ; FC
+1216: nop                 ; FF
+1217: cmp x, $A9          ; 55 A9
+1219: nop                 ; AA
+121A: nop                 ; AA
+121B: nop                 ; B5
+121C: nop                 ; B6
+121D: nop                 ; ED
+121E: nop                 ; FE
 121F: nop                 ; FF
-1220: xor x, w            ; BF
-1221: jmp.lt $0003        ; F4 03 00
-1224: nop                 ; 00
-1225: nop                 ; FA
-1226: sub a, a            ; 4D
-1227: jmp x, y            ; EA
-1228: mul y, z            ; 55
-1229: shr x               ; DA
-122A: shr x               ; DA
-122B: shl x               ; D5
-122C: dec w               ; 6F
-122D: or a, z             ; B5
-122E: pop a               ; 0A
-122F: nop                 ; 00
-1230: nop                 ; 00
-1231: nop                 ; 00
-1232: nop                 ; 00
-1233: nop                 ; 00
+1220: nop                 ; FF
+1221: nop                 ; FF
+1222: nop                 ; FF
+1223: nop                 ; AF
+1224: nop                 ; EB
+1225: adc x, $F4          ; 2F F4
+1227: push z              ; 03
+1228: add a, x            ; 20
+1229: pop x               ; 08
+122A: nop                 ; D0
+122B: or w, $BD           ; 6F BD
+122D: shl y, $DE          ; 80 DE
+122F: nop                 ; DA
+1230: cmp x, $AF          ; 55 AF
+1232: nop                 ; B5
+1233: push x              ; 01
 1234: nop                 ; 00
 1235: nop                 ; 00
 1236: nop                 ; 00
 1237: nop                 ; 00
-1238: nop                 ; FC
-1239: nop                 ; FF
-123A: and y, z            ; 94
-123B: or y, a             ; AA
-123C: mul y, y            ; 54
-123D: mul y, z            ; 55
-123E: or z, w             ; AD
-123F: dec y               ; 6D
-1240: not a               ; BB
-1241: resume              ; F7 FF
-1243: nop                 ; FF
-1244: nop                 ; FF
-1245: nop                 ; FF
-1246: nop                 ; FF
-1247: nop                 ; FE
-1248: mul w, z            ; 5F
-1249: xor y, x            ; C1
-124A: set x, $85          ; 17 85
-124C: nop                 ; 00
-124D: rol y               ; E0
-124E: mul z, w            ; 5B
-124F: mul x, w            ; 51
-1250: mul y, z            ; 55
-1251: or a, z             ; B5
-1252: cmp y, y            ; 77
-1253: nop                 ; FF
-1254: nop                 ; FA
-1255: jmp $001E, z        ; EE 1E 00
-1258: nop                 ; 00
-1259: nop                 ; 00
-125A: nop                 ; 00
-125B: nop                 ; 00
+1238: nop                 ; 00
+1239: nop                 ; 00
+123A: nop                 ; 00
+123B: nop                 ; 00
+123C: nop                 ; 00
+123D: nop                 ; FC
+123E: nop                 ; FF
+123F: cmp a, y            ; 52
+1240: jmp z, w            ; 95
+1241: nop                 ; AA
+1242: nop                 ; AA
+1243: nop                 ; D6
+1244: or y, $BB           ; 6D BB
+1246: nop                 ; FD
+1247: nop                 ; FF
+1248: nop                 ; FF
+1249: nop                 ; FF
+124A: nop                 ; FF
+124B: nop                 ; FB
+124C: cmpbit x            ; 5A 4B
+124E: nop                 ; C1
+124F: push a              ; 05
+1250: store $0000, y      ; 15 00 00
+1253: nop                 ; DF
+1254: cmp z, $02          ; 57 02
+1256: nop                 ; B4
+1257: xor a, y            ; 77
+1258: nop                 ; FF
+1259: nop                 ; FD
+125A: cmpbit y            ; 5B 15
 125C: nop                 ; 00
 125D: nop                 ; 00
 125E: nop                 ; 00
 125F: nop                 ; 00
-1260: nop                 ; FC
-1261: nop                 ; FF
-1262: mul y, z            ; 55
-1263: or y, w             ; A9
-1264: or y, a             ; AA
-1265: or y, a             ; AA
-1266: or a, z             ; B5
-1267: or a, w             ; B6
-1268: jmp $FFFE, y        ; ED FE FF
-126B: nop                 ; FF
-126C: nop                 ; FF
-126D: nop                 ; FF
-126E: or w, x             ; AF
-126F: jmp z, w            ; EB
-1270: add w, a            ; 2F
-1271: jmp.lt $2003        ; F4 03 20
-1274: pop z               ; 08
-1275: xor a, x            ; D0
-1276: dec w               ; 6F
-1277: xor x, y            ; BD
-1278: cmp w, x            ; 80
-1279: shr a               ; DE
-127A: shr x               ; DA
-127B: mul y, z            ; 55
-127C: or w, x             ; AF
-127D: or a, z             ; B5
-127E: push x              ; 01
-127F: nop                 ; 00
-1280: nop                 ; 00
-1281: nop                 ; 00
-1282: nop                 ; 00
-1283: nop                 ; 00
+1260: nop                 ; 00
+1261: nop                 ; 00
+1262: nop                 ; 00
+1263: nop                 ; 00
+1264: nop                 ; 00
+1265: nop                 ; FC
+1266: nop                 ; FF
+1267: nop                 ; AA
+1268: nop                 ; AA
+1269: nop                 ; AA
+126A: or a, z             ; 6A
+126B: or y, $BB           ; 6D BB
+126D: nop                 ; ED
+126E: nop                 ; FF
+126F: nop                 ; FF
+1270: nop                 ; FF
+1271: nop                 ; FF
+1272: shl x, $2D          ; 7F 2D
+1274: cmp x, $25          ; 55 25
+1276: nop                 ; E8
+1277: mul y, $30          ; 43 30
+1279: shl y, $40          ; 80 40
+127B: not a               ; 75
+127C: adc a, w            ; 2D
+127D: nop                 ; 00
+127E: nop                 ; DA
+127F: nop                 ; EA
+1280: shl x, $57          ; 7F 57
+1282: cmp z, $04          ; 57 04
 1284: nop                 ; 00
 1285: nop                 ; 00
 1286: nop                 ; 00
 1287: nop                 ; 00
-1288: nop                 ; FC
-1289: nop                 ; FF
-128A: mul x, a            ; 52
-128B: and y, w            ; 95
-128C: or y, a             ; AA
-128D: or y, a             ; AA
-128E: shl y               ; D6
-128F: dec y               ; 6D
-1290: not a               ; BB
-1291: nop                 ; FD
-1292: nop                 ; FF
-1293: nop                 ; FF
-1294: nop                 ; FF
-1295: nop                 ; FF
-1296: nop                 ; FB
-1297: mul z, z            ; 5A
-1298: sub a, z            ; 4B
-1299: xor y, x            ; C1
-129A: push a              ; 05
-129B: call $0000          ; 15 00 00
-129E: rol x               ; DF
-129F: mul y, a            ; 57
-12A0: push y              ; 02
-12A1: or a, y             ; B4
-12A2: cmp y, y            ; 77
-12A3: nop                 ; FF
-12A4: nop                 ; FD
-12A5: mul z, w            ; 5B
-12A6: call $0000          ; 15 00 00
-12A9: nop                 ; 00
-12AA: nop                 ; 00
-12AB: nop                 ; 00
-12AC: nop                 ; 00
+1288: nop                 ; 00
+1289: nop                 ; 00
+128A: nop                 ; 00
+128B: nop                 ; 00
+128C: nop                 ; 00
+128D: nop                 ; FC
+128E: nop                 ; FF
+128F: adc a, x            ; 2A
+1290: cmp x, $55          ; 55 55
+1292: cmp x, $DB          ; 55 DB
+1294: or z, $BB           ; 6E BB
+1296: nop                 ; FF
+1297: nop                 ; FF
+1298: nop                 ; FF
+1299: nop                 ; FF
+129A: nop                 ; DF
+129B: nop                 ; DB
+129C: cmp x, $08          ; 55 08
+129E: nop                 ; C0
+129F: pop w               ; 0B
+12A0: ror a               ; 92
+12A1: load y, $DD00       ; 10 00 DD
+12A4: sub w, $20          ; 3B 20
+12A6: nop                 ; D0
+12A7: nop                 ; AF
+12A8: nop                 ; FF
+12A9: nop                 ; FD
+12AA: pop z               ; 0A
+12AB: adc z, $00          ; 31 00
 12AD: nop                 ; 00
 12AE: nop                 ; 00
 12AF: nop                 ; 00
-12B0: nop                 ; FC
-12B1: nop                 ; FF
-12B2: or y, a             ; AA
-12B3: or y, a             ; AA
-12B4: or y, a             ; AA
-12B5: inc w               ; 6A
-12B6: dec y               ; 6D
-12B7: not a               ; BB
-12B8: jmp $FFFF, y        ; ED FF FF
-12BB: nop                 ; FF
-12BC: nop                 ; FF
-12BD: cmp z, a            ; 7F
-12BE: add w, z            ; 2D
-12BF: mul y, z            ; 55
-12C0: add y, a            ; 25
-12C1: ror a               ; E8
-12C2: sub z, a            ; 43
-12C3: add a, x            ; 30
-12C4: cmp w, x            ; 80
-12C5: sub z, y            ; 40
-12C6: cmp x, a            ; 75
-12C7: add w, z            ; 2D
-12C8: nop                 ; 00
-12C9: shr x               ; DA
-12CA: jmp x, y            ; EA
-12CB: cmp z, a            ; 7F
-12CC: mul y, a            ; 57
-12CD: mul y, a            ; 57
-12CE: push w              ; 04
-12CF: nop                 ; 00
-12D0: nop                 ; 00
-12D1: nop                 ; 00
-12D2: nop                 ; 00
-12D3: nop                 ; 00
-12D4: nop                 ; 00
+12B0: nop                 ; 00
+12B1: nop                 ; 00
+12B2: nop                 ; 00
+12B3: nop                 ; 00
+12B4: nop                 ; 00
+12B5: nop                 ; FC
+12B6: nop                 ; FF
+12B7: nop                 ; AA
+12B8: nop                 ; AA
+12B9: nop                 ; AA
+12BA: nop                 ; DA
+12BB: or a, z             ; 6A
+12BC: nop                 ; BB
+12BD: nop                 ; ED
+12BE: nop                 ; FF
+12BF: nop                 ; FF
+12C0: nop                 ; FF
+12C1: nop                 ; FF
+12C2: xor a, y            ; 77
+12C3: cmp x, $0A          ; 55 0A
+12C5: mul a, a            ; 41
+12C6: nop                 ; F2
+12C7: nop                 ; 00
+12C8: push x              ; 01
+12C9: nop                 ; 00
+12CA: nop                 ; 00
+12CB: not w               ; 74
+12CC: adc a, w            ; 2D
+12CD: pop x               ; 08
+12CE: int $FA             ; A0 FA
+12D0: nop                 ; FF
+12D1: nop                 ; EF
+12D2: nop                 ; A7
+12D3: set w, $00          ; 1E 00
 12D5: nop                 ; 00
 12D6: nop                 ; 00
 12D7: nop                 ; 00
-12D8: nop                 ; FC
-12D9: nop                 ; FF
-12DA: add z, a            ; 2A
-12DB: mul y, z            ; 55
-12DC: mul y, z            ; 55
-12DD: mul y, z            ; 55
-12DE: shr y               ; DB
-12DF: dec z               ; 6E
-12E0: not a               ; BB
-12E1: nop                 ; FF
-12E2: nop                 ; FF
-12E3: nop                 ; FF
-12E4: nop                 ; FF
-12E5: rol x               ; DF
-12E6: shr y               ; DB
-12E7: mul y, z            ; 55
-12E8: pop z               ; 08
-12E9: xor x, a            ; C0
-12EA: load x, $1092       ; 0B 92 10
-12ED: nop                 ; 00
-12EE: shr w               ; DD
-12EF: sub y, y            ; 3B
-12F0: add x, a            ; 20
-12F1: xor a, x            ; D0
-12F2: or w, x             ; AF
-12F3: nop                 ; FF
-12F4: nop                 ; FD
-12F5: pop a               ; 0A
-12F6: add a, y            ; 31
-12F7: nop                 ; 00
-12F8: nop                 ; 00
-12F9: nop                 ; 00
-12FA: nop                 ; 00
-12FB: nop                 ; 00
-12FC: nop                 ; 00
+12D8: nop                 ; 00
+12D9: nop                 ; 00
+12DA: nop                 ; 00
+12DB: nop                 ; 00
+12DC: nop                 ; 00
+12DD: nop                 ; FC
+12DE: nop                 ; FF
+12DF: nop                 ; AA
+12E0: nop                 ; AA
+12E1: nop                 ; AA
+12E2: cmp y, $BD          ; 56 BD
+12E4: or y, $FF           ; 6D FF
+12E6: nop                 ; FB
+12E7: nop                 ; FF
+12E8: nop                 ; FF
+12E9: or w, $5D           ; 6F 5D
+12EB: nop                 ; AB
+12EC: add x, $04          ; 25 04
+12EE: nop                 ; C0
+12EF: push a              ; 05
+12F0: mul z, $D0          ; 44 D0
+12F2: push w              ; 04
+12F3: nop                 ; D0
+12F4: cmpbit y            ; 5B 00
+12F6: shr x, $BF          ; 84 BF
+12F8: nop                 ; FF
+12F9: and a, x            ; 5F
+12FA: jmp.gt $006A        ; 9D 6A 00
 12FD: nop                 ; 00
 12FE: nop                 ; 00
 12FF: nop                 ; 00
-1300: nop                 ; FC
-1301: nop                 ; FF
-1302: or y, a             ; AA
-1303: or y, a             ; AA
-1304: or y, a             ; AA
-1305: shr x               ; DA
-1306: inc w               ; 6A
-1307: not a               ; BB
-1308: jmp $FFFF, y        ; ED FF FF
-130B: nop                 ; FF
-130C: nop                 ; FF
-130D: cmp y, y            ; 77
-130E: mul y, z            ; 55
-130F: pop a               ; 0A
-1310: sub z, z            ; 41
-1311: jmp.neq $0100       ; F2 00 01
-1314: nop                 ; 00
+1300: nop                 ; 00
+1301: nop                 ; 00
+1302: nop                 ; 00
+1303: nop                 ; 00
+1304: nop                 ; 00
+1305: nop                 ; FC
+1306: nop                 ; FF
+1307: nop                 ; AA
+1308: nop                 ; AA
+1309: nop                 ; AA
+130A: or a, z             ; 6A
+130B: nop                 ; EB
+130C: nop                 ; B6
+130D: or y, $FF           ; 6D FF
+130F: nop                 ; FF
+1310: nop                 ; FF
+1311: nop                 ; BF
+1312: xor a, y            ; 77
+1313: cmp x, $02          ; 55 02
 1315: nop                 ; 00
-1316: cmp x, w            ; 74
-1317: add w, z            ; 2D
-1318: pop z               ; 08
-1319: and a, y            ; A0
-131A: nop                 ; FA
-131B: nop                 ; FF
-131C: jmp $1EA7, w        ; EF A7 1E
-131F: nop                 ; 00
-1320: nop                 ; 00
-1321: nop                 ; 00
-1322: nop                 ; 00
-1323: nop                 ; 00
-1324: nop                 ; 00
+1316: add w, $80          ; 28 80
+1318: nop                 ; 00
+1319: cmp a, y            ; 52
+131A: nop                 ; 00
+131B: and a, y            ; 60
+131C: adc x, $00          ; 2F 00
+131E: nop                 ; 00
+131F: nop                 ; FD
+1320: nop                 ; F7
+1321: nop                 ; FB
+1322: xor a, y            ; 77
+1323: set z, $00          ; 1D 00
 1325: nop                 ; 00
 1326: nop                 ; 00
 1327: nop                 ; 00
-1328: nop                 ; FC
-1329: nop                 ; FF
-132A: or y, a             ; AA
-132B: or y, a             ; AA
-132C: or y, a             ; AA
-132D: mul y, w            ; 56
-132E: xor x, y            ; BD
-132F: dec y               ; 6D
-1330: nop                 ; FF
-1331: nop                 ; FB
-1332: nop                 ; FF
-1333: nop                 ; FF
-1334: dec w               ; 6F
-1335: mul w, x            ; 5D
-1336: or z, x             ; AB
-1337: add y, a            ; 25
-1338: push w              ; 04
-1339: xor x, a            ; C0
-133A: push a              ; 05
-133B: sub w, x            ; 44
-133C: xor a, x            ; D0
-133D: push w              ; 04
-133E: xor a, x            ; D0
-133F: mul z, w            ; 5B
-1340: nop                 ; 00
-1341: cmp w, a            ; 84
-1342: xor x, w            ; BF
-1343: nop                 ; FF
-1344: mul w, z            ; 5F
-1345: and w, z            ; 9D
-1346: inc w               ; 6A
-1347: nop                 ; 00
-1348: nop                 ; 00
-1349: nop                 ; 00
-134A: nop                 ; 00
-134B: nop                 ; 00
+1328: nop                 ; 00
+1329: nop                 ; 00
+132A: nop                 ; 00
+132B: nop                 ; 00
+132C: nop                 ; 00
+132D: nop                 ; FC
+132E: nop                 ; FF
+132F: cmp x, $55          ; 55 55
+1331: nop                 ; D5
+1332: nop                 ; AA
+1333: nop                 ; AD
+1334: nop                 ; ED
+1335: nop                 ; FF
+1336: nop                 ; FF
+1337: nop                 ; FF
+1338: nop                 ; FF
+1339: nop                 ; EF
+133A: nop                 ; AA
+133B: nop                 ; AA
+133C: rol y               ; 8A
+133D: ror z               ; 90
+133E: mul a, w            ; 40
+133F: nop                 ; 00
+1340: load w, $0350       ; 12 50 03
+1343: shl y, $FA          ; 80 FA
+1345: push y              ; 02
+1346: nop                 ; 00
+1347: xor a, x            ; 76
+1348: nop                 ; FF
+1349: nop                 ; AE
+134A: cmpbit w            ; 5D 77
 134C: nop                 ; 00
 134D: nop                 ; 00
 134E: nop                 ; 00
 134F: nop                 ; 00
-1350: nop                 ; FC
-1351: nop                 ; FF
-1352: or y, a             ; AA
-1353: or y, a             ; AA
-1354: or y, a             ; AA
-1355: inc w               ; 6A
-1356: jmp z, w            ; EB
-1357: or a, w             ; B6
-1358: dec y               ; 6D
-1359: nop                 ; FF
-135A: nop                 ; FF
-135B: nop                 ; FF
-135C: xor x, w            ; BF
-135D: cmp y, y            ; 77
-135E: mul y, z            ; 55
-135F: push y              ; 02
-1360: nop                 ; 00
-1361: add z, z            ; 28
-1362: cmp w, x            ; 80
-1363: nop                 ; 00
-1364: mul x, a            ; 52
+1350: nop                 ; 00
+1351: nop                 ; 00
+1352: nop                 ; 00
+1353: nop                 ; 00
+1354: nop                 ; 00
+1355: nop                 ; FC
+1356: nop                 ; FF
+1357: nop                 ; AA
+1358: nop                 ; AA
+1359: nop                 ; AA
+135A: nop                 ; B6
+135B: xor a, x            ; 76
+135C: nop                 ; B7
+135D: nop                 ; F6
+135E: nop                 ; FF
+135F: nop                 ; FF
+1360: nop                 ; BF
+1361: nop                 ; B5
+1362: nop                 ; AA
+1363: adc a, x            ; 2A
+1364: push x              ; 01
 1365: nop                 ; 00
-1366: mul w, w            ; 60
-1367: add w, a            ; 2F
-1368: nop                 ; 00
-1369: nop                 ; 00
-136A: nop                 ; FD
-136B: resume              ; F7 FB
-136D: cmp y, y            ; 77
-136E: add x, y            ; 1D
-136F: nop                 ; 00
-1370: nop                 ; 00
-1371: nop                 ; 00
-1372: nop                 ; 00
-1373: nop                 ; 00
+1366: nop                 ; 00
+1367: nop                 ; 00
+1368: mul a, a            ; 41
+1369: or a, x             ; 68
+136A: push a              ; 05
+136B: nop                 ; 00
+136C: nop                 ; AF
+136D: pop y               ; 09
+136E: nop                 ; 00
+136F: nop                 ; FC
+1370: and a, x            ; 5F
+1371: nop                 ; FB
+1372: nop                 ; F6
+1373: adc a, x            ; 2A
 1374: nop                 ; 00
 1375: nop                 ; 00
 1376: nop                 ; 00
 1377: nop                 ; 00
-1378: nop                 ; FC
-1379: nop                 ; FF
-137A: mul y, z            ; 55
-137B: mul y, z            ; 55
-137C: shl x               ; D5
-137D: or y, a             ; AA
-137E: or z, w             ; AD
-137F: jmp $FFFF, y        ; ED FF FF
-1382: nop                 ; FF
-1383: nop                 ; FF
-1384: jmp $AAAA, w        ; EF AA AA
-1387: cmpbit x            ; 8A 90
-1389: sub z, y            ; 40
-138A: nop                 ; 00
-138B: store $0350, z      ; 12 50 03
-138E: cmp w, x            ; 80
-138F: nop                 ; FA
-1390: push y              ; 02
-1391: nop                 ; 00
-1392: cmp y, x            ; 76
-1393: nop                 ; FF
-1394: or z, a             ; AE
-1395: mul w, x            ; 5D
-1396: cmp y, y            ; 77
-1397: nop                 ; 00
-1398: nop                 ; 00
-1399: nop                 ; 00
-139A: nop                 ; 00
-139B: nop                 ; 00
+1378: nop                 ; 00
+1379: nop                 ; 00
+137A: nop                 ; 00
+137B: nop                 ; 00
+137C: nop                 ; 00
+137D: nop                 ; FC
+137E: nop                 ; FF
+137F: nop                 ; AA
+1380: nop                 ; AA
+1381: nop                 ; AA
+1382: or a, z             ; 6A
+1383: nop                 ; DB
+1384: nop                 ; ED
+1385: nop                 ; BF
+1386: nop                 ; DD
+1387: nop                 ; FF
+1388: xor a, x            ; 76
+1389: nop                 ; AF
+138A: nop                 ; AA
+138B: nop                 ; AA
+138C: push w              ; 04
+138D: push y              ; 02
+138E: nop                 ; 00
+138F: nop                 ; 00
+1390: pop x               ; 08
+1391: dec a               ; 50
+1392: jmp z, w            ; 95
+1393: nop                 ; 00
+1394: xor a, z            ; 78
+1395: jmp $7820, y        ; 97 20 78
+1398: nop                 ; FD
+1399: nop                 ; B7
+139A: nop                 ; BF
+139B: nop                 ; DB
 139C: nop                 ; 00
 139D: nop                 ; 00
 139E: nop                 ; 00
 139F: nop                 ; 00
-13A0: nop                 ; FC
-13A1: nop                 ; FF
-13A2: or y, a             ; AA
-13A3: or y, a             ; AA
-13A4: or y, a             ; AA
-13A5: or a, w             ; B6
-13A6: cmp y, x            ; 76
-13A7: not x               ; B7
-13A8: int $FF             ; F6 FF
-13AA: nop                 ; FF
-13AB: xor x, w            ; BF
-13AC: or a, z             ; B5
-13AD: or y, a             ; AA
-13AE: add z, a            ; 2A
-13AF: push x              ; 01
-13B0: nop                 ; 00
-13B1: nop                 ; 00
-13B2: nop                 ; 00
-13B3: sub z, z            ; 41
-13B4: inc y               ; 68
-13B5: push a              ; 05
+13A0: nop                 ; 00
+13A1: nop                 ; 00
+13A2: nop                 ; 00
+13A3: nop                 ; 00
+13A4: nop                 ; 00
+13A5: nop                 ; FC
+13A6: nop                 ; FF
+13A7: cmp x, $55          ; 55 55
+13A9: or y, $DB           ; 6D DB
+13AB: cmp y, $B7          ; 56 B7
+13AD: nop                 ; FA
+13AE: nop                 ; FF
+13AF: nop                 ; B6
+13B0: nop                 ; DF
+13B1: cmp x, $55          ; 55 55
+13B3: add x, $25          ; 25 25
+13B5: nop                 ; 00
 13B6: nop                 ; 00
-13B7: or w, x             ; AF
-13B8: pop w               ; 09
-13B9: nop                 ; 00
-13BA: nop                 ; FC
-13BB: mul w, z            ; 5F
-13BC: nop                 ; FB
-13BD: int $2A             ; F6 2A
-13BF: nop                 ; 00
-13C0: nop                 ; 00
-13C1: nop                 ; 00
-13C2: nop                 ; 00
-13C3: nop                 ; 00
-13C4: nop                 ; 00
+13B7: shl y, $52          ; 80 52
+13B9: nop                 ; DA
+13BA: store $EA00, y      ; 15 00 EA
+13BD: load x, $D800       ; 0F 00 D8
+13C0: nop                 ; D7
+13C1: nop                 ; DE
+13C2: nop                 ; D5
+13C3: or z, $00           ; 6E 00
 13C5: nop                 ; 00
 13C6: nop                 ; 00
 13C7: nop                 ; 00
-13C8: nop                 ; FC
-13C9: nop                 ; FF
-13CA: or y, a             ; AA
-13CB: or y, a             ; AA
-13CC: or y, a             ; AA
-13CD: inc w               ; 6A
-13CE: shr y               ; DB
-13CF: jmp $DDBF, y        ; ED BF DD
-13D2: nop                 ; FF
-13D3: cmp y, x            ; 76
-13D4: or w, x             ; AF
-13D5: or y, a             ; AA
-13D6: or y, a             ; AA
-13D7: push w              ; 04
-13D8: push y              ; 02
-13D9: nop                 ; 00
-13DA: nop                 ; 00
-13DB: pop z               ; 08
-13DC: mul x, z            ; 50
-13DD: and y, w            ; 95
-13DE: nop                 ; 00
-13DF: cmp y, z            ; 78
-13E0: and z, x            ; 97
-13E1: add x, a            ; 20
-13E2: cmp y, z            ; 78
-13E3: nop                 ; FD
-13E4: not x               ; B7
-13E5: xor x, w            ; BF
-13E6: shr y               ; DB
-13E7: nop                 ; 00
-13E8: nop                 ; 00
-13E9: nop                 ; 00
-13EA: nop                 ; 00
-13EB: nop                 ; 00
+13C8: nop                 ; 00
+13C9: nop                 ; 00
+13CA: nop                 ; 00
+13CB: nop                 ; 00
+13CC: nop                 ; 00
+13CD: nop                 ; FC
+13CE: nop                 ; FF
+13CF: cmp x, $55          ; 55 55
+13D1: nop                 ; AB
+13D2: nop                 ; AA
+13D3: nop                 ; ED
+13D4: nop                 ; ED
+13D5: nop                 ; DF
+13D6: nop                 ; F7
+13D7: nop                 ; EF
+13D8: not a               ; 75
+13D9: cmp z, $95          ; 57 95
+13DB: inc w               ; 4A
+13DC: rol x               ; 89
+13DD: add a, x            ; 20
+13DE: pop x               ; 08
+13DF: nop                 ; 00
+13E0: load y, $5568       ; 10 68 55
+13E3: push y              ; 02
+13E4: nop                 ; D0
+13E5: shl x, $00          ; 7F 00
+13E7: nop                 ; F4
+13E8: nop                 ; BA
+13E9: not a               ; 75
+13EA: nop                 ; FF
+13EB: nop                 ; B3
 13EC: nop                 ; 00
 13ED: nop                 ; 00
 13EE: nop                 ; 00
 13EF: nop                 ; 00
-13F0: nop                 ; FC
-13F1: nop                 ; FF
-13F2: mul y, z            ; 55
-13F3: mul y, z            ; 55
-13F4: dec y               ; 6D
-13F5: shr y               ; DB
-13F6: mul y, w            ; 56
-13F7: not x               ; B7
-13F8: nop                 ; FA
-13F9: nop                 ; FF
-13FA: or a, w             ; B6
-13FB: rol x               ; DF
-13FC: mul y, z            ; 55
-13FD: mul y, z            ; 55
-13FE: add y, a            ; 25
-13FF: add y, a            ; 25
-1400: nop                 ; 00
-1401: nop                 ; 00
-1402: cmp w, x            ; 80
-1403: mul x, a            ; 52
-1404: shr x               ; DA
-1405: call $EA00          ; 15 00 EA
-1408: load a, $D800       ; 0F 00 D8
-140B: shl z               ; D7
-140C: shr a               ; DE
-140D: shl x               ; D5
-140E: dec z               ; 6E
-140F: nop                 ; 00
-1410: nop                 ; 00
-1411: nop                 ; 00
-1412: nop                 ; 00
-1413: nop                 ; 00
+13F0: nop                 ; 00
+13F1: nop                 ; 00
+13F2: nop                 ; 00
+13F3: nop                 ; 00
+13F4: nop                 ; 00
+13F5: nop                 ; FC
+13F6: nop                 ; FF
+13F7: nop                 ; AA
+13F8: or a, z             ; 6A
+13F9: nop                 ; D5
+13FA: nop                 ; B6
+13FB: cmpbit x            ; 5A BD
+13FD: xor x, $DD          ; 7A DD
+13FF: nop                 ; BA
+1400: nop                 ; DE
+1401: cmp x, $22          ; 55 22
+1403: cmp a, w            ; 54
+1404: add x, $02          ; 25 02
+1406: mul a, w            ; 40
+1407: nop                 ; 00
+1408: inc z               ; 49
+1409: cmp w, $57          ; 58 57
+140B: nop                 ; 00
+140C: nop                 ; E0
+140D: nop                 ; BF
+140E: ror z               ; 90
+140F: nop                 ; FF
+1410: nop                 ; DB
+1411: nop                 ; FF
+1412: nop                 ; AD
+1413: nop                 ; DE
 1414: nop                 ; 00
 1415: nop                 ; 00
 1416: nop                 ; 00
 1417: nop                 ; 00
-1418: nop                 ; FC
-1419: nop                 ; FF
-141A: mul y, z            ; 55
-141B: mul y, z            ; 55
-141C: or z, x             ; AB
-141D: or y, a             ; AA
-141E: jmp $DFED, y        ; ED ED DF
-1421: resume              ; F7 EF
-1423: cmp x, a            ; 75
-1424: mul y, a            ; 57
-1425: and y, w            ; 95
-1426: sub a, y            ; 4A
-1427: cmp a, a            ; 89
-1428: add x, a            ; 20
-1429: pop z               ; 08
-142A: nop                 ; 00
-142B: store $5568, x      ; 10 68 55
-142E: push y              ; 02
-142F: xor a, x            ; D0
-1430: cmp z, a            ; 7F
-1431: nop                 ; 00
-1432: jmp.lt $75BA        ; F4 BA 75
-1435: nop                 ; FF
-1436: or a, x             ; B3
-1437: nop                 ; 00
-1438: nop                 ; 00
-1439: nop                 ; 00
-143A: nop                 ; 00
-143B: nop                 ; 00
-143C: nop                 ; 00
+1418: nop                 ; 00
+1419: nop                 ; 00
+141A: nop                 ; 00
+141B: nop                 ; 00
+141C: nop                 ; 00
+141D: nop                 ; FC
+141E: nop                 ; FF
+141F: cmp x, $AD          ; 55 AD
+1421: cmpbit x            ; 5A D5
+1423: or z, $EB           ; 6E EB
+1425: nop                 ; D7
+1426: nop                 ; BF
+1427: nop                 ; EF
+1428: nop                 ; B5
+1429: cmpbit x            ; 5A 49
+142B: mul a, a            ; 41
+142C: inc w               ; 4A
+142D: int $02             ; A0 02
+142F: nop                 ; 00
+1430: push y              ; 02
+1431: nop                 ; E8
+1432: cmpbit w            ; 5D 13
+1434: nop                 ; 00
+1435: shl x, $03          ; 7F 03
+1437: nop                 ; BD
+1438: nop                 ; F6
+1439: nop                 ; AF
+143A: nop                 ; FB
+143B: or a, w             ; 6B
+143C: push x              ; 01
 143D: nop                 ; 00
 143E: nop                 ; 00
 143F: nop                 ; 00
-1440: nop                 ; FC
-1441: nop                 ; FF
-1442: or y, a             ; AA
-1443: inc w               ; 6A
-1444: shl x               ; D5
-1445: or a, w             ; B6
-1446: mul z, z            ; 5A
-1447: xor x, y            ; BD
-1448: cmp y, a            ; 7A
-1449: shr w               ; DD
-144A: not w               ; BA
-144B: shr a               ; DE
-144C: mul y, z            ; 55
-144D: add y, y            ; 22
-144E: mul y, y            ; 54
-144F: add y, a            ; 25
-1450: push y              ; 02
-1451: sub z, y            ; 40
-1452: nop                 ; 00
-1453: sub a, x            ; 49
-1454: mul z, x            ; 58
-1455: mul y, a            ; 57
+1440: nop                 ; 00
+1441: nop                 ; 00
+1442: nop                 ; 00
+1443: nop                 ; 00
+1444: nop                 ; 00
+1445: nop                 ; FC
+1446: nop                 ; FF
+1447: nop                 ; AA
+1448: nop                 ; AA
+1449: cmp x, $5B          ; 55 5B
+144B: nop                 ; AB
+144C: nop                 ; AD
+144D: xor x, $F5          ; 7A F5
+144F: cmpbit x            ; 5A AB
+1451: cmp y, $25          ; 56 25
+1453: adc a, x            ; 2A
+1454: push x              ; 01
+1455: pop x               ; 08
 1456: nop                 ; 00
-1457: rol y               ; E0
-1458: xor x, w            ; BF
-1459: and x, z            ; 90
-145A: nop                 ; FF
-145B: shr y               ; DB
-145C: nop                 ; FF
-145D: or z, w             ; AD
-145E: shr a               ; DE
-145F: nop                 ; 00
-1460: nop                 ; 00
-1461: nop                 ; 00
-1462: nop                 ; 00
-1463: nop                 ; 00
-1464: nop                 ; 00
+1457: ror a               ; 92
+1458: nop                 ; 00
+1459: nop                 ; B9
+145A: cmp y, $01          ; 56 01
+145C: shl y, $FE          ; 80 FE
+145E: nop                 ; ED
+145F: nop                 ; FF
+1460: nop                 ; EB
+1461: nop                 ; F7
+1462: nop                 ; AE
+1463: nop                 ; AD
+1464: push x              ; 01
 1465: nop                 ; 00
 1466: nop                 ; 00
 1467: nop                 ; 00
-1468: nop                 ; FC
-1469: nop                 ; FF
-146A: mul y, z            ; 55
-146B: or z, w             ; AD
-146C: mul z, z            ; 5A
-146D: shl x               ; D5
-146E: dec z               ; 6E
-146F: jmp z, w            ; EB
-1470: shl z               ; D7
-1471: xor x, w            ; BF
-1472: jmp $5AB5, w        ; EF B5 5A
-1475: sub a, x            ; 49
-1476: sub z, z            ; 41
-1477: sub a, y            ; 4A
-1478: and a, y            ; A0
-1479: push y              ; 02
-147A: nop                 ; 00
-147B: push y              ; 02
-147C: ror a               ; E8
-147D: mul w, x            ; 5D
-147E: store $7F00, w      ; 13 00 7F
-1481: push z              ; 03
-1482: xor x, y            ; BD
-1483: int $AF             ; F6 AF
-1485: nop                 ; FB
-1486: inc a               ; 6B
-1487: push x              ; 01
-1488: nop                 ; 00
-1489: nop                 ; 00
-148A: nop                 ; 00
-148B: nop                 ; 00
-148C: nop                 ; 00
+1468: nop                 ; 00
+1469: nop                 ; 00
+146A: nop                 ; 00
+146B: nop                 ; 00
+146C: nop                 ; 00
+146D: nop                 ; FC
+146E: nop                 ; FF
+146F: or a, z             ; 6A
+1470: nop                 ; B5
+1471: nop                 ; D6
+1472: or a, z             ; 6A
+1473: nop                 ; F5
+1474: xor a, x            ; 76
+1475: nop                 ; D7
+1476: nop                 ; AF
+1477: nop                 ; B6
+1478: nop                 ; AA
+1479: nop                 ; B5
+147A: rol y               ; 8A
+147B: mul a, w            ; 40
+147C: cmp a, w            ; 54
+147D: mul y, $91          ; 43 91
+147F: push w              ; 04
+1480: add a, x            ; 20
+1481: nop                 ; A8
+1482: not a               ; 75
+1483: dec y               ; 4D
+1484: nop                 ; 00
+1485: nop                 ; F8
+1486: nop                 ; DF
+1487: nop                 ; BF
+1488: nop                 ; EE
+1489: nop                 ; DF
+148A: xor w, $BB          ; 7D BB
+148C: push y              ; 02
 148D: nop                 ; 00
 148E: nop                 ; 00
 148F: nop                 ; 00
-1490: nop                 ; FC
-1491: nop                 ; FF
-1492: or y, a             ; AA
-1493: or y, a             ; AA
-1494: mul y, z            ; 55
-1495: mul z, w            ; 5B
-1496: or z, x             ; AB
-1497: or z, w             ; AD
-1498: cmp y, a            ; 7A
-1499: jmp.z $AB5A         ; F5 5A AB
-149C: mul y, w            ; 56
-149D: add y, a            ; 25
-149E: add z, a            ; 2A
-149F: push x              ; 01
-14A0: pop z               ; 08
-14A1: nop                 ; 00
-14A2: and x, a            ; 92
-14A3: nop                 ; 00
-14A4: not z               ; B9
-14A5: mul y, w            ; 56
-14A6: push x              ; 01
-14A7: cmp w, x            ; 80
-14A8: nop                 ; FE
-14A9: jmp $EBFF, y        ; ED FF EB
-14AC: resume              ; F7 AE
-14AE: or z, w             ; AD
-14AF: push x              ; 01
-14B0: nop                 ; 00
-14B1: nop                 ; 00
-14B2: nop                 ; 00
-14B3: nop                 ; 00
+1490: nop                 ; 00
+1491: nop                 ; 00
+1492: nop                 ; 00
+1493: nop                 ; 00
+1494: nop                 ; 00
+1495: nop                 ; FC
+1496: nop                 ; FF
+1497: cmp x, $55          ; 55 55
+1499: nop                 ; AD
+149A: cmp y, $5B          ; 56 5B
+149C: nop                 ; DB
+149D: nop                 ; BA
+149E: nop                 ; DA
+149F: nop                 ; D5
+14A0: cmpbit x            ; 5A 55
+14A2: add x, $12          ; 25 12
+14A4: cmp x, $15          ; 55 15
+14A6: mul z, $20          ; 44 20
+14A8: push a              ; 05
+14A9: nop                 ; EA
+14AA: cmpbit a            ; 5E 25
+14AC: nop                 ; 00
+14AD: nop                 ; FA
+14AE: nop                 ; FF
+14AF: nop                 ; FF
+14B0: nop                 ; FB
+14B1: shl x, $F7          ; 7F F7
+14B3: nop                 ; AF
 14B4: nop                 ; 00
 14B5: nop                 ; 00
 14B6: nop                 ; 00
 14B7: nop                 ; 00
-14B8: nop                 ; FC
-14B9: nop                 ; FF
-14BA: inc w               ; 6A
-14BB: or a, z             ; B5
-14BC: shl y               ; D6
-14BD: inc w               ; 6A
-14BE: jmp.z $D776         ; F5 76 D7
-14C1: or w, x             ; AF
-14C2: or a, w             ; B6
-14C3: or y, a             ; AA
-14C4: or a, z             ; B5
-14C5: cmpbit x            ; 8A 40
-14C7: mul y, y            ; 54
-14C8: sub z, a            ; 43
-14C9: and x, w            ; 91
-14CA: push w              ; 04
-14CB: add x, a            ; 20
-14CC: or y, z             ; A8
-14CD: cmp x, a            ; 75
-14CE: sub a, a            ; 4D
-14CF: nop                 ; 00
-14D0: nop                 ; F8
-14D1: rol x               ; DF
-14D2: xor x, w            ; BF
-14D3: jmp $7DDF, z        ; EE DF 7D
-14D6: not a               ; BB
-14D7: push y              ; 02
-14D8: nop                 ; 00
-14D9: nop                 ; 00
-14DA: nop                 ; 00
-14DB: nop                 ; 00
-14DC: nop                 ; 00
+14B8: nop                 ; 00
+14B9: nop                 ; 00
+14BA: nop                 ; 00
+14BB: nop                 ; 00
+14BC: nop                 ; 00
+14BD: nop                 ; FC
+14BE: nop                 ; FF
+14BF: nop                 ; AA
+14C0: nop                 ; D6
+14C1: or a, z             ; 6A
+14C2: nop                 ; B5
+14C3: nop                 ; AD
+14C4: nop                 ; AA
+14C5: nop                 ; EE
+14C6: or a, w             ; 6B
+14C7: nop                 ; AD
+14C8: cmp y, $55          ; 56 55
+14CA: store $4AA4, y      ; 15 A4 4A
+14CD: push y              ; 02
+14CE: pop y               ; 09
+14CF: pop y               ; 09
+14D0: load y, $F5B8       ; 10 B8 F5
+14D3: sub a, w            ; 37
+14D4: push x              ; 01
+14D5: nop                 ; E0
+14D6: nop                 ; FF
+14D7: nop                 ; FE
+14D8: nop                 ; BE
+14D9: nop                 ; DF
+14DA: nop                 ; BE
+14DB: nop                 ; BA
+14DC: push y              ; 02
 14DD: nop                 ; 00
 14DE: nop                 ; 00
 14DF: nop                 ; 00
-14E0: nop                 ; FC
-14E1: nop                 ; FF
-14E2: mul y, z            ; 55
-14E3: mul y, z            ; 55
-14E4: or z, w             ; AD
-14E5: mul y, w            ; 56
-14E6: mul z, w            ; 5B
-14E7: shr y               ; DB
-14E8: not w               ; BA
-14E9: shr x               ; DA
-14EA: shl x               ; D5
-14EB: mul z, z            ; 5A
-14EC: mul y, z            ; 55
-14ED: add y, a            ; 25
-14EE: store $1555, z      ; 12 55 15
-14F1: sub w, x            ; 44
-14F2: add x, a            ; 20
-14F3: push a              ; 05
-14F4: jmp x, y            ; EA
-14F5: mul w, y            ; 5E
-14F6: add y, a            ; 25
-14F7: nop                 ; 00
-14F8: nop                 ; FA
-14F9: nop                 ; FF
-14FA: nop                 ; FF
-14FB: nop                 ; FB
-14FC: cmp z, a            ; 7F
-14FD: resume              ; F7 AF
-14FF: nop                 ; 00
-1500: nop                 ; 00
-1501: nop                 ; 00
-1502: nop                 ; 00
-1503: nop                 ; 00
-1504: nop                 ; 00
-1505: nop                 ; 00
-1506: nop                 ; 00
+14E0: nop                 ; 00
+14E1: nop                 ; 00
+14E2: nop                 ; 00
+14E3: nop                 ; 00
+14E4: nop                 ; 00
+14E5: nop                 ; FC
+14E6: nop                 ; FF
+14E7: nop                 ; DA
+14E8: nop                 ; AA
+14E9: cmpbit x            ; 5A AB
+14EB: nop                 ; B6
+14EC: or y, $AB           ; 6D AB
+14EE: nop                 ; B6
+14EF: nop                 ; AA
+14F0: nop                 ; AA
+14F1: nop                 ; AA
+14F2: nop                 ; AA
+14F3: nop                 ; AA
+14F4: cmp a, w            ; 54
+14F5: push x              ; 01
+14F6: mul a, w            ; 40
+14F7: add a, x            ; 20
+14F8: nop                 ; 00
+14F9: nop                 ; A8
+14FA: cmpbit a            ; 5E 9D
+14FC: nop                 ; 00
+14FD: int $F7             ; A0 F7
+14FF: nop                 ; FF
+1500: nop                 ; DF
+1501: nop                 ; EF
+1502: nop                 ; EB
+1503: adc x, $00          ; 2F 00
+1505: cmp a, w            ; 54
+1506: push x              ; 01
 1507: nop                 ; 00
-1508: nop                 ; FC
-1509: nop                 ; FF
-150A: or y, a             ; AA
-150B: shl y               ; D6
-150C: inc w               ; 6A
-150D: or a, z             ; B5
-150E: or z, w             ; AD
-150F: or y, a             ; AA
-1510: jmp $AD6B, z        ; EE 6B AD
-1513: mul y, w            ; 56
-1514: mul y, z            ; 55
-1515: call $4AA4          ; 15 A4 4A
-1518: push y              ; 02
-1519: pop w               ; 09
-151A: pop w               ; 09
-151B: store $F5B8, x      ; 10 B8 F5
-151E: sub x, z            ; 37
-151F: push x              ; 01
-1520: rol y               ; E0
-1521: nop                 ; FF
-1522: nop                 ; FE
-1523: xor x, z            ; BE
-1524: rol x               ; DF
-1525: xor x, z            ; BE
-1526: not w               ; BA
-1527: push y              ; 02
-1528: nop                 ; 00
-1529: nop                 ; 00
-152A: nop                 ; 00
-152B: nop                 ; 00
-152C: nop                 ; 00
-152D: nop                 ; 00
-152E: nop                 ; 00
+1508: nop                 ; 00
+1509: nop                 ; 00
+150A: nop                 ; 00
+150B: nop                 ; 00
+150C: nop                 ; 00
+150D: nop                 ; FC
+150E: nop                 ; FF
+150F: nop                 ; AA
+1510: or a, z             ; 6A
+1511: nop                 ; AB
+1512: nop                 ; DA
+1513: or a, z             ; 6A
+1514: nop                 ; D5
+1515: nop                 ; F6
+1516: cmpbit x            ; 5A 6B
+1518: cmp x, $55          ; 55 55
+151A: cmp x, $55          ; 55 55
+151C: nop                 ; A5
+151D: push w              ; 04
+151E: nop                 ; 00
+151F: push w              ; 04
+1520: mul w, $E0          ; 45 E0
+1522: nop                 ; EB
+1523: nop                 ; F5
+1524: pop x               ; 08
+1525: mul a, w            ; 40
+1526: nop                 ; FF
+1527: nop                 ; EF
+1528: nop                 ; BF
+1529: nop                 ; BF
+152A: nop                 ; DE
+152B: nop                 ; AA
+152C: pop z               ; 0A
+152D: nop                 ; A8
+152E: pop z               ; 0A
 152F: nop                 ; 00
-1530: nop                 ; FC
-1531: nop                 ; FF
-1532: shr x               ; DA
-1533: or y, a             ; AA
-1534: mul z, z            ; 5A
-1535: or z, x             ; AB
-1536: or a, w             ; B6
-1537: dec y               ; 6D
-1538: or z, x             ; AB
-1539: or a, w             ; B6
-153A: or y, a             ; AA
-153B: or y, a             ; AA
-153C: or y, a             ; AA
-153D: or y, a             ; AA
-153E: or y, a             ; AA
-153F: mul y, y            ; 54
-1540: push x              ; 01
-1541: sub z, y            ; 40
-1542: add x, a            ; 20
-1543: nop                 ; 00
-1544: or y, z             ; A8
-1545: mul w, y            ; 5E
-1546: and w, z            ; 9D
-1547: nop                 ; 00
-1548: and a, y            ; A0
-1549: resume              ; F7 FF
-154B: rol x               ; DF
-154C: jmp $2FEB, w        ; EF EB 2F
-154F: nop                 ; 00
-1550: mul y, y            ; 54
-1551: push x              ; 01
-1552: nop                 ; 00
-1553: nop                 ; 00
-1554: nop                 ; 00
-1555: nop                 ; 00
-1556: nop                 ; 00
+1530: nop                 ; 00
+1531: nop                 ; 00
+1532: nop                 ; 00
+1533: nop                 ; 00
+1534: nop                 ; 00
+1535: nop                 ; FC
+1536: nop                 ; FF
+1537: nop                 ; AA
+1538: nop                 ; AD
+1539: or a, z             ; 6A
+153A: nop                 ; AB
+153B: nop                 ; AA
+153C: nop                 ; B6
+153D: cmpbit x            ; 5A 6B
+153F: nop                 ; AD
+1540: nop                 ; AA
+1541: nop                 ; AA
+1542: adc a, x            ; 2A
+1543: inc z               ; 49
+1544: add a, $81          ; 29 81
+1546: shl y, $20          ; 80 20
+1548: load y, $BE92       ; 10 92 BE
+154B: cmp x, $03          ; 55 03
+154D: nop                 ; 00
+154E: nop                 ; FF
+154F: nop                 ; FF
+1550: nop                 ; FF
+1551: not a               ; 75
+1552: xor x, $4B          ; 7A 4B
+1554: store $02F4, x      ; 14 F4 02
 1557: nop                 ; 00
-1558: nop                 ; FC
-1559: nop                 ; FF
-155A: or y, a             ; AA
-155B: inc w               ; 6A
-155C: or z, x             ; AB
-155D: shr x               ; DA
-155E: inc w               ; 6A
-155F: shl x               ; D5
-1560: int $5A             ; F6 5A
-1562: inc a               ; 6B
-1563: mul y, z            ; 55
-1564: mul y, z            ; 55
-1565: mul y, z            ; 55
-1566: mul y, z            ; 55
-1567: or x, w             ; A5
-1568: push w              ; 04
-1569: nop                 ; 00
-156A: push w              ; 04
-156B: sub w, y            ; 45
-156C: rol y               ; E0
-156D: jmp z, w            ; EB
-156E: jmp.z $4008         ; F5 08 40
-1571: nop                 ; FF
-1572: jmp $BFBF, w        ; EF BF BF
-1575: shr a               ; DE
-1576: or y, a             ; AA
-1577: pop a               ; 0A
-1578: or y, z             ; A8
-1579: pop a               ; 0A
-157A: nop                 ; 00
-157B: nop                 ; 00
-157C: nop                 ; 00
-157D: nop                 ; 00
-157E: nop                 ; 00
-157F: nop                 ; 00
-1580: nop                 ; FC
-1581: nop                 ; FF
-1582: or y, a             ; AA
-1583: or z, w             ; AD
-1584: inc w               ; 6A
-1585: or z, x             ; AB
-1586: or y, a             ; AA
-1587: or a, w             ; B6
-1588: mul z, z            ; 5A
-1589: inc a               ; 6B
-158A: or z, w             ; AD
-158B: or y, a             ; AA
-158C: or y, a             ; AA
-158D: add z, a            ; 2A
-158E: sub a, x            ; 49
-158F: add z, w            ; 29
-1590: cmp w, y            ; 81
-1591: cmp w, x            ; 80
-1592: add x, a            ; 20
-1593: store $BE92, x      ; 10 92 BE
-1596: mul y, z            ; 55
-1597: push z              ; 03
-1598: nop                 ; 00
-1599: nop                 ; FF
-159A: nop                 ; FF
-159B: nop                 ; FF
-159C: cmp x, a            ; 75
-159D: cmp y, a            ; 7A
-159E: sub a, z            ; 4B
-159F: store $02F4, a      ; 14 F4 02
-15A2: nop                 ; 00
-15A3: nop                 ; 00
-15A4: nop                 ; 00
-15A5: nop                 ; 00
-15A6: nop                 ; 00
+1558: nop                 ; 00
+1559: nop                 ; 00
+155A: nop                 ; 00
+155B: nop                 ; 00
+155C: nop                 ; 00
+155D: nop                 ; FC
+155E: nop                 ; FF
+155F: nop                 ; AB
+1560: or a, z             ; 6A
+1561: cmpbit y            ; 5B 6D
+1563: nop                 ; AD
+1564: cmp x, $57          ; 55 57
+1566: nop                 ; AD
+1567: nop                 ; AA
+1568: nop                 ; AA
+1569: adc a, x            ; 2A
+156A: nop                 ; A9
+156B: nop                 ; AA
+156C: nop                 ; AA
+156D: pop z               ; 0A
+156E: nop                 ; 00
+156F: push w              ; 04
+1570: nop                 ; 00
+1571: nop                 ; A4
+1572: or a, z             ; 6A
+1573: nop                 ; DF
+1574: load w, $B800       ; 12 00 B8
+1577: nop                 ; FF
+1578: shl x, $DF          ; 7F DF
+157A: nop                 ; DA
+157B: jmp $F86B, y        ; 97 6B F8
+157E: store $0000, y      ; 15 00 00
+1581: nop                 ; 00
+1582: nop                 ; 00
+1583: nop                 ; 00
+1584: nop                 ; 00
+1585: nop                 ; FC
+1586: nop                 ; FF
+1587: cmp x, $55          ; 55 55
+1589: nop                 ; AD
+158A: cmp x, $AB          ; 55 AB
+158C: nop                 ; DA
+158D: or a, z             ; 6A
+158E: cmp x, $55          ; 55 55
+1590: cmp x, $A5          ; 55 A5
+1592: inc w               ; 4A
+1593: jmp z, w            ; 95
+1594: inc w               ; 4A
+1595: push a              ; 05
+1596: mul a, w            ; 40
+1597: push y              ; 02
+1598: mul x, $1E          ; 42 1E
+159A: nop                 ; BB
+159B: not a               ; 75
+159C: pop w               ; 0B
+159D: nop                 ; 00
+159E: nop                 ; FC
+159F: nop                 ; FB
+15A0: nop                 ; FF
+15A1: or a, z             ; 6A
+15A2: or y, $DD           ; 6D DD
+15A4: nop                 ; B6
+15A5: nop                 ; F4
+15A6: push.f              ; 07
 15A7: nop                 ; 00
-15A8: nop                 ; FC
-15A9: nop                 ; FF
-15AA: or z, x             ; AB
-15AB: inc w               ; 6A
-15AC: mul z, w            ; 5B
-15AD: dec y               ; 6D
-15AE: or z, w             ; AD
-15AF: mul y, z            ; 55
-15B0: mul y, a            ; 57
-15B1: or z, w             ; AD
-15B2: or y, a             ; AA
-15B3: or y, a             ; AA
-15B4: add z, a            ; 2A
-15B5: or y, w             ; A9
-15B6: or y, a             ; AA
-15B7: or y, a             ; AA
-15B8: pop a               ; 0A
-15B9: nop                 ; 00
-15BA: push w              ; 04
-15BB: nop                 ; 00
-15BC: or x, z             ; A4
-15BD: inc w               ; 6A
-15BE: rol x               ; DF
-15BF: store $B800, z      ; 12 00 B8
-15C2: nop                 ; FF
-15C3: cmp z, a            ; 7F
-15C4: rol x               ; DF
-15C5: shr x               ; DA
-15C6: and z, x            ; 97
-15C7: inc a               ; 6B
-15C8: nop                 ; F8
-15C9: call $0000          ; 15 00 00
-15CC: nop                 ; 00
-15CD: nop                 ; 00
-15CE: nop                 ; 00
-15CF: nop                 ; 00
-15D0: nop                 ; FC
-15D1: nop                 ; FF
-15D2: mul y, z            ; 55
-15D3: mul y, z            ; 55
-15D4: or z, w             ; AD
-15D5: mul y, z            ; 55
-15D6: or z, x             ; AB
-15D7: shr x               ; DA
-15D8: inc w               ; 6A
-15D9: mul y, z            ; 55
-15DA: mul y, z            ; 55
-15DB: mul y, z            ; 55
-15DC: or x, w             ; A5
-15DD: sub a, y            ; 4A
-15DE: and y, w            ; 95
-15DF: sub a, y            ; 4A
-15E0: push a              ; 05
-15E1: sub z, y            ; 40
-15E2: push y              ; 02
-15E3: sub z, w            ; 42
-15E4: add x, z            ; 1E
-15E5: not a               ; BB
-15E6: cmp x, a            ; 75
-15E7: load x, $FC00       ; 0B 00 FC
-15EA: nop                 ; FB
-15EB: nop                 ; FF
-15EC: inc w               ; 6A
-15ED: dec y               ; 6D
-15EE: shr w               ; DD
-15EF: or a, w             ; B6
-15F0: jmp.lt $0007        ; F4 07 00
-15F3: nop                 ; 00
-15F4: nop                 ; 00
-15F5: nop                 ; 00
-15F6: nop                 ; 00
+15A8: nop                 ; 00
+15A9: nop                 ; 00
+15AA: nop                 ; 00
+15AB: nop                 ; 00
+15AC: nop                 ; 00
+15AD: nop                 ; FC
+15AE: nop                 ; FF
+15AF: nop                 ; DA
+15B0: nop                 ; DA
+15B1: or a, z             ; 6A
+15B2: cmp x, $D5          ; 55 D5
+15B4: nop                 ; AA
+15B5: cmp x, $55          ; 55 55
+15B7: cmp x, $55          ; 55 55
+15B9: cmp x, $55          ; 55 55
+15BB: nop                 ; A5
+15BC: cmp a, w            ; 54
+15BD: pop y               ; 09
+15BE: nop                 ; 00
+15BF: nop                 ; 00
+15C0: pop x               ; 08
+15C1: or a, $AA           ; 70 AA
+15C3: nop                 ; DF
+15C4: dec z               ; 4E
+15C5: push x              ; 01
+15C6: nop                 ; E0
+15C7: nop                 ; FF
+15C8: nop                 ; BF
+15C9: nop                 ; DD
+15CA: nop                 ; FB
+15CB: nop                 ; F7
+15CC: cmp z, $D1          ; 57 D1
+15CE: set a, $00          ; 1F 00
+15D0: nop                 ; 00
+15D1: nop                 ; 00
+15D2: nop                 ; 00
+15D3: nop                 ; 00
+15D4: nop                 ; 00
+15D5: nop                 ; FC
+15D6: nop                 ; FF
+15D7: nop                 ; AA
+15D8: cmp y, $AB          ; 56 AB
+15DA: nop                 ; B6
+15DB: nop                 ; B6
+15DC: nop                 ; B6
+15DD: nop                 ; AA
+15DE: cmp y, $55          ; 56 55
+15E0: cmp x, $2A          ; 55 2A
+15E2: cmp x, $AA          ; 55 AA
+15E4: cmp a, y            ; 52
+15E5: pop z               ; 0A
+15E6: nop                 ; 00
+15E7: shl y, $00          ; 80 00
+15E9: nop                 ; EE
+15EA: nop                 ; ED
+15EB: xor a, x            ; 76
+15EC: adc a, y            ; 2B
+15ED: nop                 ; 00
+15EE: mul a, w            ; 40
+15EF: nop                 ; BF
+15F0: nop                 ; F7
+15F1: xor a, x            ; 76
+15F2: nop                 ; BF
+15F3: cmpbit w            ; 5D ED
+15F5: nop                 ; A5
+15F6: push.f              ; 07
 15F7: nop                 ; 00
-15F8: nop                 ; FC
-15F9: nop                 ; FF
-15FA: shr x               ; DA
-15FB: shr x               ; DA
-15FC: inc w               ; 6A
-15FD: mul y, z            ; 55
-15FE: shl x               ; D5
-15FF: or y, a             ; AA
-1600: mul y, z            ; 55
-1601: mul y, z            ; 55
-1602: mul y, z            ; 55
-1603: mul y, z            ; 55
-1604: mul y, z            ; 55
-1605: mul y, z            ; 55
-1606: or x, w             ; A5
-1607: mul y, y            ; 54
-1608: pop w               ; 09
-1609: nop                 ; 00
-160A: nop                 ; 00
-160B: pop z               ; 08
-160C: dec a               ; 70
-160D: or y, a             ; AA
-160E: rol x               ; DF
-160F: mul x, x            ; 4E
-1610: push x              ; 01
-1611: rol y               ; E0
-1612: nop                 ; FF
-1613: xor x, w            ; BF
-1614: shr w               ; DD
-1615: nop                 ; FB
-1616: resume              ; F7 57
-1618: xor a, y            ; D1
-1619: add x, w            ; 1F
-161A: nop                 ; 00
-161B: nop                 ; 00
-161C: nop                 ; 00
-161D: nop                 ; 00
-161E: nop                 ; 00
+15F8: nop                 ; 00
+15F9: nop                 ; 00
+15FA: nop                 ; 00
+15FB: nop                 ; 00
+15FC: nop                 ; 00
+15FD: nop                 ; FC
+15FE: nop                 ; FF
+15FF: nop                 ; AA
+1600: nop                 ; AA
+1601: nop                 ; AA
+1602: nop                 ; AA
+1603: cmp x, $AB          ; 55 AB
+1605: cmpbit x            ; 5A A9
+1607: nop                 ; AA
+1608: inc w               ; 4A
+1609: nop                 ; A5
+160A: cmp a, y            ; 52
+160B: jmp z, w            ; 95
+160C: inc w               ; 4A
+160D: store $0080, y      ; 15 80 00
+1610: mul a, w            ; 40
+1611: jmp.neq $DDB7       ; 9C B7 DD
+1614: or y, $01           ; 6D 01
+1616: nop                 ; 00
+1617: nop                 ; A4
+1618: store $FFD9, x      ; 14 D9 FF
+161B: nop                 ; F7
+161C: nop                 ; BF
+161D: dec z               ; 4E
+161E: adc a, a            ; 2E
 161F: nop                 ; 00
-1620: nop                 ; FC
-1621: nop                 ; FF
-1622: or y, a             ; AA
-1623: mul y, w            ; 56
-1624: or z, x             ; AB
-1625: or a, w             ; B6
-1626: or a, w             ; B6
-1627: or a, w             ; B6
-1628: or y, a             ; AA
-1629: mul y, w            ; 56
-162A: mul y, z            ; 55
-162B: mul y, z            ; 55
-162C: add z, a            ; 2A
-162D: mul y, z            ; 55
-162E: or y, a             ; AA
-162F: mul x, a            ; 52
-1630: pop a               ; 0A
-1631: nop                 ; 00
-1632: cmp w, x            ; 80
-1633: nop                 ; 00
-1634: jmp $76ED, z        ; EE ED 76
-1637: add w, x            ; 2B
-1638: nop                 ; 00
-1639: sub z, y            ; 40
-163A: xor x, w            ; BF
-163B: resume              ; F7 76
-163D: xor x, w            ; BF
-163E: mul w, x            ; 5D
-163F: jmp $07A5, y        ; ED A5 07
-1642: nop                 ; 00
-1643: nop                 ; 00
-1644: nop                 ; 00
-1645: nop                 ; 00
-1646: nop                 ; 00
+1620: nop                 ; 00
+1621: nop                 ; 00
+1622: nop                 ; 00
+1623: nop                 ; 00
+1624: nop                 ; 00
+1625: nop                 ; FC
+1626: nop                 ; FF
+1627: cmp y, $55          ; 56 55
+1629: cmp x, $55          ; 55 55
+162B: nop                 ; D5
+162C: nop                 ; AA
+162D: nop                 ; AA
+162E: cmp y, $55          ; 56 55
+1630: cmp a, y            ; 52
+1631: nop                 ; A9
+1632: cmp a, w            ; 54
+1633: cmp x, $AA          ; 55 AA
+1635: store $0000, x      ; 14 00 00
+1638: load y, $B670       ; 10 70 B6
+163B: xor a, x            ; 76
+163C: nop                 ; AF
+163D: push x              ; 01
+163E: nop                 ; 00
+163F: load w, $F442       ; 12 42 F4
+1642: nop                 ; FF
+1643: and a, x            ; 5F
+1644: cmp x, $9B          ; 55 9B
+1646: push y              ; 02
 1647: nop                 ; 00
-1648: nop                 ; FC
-1649: nop                 ; FF
-164A: or y, a             ; AA
-164B: or y, a             ; AA
-164C: or y, a             ; AA
-164D: or y, a             ; AA
-164E: mul y, z            ; 55
-164F: or z, x             ; AB
-1650: mul z, z            ; 5A
-1651: or y, w             ; A9
-1652: or y, a             ; AA
-1653: sub a, y            ; 4A
-1654: or x, w             ; A5
-1655: mul x, a            ; 52
-1656: and y, w            ; 95
-1657: sub a, y            ; 4A
-1658: call $0080          ; 15 80 00
-165B: sub z, y            ; 40
-165C: and w, y            ; 9C
-165D: not x               ; B7
-165E: shr w               ; DD
-165F: dec y               ; 6D
-1660: push x              ; 01
-1661: nop                 ; 00
-1662: or x, z             ; A4
-1663: store $FFD9, a      ; 14 D9 FF
-1666: resume              ; F7 BF
-1668: mul x, x            ; 4E
-1669: add w, w            ; 2E
-166A: nop                 ; 00
-166B: nop                 ; 00
-166C: nop                 ; 00
-166D: nop                 ; 00
-166E: nop                 ; 00
+1648: nop                 ; 00
+1649: nop                 ; 00
+164A: nop                 ; 00
+164B: nop                 ; 00
+164C: nop                 ; 00
+164D: nop                 ; FC
+164E: nop                 ; FF
+164F: nop                 ; AA
+1650: nop                 ; B5
+1651: nop                 ; AA
+1652: or a, z             ; 6A
+1653: nop                 ; AD
+1654: cmpbit x            ; 5A 55
+1656: nop                 ; A9
+1657: nop                 ; AA
+1658: adc a, x            ; 2A
+1659: cmp x, $95          ; 55 95
+165B: cmp a, y            ; 52
+165C: cmp x, $25          ; 55 25
+165E: nop                 ; 00
+165F: nop                 ; 00
+1660: nop                 ; 00
+1661: nop                 ; CC
+1662: nop                 ; E9
+1663: cmpbit a            ; 5E B9
+1665: pop z               ; 0A
+1666: nop                 ; 00
+1667: push w              ; 04
+1668: load y, $FFE1       ; 10 E1 FF
+166B: nop                 ; FF
+166C: nop                 ; FF
+166D: or a, z             ; 6A
+166E: pop x               ; 08
 166F: nop                 ; 00
-1670: nop                 ; FC
-1671: nop                 ; FF
-1672: mul y, w            ; 56
-1673: mul y, z            ; 55
-1674: mul y, z            ; 55
-1675: mul y, z            ; 55
-1676: shl x               ; D5
-1677: or y, a             ; AA
-1678: or y, a             ; AA
-1679: mul y, w            ; 56
-167A: mul y, z            ; 55
-167B: mul x, a            ; 52
-167C: or y, w             ; A9
-167D: mul y, y            ; 54
-167E: mul y, z            ; 55
-167F: or y, a             ; AA
-1680: store $0000, a      ; 14 00 00
-1683: store $B670, x      ; 10 70 B6
-1686: cmp y, x            ; 76
-1687: or w, x             ; AF
-1688: push x              ; 01
-1689: nop                 ; 00
-168A: store $F442, z      ; 12 42 F4
-168D: nop                 ; FF
-168E: mul w, z            ; 5F
-168F: mul y, z            ; 55
-1690: and w, x            ; 9B
-1691: push y              ; 02
-1692: nop                 ; 00
-1693: nop                 ; 00
-1694: nop                 ; 00
-1695: nop                 ; 00
-1696: nop                 ; 00
-1697: nop                 ; 00
-1698: nop                 ; FC
-1699: nop                 ; FF
-169A: or y, a             ; AA
-169B: or a, z             ; B5
-169C: or y, a             ; AA
-169D: inc w               ; 6A
-169E: or z, w             ; AD
-169F: mul z, z            ; 5A
-16A0: mul y, z            ; 55
-16A1: or y, w             ; A9
-16A2: or y, a             ; AA
-16A3: add z, a            ; 2A
-16A4: mul y, z            ; 55
-16A5: and y, w            ; 95
-16A6: mul x, a            ; 52
-16A7: mul y, z            ; 55
-16A8: add y, a            ; 25
-16A9: nop                 ; 00
-16AA: nop                 ; 00
-16AB: nop                 ; 00
-16AC: xor w, y            ; CC
-16AD: jmp $B95E           ; E9 5E B9
-16B0: pop a               ; 0A
-16B1: nop                 ; 00
-16B2: push w              ; 04
-16B3: store $FFE1, x      ; 10 E1 FF
-16B6: nop                 ; FF
-16B7: nop                 ; FF
-16B8: inc w               ; 6A
-16B9: pop z               ; 08
-16BA: nop                 ; 00
-16BB: nop                 ; 00
-16BC: nop                 ; 00
-16BD: nop                 ; 00
-16BE: nop                 ; 00
+1670: nop                 ; 00
+1671: nop                 ; 00
+1672: nop                 ; 00
+1673: nop                 ; 00
+1674: nop                 ; 00
+1675: nop                 ; FC
+1676: nop                 ; FF
+1677: cmpbit x            ; 5A 55
+1679: cmp x, $55          ; 55 55
+167B: cmp x, $A5          ; 55 A5
+167D: nop                 ; AA
+167E: cmp y, $A5          ; 56 A5
+1680: cmp a, w            ; 54
+1681: add x, $A5          ; 25 A5
+1683: nop                 ; AA
+1684: ror a               ; 92
+1685: adc a, x            ; 2A
+1686: nop                 ; 00
+1687: nop                 ; 00
+1688: shl y, $DC          ; 80 DC
+168A: nop                 ; A7
+168B: nop                 ; EB
+168C: nop                 ; AF
+168D: push a              ; 05
+168E: nop                 ; 00
+168F: mul a, w            ; 40
+1690: nop                 ; AA
+1691: nop                 ; E4
+1692: nop                 ; FF
+1693: nop                 ; FF
+1694: nop                 ; AA
+1695: nop                 ; BF
+1696: store $0000, x      ; 14 00 00
+1699: nop                 ; 00
+169A: nop                 ; 00
+169B: nop                 ; 00
+169C: nop                 ; 00
+169D: nop                 ; FC
+169E: nop                 ; FF
+169F: cmp x, $55          ; 55 55
+16A1: nop                 ; AB
+16A2: nop                 ; AA
+16A3: nop                 ; AA
+16A4: cmpbit x            ; 5A 55
+16A6: nop                 ; A9
+16A7: jmp x, y            ; 94
+16A8: ror a               ; 92
+16A9: cmp a, w            ; 54
+16AA: nop                 ; A9
+16AB: cmp a, w            ; 54
+16AC: cmp x, $55          ; 55 55
+16AE: push x              ; 01
+16AF: shl w, $00          ; 82 00
+16B1: or a, $DE           ; 70 DE
+16B3: xor x, $F5          ; 7A F5
+16B5: store $9400, z      ; 16 00 94
+16B8: inc y               ; 48
+16B9: rol x               ; 89
+16BA: nop                 ; FF
+16BB: nop                 ; FF
+16BC: nop                 ; FF
+16BD: nop                 ; EA
+16BE: push x              ; 01
 16BF: nop                 ; 00
-16C0: nop                 ; FC
-16C1: nop                 ; FF
-16C2: mul z, z            ; 5A
-16C3: mul y, z            ; 55
-16C4: mul y, z            ; 55
-16C5: mul y, z            ; 55
-16C6: mul y, z            ; 55
-16C7: or x, w             ; A5
-16C8: or y, a             ; AA
-16C9: mul y, w            ; 56
-16CA: or x, w             ; A5
-16CB: mul y, y            ; 54
-16CC: add y, a            ; 25
-16CD: or x, w             ; A5
-16CE: or y, a             ; AA
-16CF: and x, a            ; 92
-16D0: add z, a            ; 2A
-16D1: nop                 ; 00
-16D2: nop                 ; 00
-16D3: cmp w, x            ; 80
-16D4: shr z               ; DC
-16D5: or y, x             ; A7
-16D6: jmp z, w            ; EB
-16D7: or w, x             ; AF
-16D8: push a              ; 05
-16D9: nop                 ; 00
-16DA: sub z, y            ; 40
-16DB: or y, a             ; AA
-16DC: ror x               ; E4
-16DD: nop                 ; FF
-16DE: nop                 ; FF
-16DF: or y, a             ; AA
-16E0: xor x, w            ; BF
-16E1: store $0000, a      ; 14 00 00
-16E4: nop                 ; 00
-16E5: nop                 ; 00
-16E6: nop                 ; 00
+16C0: nop                 ; 00
+16C1: nop                 ; 00
+16C2: nop                 ; 00
+16C3: nop                 ; 00
+16C4: nop                 ; 00
+16C5: nop                 ; FC
+16C6: nop                 ; FF
+16C7: nop                 ; AA
+16C8: nop                 ; AA
+16C9: cmp a, w            ; 54
+16CA: cmp x, $55          ; 55 55
+16CC: nop                 ; A5
+16CD: nop                 ; AA
+16CE: cmp y, $55          ; 56 55
+16D0: cmp x, $55          ; 55 55
+16D2: cmp x, $A5          ; 55 A5
+16D4: adc a, x            ; 2A
+16D5: nop                 ; A9
+16D6: nop                 ; 00
+16D7: add a, x            ; 20
+16D8: nop                 ; 00
+16D9: nop                 ; E0
+16DA: nop                 ; D9
+16DB: nop                 ; AE
+16DC: nop                 ; BD
+16DD: store $0000, z      ; 16 00 00
+16E0: nop                 ; A5
+16E1: sec                 ; A2
+16E2: nop                 ; FF
+16E3: nop                 ; FF
+16E4: nop                 ; AB
+16E5: nop                 ; BA
+16E6: push y              ; 02
 16E7: nop                 ; 00
-16E8: nop                 ; FC
-16E9: nop                 ; FF
-16EA: mul y, z            ; 55
-16EB: mul y, z            ; 55
-16EC: or z, x             ; AB
-16ED: or y, a             ; AA
-16EE: or y, a             ; AA
-16EF: mul z, z            ; 5A
-16F0: mul y, z            ; 55
-16F1: or y, w             ; A9
-16F2: and y, z            ; 94
-16F3: and x, a            ; 92
-16F4: mul y, y            ; 54
-16F5: or y, w             ; A9
-16F6: mul y, y            ; 54
-16F7: mul y, z            ; 55
-16F8: mul y, z            ; 55
-16F9: push x              ; 01
-16FA: cmp w, z            ; 82
-16FB: nop                 ; 00
-16FC: dec a               ; 70
-16FD: shr a               ; DE
-16FE: cmp y, a            ; 7A
-16FF: jmp.z $0016         ; F5 16 00
-1702: and y, z            ; 94
-1703: sub w, a            ; 48
-1704: cmp a, a            ; 89
-1705: nop                 ; FF
-1706: nop                 ; FF
-1707: nop                 ; FF
-1708: jmp x, y            ; EA
-1709: push x              ; 01
-170A: nop                 ; 00
-170B: nop                 ; 00
-170C: nop                 ; 00
-170D: nop                 ; 00
-170E: nop                 ; 00
-170F: nop                 ; 00
-1710: nop                 ; FC
-1711: nop                 ; FF
-1712: or y, a             ; AA
-1713: or y, a             ; AA
-1714: mul y, y            ; 54
-1715: mul y, z            ; 55
-1716: mul y, z            ; 55
-1717: or x, w             ; A5
-1718: or y, a             ; AA
-1719: mul y, w            ; 56
-171A: mul y, z            ; 55
-171B: mul y, z            ; 55
-171C: mul y, z            ; 55
-171D: mul y, z            ; 55
-171E: or x, w             ; A5
-171F: add z, a            ; 2A
-1720: or y, w             ; A9
-1721: nop                 ; 00
-1722: add x, a            ; 20
-1723: nop                 ; 00
-1724: rol y               ; E0
-1725: shl a               ; D9
-1726: or z, a             ; AE
-1727: xor x, y            ; BD
-1728: return              ; 16
-1729: nop                 ; 00
-172A: nop                 ; 00
-172B: or x, w             ; A5
-172C: and a, w            ; A2
-172D: nop                 ; FF
-172E: nop                 ; FF
-172F: or z, x             ; AB
-1730: not w               ; BA
-1731: push y              ; 02
-1732: nop                 ; 00
-1733: nop                 ; 00
-1734: nop                 ; 00
-1735: nop                 ; 00
-1736: nop                 ; 00
-1737: nop                 ; 00
-1738: nop                 ; FC
-1739: nop                 ; FF
-173A: mul y, z            ; 55
-173B: mul y, z            ; 55
-173C: or z, x             ; AB
-173D: or y, a             ; AA
-173E: or y, a             ; AA
-173F: mul z, z            ; 5A
-1740: mul y, z            ; 55
-1741: add z, w            ; 29
-1742: or x, w             ; A5
-1743: add y, w            ; 24
-1744: sub a, x            ; 49
-1745: sub a, y            ; 4A
-1746: add z, a            ; 2A
-1747: or y, w             ; A9
-1748: sub a, y            ; 4A
-1749: load x, $0400       ; 0B 00 04
-174C: nop                 ; 00
-174D: and z, x            ; 97
-174E: cmp z, x            ; 7B
-174F: ror w               ; E7
-1750: pop x               ; 06
+16E8: nop                 ; 00
+16E9: nop                 ; 00
+16EA: nop                 ; 00
+16EB: nop                 ; 00
+16EC: nop                 ; 00
+16ED: nop                 ; FC
+16EE: nop                 ; FF
+16EF: cmp x, $55          ; 55 55
+16F1: nop                 ; AB
+16F2: nop                 ; AA
+16F3: nop                 ; AA
+16F4: cmpbit x            ; 5A 55
+16F6: add a, $A5          ; 29 A5
+16F8: add a, a            ; 24
+16F9: inc z               ; 49
+16FA: inc w               ; 4A
+16FB: adc a, x            ; 2A
+16FC: nop                 ; A9
+16FD: inc w               ; 4A
+16FE: pop w               ; 0B
+16FF: nop                 ; 00
+1700: push w              ; 04
+1701: nop                 ; 00
+1702: jmp $E77B, y        ; 97 7B E7
+1705: push.a              ; 06
+1706: nop                 ; 00
+1707: dec a               ; 50
+1708: add w, $0D          ; 28 0D
+170A: nop                 ; FF
+170B: nop                 ; FF
+170C: nop                 ; BE
+170D: nop                 ; F7
+170E: load x, $0000       ; 0F 00 00
+1711: nop                 ; 00
+1712: nop                 ; 00
+1713: nop                 ; 00
+1714: nop                 ; 00
+1715: nop                 ; FC
+1716: nop                 ; FF
+1717: nop                 ; AA
+1718: nop                 ; AA
+1719: nop                 ; AA
+171A: nop                 ; AA
+171B: nop                 ; AA
+171C: nop                 ; AA
+171D: nop                 ; AA
+171E: inc w               ; 4A
+171F: cmp x, $55          ; 55 55
+1721: cmp x, $A9          ; 55 A9
+1723: nop                 ; AA
+1724: inc w               ; 4A
+1725: cmp a, y            ; 52
+1726: push w              ; 04
+1727: nop                 ; 00
+1728: nop                 ; 00
+1729: push w              ; 04
+172A: nop                 ; CF
+172B: nop                 ; AA
+172C: nop                 ; BD
+172D: push y              ; 02
+172E: nop                 ; 00
+172F: nop                 ; 00
+1730: mul w, $51          ; 45 51
+1732: nop                 ; FF
+1733: cmpbit w            ; 5D EB
+1735: nop                 ; BA
+1736: set a, $E8          ; 1F E8
+1738: nop                 ; 00
+1739: nop                 ; 00
+173A: nop                 ; 00
+173B: nop                 ; 00
+173C: nop                 ; 00
+173D: nop                 ; FC
+173E: nop                 ; FF
+173F: cmp x, $55          ; 55 55
+1741: cmp x, $55          ; 55 55
+1743: cmp x, $55          ; 55 55
+1745: cmp x, $AA          ; 55 AA
+1747: cmp a, w            ; 54
+1748: nop                 ; AA
+1749: add a, a            ; 24
+174A: cmp x, $49          ; 55 49
+174C: cmp x, $55          ; 55 55
+174E: adc a, y            ; 2B
+174F: nop                 ; 00
+1750: nop                 ; 00
 1751: nop                 ; 00
-1752: mul x, z            ; 50
-1753: add z, z            ; 28
-1754: load z, $FFFF       ; 0D FF FF
-1757: xor x, z            ; BE
-1758: resume              ; F7 0F
-175A: nop                 ; 00
-175B: nop                 ; 00
-175C: nop                 ; 00
-175D: nop                 ; 00
-175E: nop                 ; 00
-175F: nop                 ; 00
-1760: nop                 ; FC
-1761: nop                 ; FF
-1762: or y, a             ; AA
-1763: or y, a             ; AA
-1764: or y, a             ; AA
-1765: or y, a             ; AA
-1766: or y, a             ; AA
-1767: or y, a             ; AA
-1768: or y, a             ; AA
-1769: sub a, y            ; 4A
-176A: mul y, z            ; 55
-176B: mul y, z            ; 55
-176C: mul y, z            ; 55
-176D: or y, w             ; A9
-176E: or y, a             ; AA
-176F: sub a, y            ; 4A
-1770: mul x, a            ; 52
-1771: push w              ; 04
-1772: nop                 ; 00
-1773: nop                 ; 00
-1774: push w              ; 04
-1775: xor w, a            ; CF
-1776: or y, a             ; AA
-1777: xor x, y            ; BD
-1778: push y              ; 02
-1779: nop                 ; 00
-177A: nop                 ; 00
-177B: sub w, y            ; 45
-177C: mul x, w            ; 51
-177D: nop                 ; FF
-177E: mul w, x            ; 5D
-177F: jmp z, w            ; EB
-1780: not w               ; BA
-1781: add x, w            ; 1F
-1782: ror a               ; E8
-1783: nop                 ; 00
-1784: nop                 ; 00
-1785: nop                 ; 00
-1786: nop                 ; 00
-1787: nop                 ; 00
-1788: nop                 ; FC
-1789: nop                 ; FF
-178A: mul y, z            ; 55
-178B: mul y, z            ; 55
-178C: mul y, z            ; 55
-178D: mul y, z            ; 55
-178E: mul y, z            ; 55
-178F: mul y, z            ; 55
-1790: mul y, z            ; 55
-1791: or y, a             ; AA
-1792: mul y, y            ; 54
-1793: or y, a             ; AA
-1794: add y, w            ; 24
-1795: mul y, z            ; 55
-1796: sub a, x            ; 49
-1797: mul y, z            ; 55
-1798: mul y, z            ; 55
-1799: add w, x            ; 2B
-179A: nop                 ; 00
-179B: nop                 ; 00
-179C: nop                 ; 00
-179D: not y               ; B8
-179E: jmp $57D7, z        ; EE D7 57
+1752: nop                 ; B8
+1753: nop                 ; EE
+1754: nop                 ; D7
+1755: cmp z, $00          ; 57 00
+1757: mul a, w            ; 40
+1758: dec a               ; 50
+1759: store $FFFC, z      ; 16 FC FF
+175C: nop                 ; BE
+175D: nop                 ; F7
+175E: nop                 ; B5
+175F: nop                 ; AA
+1760: push x              ; 01
+1761: nop                 ; 00
+1762: nop                 ; 00
+1763: nop                 ; 00
+1764: nop                 ; 00
+1765: nop                 ; FC
+1766: nop                 ; FF
+1767: nop                 ; AA
+1768: nop                 ; AA
+1769: cmpbit x            ; 5A 55
+176B: cmp x, $55          ; 55 55
+176D: inc z               ; 49
+176E: nop                 ; A9
+176F: ror a               ; 92
+1770: ror a               ; 92
+1771: nop                 ; AA
+1772: ror a               ; 92
+1773: adc a, x            ; 2A
+1774: cmp x, $A5          ; 55 A5
+1776: cmp a, w            ; 54
+1777: nop                 ; 00
+1778: mul a, w            ; 40
+1779: mul a, w            ; 40
+177A: nop                 ; C0
+177B: nop                 ; BB
+177C: nop                 ; F6
+177D: push y              ; 02
+177E: nop                 ; 00
+177F: nop                 ; 00
+1780: shl z, $A8          ; 81 A8
+1782: nop                 ; FE
+1783: or w, $EB           ; 6F EB
+1785: nop                 ; DF
+1786: shl x, $FB          ; 7F FB
+1788: push x              ; 01
+1789: nop                 ; 00
+178A: nop                 ; 00
+178B: nop                 ; 00
+178C: nop                 ; 00
+178D: nop                 ; FC
+178E: nop                 ; FF
+178F: cmp x, $55          ; 55 55
+1791: cmp x, $55          ; 55 55
+1793: cmp x, $55          ; 55 55
+1795: nop                 ; AA
+1796: adc a, x            ; 2A
+1797: cmp x, $55          ; 55 55
+1799: jmp z, w            ; 95
+179A: cmp a, w            ; 54
+179B: nop                 ; A5
+179C: cmp a, y            ; 52
+179D: add a, $55          ; 29 55
+179F: push x              ; 01
+17A0: nop                 ; 00
 17A1: nop                 ; 00
-17A2: sub z, y            ; 40
-17A3: mul x, z            ; 50
-17A4: return              ; 16
-17A5: nop                 ; FC
-17A6: nop                 ; FF
-17A7: xor x, z            ; BE
-17A8: resume              ; F7 B5
-17AA: or y, a             ; AA
-17AB: push x              ; 01
-17AC: nop                 ; 00
-17AD: nop                 ; 00
-17AE: nop                 ; 00
-17AF: nop                 ; 00
-17B0: nop                 ; FC
-17B1: nop                 ; FF
-17B2: or y, a             ; AA
-17B3: or y, a             ; AA
-17B4: mul z, z            ; 5A
-17B5: mul y, z            ; 55
-17B6: mul y, z            ; 55
-17B7: mul y, z            ; 55
-17B8: sub a, x            ; 49
-17B9: or y, w             ; A9
-17BA: and x, a            ; 92
-17BB: and x, a            ; 92
-17BC: or y, a             ; AA
-17BD: and x, a            ; 92
-17BE: add z, a            ; 2A
-17BF: mul y, z            ; 55
-17C0: or x, w             ; A5
-17C1: mul y, y            ; 54
-17C2: nop                 ; 00
-17C3: sub z, y            ; 40
-17C4: sub z, y            ; 40
-17C5: xor x, a            ; C0
-17C6: not a               ; BB
-17C7: int $02             ; F6 02
+17A2: shr x, $AA          ; 84 AA
+17A4: nop                 ; DD
+17A5: store $0000, z      ; 16 00 00
+17A8: adc a, x            ; 2A
+17A9: add x, $F8          ; 25 F8
+17AB: nop                 ; DF
+17AC: nop                 ; FF
+17AD: nop                 ; FF
+17AE: nop                 ; AE
+17AF: cmp y, $07          ; 56 07
+17B1: nop                 ; 00
+17B2: nop                 ; 00
+17B3: nop                 ; 00
+17B4: nop                 ; 00
+17B5: nop                 ; FC
+17B6: nop                 ; FF
+17B7: nop                 ; AA
+17B8: nop                 ; AA
+17B9: nop                 ; AA
+17BA: nop                 ; AA
+17BB: nop                 ; AA
+17BC: ror a               ; 92
+17BD: ror a               ; 92
+17BE: cmp a, y            ; 52
+17BF: cmp x, $55          ; 55 55
+17C1: cmp a, y            ; 52
+17C2: add x, $55          ; 25 55
+17C4: inc w               ; 4A
+17C5: jmp z, w            ; 95
+17C6: ror a               ; 92
+17C7: nop                 ; 00
+17C8: nop                 ; 00
 17C9: nop                 ; 00
-17CA: nop                 ; 00
-17CB: cmp w, y            ; 81
-17CC: or y, z             ; A8
-17CD: nop                 ; FE
-17CE: dec w               ; 6F
-17CF: jmp z, w            ; EB
-17D0: rol x               ; DF
-17D1: cmp z, a            ; 7F
-17D2: nop                 ; FB
-17D3: push x              ; 01
+17CA: mul a, w            ; 40
+17CB: nop                 ; FB
+17CC: cmp y, $03          ; 56 03
+17CE: nop                 ; 00
+17CF: nop                 ; 00
+17D0: shl y, $54          ; 80 54
+17D2: nop                 ; A9
+17D3: cmp a, y            ; 52
 17D4: nop                 ; 00
-17D5: nop                 ; 00
-17D6: nop                 ; 00
-17D7: nop                 ; 00
-17D8: nop                 ; FC
-17D9: nop                 ; FF
-17DA: mul y, z            ; 55
-17DB: mul y, z            ; 55
-17DC: mul y, z            ; 55
-17DD: mul y, z            ; 55
-17DE: mul y, z            ; 55
-17DF: mul y, z            ; 55
-17E0: or y, a             ; AA
-17E1: add z, a            ; 2A
-17E2: mul y, z            ; 55
-17E3: mul y, z            ; 55
-17E4: and y, w            ; 95
-17E5: mul y, y            ; 54
-17E6: or x, w             ; A5
-17E7: mul x, a            ; 52
-17E8: add z, w            ; 29
-17E9: mul y, z            ; 55
-17EA: push x              ; 01
-17EB: nop                 ; 00
-17EC: nop                 ; 00
-17ED: cmp w, a            ; 84
-17EE: or y, a             ; AA
-17EF: shr w               ; DD
-17F0: return              ; 16
+17D5: int $F7             ; A0 F7
+17D7: nop                 ; FA
+17D8: push.f              ; 07
+17D9: nop                 ; 00
+17DA: nop                 ; 00
+17DB: nop                 ; 00
+17DC: nop                 ; 00
+17DD: nop                 ; FC
+17DE: nop                 ; FF
+17DF: nop                 ; AA
+17E0: nop                 ; AA
+17E1: cmp y, $55          ; 56 55
+17E3: cmp x, $55          ; 55 55
+17E5: cmp x, $AA          ; 55 AA
+17E7: add a, a            ; 24
+17E8: inc z               ; 49
+17E9: cmp x, $AA          ; 55 AA
+17EB: cmp a, y            ; 52
+17EC: cmp x, $AA          ; 55 AA
+17EE: nop                 ; AA
+17EF: push.a              ; 06
+17F0: nop                 ; 00
 17F1: nop                 ; 00
 17F2: nop                 ; 00
-17F3: add z, a            ; 2A
-17F4: add y, a            ; 25
-17F5: nop                 ; F8
-17F6: rol x               ; DF
-17F7: nop                 ; FF
-17F8: nop                 ; FF
-17F9: or z, a             ; AE
-17FA: mul y, w            ; 56
-17FB: pop y               ; 07
+17F3: nop                 ; AC
+17F4: xor a, $13          ; 7E 13
+17F6: nop                 ; 00
+17F7: nop                 ; 00
+17F8: add w, $49          ; 28 49
+17FA: push y              ; 02
+17FB: nop                 ; 00
 17FC: nop                 ; 00
-17FD: nop                 ; 00
-17FE: nop                 ; 00
-17FF: nop                 ; 00
-1800: nop                 ; FC
-1801: nop                 ; FF
-1802: or y, a             ; AA
-1803: or y, a             ; AA
-1804: or y, a             ; AA
-1805: or y, a             ; AA
-1806: or y, a             ; AA
-1807: and x, a            ; 92
-1808: and x, a            ; 92
-1809: mul x, a            ; 52
-180A: mul y, z            ; 55
-180B: mul y, z            ; 55
-180C: mul x, a            ; 52
-180D: add y, a            ; 25
-180E: mul y, z            ; 55
-180F: sub a, y            ; 4A
-1810: and y, w            ; 95
-1811: and x, a            ; 92
-1812: nop                 ; 00
-1813: nop                 ; 00
-1814: nop                 ; 00
-1815: sub z, y            ; 40
-1816: nop                 ; FB
-1817: mul y, w            ; 56
-1818: push z              ; 03
+17FD: nop                 ; E0
+17FE: nop                 ; AF
+17FF: nop                 ; FD
+1800: pop.a               ; 0D
+1801: nop                 ; 00
+1802: nop                 ; 00
+1803: nop                 ; 00
+1804: nop                 ; 00
+1805: nop                 ; FC
+1806: nop                 ; FF
+1807: cmp x, $55          ; 55 55
+1809: cmp x, $55          ; 55 55
+180B: jmp z, w            ; 95
+180C: add a, a            ; 24
+180D: nop                 ; A5
+180E: inc w               ; 4A
+180F: cmp x, $55          ; 55 55
+1811: nop                 ; A5
+1812: cmp a, y            ; 52
+1813: inc w               ; 4A
+1814: nop                 ; A9
+1815: cmp a, y            ; 52
+1816: cmp a, y            ; 52
+1817: pop y               ; 09
+1818: nop                 ; 00
 1819: nop                 ; 00
-181A: nop                 ; 00
-181B: cmp w, x            ; 80
-181C: mul y, y            ; 54
-181D: or y, w             ; A9
-181E: mul x, a            ; 52
+181A: add a, x            ; 20
+181B: nop                 ; B4
+181C: nop                 ; DB
+181D: push a              ; 05
+181E: nop                 ; 00
 181F: nop                 ; 00
-1820: and a, y            ; A0
-1821: resume              ; F7 FA
-1823: pop y               ; 07
-1824: nop                 ; 00
-1825: nop                 ; 00
-1826: nop                 ; 00
-1827: nop                 ; 00
-1828: nop                 ; FC
-1829: nop                 ; FF
-182A: or y, a             ; AA
-182B: or y, a             ; AA
-182C: mul y, w            ; 56
-182D: mul y, z            ; 55
-182E: mul y, z            ; 55
-182F: mul y, z            ; 55
-1830: mul y, z            ; 55
-1831: or y, a             ; AA
-1832: add y, w            ; 24
-1833: sub a, x            ; 49
-1834: mul y, z            ; 55
-1835: or y, a             ; AA
-1836: mul x, a            ; 52
-1837: mul y, z            ; 55
-1838: or y, a             ; AA
-1839: or y, a             ; AA
-183A: pop x               ; 06
-183B: nop                 ; 00
-183C: nop                 ; 00
-183D: nop                 ; 00
-183E: or z, y             ; AC
-183F: cmp z, w            ; 7E
-1840: store $0000, w      ; 13 00 00
-1843: add z, z            ; 28
-1844: sub a, x            ; 49
-1845: push y              ; 02
+1820: nop                 ; 00
+1821: nop                 ; A4
+1822: nop                 ; 00
+1823: nop                 ; 00
+1824: inc z               ; 49
+1825: mul x, $B5          ; 42 B5
+1827: cmp y, $0F          ; 56 0F
+1829: nop                 ; 00
+182A: nop                 ; 00
+182B: nop                 ; 00
+182C: nop                 ; 00
+182D: nop                 ; FC
+182E: nop                 ; FF
+182F: cmp x, $55          ; 55 55
+1831: cmp x, $55          ; 55 55
+1833: cmp x, $55          ; 55 55
+1835: add a, $29          ; 29 29
+1837: cmp x, $55          ; 55 55
+1839: add a, $95          ; 29 95
+183B: adc a, x            ; 2A
+183C: jmp z, w            ; 95
+183D: inc w               ; 4A
+183E: add a, $35          ; 29 35
+1840: nop                 ; 00
+1841: nop                 ; 00
+1842: nop                 ; 00
+1843: int $76             ; A0 76
+1845: pop w               ; 0B
 1846: nop                 ; 00
 1847: nop                 ; 00
-1848: rol y               ; E0
-1849: or w, x             ; AF
-184A: nop                 ; FD
-184B: load z, $0000       ; 0D 00 00
-184E: nop                 ; 00
-184F: nop                 ; 00
-1850: nop                 ; FC
-1851: nop                 ; FF
-1852: mul y, z            ; 55
-1853: mul y, z            ; 55
-1854: mul y, z            ; 55
-1855: mul y, z            ; 55
-1856: and y, w            ; 95
-1857: add y, w            ; 24
-1858: or x, w             ; A5
-1859: sub a, y            ; 4A
-185A: mul y, z            ; 55
-185B: mul y, z            ; 55
-185C: or x, w             ; A5
-185D: mul x, a            ; 52
-185E: sub a, y            ; 4A
-185F: or y, w             ; A9
-1860: mul x, a            ; 52
-1861: mul x, a            ; 52
-1862: pop w               ; 09
-1863: nop                 ; 00
-1864: nop                 ; 00
-1865: add x, a            ; 20
-1866: or a, y             ; B4
-1867: shr y               ; DB
-1868: push a              ; 05
+1848: mul a, w            ; 40
+1849: ror w               ; 91
+184A: pop z               ; 0A
+184B: nop                 ; 00
+184C: shl y, $84          ; 80 84
+184E: nop                 ; DB
+184F: nop                 ; FF
+1850: sub w, $00          ; 3B 00
+1852: nop                 ; 00
+1853: nop                 ; 00
+1854: nop                 ; 00
+1855: nop                 ; FC
+1856: nop                 ; FF
+1857: cmp x, $55          ; 55 55
+1859: cmp x, $55          ; 55 55
+185B: nop                 ; A9
+185C: inc w               ; 4A
+185D: inc w               ; 4A
+185E: cmp x, $49          ; 55 49
+1860: adc a, x            ; 2A
+1861: cmp x, $A5          ; 55 A5
+1863: cmp a, w            ; 54
+1864: nop                 ; A5
+1865: cmp a, w            ; 54
+1866: nop                 ; A5
+1867: ror a               ; 92
+1868: nop                 ; 00
 1869: nop                 ; 00
 186A: nop                 ; 00
-186B: nop                 ; 00
-186C: or x, z             ; A4
-186D: nop                 ; 00
+186B: nop                 ; C1
+186C: cmpbit x            ; 5A 01
 186E: nop                 ; 00
-186F: sub a, x            ; 49
-1870: sub z, w            ; 42
-1871: or a, z             ; B5
-1872: mul y, w            ; 56
-1873: load a, $0000       ; 0F 00 00
-1876: nop                 ; 00
-1877: nop                 ; 00
-1878: nop                 ; FC
-1879: nop                 ; FF
-187A: mul y, z            ; 55
-187B: mul y, z            ; 55
-187C: mul y, z            ; 55
-187D: mul y, z            ; 55
-187E: mul y, z            ; 55
-187F: mul y, z            ; 55
-1880: add z, w            ; 29
-1881: add z, w            ; 29
-1882: mul y, z            ; 55
-1883: mul y, z            ; 55
-1884: add z, w            ; 29
-1885: and y, w            ; 95
-1886: add z, a            ; 2A
-1887: and y, w            ; 95
-1888: sub a, y            ; 4A
-1889: add z, w            ; 29
-188A: sub x, x            ; 35
-188B: nop                 ; 00
-188C: nop                 ; 00
-188D: nop                 ; 00
-188E: and a, y            ; A0
-188F: cmp y, x            ; 76
-1890: load x, $0000       ; 0B 00 00
-1893: sub z, y            ; 40
-1894: and x, w            ; 91
-1895: pop a               ; 0A
-1896: nop                 ; 00
-1897: cmp w, x            ; 80
-1898: cmp w, a            ; 84
-1899: shr y               ; DB
-189A: nop                 ; FF
-189B: sub y, y            ; 3B
-189C: nop                 ; 00
-189D: nop                 ; 00
-189E: nop                 ; 00
-189F: nop                 ; 00
-18A0: nop                 ; FC
-18A1: nop                 ; FF
-18A2: mul y, z            ; 55
-18A3: mul y, z            ; 55
-18A4: mul y, z            ; 55
-18A5: mul y, z            ; 55
-18A6: or y, w             ; A9
-18A7: sub a, y            ; 4A
-18A8: sub a, y            ; 4A
-18A9: mul y, z            ; 55
-18AA: sub a, x            ; 49
-18AB: add z, a            ; 2A
-18AC: mul y, z            ; 55
-18AD: or x, w             ; A5
-18AE: mul y, y            ; 54
-18AF: or x, w             ; A5
-18B0: mul y, y            ; 54
-18B1: or x, w             ; A5
-18B2: and x, a            ; 92
-18B3: nop                 ; 00
-18B4: nop                 ; 00
-18B5: nop                 ; 00
-18B6: xor y, x            ; C1
-18B7: mul z, z            ; 5A
+186F: nop                 ; 00
+1870: nop                 ; 00
+1871: mul a, w            ; 40
+1872: push y              ; 02
+1873: add a, $2A          ; 29 2A
+1875: shl w, $6E          ; 82 6E
+1877: nop                 ; EB
+1878: adc a, a            ; 2E
+1879: nop                 ; 00
+187A: nop                 ; 00
+187B: nop                 ; 00
+187C: nop                 ; 00
+187D: nop                 ; FC
+187E: nop                 ; FF
+187F: cmp x, $55          ; 55 55
+1881: cmp x, $55          ; 55 55
+1883: add x, $A9          ; 25 A9
+1885: nop                 ; AA
+1886: nop                 ; A4
+1887: nop                 ; AA
+1888: cmp a, y            ; 52
+1889: jmp z, w            ; 95
+188A: cmp a, w            ; 54
+188B: nop                 ; A5
+188C: cmp a, w            ; 54
+188D: cmp x, $4A          ; 55 4A
+188F: nop                 ; AA
+1890: nop                 ; 00
+1891: nop                 ; 00
+1892: nop                 ; 00
+1893: nop                 ; 00
+1894: or a, z             ; 6A
+1895: load a, $0000       ; 13 00 00
+1898: nop                 ; 00
+1899: jmp z, w            ; 95
+189A: nop                 ; 00
+189B: shl y, $80          ; 80 80
+189D: store $BED5, x      ; 14 D5 BE
+18A0: or w, $00           ; 6F 00
+18A2: nop                 ; 00
+18A3: nop                 ; 00
+18A4: nop                 ; 00
+18A5: nop                 ; FC
+18A6: nop                 ; FF
+18A7: nop                 ; AA
+18A8: nop                 ; AA
+18A9: nop                 ; AA
+18AA: nop                 ; AA
+18AB: nop                 ; AA
+18AC: adc a, x            ; 2A
+18AD: add a, $95          ; 29 95
+18AF: nop                 ; AA
+18B0: inc w               ; 4A
+18B1: nop                 ; A9
+18B2: inc w               ; 4A
+18B3: add a, $95          ; 29 95
+18B5: ror a               ; 92
+18B6: nop                 ; AA
+18B7: cmp a, y            ; 52
 18B8: push x              ; 01
 18B9: nop                 ; 00
 18BA: nop                 ; 00
 18BB: nop                 ; 00
-18BC: sub z, y            ; 40
-18BD: push y              ; 02
-18BE: add z, w            ; 29
-18BF: add z, a            ; 2A
-18C0: cmp w, z            ; 82
-18C1: dec z               ; 6E
-18C2: jmp z, w            ; EB
-18C3: add w, w            ; 2E
-18C4: nop                 ; 00
-18C5: nop                 ; 00
-18C6: nop                 ; 00
-18C7: nop                 ; 00
-18C8: nop                 ; FC
-18C9: nop                 ; FF
-18CA: mul y, z            ; 55
-18CB: mul y, z            ; 55
-18CC: mul y, z            ; 55
-18CD: mul y, z            ; 55
-18CE: add y, a            ; 25
-18CF: or y, w             ; A9
-18D0: or y, a             ; AA
-18D1: or x, z             ; A4
-18D2: or y, a             ; AA
-18D3: mul x, a            ; 52
-18D4: and y, w            ; 95
-18D5: mul y, y            ; 54
-18D6: or x, w             ; A5
-18D7: mul y, y            ; 54
-18D8: mul y, z            ; 55
-18D9: sub a, y            ; 4A
-18DA: or y, a             ; AA
-18DB: nop                 ; 00
-18DC: nop                 ; 00
-18DD: nop                 ; 00
-18DE: nop                 ; 00
-18DF: inc w               ; 6A
-18E0: store $0000, w      ; 13 00 00
+18BC: xor x, $01          ; 7A 01
+18BE: nop                 ; 00
+18BF: nop                 ; 00
+18C0: nop                 ; 00
+18C1: nop                 ; 00
+18C2: nop                 ; 00
+18C3: add w, $AA          ; 28 AA
+18C5: push y              ; 02
+18C6: nop                 ; FD
+18C7: nop                 ; D7
+18C8: nop                 ; BD
+18C9: nop                 ; 00
+18CA: nop                 ; 00
+18CB: nop                 ; 00
+18CC: nop                 ; 00
+18CD: nop                 ; FC
+18CE: nop                 ; FF
+18CF: cmp x, $55          ; 55 55
+18D1: cmp x, $55          ; 55 55
+18D3: jmp z, w            ; 95
+18D4: nop                 ; A4
+18D5: inc w               ; 4A
+18D6: nop                 ; A9
+18D7: add a, a            ; 24
+18D8: add a, $A5          ; 29 A5
+18DA: cmp a, y            ; 52
+18DB: nop                 ; AA
+18DC: cmp a, y            ; 52
+18DD: cmp x, $A9          ; 55 A9
+18DF: jmp x, y            ; 94
+18E0: pop z               ; 0A
+18E1: nop                 ; 00
+18E2: nop                 ; 00
 18E3: nop                 ; 00
-18E4: and y, w            ; 95
-18E5: nop                 ; 00
-18E6: cmp w, x            ; 80
-18E7: cmp w, x            ; 80
-18E8: store $BED5, a      ; 14 D5 BE
-18EB: dec w               ; 6F
-18EC: nop                 ; 00
-18ED: nop                 ; 00
-18EE: nop                 ; 00
-18EF: nop                 ; 00
-18F0: nop                 ; FC
-18F1: nop                 ; FF
-18F2: or y, a             ; AA
-18F3: or y, a             ; AA
-18F4: or y, a             ; AA
-18F5: or y, a             ; AA
-18F6: or y, a             ; AA
-18F7: add z, a            ; 2A
-18F8: add z, w            ; 29
-18F9: and y, w            ; 95
-18FA: or y, a             ; AA
-18FB: sub a, y            ; 4A
-18FC: or y, w             ; A9
-18FD: sub a, y            ; 4A
-18FE: add z, w            ; 29
-18FF: and y, w            ; 95
-1900: and x, a            ; 92
-1901: or y, a             ; AA
-1902: mul x, a            ; 52
-1903: push x              ; 01
-1904: nop                 ; 00
-1905: nop                 ; 00
-1906: nop                 ; 00
-1907: cmp y, a            ; 7A
-1908: push x              ; 01
+18E4: mul a, w            ; 40
+18E5: pop w               ; 0B
+18E6: nop                 ; 00
+18E7: nop                 ; 00
+18E8: nop                 ; 00
+18E9: inc y               ; 48
+18EA: nop                 ; 00
+18EB: shl y, $22          ; 80 22
+18ED: add w, $6A          ; 28 6A
+18EF: nop                 ; BF
+18F0: or w, $00           ; 6F 00
+18F2: nop                 ; 00
+18F3: nop                 ; 00
+18F4: nop                 ; 00
+18F5: nop                 ; FC
+18F6: nop                 ; FF
+18F7: cmp x, $55          ; 55 55
+18F9: cmp x, $55          ; 55 55
+18FB: nop                 ; A9
+18FC: inc w               ; 4A
+18FD: cmp a, y            ; 52
+18FE: inc w               ; 4A
+18FF: cmp x, $95          ; 55 95
+1901: cmp a, w            ; 54
+1902: nop                 ; AA
+1903: cmp a, y            ; 52
+1904: cmp x, $AA          ; 55 AA
+1906: inc w               ; 4A
+1907: nop                 ; A5
+1908: nop                 ; AA
 1909: nop                 ; 00
 190A: nop                 ; 00
 190B: nop                 ; 00
-190C: nop                 ; 00
-190D: nop                 ; 00
-190E: add z, z            ; 28
-190F: or y, a             ; AA
-1910: push y              ; 02
-1911: nop                 ; FD
-1912: shl z               ; D7
-1913: xor x, y            ; BD
-1914: nop                 ; 00
-1915: nop                 ; 00
-1916: nop                 ; 00
-1917: nop                 ; 00
-1918: nop                 ; FC
-1919: nop                 ; FF
-191A: mul y, z            ; 55
-191B: mul y, z            ; 55
-191C: mul y, z            ; 55
-191D: mul y, z            ; 55
-191E: and y, w            ; 95
-191F: or x, z             ; A4
-1920: sub a, y            ; 4A
-1921: or y, w             ; A9
-1922: add y, w            ; 24
-1923: add z, w            ; 29
-1924: or x, w             ; A5
-1925: mul x, a            ; 52
-1926: or y, a             ; AA
-1927: mul x, a            ; 52
-1928: mul y, z            ; 55
-1929: or y, w             ; A9
-192A: and y, z            ; 94
-192B: pop a               ; 0A
-192C: nop                 ; 00
-192D: nop                 ; 00
-192E: nop                 ; 00
-192F: sub z, y            ; 40
-1930: load x, $0000       ; 0B 00 00
+190C: int $01             ; A0 01
+190E: nop                 ; 00
+190F: nop                 ; 00
+1910: nop                 ; 00
+1911: add a, x            ; 20
+1912: nop                 ; 00
+1913: cmp a, x            ; 51
+1914: shr a, $0A          ; 88 0A
+1916: nop                 ; BC
+1917: nop                 ; ED
+1918: nop                 ; B6
+1919: nop                 ; 00
+191A: nop                 ; 00
+191B: nop                 ; 00
+191C: nop                 ; 00
+191D: nop                 ; FC
+191E: nop                 ; FF
+191F: cmp x, $55          ; 55 55
+1921: cmp x, $95          ; 55 95
+1923: inc w               ; 4A
+1924: nop                 ; A9
+1925: nop                 ; AA
+1926: cmp a, y            ; 52
+1927: ror a               ; 92
+1928: nop                 ; A4
+1929: cmp a, y            ; 52
+192A: jmp z, w            ; 95
+192B: adc a, x            ; 2A
+192C: inc z               ; 49
+192D: inc z               ; 49
+192E: adc a, x            ; 2A
+192F: add a, $49          ; 29 49
+1931: nop                 ; AD
+1932: nop                 ; 00
 1933: nop                 ; 00
-1934: sub w, a            ; 48
-1935: nop                 ; 00
-1936: cmp w, x            ; 80
-1937: add y, y            ; 22
-1938: add z, z            ; 28
-1939: inc w               ; 6A
-193A: xor x, w            ; BF
-193B: dec w               ; 6F
-193C: nop                 ; 00
-193D: nop                 ; 00
-193E: nop                 ; 00
-193F: nop                 ; 00
-1940: nop                 ; FC
-1941: nop                 ; FF
-1942: mul y, z            ; 55
-1943: mul y, z            ; 55
-1944: mul y, z            ; 55
-1945: mul y, z            ; 55
-1946: or y, w             ; A9
-1947: sub a, y            ; 4A
-1948: mul x, a            ; 52
-1949: sub a, y            ; 4A
-194A: mul y, z            ; 55
-194B: and y, w            ; 95
-194C: mul y, y            ; 54
-194D: or y, a             ; AA
-194E: mul x, a            ; 52
-194F: mul y, z            ; 55
-1950: or y, a             ; AA
-1951: sub a, y            ; 4A
-1952: or x, w             ; A5
-1953: or y, a             ; AA
-1954: nop                 ; 00
-1955: nop                 ; 00
-1956: nop                 ; 00
-1957: and a, y            ; A0
-1958: push x              ; 01
-1959: nop                 ; 00
-195A: nop                 ; 00
+1934: nop                 ; 00
+1935: push x              ; 01
+1936: nop                 ; 00
+1937: nop                 ; 00
+1938: nop                 ; 00
+1939: shl y, $00          ; 80 00
+193B: shl y, $52          ; 80 52
+193D: cmp a, y            ; 52
+193E: nop                 ; E8
+193F: nop                 ; FF
+1940: nop                 ; FD
+1941: push x              ; 01
+1942: nop                 ; 00
+1943: nop                 ; 00
+1944: nop                 ; 00
+1945: nop                 ; FC
+1946: nop                 ; FF
+1947: cmp x, $55          ; 55 55
+1949: cmp x, $A9          ; 55 A9
+194B: adc a, x            ; 2A
+194C: jmp z, w            ; 95
+194D: add a, a            ; 24
+194E: jmp z, w            ; 95
+194F: nop                 ; AA
+1950: adc a, x            ; 2A
+1951: jmp z, w            ; 95
+1952: cmp a, y            ; 52
+1953: inc w               ; 4A
+1954: cmp x, $55          ; 55 55
+1956: cmp x, $55          ; 55 55
+1958: cmp x, $25          ; 55 25
+195A: push y              ; 02
 195B: nop                 ; 00
-195C: add x, a            ; 20
+195C: nop                 ; 00
 195D: nop                 ; 00
-195E: mul x, w            ; 51
-195F: cmp a, w            ; 88
-1960: pop a               ; 0A
-1961: xor x, x            ; BC
-1962: jmp $00B6, y        ; ED B6 00
-1965: nop                 ; 00
-1966: nop                 ; 00
-1967: nop                 ; 00
-1968: nop                 ; FC
-1969: nop                 ; FF
-196A: mul y, z            ; 55
-196B: mul y, z            ; 55
-196C: mul y, z            ; 55
-196D: and y, w            ; 95
-196E: sub a, y            ; 4A
-196F: or y, w             ; A9
-1970: or y, a             ; AA
-1971: mul x, a            ; 52
-1972: and x, a            ; 92
-1973: or x, z             ; A4
-1974: mul x, a            ; 52
-1975: and y, w            ; 95
-1976: add z, a            ; 2A
-1977: sub a, x            ; 49
-1978: sub a, x            ; 49
-1979: add z, a            ; 2A
-197A: add z, w            ; 29
-197B: sub a, x            ; 49
-197C: or z, w             ; AD
-197D: nop                 ; 00
-197E: nop                 ; 00
-197F: nop                 ; 00
-1980: push x              ; 01
-1981: nop                 ; 00
-1982: nop                 ; 00
+195E: nop                 ; 00
+195F: nop                 ; 00
+1960: nop                 ; 00
+1961: nop                 ; 00
+1962: nop                 ; 00
+1963: nop                 ; 00
+1964: shr x, $48          ; 84 48
+1966: nop                 ; B8
+1967: nop                 ; B5
+1968: or w, $03           ; 6F 03
+196A: nop                 ; 00
+196B: nop                 ; 00
+196C: nop                 ; 00
+196D: nop                 ; FC
+196E: nop                 ; FF
+196F: cmp x, $55          ; 55 55
+1971: cmp x, $55          ; 55 55
+1973: cmp a, y            ; 52
+1974: nop                 ; A5
+1975: nop                 ; AA
+1976: cmp a, y            ; 52
+1977: nop                 ; A5
+1978: nop                 ; A4
+1979: cmp a, w            ; 54
+197A: cmp x, $A9          ; 55 A9
+197C: adc a, x            ; 2A
+197D: cmp x, $49          ; 55 49
+197F: jmp z, w            ; 95
+1980: add a, a            ; 24
+1981: nop                 ; A9
+1982: push w              ; 04
 1983: nop                 ; 00
-1984: cmp w, x            ; 80
-1985: nop                 ; 00
-1986: cmp w, x            ; 80
-1987: mul x, a            ; 52
-1988: mul x, a            ; 52
-1989: ror a               ; E8
-198A: nop                 ; FF
-198B: nop                 ; FD
-198C: push x              ; 01
-198D: nop                 ; 00
-198E: nop                 ; 00
-198F: nop                 ; 00
-1990: nop                 ; FC
-1991: nop                 ; FF
-1992: mul y, z            ; 55
-1993: mul y, z            ; 55
-1994: mul y, z            ; 55
-1995: or y, w             ; A9
-1996: add z, a            ; 2A
-1997: and y, w            ; 95
-1998: add y, w            ; 24
-1999: and y, w            ; 95
-199A: or y, a             ; AA
-199B: add z, a            ; 2A
-199C: and y, w            ; 95
-199D: mul x, a            ; 52
-199E: sub a, y            ; 4A
-199F: mul y, z            ; 55
-19A0: mul y, z            ; 55
-19A1: mul y, z            ; 55
-19A2: mul y, z            ; 55
-19A3: mul y, z            ; 55
-19A4: add y, a            ; 25
-19A5: push y              ; 02
-19A6: nop                 ; 00
-19A7: nop                 ; 00
-19A8: nop                 ; 00
-19A9: nop                 ; 00
-19AA: nop                 ; 00
+1984: nop                 ; 00
+1985: pop x               ; 08
+1986: nop                 ; 00
+1987: nop                 ; 00
+1988: nop                 ; 00
+1989: nop                 ; 00
+198A: pop x               ; 08
+198B: mul a, w            ; 40
+198C: add a, $12          ; 29 12
+198E: and a, z            ; 61
+198F: nop                 ; FF
+1990: nop                 ; FB
+1991: push.a              ; 06
+1992: nop                 ; 00
+1993: nop                 ; 00
+1994: nop                 ; 00
+1995: nop                 ; FC
+1996: nop                 ; FF
+1997: cmp x, $55          ; 55 55
+1999: cmp x, $55          ; 55 55
+199B: cmp x, $2A          ; 55 2A
+199D: inc z               ; 49
+199E: inc w               ; 4A
+199F: inc w               ; 4A
+19A0: jmp z, w            ; 95
+19A1: cmp a, y            ; 52
+19A2: inc w               ; 4A
+19A3: jmp z, w            ; 95
+19A4: nop                 ; A4
+19A5: ror a               ; 92
+19A6: adc a, x            ; 2A
+19A7: nop                 ; A9
+19A8: nop                 ; AA
+19A9: inc w               ; 4A
+19AA: push a              ; 05
 19AB: nop                 ; 00
 19AC: nop                 ; 00
 19AD: nop                 ; 00
 19AE: nop                 ; 00
-19AF: cmp w, a            ; 84
-19B0: sub w, a            ; 48
-19B1: not y               ; B8
-19B2: or a, z             ; B5
-19B3: dec w               ; 6F
-19B4: push z              ; 03
-19B5: nop                 ; 00
-19B6: nop                 ; 00
-19B7: nop                 ; 00
-19B8: nop                 ; FC
-19B9: nop                 ; FF
-19BA: mul y, z            ; 55
-19BB: mul y, z            ; 55
-19BC: mul y, z            ; 55
-19BD: mul y, z            ; 55
-19BE: mul x, a            ; 52
-19BF: or x, w             ; A5
-19C0: or y, a             ; AA
-19C1: mul x, a            ; 52
-19C2: or x, w             ; A5
-19C3: or x, z             ; A4
-19C4: mul y, y            ; 54
-19C5: mul y, z            ; 55
-19C6: or y, w             ; A9
-19C7: add z, a            ; 2A
-19C8: mul y, z            ; 55
-19C9: sub a, x            ; 49
-19CA: and y, w            ; 95
-19CB: add y, w            ; 24
-19CC: or y, w             ; A9
-19CD: push w              ; 04
-19CE: nop                 ; 00
-19CF: nop                 ; 00
-19D0: pop z               ; 08
-19D1: nop                 ; 00
-19D2: nop                 ; 00
-19D3: nop                 ; 00
+19AF: nop                 ; 00
+19B0: nop                 ; 00
+19B1: nop                 ; 00
+19B2: nop                 ; 00
+19B3: nop                 ; 00
+19B4: nop                 ; A4
+19B5: nop                 ; A4
+19B6: nop                 ; F0
+19B7: or y, $EF           ; 6D EF
+19B9: pop w               ; 0B
+19BA: nop                 ; 00
+19BB: nop                 ; 00
+19BC: nop                 ; 00
+19BD: nop                 ; FC
+19BE: nop                 ; FF
+19BF: nop                 ; AA
+19C0: nop                 ; AA
+19C1: nop                 ; AA
+19C2: nop                 ; AA
+19C3: nop                 ; AA
+19C4: cmp a, y            ; 52
+19C5: cmp x, $A9          ; 55 A9
+19C7: cmp a, y            ; 52
+19C8: cmp a, y            ; 52
+19C9: jmp x, y            ; 94
+19CA: cmp a, y            ; 52
+19CB: nop                 ; A5
+19CC: nop                 ; AA
+19CD: cmp a, w            ; 54
+19CE: nop                 ; AA
+19CF: inc w               ; 4A
+19D0: ror a               ; 92
+19D1: adc a, x            ; 2A
+19D2: add a, $00          ; 29 00
 19D4: nop                 ; 00
-19D5: pop z               ; 08
-19D6: sub z, y            ; 40
-19D7: add z, w            ; 29
-19D8: store $FF61, z      ; 12 61 FF
-19DB: nop                 ; FB
-19DC: pop x               ; 06
-19DD: nop                 ; 00
-19DE: nop                 ; 00
-19DF: nop                 ; 00
-19E0: nop                 ; FC
-19E1: nop                 ; FF
-19E2: mul y, z            ; 55
-19E3: mul y, z            ; 55
-19E4: mul y, z            ; 55
-19E5: mul y, z            ; 55
-19E6: mul y, z            ; 55
-19E7: add z, a            ; 2A
-19E8: sub a, x            ; 49
-19E9: sub a, y            ; 4A
-19EA: sub a, y            ; 4A
-19EB: and y, w            ; 95
-19EC: mul x, a            ; 52
-19ED: sub a, y            ; 4A
-19EE: and y, w            ; 95
-19EF: or x, z             ; A4
-19F0: and x, a            ; 92
-19F1: add z, a            ; 2A
-19F2: or y, w             ; A9
-19F3: or y, a             ; AA
-19F4: sub a, y            ; 4A
-19F5: push a              ; 05
-19F6: nop                 ; 00
-19F7: nop                 ; 00
-19F8: nop                 ; 00
-19F9: nop                 ; 00
-19FA: nop                 ; 00
+19D5: nop                 ; 00
+19D6: nop                 ; 00
+19D7: nop                 ; 00
+19D8: nop                 ; 00
+19D9: nop                 ; 00
+19DA: shl y, $00          ; 80 00
+19DC: pop x               ; 08
+19DD: pop y               ; 09
+19DE: mul x, $DF          ; 42 DF
+19E0: nop                 ; BB
+19E1: set w, $00          ; 1E 00
+19E3: nop                 ; 00
+19E4: nop                 ; 00
+19E5: nop                 ; FC
+19E6: nop                 ; FF
+19E7: cmp x, $55          ; 55 55
+19E9: cmp x, $55          ; 55 55
+19EB: nop                 ; A5
+19EC: inc w               ; 4A
+19ED: ror a               ; 92
+19EE: inc w               ; 4A
+19EF: adc a, x            ; 2A
+19F0: jmp z, w            ; 95
+19F1: cmp a, y            ; 52
+19F2: cmp x, $AA          ; 55 AA
+19F4: inc w               ; 4A
+19F5: cmp x, $49          ; 55 49
+19F7: cmp x, $55          ; 55 55
+19F9: nop                 ; AA
+19FA: ror a               ; 92
 19FB: nop                 ; 00
 19FC: nop                 ; 00
-19FD: nop                 ; 00
+19FD: add a, x            ; 20
 19FE: nop                 ; 00
-19FF: or x, z             ; A4
-1A00: or x, z             ; A4
-1A01: jmp $EF6D, a        ; F0 6D EF
-1A04: load x, $0000       ; 0B 00 00
-1A07: nop                 ; 00
-1A08: nop                 ; FC
-1A09: nop                 ; FF
-1A0A: or y, a             ; AA
-1A0B: or y, a             ; AA
-1A0C: or y, a             ; AA
-1A0D: or y, a             ; AA
-1A0E: or y, a             ; AA
-1A0F: mul x, a            ; 52
-1A10: mul y, z            ; 55
-1A11: or y, w             ; A9
-1A12: mul x, a            ; 52
-1A13: mul x, a            ; 52
-1A14: and y, z            ; 94
-1A15: mul x, a            ; 52
-1A16: or x, w             ; A5
-1A17: or y, a             ; AA
-1A18: mul y, y            ; 54
-1A19: or y, a             ; AA
-1A1A: sub a, y            ; 4A
-1A1B: and x, a            ; 92
-1A1C: add z, a            ; 2A
-1A1D: add z, w            ; 29
-1A1E: nop                 ; 00
-1A1F: nop                 ; 00
-1A20: nop                 ; 00
-1A21: nop                 ; 00
-1A22: nop                 ; 00
-1A23: nop                 ; 00
+19FF: nop                 ; 00
+1A00: nop                 ; 00
+1A01: nop                 ; 00
+1A02: nop                 ; 00
+1A03: shl y, $A4          ; 80 A4
+1A05: nop                 ; A4
+1A06: nop                 ; F0
+1A07: nop                 ; F5
+1A08: nop                 ; EE
+1A09: pop.a               ; 0D
+1A0A: nop                 ; 00
+1A0B: nop                 ; 00
+1A0C: nop                 ; 00
+1A0D: nop                 ; FC
+1A0E: nop                 ; FF
+1A0F: cmp x, $55          ; 55 55
+1A11: cmp x, $AA          ; 55 AA
+1A13: jmp x, y            ; 94
+1A14: cmp a, w            ; 54
+1A15: cmp x, $A9          ; 55 A9
+1A17: nop                 ; A4
+1A18: nop                 ; A4
+1A19: jmp x, y            ; 94
+1A1A: cmp a, w            ; 54
+1A1B: cmp x, $52          ; 55 52
+1A1D: inc w               ; 4A
+1A1E: cmp x, $52          ; 55 52
+1A20: nop                 ; A5
+1A21: cmp a, y            ; 52
+1A22: add x, $01          ; 25 01
 1A24: nop                 ; 00
-1A25: cmp w, x            ; 80
+1A25: nop                 ; 00
 1A26: nop                 ; 00
-1A27: pop z               ; 08
-1A28: pop w               ; 09
-1A29: sub z, w            ; 42
-1A2A: rol x               ; DF
-1A2B: not a               ; BB
-1A2C: add x, z            ; 1E
-1A2D: nop                 ; 00
-1A2E: nop                 ; 00
-1A2F: nop                 ; 00
-1A30: nop                 ; FC
-1A31: nop                 ; FF
-1A32: mul y, z            ; 55
-1A33: mul y, z            ; 55
-1A34: mul y, z            ; 55
-1A35: mul y, z            ; 55
-1A36: or x, w             ; A5
-1A37: sub a, y            ; 4A
-1A38: and x, a            ; 92
-1A39: sub a, y            ; 4A
-1A3A: add z, a            ; 2A
-1A3B: and y, w            ; 95
-1A3C: mul x, a            ; 52
-1A3D: mul y, z            ; 55
-1A3E: or y, a             ; AA
-1A3F: sub a, y            ; 4A
-1A40: mul y, z            ; 55
-1A41: sub a, x            ; 49
-1A42: mul y, z            ; 55
-1A43: mul y, z            ; 55
-1A44: or y, a             ; AA
-1A45: and x, a            ; 92
-1A46: nop                 ; 00
-1A47: nop                 ; 00
-1A48: add x, a            ; 20
-1A49: nop                 ; 00
-1A4A: nop                 ; 00
-1A4B: nop                 ; 00
+1A27: nop                 ; 00
+1A28: nop                 ; 00
+1A29: nop                 ; 00
+1A2A: load y, $0008       ; 10 08 00
+1A2D: load z, $BFB1       ; 11 B1 BF
+1A30: cmp z, $7B          ; 57 7B
+1A32: nop                 ; 00
+1A33: nop                 ; 00
+1A34: nop                 ; 00
+1A35: nop                 ; FC
+1A36: nop                 ; FF
+1A37: cmp x, $55          ; 55 55
+1A39: cmp x, $55          ; 55 55
+1A3B: cmp x, $95          ; 55 95
+1A3D: add a, a            ; 24
+1A3E: jmp z, w            ; 95
+1A3F: inc w               ; 4A
+1A40: store $4921, y      ; 15 21 49
+1A43: inc z               ; 49
+1A44: jmp z, w            ; 95
+1A45: cmp a, y            ; 52
+1A46: cmp x, $95          ; 55 95
+1A48: jmp x, y            ; 94
+1A49: jmp x, y            ; 94
+1A4A: jmp x, y            ; 94
+1A4B: push w              ; 04
 1A4C: nop                 ; 00
 1A4D: nop                 ; 00
-1A4E: cmp w, x            ; 80
-1A4F: or x, z             ; A4
-1A50: or x, z             ; A4
-1A51: jmp $EEF5, a        ; F0 F5 EE
-1A54: load z, $0000       ; 0D 00 00
-1A57: nop                 ; 00
-1A58: nop                 ; FC
-1A59: nop                 ; FF
-1A5A: mul y, z            ; 55
-1A5B: mul y, z            ; 55
-1A5C: mul y, z            ; 55
-1A5D: or y, a             ; AA
-1A5E: and y, z            ; 94
-1A5F: mul y, y            ; 54
-1A60: mul y, z            ; 55
-1A61: or y, w             ; A9
-1A62: or x, z             ; A4
-1A63: or x, z             ; A4
-1A64: and y, z            ; 94
-1A65: mul y, y            ; 54
-1A66: mul y, z            ; 55
-1A67: mul x, a            ; 52
-1A68: sub a, y            ; 4A
-1A69: mul y, z            ; 55
-1A6A: mul x, a            ; 52
-1A6B: or x, w             ; A5
-1A6C: mul x, a            ; 52
-1A6D: add y, a            ; 25
-1A6E: push x              ; 01
-1A6F: nop                 ; 00
-1A70: nop                 ; 00
-1A71: nop                 ; 00
-1A72: nop                 ; 00
-1A73: nop                 ; 00
+1A4E: push x              ; 01
+1A4F: nop                 ; 00
+1A50: shl y, $00          ; 80 00
+1A52: nop                 ; 00
+1A53: nop                 ; 00
+1A54: nop                 ; A8
+1A55: mul z, $F8          ; 44 F8
+1A57: nop                 ; F6
+1A58: nop                 ; ED
+1A59: adc a, x            ; 2A
+1A5A: nop                 ; 00
+1A5B: nop                 ; 00
+1A5C: nop                 ; 00
+1A5D: nop                 ; FC
+1A5E: nop                 ; FF
+1A5F: cmp x, $55          ; 55 55
+1A61: inc z               ; 49
+1A62: inc z               ; 49
+1A63: cmp x, $A5          ; 55 A5
+1A65: nop                 ; AA
+1A66: nop                 ; A4
+1A67: cmp a, y            ; 52
+1A68: cmp a, y            ; 52
+1A69: inc w               ; 4A
+1A6A: adc a, x            ; 2A
+1A6B: cmp x, $A9          ; 55 A9
+1A6D: nop                 ; AA
+1A6E: add a, a            ; 24
+1A6F: nop                 ; A9
+1A70: cmp a, y            ; 52
+1A71: cmp x, $55          ; 55 55
+1A73: pop y               ; 09
 1A74: nop                 ; 00
-1A75: store $0008, x      ; 10 08 00
-1A78: store $BFB1, y      ; 11 B1 BF
-1A7B: mul y, a            ; 57
-1A7C: cmp z, x            ; 7B
-1A7D: nop                 ; 00
-1A7E: nop                 ; 00
-1A7F: nop                 ; 00
-1A80: nop                 ; FC
-1A81: nop                 ; FF
-1A82: mul y, z            ; 55
-1A83: mul y, z            ; 55
-1A84: mul y, z            ; 55
-1A85: mul y, z            ; 55
-1A86: mul y, z            ; 55
-1A87: and y, w            ; 95
-1A88: add y, w            ; 24
-1A89: and y, w            ; 95
-1A8A: sub a, y            ; 4A
-1A8B: call $4921          ; 15 21 49
-1A8E: sub a, x            ; 49
-1A8F: and y, w            ; 95
-1A90: mul x, a            ; 52
-1A91: mul y, z            ; 55
-1A92: and y, w            ; 95
-1A93: and y, z            ; 94
-1A94: and y, z            ; 94
-1A95: and y, z            ; 94
-1A96: push w              ; 04
-1A97: nop                 ; 00
-1A98: nop                 ; 00
-1A99: push x              ; 01
-1A9A: nop                 ; 00
-1A9B: cmp w, x            ; 80
+1A75: nop                 ; 00
+1A76: nop                 ; 00
+1A77: nop                 ; 00
+1A78: nop                 ; 00
+1A79: nop                 ; 00
+1A7A: shl y, $00          ; 80 00
+1A7C: push x              ; 01
+1A7D: load z, $6FA8       ; 11 A8 6F
+1A80: nop                 ; B7
+1A81: nop                 ; F6
+1A82: nop                 ; 00
+1A83: nop                 ; 00
+1A84: nop                 ; 00
+1A85: nop                 ; FC
+1A86: nop                 ; FF
+1A87: cmp x, $55          ; 55 55
+1A89: cmp x, $55          ; 55 55
+1A8B: nop                 ; A5
+1A8C: cmp a, w            ; 54
+1A8D: ror a               ; 92
+1A8E: adc a, x            ; 2A
+1A8F: jmp z, w            ; 95
+1A90: nop                 ; AA
+1A91: ror a               ; 92
+1A92: cmp a, y            ; 52
+1A93: cmp x, $55          ; 55 55
+1A95: inc w               ; 4A
+1A96: cmp x, $55          ; 55 55
+1A98: cmp x, $52          ; 55 52
+1A9A: cmp x, $2A          ; 55 2A
 1A9C: nop                 ; 00
 1A9D: nop                 ; 00
-1A9E: nop                 ; 00
-1A9F: or y, z             ; A8
-1AA0: sub w, x            ; 44
-1AA1: nop                 ; F8
-1AA2: int $ED             ; F6 ED
-1AA4: add z, a            ; 2A
-1AA5: nop                 ; 00
-1AA6: nop                 ; 00
-1AA7: nop                 ; 00
-1AA8: nop                 ; FC
-1AA9: nop                 ; FF
-1AAA: mul y, z            ; 55
-1AAB: mul y, z            ; 55
-1AAC: sub a, x            ; 49
-1AAD: sub a, x            ; 49
-1AAE: mul y, z            ; 55
-1AAF: or x, w             ; A5
-1AB0: or y, a             ; AA
-1AB1: or x, z             ; A4
-1AB2: mul x, a            ; 52
-1AB3: mul x, a            ; 52
-1AB4: sub a, y            ; 4A
-1AB5: add z, a            ; 2A
-1AB6: mul y, z            ; 55
-1AB7: or y, w             ; A9
-1AB8: or y, a             ; AA
-1AB9: add y, w            ; 24
-1ABA: or y, w             ; A9
-1ABB: mul x, a            ; 52
-1ABC: mul y, z            ; 55
-1ABD: mul y, z            ; 55
-1ABE: pop w               ; 09
-1ABF: nop                 ; 00
-1AC0: nop                 ; 00
-1AC1: nop                 ; 00
-1AC2: nop                 ; 00
-1AC3: nop                 ; 00
+1A9E: pop x               ; 08
+1A9F: nop                 ; 00
+1AA0: nop                 ; 00
+1AA1: nop                 ; 00
+1AA2: nop                 ; 00
+1AA3: shl y, $40          ; 80 40
+1AA5: shr x, $FC          ; 84 FC
+1AA7: nop                 ; FA
+1AA8: nop                 ; D9
+1AA9: cmp x, $01          ; 55 01
+1AAB: nop                 ; 00
+1AAC: nop                 ; 00
+1AAD: nop                 ; FC
+1AAE: nop                 ; FF
+1AAF: nop                 ; AA
+1AB0: nop                 ; AA
+1AB1: nop                 ; AA
+1AB2: nop                 ; AA
+1AB3: cmp a, w            ; 54
+1AB4: cmp x, $55          ; 55 55
+1AB6: inc z               ; 49
+1AB7: nop                 ; A9
+1AB8: ror a               ; 92
+1AB9: nop                 ; A4
+1ABA: add a, a            ; 24
+1ABB: inc z               ; 49
+1ABC: inc w               ; 4A
+1ABD: cmp x, $AA          ; 55 AA
+1ABF: inc w               ; 4A
+1AC0: inc w               ; 4A
+1AC1: jmp z, w            ; 95
+1AC2: nop                 ; A4
+1AC3: ror a               ; 92
 1AC4: nop                 ; 00
-1AC5: cmp w, x            ; 80
+1AC5: nop                 ; 00
 1AC6: nop                 ; 00
-1AC7: push x              ; 01
-1AC8: store $6FA8, y      ; 11 A8 6F
-1ACB: not x               ; B7
-1ACC: int $00             ; F6 00
-1ACE: nop                 ; 00
-1ACF: nop                 ; 00
-1AD0: nop                 ; FC
-1AD1: nop                 ; FF
-1AD2: mul y, z            ; 55
-1AD3: mul y, z            ; 55
-1AD4: mul y, z            ; 55
-1AD5: mul y, z            ; 55
-1AD6: or x, w             ; A5
-1AD7: mul y, y            ; 54
-1AD8: and x, a            ; 92
-1AD9: add z, a            ; 2A
-1ADA: and y, w            ; 95
-1ADB: or y, a             ; AA
-1ADC: and x, a            ; 92
-1ADD: mul x, a            ; 52
-1ADE: mul y, z            ; 55
-1ADF: mul y, z            ; 55
-1AE0: sub a, y            ; 4A
-1AE1: mul y, z            ; 55
-1AE2: mul y, z            ; 55
-1AE3: mul y, z            ; 55
-1AE4: mul x, a            ; 52
-1AE5: mul y, z            ; 55
-1AE6: add z, a            ; 2A
-1AE7: nop                 ; 00
-1AE8: nop                 ; 00
-1AE9: pop z               ; 08
-1AEA: nop                 ; 00
-1AEB: nop                 ; 00
+1AC7: nop                 ; 00
+1AC8: nop                 ; 00
+1AC9: nop                 ; 00
+1ACA: nop                 ; 00
+1ACB: nop                 ; 00
+1ACC: push w              ; 04
+1ACD: load z, $6FD4       ; 11 D4 6F
+1AD0: nop                 ; B7
+1AD1: nop                 ; F6
+1AD2: nop                 ; 00
+1AD3: nop                 ; 00
+1AD4: nop                 ; 00
+1AD5: nop                 ; FC
+1AD6: nop                 ; FF
+1AD7: cmp x, $AA          ; 55 AA
+1AD9: nop                 ; AA
+1ADA: nop                 ; AA
+1ADB: adc a, x            ; 2A
+1ADC: jmp z, w            ; 95
+1ADD: add a, a            ; 24
+1ADE: cmp x, $2A          ; 55 2A
+1AE0: cmp x, $15          ; 55 15
+1AE2: ror a               ; 92
+1AE3: cmp a, w            ; 54
+1AE4: cmp x, $A9          ; 55 A9
+1AE6: ror a               ; 92
+1AE7: cmp a, w            ; 54
+1AE8: cmp x, $49          ; 55 49
+1AEA: jmp z, w            ; 95
+1AEB: inc w               ; 4A
 1AEC: nop                 ; 00
 1AED: nop                 ; 00
-1AEE: cmp w, x            ; 80
-1AEF: sub z, y            ; 40
-1AF0: cmp w, a            ; 84
-1AF1: nop                 ; FC
-1AF2: nop                 ; FA
-1AF3: shl a               ; D9
-1AF4: mul y, z            ; 55
-1AF5: push x              ; 01
-1AF6: nop                 ; 00
-1AF7: nop                 ; 00
-1AF8: nop                 ; FC
-1AF9: nop                 ; FF
-1AFA: or y, a             ; AA
-1AFB: or y, a             ; AA
-1AFC: or y, a             ; AA
-1AFD: or y, a             ; AA
-1AFE: mul y, y            ; 54
-1AFF: mul y, z            ; 55
-1B00: mul y, z            ; 55
-1B01: sub a, x            ; 49
-1B02: or y, w             ; A9
-1B03: and x, a            ; 92
-1B04: or x, z             ; A4
-1B05: add y, w            ; 24
-1B06: sub a, x            ; 49
-1B07: sub a, y            ; 4A
-1B08: mul y, z            ; 55
-1B09: or y, a             ; AA
-1B0A: sub a, y            ; 4A
-1B0B: sub a, y            ; 4A
-1B0C: and y, w            ; 95
-1B0D: or x, z             ; A4
-1B0E: and x, a            ; 92
-1B0F: nop                 ; 00
-1B10: nop                 ; 00
-1B11: nop                 ; 00
-1B12: nop                 ; 00
-1B13: nop                 ; 00
-1B14: nop                 ; 00
+1AEE: nop                 ; 00
+1AEF: nop                 ; 00
+1AF0: nop                 ; 00
+1AF1: nop                 ; 00
+1AF2: nop                 ; 00
+1AF3: load z, $0480       ; 11 80 04
+1AF6: or a, z             ; 6A
+1AF7: nop                 ; FB
+1AF8: nop                 ; DD
+1AF9: nop                 ; FA
+1AFA: nop                 ; 00
+1AFB: nop                 ; 00
+1AFC: nop                 ; 00
+1AFD: nop                 ; FC
+1AFE: nop                 ; FF
+1AFF: cmp a, y            ; 52
+1B00: cmp x, $55          ; 55 55
+1B02: jmp z, w            ; 95
+1B03: nop                 ; AA
+1B04: cmp a, y            ; 52
+1B05: cmp x, $49          ; 55 49
+1B07: nop                 ; A5
+1B08: add a, a            ; 24
+1B09: inc z               ; 49
+1B0A: inc z               ; 49
+1B0B: add x, $29          ; 25 29
+1B0D: jmp z, w            ; 95
+1B0E: nop                 ; AA
+1B0F: cmp a, y            ; 52
+1B10: add a, $55          ; 29 55
+1B12: cmp a, y            ; 52
+1B13: cmp x, $05          ; 55 05
 1B15: nop                 ; 00
-1B16: nop                 ; 00
-1B17: push w              ; 04
-1B18: store $6FD4, y      ; 11 D4 6F
-1B1B: not x               ; B7
-1B1C: int $00             ; F6 00
-1B1E: nop                 ; 00
-1B1F: nop                 ; 00
-1B20: nop                 ; FC
-1B21: nop                 ; FF
-1B22: mul y, z            ; 55
-1B23: or y, a             ; AA
-1B24: or y, a             ; AA
-1B25: or y, a             ; AA
-1B26: add z, a            ; 2A
-1B27: and y, w            ; 95
-1B28: add y, w            ; 24
-1B29: mul y, z            ; 55
-1B2A: add z, a            ; 2A
-1B2B: mul y, z            ; 55
-1B2C: call $5492          ; 15 92 54
-1B2F: mul y, z            ; 55
-1B30: or y, w             ; A9
-1B31: and x, a            ; 92
-1B32: mul y, y            ; 54
-1B33: mul y, z            ; 55
-1B34: sub a, x            ; 49
-1B35: and y, w            ; 95
-1B36: sub a, y            ; 4A
-1B37: nop                 ; 00
-1B38: nop                 ; 00
-1B39: nop                 ; 00
-1B3A: nop                 ; 00
-1B3B: nop                 ; 00
-1B3C: nop                 ; 00
-1B3D: nop                 ; 00
-1B3E: store $0480, y      ; 11 80 04
-1B41: inc w               ; 6A
-1B42: nop                 ; FB
-1B43: shr w               ; DD
-1B44: nop                 ; FA
+1B16: mul a, w            ; 40
+1B17: nop                 ; 00
+1B18: nop                 ; 00
+1B19: nop                 ; 00
+1B1A: nop                 ; 00
+1B1B: nop                 ; 00
+1B1C: pop x               ; 08
+1B1D: inc y               ; 48
+1B1E: nop                 ; A8
+1B1F: or w, $75           ; 6F 75
+1B21: nop                 ; EB
+1B22: push z              ; 03
+1B23: nop                 ; 00
+1B24: nop                 ; 00
+1B25: nop                 ; FC
+1B26: nop                 ; FF
+1B27: nop                 ; AA
+1B28: ror a               ; 92
+1B29: nop                 ; AA
+1B2A: cmp a, w            ; 54
+1B2B: nop                 ; A5
+1B2C: nop                 ; AA
+1B2D: ror a               ; 92
+1B2E: cmp a, w            ; 54
+1B2F: cmp a, y            ; 52
+1B30: cmp x, $55          ; 55 55
+1B32: add a, a            ; 24
+1B33: nop                 ; A9
+1B34: nop                 ; AA
+1B35: cmp a, y            ; 52
+1B36: nop                 ; AA
+1B37: inc w               ; 4A
+1B38: cmp x, $95          ; 55 95
+1B3A: nop                 ; AA
+1B3B: jmp x, y            ; 94
+1B3C: load w, $0000       ; 12 00 00
+1B3F: nop                 ; 00
+1B40: pop x               ; 08
+1B41: nop                 ; 00
+1B42: nop                 ; 00
+1B43: nop                 ; 00
+1B44: push x              ; 01
 1B45: nop                 ; 00
-1B46: nop                 ; 00
-1B47: nop                 ; 00
-1B48: nop                 ; FC
-1B49: nop                 ; FF
-1B4A: mul x, a            ; 52
-1B4B: mul y, z            ; 55
-1B4C: mul y, z            ; 55
-1B4D: and y, w            ; 95
-1B4E: or y, a             ; AA
-1B4F: mul x, a            ; 52
-1B50: mul y, z            ; 55
-1B51: sub a, x            ; 49
-1B52: or x, w             ; A5
-1B53: add y, w            ; 24
-1B54: sub a, x            ; 49
-1B55: sub a, x            ; 49
-1B56: add y, a            ; 25
-1B57: add z, w            ; 29
-1B58: and y, w            ; 95
-1B59: or y, a             ; AA
-1B5A: mul x, a            ; 52
-1B5B: add z, w            ; 29
-1B5C: mul y, z            ; 55
-1B5D: mul x, a            ; 52
-1B5E: mul y, z            ; 55
-1B5F: push a              ; 05
-1B60: nop                 ; 00
-1B61: sub z, y            ; 40
-1B62: nop                 ; 00
-1B63: nop                 ; 00
-1B64: nop                 ; 00
+1B46: int $BE             ; A0 BE
+1B48: nop                 ; DE
+1B49: nop                 ; FE
+1B4A: push x              ; 01
+1B4B: nop                 ; 00
+1B4C: nop                 ; 00
+1B4D: nop                 ; FC
+1B4E: nop                 ; FF
+1B4F: nop                 ; AA
+1B50: nop                 ; AA
+1B51: cmp a, w            ; 54
+1B52: cmp x, $55          ; 55 55
+1B54: add a, $55          ; 29 55
+1B56: jmp z, w            ; 95
+1B57: inc w               ; 4A
+1B58: inc w               ; 4A
+1B59: inc z               ; 49
+1B5A: inc z               ; 49
+1B5B: inc w               ; 4A
+1B5C: inc w               ; 4A
+1B5D: cmp x, $49          ; 55 49
+1B5F: adc a, x            ; 2A
+1B60: nop                 ; A5
+1B61: cmp a, y            ; 52
+1B62: jmp z, w            ; 95
+1B63: nop                 ; AA
+1B64: add a, a            ; 24
 1B65: nop                 ; 00
 1B66: nop                 ; 00
-1B67: pop z               ; 08
-1B68: sub w, a            ; 48
-1B69: or y, z             ; A8
-1B6A: dec w               ; 6F
-1B6B: cmp x, a            ; 75
-1B6C: jmp z, w            ; EB
-1B6D: push z              ; 03
+1B67: nop                 ; 00
+1B68: nop                 ; 00
+1B69: nop                 ; 00
+1B6A: nop                 ; 00
+1B6B: pop x               ; 08
+1B6C: nop                 ; 00
+1B6D: push y              ; 02
 1B6E: nop                 ; 00
-1B6F: nop                 ; 00
-1B70: nop                 ; FC
-1B71: nop                 ; FF
-1B72: or y, a             ; AA
-1B73: and x, a            ; 92
-1B74: or y, a             ; AA
-1B75: mul y, y            ; 54
-1B76: or x, w             ; A5
-1B77: or y, a             ; AA
-1B78: and x, a            ; 92
-1B79: mul y, y            ; 54
-1B7A: mul x, a            ; 52
-1B7B: mul y, z            ; 55
-1B7C: mul y, z            ; 55
-1B7D: add y, w            ; 24
-1B7E: or y, w             ; A9
-1B7F: or y, a             ; AA
-1B80: mul x, a            ; 52
-1B81: or y, a             ; AA
-1B82: sub a, y            ; 4A
-1B83: mul y, z            ; 55
-1B84: and y, w            ; 95
-1B85: or y, a             ; AA
-1B86: and y, z            ; 94
-1B87: store $0000, z      ; 12 00 00
-1B8A: nop                 ; 00
-1B8B: pop z               ; 08
-1B8C: nop                 ; 00
+1B6F: xor a, y            ; 77
+1B70: nop                 ; BB
+1B71: nop                 ; FB
+1B72: push z              ; 03
+1B73: nop                 ; 00
+1B74: nop                 ; 00
+1B75: nop                 ; FC
+1B76: nop                 ; FF
+1B77: cmp a, w            ; 54
+1B78: cmp x, $55          ; 55 55
+1B7A: cmp x, $95          ; 55 95
+1B7C: inc w               ; 4A
+1B7D: jmp z, w            ; 95
+1B7E: cmp a, y            ; 52
+1B7F: nop                 ; AA
+1B80: cmp a, y            ; 52
+1B81: nop                 ; AA
+1B82: ror a               ; 92
+1B83: add a, a            ; 24
+1B84: nop                 ; A9
+1B85: jmp x, y            ; 94
+1B86: nop                 ; AA
+1B87: nop                 ; AA
+1B88: cmp a, w            ; 54
+1B89: adc a, x            ; 2A
+1B8A: nop                 ; A9
+1B8B: cmp a, y            ; 52
+1B8C: jmp z, w            ; 95
 1B8D: nop                 ; 00
 1B8E: nop                 ; 00
-1B8F: push x              ; 01
-1B90: nop                 ; 00
-1B91: and a, y            ; A0
-1B92: xor x, z            ; BE
-1B93: shr a               ; DE
-1B94: nop                 ; FE
-1B95: push x              ; 01
-1B96: nop                 ; 00
-1B97: nop                 ; 00
-1B98: nop                 ; FC
-1B99: nop                 ; FF
-1B9A: or y, a             ; AA
-1B9B: or y, a             ; AA
-1B9C: mul y, y            ; 54
-1B9D: mul y, z            ; 55
-1B9E: mul y, z            ; 55
-1B9F: add z, w            ; 29
-1BA0: mul y, z            ; 55
-1BA1: and y, w            ; 95
-1BA2: sub a, y            ; 4A
-1BA3: sub a, y            ; 4A
-1BA4: sub a, x            ; 49
-1BA5: sub a, x            ; 49
-1BA6: sub a, y            ; 4A
-1BA7: sub a, y            ; 4A
-1BA8: mul y, z            ; 55
-1BA9: sub a, x            ; 49
-1BAA: add z, a            ; 2A
-1BAB: or x, w             ; A5
-1BAC: mul x, a            ; 52
-1BAD: and y, w            ; 95
-1BAE: or y, a             ; AA
-1BAF: add y, w            ; 24
-1BB0: nop                 ; 00
-1BB1: nop                 ; 00
-1BB2: nop                 ; 00
-1BB3: nop                 ; 00
-1BB4: nop                 ; 00
-1BB5: nop                 ; 00
-1BB6: pop z               ; 08
+1B8F: nop                 ; 00
+1B90: shl y, $00          ; 80 00
+1B92: nop                 ; 00
+1B93: nop                 ; 00
+1B94: add a, x            ; 20
+1B95: load y, $5D88       ; 10 88 5D
+1B98: nop                 ; EF
+1B99: nop                 ; BD
+1B9A: push x              ; 01
+1B9B: nop                 ; 00
+1B9C: nop                 ; 00
+1B9D: nop                 ; FC
+1B9E: nop                 ; FF
+1B9F: inc w               ; 4A
+1BA0: nop                 ; AA
+1BA1: nop                 ; AA
+1BA2: nop                 ; AA
+1BA3: or a, z             ; 6A
+1BA4: nop                 ; AA
+1BA5: cmp a, y            ; 52
+1BA6: inc z               ; 49
+1BA7: inc z               ; 49
+1BA8: nop                 ; AA
+1BA9: inc w               ; 4A
+1BAA: inc w               ; 4A
+1BAB: cmp a, y            ; 52
+1BAC: add x, $A5          ; 25 A5
+1BAE: nop                 ; AA
+1BAF: cmp a, y            ; 52
+1BB0: jmp z, w            ; 95
+1BB1: nop                 ; AA
+1BB2: inc w               ; 4A
+1BB3: cmp x, $55          ; 55 55
+1BB5: push x              ; 01
+1BB6: nop                 ; 00
 1BB7: nop                 ; 00
-1BB8: push y              ; 02
-1BB9: nop                 ; 00
-1BBA: cmp y, y            ; 77
-1BBB: not a               ; BB
-1BBC: nop                 ; FB
-1BBD: push z              ; 03
-1BBE: nop                 ; 00
-1BBF: nop                 ; 00
-1BC0: nop                 ; FC
-1BC1: nop                 ; FF
-1BC2: mul y, y            ; 54
-1BC3: mul y, z            ; 55
-1BC4: mul y, z            ; 55
-1BC5: mul y, z            ; 55
-1BC6: and y, w            ; 95
-1BC7: sub a, y            ; 4A
-1BC8: and y, w            ; 95
-1BC9: mul x, a            ; 52
-1BCA: or y, a             ; AA
-1BCB: mul x, a            ; 52
-1BCC: or y, a             ; AA
-1BCD: and x, a            ; 92
-1BCE: add y, w            ; 24
-1BCF: or y, w             ; A9
-1BD0: and y, z            ; 94
-1BD1: or y, a             ; AA
-1BD2: or y, a             ; AA
-1BD3: mul y, y            ; 54
-1BD4: add z, a            ; 2A
-1BD5: or y, w             ; A9
-1BD6: mul x, a            ; 52
-1BD7: and y, w            ; 95
-1BD8: nop                 ; 00
-1BD9: nop                 ; 00
-1BDA: nop                 ; 00
-1BDB: cmp w, x            ; 80
-1BDC: nop                 ; 00
-1BDD: nop                 ; 00
+1BB8: nop                 ; 00
+1BB9: push a              ; 05
+1BBA: nop                 ; 00
+1BBB: mul a, w            ; 40
+1BBC: nop                 ; 00
+1BBD: nop                 ; 00
+1BBE: add a, x            ; 20
+1BBF: nop                 ; BA
+1BC0: xor w, $F7          ; 7D F7
+1BC2: push x              ; 01
+1BC3: nop                 ; 00
+1BC4: nop                 ; 00
+1BC5: nop                 ; FC
+1BC6: nop                 ; FF
+1BC7: cmp x, $A5          ; 55 A5
+1BC9: ror a               ; 92
+1BCA: nop                 ; AA
+1BCB: jmp x, y            ; 94
+1BCC: nop                 ; AA
+1BCD: cmp a, w            ; 54
+1BCE: nop                 ; AA
+1BCF: nop                 ; AA
+1BD0: nop                 ; A4
+1BD1: cmp a, w            ; 54
+1BD2: jmp z, w            ; 95
+1BD3: shr a, $54          ; 88 54
+1BD5: cmp x, $92          ; 55 92
+1BD7: jmp x, y            ; 94
+1BD8: cmp a, y            ; 52
+1BD9: inc z               ; 49
+1BDA: cmp x, $4A          ; 55 4A
+1BDC: inc z               ; 49
+1BDD: push y              ; 02
 1BDE: nop                 ; 00
-1BDF: add x, a            ; 20
-1BE0: store $5D88, x      ; 10 88 5D
-1BE3: jmp $01BD, w        ; EF BD 01
-1BE6: nop                 ; 00
-1BE7: nop                 ; 00
-1BE8: nop                 ; FC
-1BE9: nop                 ; FF
-1BEA: sub a, y            ; 4A
-1BEB: or y, a             ; AA
-1BEC: or y, a             ; AA
-1BED: or y, a             ; AA
-1BEE: inc w               ; 6A
-1BEF: or y, a             ; AA
-1BF0: mul x, a            ; 52
-1BF1: sub a, x            ; 49
-1BF2: sub a, x            ; 49
-1BF3: or y, a             ; AA
-1BF4: sub a, y            ; 4A
-1BF5: sub a, y            ; 4A
-1BF6: mul x, a            ; 52
-1BF7: add y, a            ; 25
-1BF8: or x, w             ; A5
-1BF9: or y, a             ; AA
-1BFA: mul x, a            ; 52
-1BFB: and y, w            ; 95
-1BFC: or y, a             ; AA
-1BFD: sub a, y            ; 4A
-1BFE: mul y, z            ; 55
-1BFF: mul y, z            ; 55
-1C00: push x              ; 01
-1C01: nop                 ; 00
-1C02: nop                 ; 00
-1C03: nop                 ; 00
-1C04: push a              ; 05
-1C05: nop                 ; 00
-1C06: sub z, y            ; 40
-1C07: nop                 ; 00
+1BDF: nop                 ; 00
+1BE0: mul a, w            ; 40
+1BE1: push y              ; 02
+1BE2: nop                 ; 00
+1BE3: nop                 ; 00
+1BE4: push y              ; 02
+1BE5: nop                 ; 00
+1BE6: nop                 ; B0
+1BE7: nop                 ; AE
+1BE8: nop                 ; B7
+1BE9: nop                 ; FB
+1BEA: push x              ; 01
+1BEB: nop                 ; 00
+1BEC: nop                 ; 00
+1BED: nop                 ; FC
+1BEE: nop                 ; FF
+1BEF: nop                 ; AA
+1BF0: nop                 ; AA
+1BF1: nop                 ; AA
+1BF2: nop                 ; A4
+1BF3: nop                 ; AA
+1BF4: ror a               ; 92
+1BF5: nop                 ; AA
+1BF6: inc w               ; 4A
+1BF7: ror a               ; 92
+1BF8: adc a, x            ; 2A
+1BF9: nop                 ; A5
+1BFA: nop                 ; A4
+1BFB: cmp a, y            ; 52
+1BFC: ror a               ; 92
+1BFD: cmp a, y            ; 52
+1BFE: cmp x, $55          ; 55 55
+1C00: cmp x, $55          ; 55 55
+1C02: ror a               ; 92
+1C03: cmp a, y            ; 52
+1C04: nop                 ; AA
+1C05: pop z               ; 0A
+1C06: nop                 ; 00
+1C07: mul a, w            ; 40
 1C08: nop                 ; 00
-1C09: add x, a            ; 20
-1C0A: not w               ; BA
-1C0B: cmp z, z            ; 7D
-1C0C: resume              ; F7 01
-1C0E: nop                 ; 00
-1C0F: nop                 ; 00
-1C10: nop                 ; FC
-1C11: nop                 ; FF
-1C12: mul y, z            ; 55
-1C13: or x, w             ; A5
-1C14: and x, a            ; 92
-1C15: or y, a             ; AA
-1C16: and y, z            ; 94
-1C17: or y, a             ; AA
-1C18: mul y, y            ; 54
-1C19: or y, a             ; AA
-1C1A: or y, a             ; AA
-1C1B: or x, z             ; A4
-1C1C: mul y, y            ; 54
-1C1D: and y, w            ; 95
-1C1E: cmp a, w            ; 88
-1C1F: mul y, y            ; 54
-1C20: mul y, z            ; 55
-1C21: and x, a            ; 92
-1C22: and y, z            ; 94
-1C23: mul x, a            ; 52
-1C24: sub a, x            ; 49
-1C25: mul y, z            ; 55
-1C26: sub a, y            ; 4A
-1C27: sub a, x            ; 49
-1C28: push y              ; 02
-1C29: nop                 ; 00
-1C2A: nop                 ; 00
-1C2B: sub z, y            ; 40
-1C2C: push y              ; 02
-1C2D: nop                 ; 00
+1C09: push x              ; 01
+1C0A: nop                 ; 00
+1C0B: nop                 ; 00
+1C0C: pop x               ; 08
+1C0D: pop y               ; 09
+1C0E: mul z, $DC          ; 44 DC
+1C10: nop                 ; FE
+1C11: nop                 ; DE
+1C12: nop                 ; 00
+1C13: nop                 ; 00
+1C14: nop                 ; 00
+1C15: nop                 ; FC
+1C16: nop                 ; FF
+1C17: nop                 ; A9
+1C18: adc a, x            ; 2A
+1C19: cmp x, $55          ; 55 55
+1C1B: cmp x, $55          ; 55 55
+1C1D: nop                 ; A5
+1C1E: cmp a, w            ; 54
+1C1F: add a, $49          ; 29 49
+1C21: add a, $55          ; 29 55
+1C23: add x, $A9          ; 25 A9
+1C25: jmp x, y            ; 94
+1C26: nop                 ; AA
+1C27: nop                 ; AA
+1C28: jmp x, y            ; 94
+1C29: nop                 ; AA
+1C2A: nop                 ; AA
+1C2B: cmp a, w            ; 54
+1C2C: cmp x, $05          ; 55 05
 1C2E: nop                 ; 00
-1C2F: push y              ; 02
+1C2F: nop                 ; 00
 1C30: nop                 ; 00
-1C31: or w, y             ; B0
-1C32: or z, a             ; AE
-1C33: not x               ; B7
-1C34: nop                 ; FB
-1C35: push x              ; 01
-1C36: nop                 ; 00
-1C37: nop                 ; 00
-1C38: nop                 ; FC
-1C39: nop                 ; FF
-1C3A: or y, a             ; AA
-1C3B: or y, a             ; AA
-1C3C: or y, a             ; AA
-1C3D: or x, z             ; A4
-1C3E: or y, a             ; AA
-1C3F: and x, a            ; 92
-1C40: or y, a             ; AA
-1C41: sub a, y            ; 4A
-1C42: and x, a            ; 92
-1C43: add z, a            ; 2A
-1C44: or x, w             ; A5
-1C45: or x, z             ; A4
-1C46: mul x, a            ; 52
-1C47: and x, a            ; 92
-1C48: mul x, a            ; 52
-1C49: mul y, z            ; 55
-1C4A: mul y, z            ; 55
-1C4B: mul y, z            ; 55
-1C4C: mul y, z            ; 55
-1C4D: and x, a            ; 92
-1C4E: mul x, a            ; 52
-1C4F: or y, a             ; AA
-1C50: pop a               ; 0A
-1C51: nop                 ; 00
-1C52: sub z, y            ; 40
-1C53: nop                 ; 00
-1C54: push x              ; 01
-1C55: nop                 ; 00
-1C56: nop                 ; 00
-1C57: pop z               ; 08
-1C58: pop w               ; 09
-1C59: sub w, x            ; 44
-1C5A: shr z               ; DC
-1C5B: nop                 ; FE
-1C5C: shr a               ; DE
+1C31: push x              ; 01
+1C32: nop                 ; 00
+1C33: nop                 ; 00
+1C34: mul a, w            ; 40
+1C35: nop                 ; 00
+1C36: mul a, w            ; 40
+1C37: or a, z             ; 6A
+1C38: nop                 ; EB
+1C39: or a, w             ; 6B
+1C3A: nop                 ; 00
+1C3B: nop                 ; 00
+1C3C: nop                 ; 00
+1C3D: nop                 ; FC
+1C3E: nop                 ; FF
+1C3F: adc a, x            ; 2A
+1C40: nop                 ; A9
+1C41: nop                 ; AA
+1C42: nop                 ; AA
+1C43: nop                 ; AA
+1C44: nop                 ; AA
+1C45: adc a, x            ; 2A
+1C46: add x, $A5          ; 25 A5
+1C48: nop                 ; AA
+1C49: nop                 ; AA
+1C4A: adc a, x            ; 2A
+1C4B: inc z               ; 49
+1C4C: jmp z, w            ; 95
+1C4D: nop                 ; AA
+1C4E: add a, a            ; 24
+1C4F: nop                 ; A5
+1C50: nop                 ; AA
+1C51: nop                 ; A4
+1C52: inc w               ; 4A
+1C53: cmp x, $95          ; 55 95
+1C55: store $0000, x      ; 14 00 00
+1C58: nop                 ; 00
+1C59: nop                 ; 00
+1C5A: nop                 ; 00
+1C5B: nop                 ; 00
+1C5C: nop                 ; 00
 1C5D: nop                 ; 00
-1C5E: nop                 ; 00
-1C5F: nop                 ; 00
-1C60: nop                 ; FC
-1C61: nop                 ; FF
-1C62: or y, w             ; A9
-1C63: add z, a            ; 2A
-1C64: mul y, z            ; 55
-1C65: mul y, z            ; 55
-1C66: mul y, z            ; 55
-1C67: mul y, z            ; 55
-1C68: or x, w             ; A5
-1C69: mul y, y            ; 54
-1C6A: add z, w            ; 29
-1C6B: sub a, x            ; 49
-1C6C: add z, w            ; 29
-1C6D: mul y, z            ; 55
-1C6E: add y, a            ; 25
-1C6F: or y, w             ; A9
-1C70: and y, z            ; 94
-1C71: or y, a             ; AA
-1C72: or y, a             ; AA
-1C73: and y, z            ; 94
-1C74: or y, a             ; AA
-1C75: or y, a             ; AA
-1C76: mul y, y            ; 54
-1C77: mul y, z            ; 55
-1C78: push a              ; 05
-1C79: nop                 ; 00
-1C7A: nop                 ; 00
-1C7B: nop                 ; 00
-1C7C: push x              ; 01
-1C7D: nop                 ; 00
-1C7E: nop                 ; 00
-1C7F: sub z, y            ; 40
+1C5E: load y, $BFDC       ; 10 DC BF
+1C61: xor a, $00          ; 7E 00
+1C63: nop                 ; 00
+1C64: nop                 ; 00
+1C65: nop                 ; FC
+1C66: nop                 ; FF
+1C67: cmp x, $55          ; 55 55
+1C69: cmp x, $95          ; 55 95
+1C6B: cmp a, y            ; 52
+1C6C: jmp z, w            ; 95
+1C6D: cmp a, w            ; 54
+1C6E: cmp x, $95          ; 55 95
+1C70: add a, a            ; 24
+1C71: nop                 ; A5
+1C72: nop                 ; A4
+1C73: nop                 ; AA
+1C74: cmp a, y            ; 52
+1C75: cmp a, y            ; 52
+1C76: cmp x, $29          ; 55 29
+1C78: nop                 ; A5
+1C79: adc a, x            ; 2A
+1C7A: add a, $49          ; 29 49
+1C7C: cmp a, y            ; 52
+1C7D: cmp x, $00          ; 55 00
+1C7F: nop                 ; 00
 1C80: nop                 ; 00
-1C81: sub z, y            ; 40
-1C82: inc w               ; 6A
-1C83: jmp z, w            ; EB
-1C84: inc a               ; 6B
-1C85: nop                 ; 00
+1C81: nop                 ; 00
+1C82: nop                 ; 00
+1C83: nop                 ; 00
+1C84: nop                 ; 00
+1C85: push y              ; 02
 1C86: nop                 ; 00
-1C87: nop                 ; 00
-1C88: nop                 ; FC
-1C89: nop                 ; FF
-1C8A: add z, a            ; 2A
-1C8B: or y, w             ; A9
-1C8C: or y, a             ; AA
-1C8D: or y, a             ; AA
-1C8E: or y, a             ; AA
-1C8F: or y, a             ; AA
-1C90: add z, a            ; 2A
-1C91: add y, a            ; 25
-1C92: or x, w             ; A5
-1C93: or y, a             ; AA
-1C94: or y, a             ; AA
-1C95: add z, a            ; 2A
-1C96: sub a, x            ; 49
-1C97: and y, w            ; 95
-1C98: or y, a             ; AA
-1C99: add y, w            ; 24
-1C9A: or x, w             ; A5
-1C9B: or y, a             ; AA
-1C9C: or x, z             ; A4
-1C9D: sub a, y            ; 4A
-1C9E: mul y, z            ; 55
-1C9F: and y, w            ; 95
-1CA0: store $0000, a      ; 14 00 00
-1CA3: nop                 ; 00
-1CA4: nop                 ; 00
-1CA5: nop                 ; 00
+1C87: nop                 ; E4
+1C88: nop                 ; F6
+1C89: adc a, y            ; 2B
+1C8A: nop                 ; 00
+1C8B: nop                 ; 00
+1C8C: nop                 ; 00
+1C8D: nop                 ; FC
+1C8E: nop                 ; FF
+1C8F: nop                 ; A5
+1C90: nop                 ; AA
+1C91: nop                 ; AA
+1C92: nop                 ; AA
+1C93: nop                 ; AA
+1C94: cmp a, y            ; 52
+1C95: nop                 ; A5
+1C96: cmp a, y            ; 52
+1C97: cmp a, y            ; 52
+1C98: cmp x, $29          ; 55 29
+1C9A: jmp z, w            ; 95
+1C9B: cmp a, w            ; 54
+1C9C: nop                 ; AA
+1C9D: adc a, x            ; 2A
+1C9E: inc z               ; 49
+1C9F: cmp x, $A9          ; 55 A9
+1CA1: nop                 ; AA
+1CA2: nop                 ; AA
+1CA3: nop                 ; AA
+1CA4: nop                 ; AA
+1CA5: nop                 ; AA
 1CA6: nop                 ; 00
 1CA7: nop                 ; 00
 1CA8: nop                 ; 00
-1CA9: store $BFDC, x      ; 10 DC BF
-1CAC: cmp z, w            ; 7E
-1CAD: nop                 ; 00
+1CA9: nop                 ; 00
+1CAA: nop                 ; 00
+1CAB: nop                 ; 00
+1CAC: add a, z            ; 22
+1CAD: add a, x            ; 20
 1CAE: nop                 ; 00
-1CAF: nop                 ; 00
-1CB0: nop                 ; FC
-1CB1: nop                 ; FF
-1CB2: mul y, z            ; 55
-1CB3: mul y, z            ; 55
-1CB4: mul y, z            ; 55
-1CB5: and y, w            ; 95
-1CB6: mul x, a            ; 52
-1CB7: and y, w            ; 95
-1CB8: mul y, y            ; 54
-1CB9: mul y, z            ; 55
-1CBA: and y, w            ; 95
-1CBB: add y, w            ; 24
-1CBC: or x, w             ; A5
-1CBD: or x, z             ; A4
-1CBE: or y, a             ; AA
-1CBF: mul x, a            ; 52
-1CC0: mul x, a            ; 52
-1CC1: mul y, z            ; 55
-1CC2: add z, w            ; 29
-1CC3: or x, w             ; A5
-1CC4: add z, a            ; 2A
-1CC5: add z, w            ; 29
-1CC6: sub a, x            ; 49
-1CC7: mul x, a            ; 52
-1CC8: mul y, z            ; 55
-1CC9: nop                 ; 00
-1CCA: nop                 ; 00
-1CCB: nop                 ; 00
-1CCC: nop                 ; 00
-1CCD: nop                 ; 00
-1CCE: nop                 ; 00
+1CAF: nop                 ; B4
+1CB0: nop                 ; AF
+1CB1: mul a, y            ; 3E
+1CB2: nop                 ; 00
+1CB3: nop                 ; 00
+1CB4: nop                 ; 00
+1CB5: nop                 ; FC
+1CB6: nop                 ; FF
+1CB7: cmp x, $55          ; 55 55
+1CB9: cmp x, $55          ; 55 55
+1CBB: cmp x, $AA          ; 55 AA
+1CBD: adc a, x            ; 2A
+1CBE: jmp z, w            ; 95
+1CBF: adc a, x            ; 2A
+1CC0: inc z               ; 49
+1CC1: inc w               ; 4A
+1CC2: nop                 ; A9
+1CC3: ror a               ; 92
+1CC4: inc w               ; 4A
+1CC5: inc z               ; 49
+1CC6: cmp x, $AA          ; 55 AA
+1CC8: inc w               ; 4A
+1CC9: cmp a, y            ; 52
+1CCA: cmp x, $95          ; 55 95
+1CCC: nop                 ; AA
+1CCD: ror a               ; 92
+1CCE: push y              ; 02
 1CCF: nop                 ; 00
-1CD0: push y              ; 02
+1CD0: nop                 ; 00
 1CD1: nop                 ; 00
-1CD2: ror x               ; E4
-1CD3: int $2B             ; F6 2B
-1CD5: nop                 ; 00
+1CD2: push y              ; 02
+1CD3: nop                 ; 00
+1CD4: nop                 ; 00
+1CD5: push w              ; 04
 1CD6: nop                 ; 00
-1CD7: nop                 ; 00
-1CD8: nop                 ; FC
-1CD9: nop                 ; FF
-1CDA: or x, w             ; A5
-1CDB: or y, a             ; AA
-1CDC: or y, a             ; AA
-1CDD: or y, a             ; AA
-1CDE: or y, a             ; AA
-1CDF: mul x, a            ; 52
-1CE0: or x, w             ; A5
-1CE1: mul x, a            ; 52
-1CE2: mul x, a            ; 52
-1CE3: mul y, z            ; 55
-1CE4: add z, w            ; 29
-1CE5: and y, w            ; 95
-1CE6: mul y, y            ; 54
-1CE7: or y, a             ; AA
-1CE8: add z, a            ; 2A
-1CE9: sub a, x            ; 49
-1CEA: mul y, z            ; 55
-1CEB: or y, w             ; A9
-1CEC: or y, a             ; AA
-1CED: or y, a             ; AA
-1CEE: or y, a             ; AA
-1CEF: or y, a             ; AA
-1CF0: or y, a             ; AA
-1CF1: nop                 ; 00
-1CF2: nop                 ; 00
-1CF3: nop                 ; 00
-1CF4: nop                 ; 00
-1CF5: nop                 ; 00
-1CF6: nop                 ; 00
-1CF7: add y, y            ; 22
-1CF8: add x, a            ; 20
+1CD7: nop                 ; F8
+1CD8: nop                 ; FA
+1CD9: set x, $00          ; 1B 00
+1CDB: nop                 ; 00
+1CDC: nop                 ; 00
+1CDD: nop                 ; FC
+1CDE: nop                 ; FF
+1CDF: jmp x, y            ; 94
+1CE0: jmp x, y            ; 94
+1CE1: nop                 ; AA
+1CE2: nop                 ; AA
+1CE3: nop                 ; AA
+1CE4: adc a, x            ; 2A
+1CE5: nop                 ; A9
+1CE6: cmp a, w            ; 54
+1CE7: nop                 ; A5
+1CE8: nop                 ; AA
+1CE9: nop                 ; AA
+1CEA: inc w               ; 4A
+1CEB: nop                 ; AA
+1CEC: cmp a, y            ; 52
+1CED: nop                 ; AA
+1CEE: nop                 ; A4
+1CEF: inc w               ; 4A
+1CF0: nop                 ; AA
+1CF1: adc a, x            ; 2A
+1CF2: inc z               ; 49
+1CF3: cmp a, y            ; 52
+1CF4: inc z               ; 49
+1CF5: nop                 ; AA
+1CF6: pop z               ; 0A
+1CF7: nop                 ; 00
+1CF8: nop                 ; 00
 1CF9: nop                 ; 00
-1CFA: or a, y             ; B4
-1CFB: or w, x             ; AF
-1CFC: sub y, a            ; 3E
-1CFD: nop                 ; 00
+1CFA: nop                 ; 00
+1CFB: nop                 ; 00
+1CFC: shl y, $00          ; 80 00
 1CFE: nop                 ; 00
-1CFF: nop                 ; 00
-1D00: nop                 ; FC
-1D01: nop                 ; FF
-1D02: mul y, z            ; 55
-1D03: mul y, z            ; 55
-1D04: mul y, z            ; 55
-1D05: mul y, z            ; 55
-1D06: mul y, z            ; 55
-1D07: or y, a             ; AA
-1D08: add z, a            ; 2A
-1D09: and y, w            ; 95
-1D0A: add z, a            ; 2A
-1D0B: sub a, x            ; 49
-1D0C: sub a, y            ; 4A
-1D0D: or y, w             ; A9
-1D0E: and x, a            ; 92
-1D0F: sub a, y            ; 4A
-1D10: sub a, x            ; 49
-1D11: mul y, z            ; 55
-1D12: or y, a             ; AA
-1D13: sub a, y            ; 4A
-1D14: mul x, a            ; 52
-1D15: mul y, z            ; 55
-1D16: and y, w            ; 95
-1D17: or y, a             ; AA
-1D18: and x, a            ; 92
-1D19: push y              ; 02
-1D1A: nop                 ; 00
-1D1B: nop                 ; 00
-1D1C: nop                 ; 00
-1D1D: push y              ; 02
-1D1E: nop                 ; 00
-1D1F: nop                 ; 00
-1D20: push w              ; 04
+1CFF: nop                 ; A8
+1D00: nop                 ; DF
+1D01: store $0000, z      ; 16 00 00
+1D04: nop                 ; 00
+1D05: nop                 ; FC
+1D06: nop                 ; FF
+1D07: nop                 ; AA
+1D08: nop                 ; AA
+1D09: ror a               ; 92
+1D0A: cmp a, y            ; 52
+1D0B: inc w               ; 4A
+1D0C: cmp x, $55          ; 55 55
+1D0E: nop                 ; A5
+1D0F: jmp x, y            ; 94
+1D10: add a, a            ; 24
+1D11: add a, $55          ; 29 55
+1D13: add x, $49          ; 25 49
+1D15: add x, $95          ; 25 95
+1D17: cmp a, w            ; 54
+1D18: nop                 ; A9
+1D19: inc w               ; 4A
+1D1A: cmp x, $95          ; 55 95
+1D1C: nop                 ; AA
+1D1D: nop                 ; AA
+1D1E: store $0000, x      ; 14 00 00
 1D21: nop                 ; 00
-1D22: nop                 ; F8
-1D23: nop                 ; FA
-1D24: set a, $00          ; 1B 00
-1D26: nop                 ; 00
-1D27: nop                 ; 00
-1D28: nop                 ; FC
-1D29: nop                 ; FF
-1D2A: and y, z            ; 94
-1D2B: and y, z            ; 94
-1D2C: or y, a             ; AA
-1D2D: or y, a             ; AA
-1D2E: or y, a             ; AA
-1D2F: add z, a            ; 2A
-1D30: or y, w             ; A9
-1D31: mul y, y            ; 54
-1D32: or x, w             ; A5
-1D33: or y, a             ; AA
-1D34: or y, a             ; AA
-1D35: sub a, y            ; 4A
-1D36: or y, a             ; AA
-1D37: mul x, a            ; 52
-1D38: or y, a             ; AA
-1D39: or x, z             ; A4
-1D3A: sub a, y            ; 4A
-1D3B: or y, a             ; AA
-1D3C: add z, a            ; 2A
-1D3D: sub a, x            ; 49
-1D3E: mul x, a            ; 52
-1D3F: sub a, x            ; 49
-1D40: or y, a             ; AA
-1D41: pop a               ; 0A
-1D42: nop                 ; 00
-1D43: nop                 ; 00
-1D44: nop                 ; 00
-1D45: nop                 ; 00
-1D46: nop                 ; 00
-1D47: cmp w, x            ; 80
+1D22: nop                 ; 00
+1D23: nop                 ; 00
+1D24: load y, $0048       ; 10 48 00
+1D27: nop                 ; FC
+1D28: xor a, x            ; 76
+1D29: load x, $0000       ; 0F 00 00
+1D2C: nop                 ; 00
+1D2D: nop                 ; FC
+1D2E: nop                 ; FF
+1D2F: cmp a, y            ; 52
+1D30: cmp x, $55          ; 55 55
+1D32: nop                 ; AA
+1D33: nop                 ; AA
+1D34: inc w               ; 4A
+1D35: jmp z, w            ; 95
+1D36: nop                 ; AA
+1D37: cmp a, y            ; 52
+1D38: cmp x, $A5          ; 55 A5
+1D3A: add a, a            ; 24
+1D3B: nop                 ; A9
+1D3C: adc a, x            ; 2A
+1D3D: nop                 ; A9
+1D3E: cmp a, y            ; 52
+1D3F: add x, $95          ; 25 95
+1D41: cmp a, w            ; 54
+1D42: cmp x, $A9          ; 55 A9
+1D44: nop                 ; A4
+1D45: inc w               ; 4A
+1D46: cmp x, $00          ; 55 00
 1D48: nop                 ; 00
 1D49: nop                 ; 00
-1D4A: or y, z             ; A8
-1D4B: rol x               ; DF
-1D4C: return              ; 16
-1D4D: nop                 ; 00
+1D4A: nop                 ; 00
+1D4B: nop                 ; 00
+1D4C: nop                 ; 00
+1D4D: push x              ; 01
 1D4E: nop                 ; 00
-1D4F: nop                 ; 00
-1D50: nop                 ; FC
-1D51: nop                 ; FF
-1D52: or y, a             ; AA
-1D53: or y, a             ; AA
-1D54: and x, a            ; 92
-1D55: mul x, a            ; 52
-1D56: sub a, y            ; 4A
-1D57: mul y, z            ; 55
-1D58: mul y, z            ; 55
-1D59: or x, w             ; A5
-1D5A: and y, z            ; 94
-1D5B: add y, w            ; 24
-1D5C: add z, w            ; 29
-1D5D: mul y, z            ; 55
-1D5E: add y, a            ; 25
-1D5F: sub a, x            ; 49
-1D60: add y, a            ; 25
-1D61: and y, w            ; 95
-1D62: mul y, y            ; 54
-1D63: or y, w             ; A9
-1D64: sub a, y            ; 4A
-1D65: mul y, z            ; 55
-1D66: and y, w            ; 95
-1D67: or y, a             ; AA
-1D68: or y, a             ; AA
-1D69: store $0000, a      ; 14 00 00
-1D6C: nop                 ; 00
-1D6D: nop                 ; 00
-1D6E: nop                 ; 00
-1D6F: store $0048, x      ; 10 48 00
-1D72: nop                 ; FC
-1D73: cmp y, x            ; 76
-1D74: load a, $0000       ; 0F 00 00
-1D77: nop                 ; 00
-1D78: nop                 ; FC
-1D79: nop                 ; FF
-1D7A: mul x, a            ; 52
-1D7B: mul y, z            ; 55
-1D7C: mul y, z            ; 55
-1D7D: or y, a             ; AA
-1D7E: or y, a             ; AA
-1D7F: sub a, y            ; 4A
-1D80: and y, w            ; 95
-1D81: or y, a             ; AA
-1D82: mul x, a            ; 52
-1D83: mul y, z            ; 55
-1D84: or x, w             ; A5
-1D85: add y, w            ; 24
-1D86: or y, w             ; A9
-1D87: add z, a            ; 2A
-1D88: or y, w             ; A9
-1D89: mul x, a            ; 52
-1D8A: add y, a            ; 25
-1D8B: and y, w            ; 95
-1D8C: mul y, y            ; 54
-1D8D: mul y, z            ; 55
-1D8E: or y, w             ; A9
-1D8F: or x, z             ; A4
-1D90: sub a, y            ; 4A
-1D91: mul y, z            ; 55
-1D92: nop                 ; 00
-1D93: nop                 ; 00
-1D94: nop                 ; 00
-1D95: nop                 ; 00
-1D96: nop                 ; 00
-1D97: nop                 ; 00
-1D98: push x              ; 01
+1D4F: nop                 ; D0
+1D50: nop                 ; DD
+1D51: push a              ; 05
+1D52: nop                 ; 00
+1D53: nop                 ; 00
+1D54: nop                 ; 00
+1D55: nop                 ; FC
+1D56: nop                 ; FF
+1D57: cmp x, $55          ; 55 55
+1D59: cmp x, $55          ; 55 55
+1D5B: cmp x, $A9          ; 55 A9
+1D5D: nop                 ; A4
+1D5E: jmp x, y            ; 94
+1D5F: adc a, x            ; 2A
+1D60: inc z               ; 49
+1D61: nop                 ; AA
+1D62: nop                 ; AA
+1D63: inc w               ; 4A
+1D64: nop                 ; AA
+1D65: inc w               ; 4A
+1D66: adc a, x            ; 2A
+1D67: jmp z, w            ; 95
+1D68: cmp a, y            ; 52
+1D69: cmp x, $52          ; 55 52
+1D6B: add x, $95          ; 25 95
+1D6D: cmp a, w            ; 54
+1D6E: nop                 ; A5
+1D6F: nop                 ; 00
+1D70: nop                 ; 00
+1D71: nop                 ; 00
+1D72: nop                 ; 00
+1D73: nop                 ; 00
+1D74: nop                 ; 00
+1D75: nop                 ; 00
+1D76: push x              ; 01
+1D77: or x, $77           ; 6C 77
+1D79: push.f              ; 07
+1D7A: nop                 ; 00
+1D7B: nop                 ; 00
+1D7C: nop                 ; 00
+1D7D: nop                 ; FC
+1D7E: nop                 ; FF
+1D7F: cmp x, $AA          ; 55 AA
+1D81: cmp a, w            ; 54
+1D82: cmp x, $A9          ; 55 A9
+1D84: nop                 ; AA
+1D85: nop                 ; AA
+1D86: cmp a, y            ; 52
+1D87: inc w               ; 4A
+1D88: cmp x, $49          ; 55 49
+1D8A: cmp a, y            ; 52
+1D8B: nop                 ; AA
+1D8C: ror a               ; 92
+1D8D: cmp a, w            ; 54
+1D8E: inc z               ; 49
+1D8F: nop                 ; A9
+1D90: inc w               ; 4A
+1D91: nop                 ; A5
+1D92: inc w               ; 4A
+1D93: nop                 ; AA
+1D94: cmp a, y            ; 52
+1D95: cmp x, $A9          ; 55 A9
+1D97: push y              ; 02
+1D98: nop                 ; 00
 1D99: nop                 ; 00
-1D9A: xor a, x            ; D0
-1D9B: shr w               ; DD
-1D9C: push a              ; 05
-1D9D: nop                 ; 00
+1D9A: nop                 ; 00
+1D9B: nop                 ; 00
+1D9C: mul a, w            ; 40
+1D9D: add a, a            ; 24
 1D9E: nop                 ; 00
-1D9F: nop                 ; 00
-1DA0: nop                 ; FC
-1DA1: nop                 ; FF
-1DA2: mul y, z            ; 55
-1DA3: mul y, z            ; 55
-1DA4: mul y, z            ; 55
-1DA5: mul y, z            ; 55
-1DA6: mul y, z            ; 55
-1DA7: or y, w             ; A9
-1DA8: or x, z             ; A4
-1DA9: and y, z            ; 94
-1DAA: add z, a            ; 2A
-1DAB: sub a, x            ; 49
-1DAC: or y, a             ; AA
-1DAD: or y, a             ; AA
-1DAE: sub a, y            ; 4A
-1DAF: or y, a             ; AA
-1DB0: sub a, y            ; 4A
-1DB1: add z, a            ; 2A
-1DB2: and y, w            ; 95
-1DB3: mul x, a            ; 52
-1DB4: mul y, z            ; 55
-1DB5: mul x, a            ; 52
-1DB6: add y, a            ; 25
-1DB7: and y, w            ; 95
-1DB8: mul y, y            ; 54
-1DB9: or x, w             ; A5
-1DBA: nop                 ; 00
-1DBB: nop                 ; 00
-1DBC: nop                 ; 00
-1DBD: nop                 ; 00
-1DBE: nop                 ; 00
-1DBF: nop                 ; 00
+1D9F: nop                 ; D0
+1DA0: nop                 ; DE
+1DA1: push z              ; 03
+1DA2: nop                 ; 00
+1DA3: nop                 ; 00
+1DA4: nop                 ; 00
+1DA5: nop                 ; FC
+1DA6: nop                 ; FF
+1DA7: jmp z, w            ; 95
+1DA8: cmp a, y            ; 52
+1DA9: cmp x, $A5          ; 55 A5
+1DAB: nop                 ; AA
+1DAC: nop                 ; AA
+1DAD: nop                 ; AA
+1DAE: nop                 ; AA
+1DAF: cmp a, y            ; 52
+1DB0: ror a               ; 92
+1DB1: nop                 ; AA
+1DB2: inc w               ; 4A
+1DB3: add a, $55          ; 29 55
+1DB5: nop                 ; A5
+1DB6: nop                 ; AA
+1DB7: adc a, x            ; 2A
+1DB8: cmp x, $AA          ; 55 AA
+1DBA: nop                 ; AA
+1DBB: nop                 ; AA
+1DBC: jmp x, y            ; 94
+1DBD: add a, a            ; 24
+1DBE: jmp z, w            ; 95
+1DBF: pop z               ; 0A
 1DC0: nop                 ; 00
-1DC1: push x              ; 01
-1DC2: dec x               ; 6C
-1DC3: cmp y, y            ; 77
-1DC4: pop y               ; 07
+1DC1: nop                 ; 00
+1DC2: nop                 ; 00
+1DC3: nop                 ; 00
+1DC4: nop                 ; 00
 1DC5: nop                 ; 00
-1DC6: nop                 ; 00
-1DC7: nop                 ; 00
-1DC8: nop                 ; FC
-1DC9: nop                 ; FF
-1DCA: mul y, z            ; 55
-1DCB: or y, a             ; AA
-1DCC: mul y, y            ; 54
-1DCD: mul y, z            ; 55
-1DCE: or y, w             ; A9
-1DCF: or y, a             ; AA
-1DD0: or y, a             ; AA
-1DD1: mul x, a            ; 52
-1DD2: sub a, y            ; 4A
-1DD3: mul y, z            ; 55
-1DD4: sub a, x            ; 49
-1DD5: mul x, a            ; 52
-1DD6: or y, a             ; AA
-1DD7: and x, a            ; 92
-1DD8: mul y, y            ; 54
-1DD9: sub a, x            ; 49
-1DDA: or y, w             ; A9
-1DDB: sub a, y            ; 4A
-1DDC: or x, w             ; A5
-1DDD: sub a, y            ; 4A
-1DDE: or y, a             ; AA
-1DDF: mul x, a            ; 52
-1DE0: mul y, z            ; 55
-1DE1: or y, w             ; A9
-1DE2: push y              ; 02
-1DE3: nop                 ; 00
-1DE4: nop                 ; 00
-1DE5: nop                 ; 00
-1DE6: nop                 ; 00
-1DE7: sub z, y            ; 40
-1DE8: add y, w            ; 24
-1DE9: nop                 ; 00
-1DEA: xor a, x            ; D0
-1DEB: shr a               ; DE
-1DEC: push z              ; 03
-1DED: nop                 ; 00
-1DEE: nop                 ; 00
-1DEF: nop                 ; 00
-1DF0: nop                 ; FC
-1DF1: nop                 ; FF
-1DF2: and y, w            ; 95
-1DF3: mul x, a            ; 52
-1DF4: mul y, z            ; 55
-1DF5: or x, w             ; A5
-1DF6: or y, a             ; AA
-1DF7: or y, a             ; AA
-1DF8: or y, a             ; AA
-1DF9: or y, a             ; AA
-1DFA: mul x, a            ; 52
-1DFB: and x, a            ; 92
-1DFC: or y, a             ; AA
-1DFD: sub a, y            ; 4A
-1DFE: add z, w            ; 29
-1DFF: mul y, z            ; 55
-1E00: or x, w             ; A5
-1E01: or y, a             ; AA
-1E02: add z, a            ; 2A
-1E03: mul y, z            ; 55
-1E04: or y, a             ; AA
-1E05: or y, a             ; AA
-1E06: or y, a             ; AA
-1E07: and y, z            ; 94
-1E08: add y, w            ; 24
-1E09: and y, w            ; 95
-1E0A: pop a               ; 0A
-1E0B: nop                 ; 00
-1E0C: nop                 ; 00
-1E0D: nop                 ; 00
-1E0E: nop                 ; 00
-1E0F: nop                 ; 00
+1DC6: push w              ; 04
+1DC7: nop                 ; D4
+1DC8: xor y, $01          ; 7B 01
+1DCA: nop                 ; 00
+1DCB: nop                 ; 00
+1DCC: nop                 ; 00
+1DCD: nop                 ; FC
+1DCE: nop                 ; FF
+1DCF: nop                 ; A4
+1DD0: adc a, x            ; 2A
+1DD1: add x, $55          ; 25 55
+1DD3: adc a, x            ; 2A
+1DD4: cmp x, $95          ; 55 95
+1DD6: jmp x, y            ; 94
+1DD7: nop                 ; AA
+1DD8: nop                 ; AA
+1DD9: add a, a            ; 24
+1DDA: nop                 ; A9
+1DDB: inc w               ; 4A
+1DDC: inc z               ; 49
+1DDD: cmp a, y            ; 52
+1DDE: cmp a, y            ; 52
+1DDF: inc w               ; 4A
+1DE0: nop                 ; A9
+1DE1: ror a               ; 92
+1DE2: cmp a, w            ; 54
+1DE3: jmp z, w            ; 95
+1DE4: cmp a, y            ; 52
+1DE5: cmp x, $55          ; 55 55
+1DE7: store $0000, y      ; 15 00 00
+1DEA: nop                 ; 00
+1DEB: nop                 ; 00
+1DEC: nop                 ; 00
+1DED: load z, $D400       ; 11 00 D4
+1DF0: nop                 ; D6
+1DF1: push x              ; 01
+1DF2: nop                 ; 00
+1DF3: nop                 ; 00
+1DF4: nop                 ; 00
+1DF5: nop                 ; FC
+1DF6: nop                 ; FF
+1DF7: cmp x, $A5          ; 55 A5
+1DF9: nop                 ; AA
+1DFA: nop                 ; AA
+1DFB: nop                 ; AA
+1DFC: inc w               ; 4A
+1DFD: nop                 ; A9
+1DFE: cmp a, y            ; 52
+1DFF: inc w               ; 4A
+1E00: add x, $55          ; 25 55
+1E02: jmp z, w            ; 95
+1E03: cmp a, y            ; 52
+1E04: nop                 ; AA
+1E05: inc w               ; 4A
+1E06: jmp z, w            ; 95
+1E07: cmp a, y            ; 52
+1E08: inc w               ; 4A
+1E09: cmp x, $25          ; 55 25
+1E0B: nop                 ; A9
+1E0C: inc w               ; 4A
+1E0D: cmp a, y            ; 52
+1E0E: add x, $29          ; 25 29
 1E10: nop                 ; 00
-1E11: push w              ; 04
-1E12: xor a, a            ; D4
-1E13: cmp z, x            ; 7B
-1E14: push x              ; 01
-1E15: nop                 ; 00
-1E16: nop                 ; 00
-1E17: nop                 ; 00
-1E18: nop                 ; FC
-1E19: nop                 ; FF
-1E1A: or x, z             ; A4
-1E1B: add z, a            ; 2A
-1E1C: add y, a            ; 25
-1E1D: mul y, z            ; 55
-1E1E: add z, a            ; 2A
-1E1F: mul y, z            ; 55
-1E20: and y, w            ; 95
-1E21: and y, z            ; 94
-1E22: or y, a             ; AA
-1E23: or y, a             ; AA
-1E24: add y, w            ; 24
-1E25: or y, w             ; A9
-1E26: sub a, y            ; 4A
-1E27: sub a, x            ; 49
-1E28: mul x, a            ; 52
-1E29: mul x, a            ; 52
-1E2A: sub a, y            ; 4A
-1E2B: or y, w             ; A9
-1E2C: and x, a            ; 92
-1E2D: mul y, y            ; 54
-1E2E: and y, w            ; 95
-1E2F: mul x, a            ; 52
-1E30: mul y, z            ; 55
-1E31: mul y, z            ; 55
-1E32: call $0000          ; 15 00 00
-1E35: nop                 ; 00
-1E36: nop                 ; 00
-1E37: nop                 ; 00
-1E38: store $D400, y      ; 11 00 D4
-1E3B: shl y               ; D6
-1E3C: push x              ; 01
-1E3D: nop                 ; 00
-1E3E: nop                 ; 00
-1E3F: nop                 ; 00
-1E40: nop                 ; FC
-1E41: nop                 ; FF
-1E42: mul y, z            ; 55
-1E43: or x, w             ; A5
-1E44: or y, a             ; AA
-1E45: or y, a             ; AA
-1E46: or y, a             ; AA
-1E47: sub a, y            ; 4A
-1E48: or y, w             ; A9
-1E49: mul x, a            ; 52
-1E4A: sub a, y            ; 4A
-1E4B: add y, a            ; 25
-1E4C: mul y, z            ; 55
-1E4D: and y, w            ; 95
-1E4E: mul x, a            ; 52
-1E4F: or y, a             ; AA
-1E50: sub a, y            ; 4A
-1E51: and y, w            ; 95
-1E52: mul x, a            ; 52
-1E53: sub a, y            ; 4A
-1E54: mul y, z            ; 55
-1E55: add y, a            ; 25
-1E56: or y, w             ; A9
-1E57: sub a, y            ; 4A
-1E58: mul x, a            ; 52
-1E59: add y, a            ; 25
-1E5A: add z, w            ; 29
-1E5B: nop                 ; 00
-1E5C: nop                 ; 00
-1E5D: nop                 ; 00
-1E5E: nop                 ; 00
-1E5F: nop                 ; 00
-1E60: cmp w, x            ; 80
-1E61: nop                 ; 00
-1E62: mul a, z            ; 64
-1E63: cmp z, a            ; 7F
-1E64: push x              ; 01
-1E65: nop                 ; 00
-1E66: nop                 ; 00
-1E67: nop                 ; 00
-1E68: nop                 ; FC
-1E69: nop                 ; FF
-1E6A: or y, a             ; AA
-1E6B: mul y, y            ; 54
-1E6C: mul y, z            ; 55
-1E6D: sub a, x            ; 49
-1E6E: mul y, z            ; 55
-1E6F: mul y, z            ; 55
-1E70: mul y, z            ; 55
-1E71: mul y, z            ; 55
-1E72: add z, w            ; 29
-1E73: or y, w             ; A9
-1E74: and x, a            ; 92
-1E75: mul y, y            ; 54
-1E76: or y, a             ; AA
-1E77: add z, a            ; 2A
-1E78: or y, w             ; A9
-1E79: or x, z             ; A4
-1E7A: or y, a             ; AA
-1E7B: or y, a             ; AA
-1E7C: mul y, y            ; 54
-1E7D: mul y, z            ; 55
-1E7E: or x, w             ; A5
-1E7F: mul y, y            ; 54
-1E80: and y, w            ; 95
-1E81: mul y, y            ; 54
-1E82: mul y, z            ; 55
-1E83: push x              ; 01
-1E84: nop                 ; 00
-1E85: nop                 ; 00
-1E86: nop                 ; 00
-1E87: nop                 ; 00
-1E88: push w              ; 04
-1E89: store $D5DC, x      ; 10 DC D5
-1E8C: nop                 ; 00
+1E11: nop                 ; 00
+1E12: nop                 ; 00
+1E13: nop                 ; 00
+1E14: nop                 ; 00
+1E15: shl y, $00          ; 80 00
+1E17: and y, $7F          ; 64 7F
+1E19: push x              ; 01
+1E1A: nop                 ; 00
+1E1B: nop                 ; 00
+1E1C: nop                 ; 00
+1E1D: nop                 ; FC
+1E1E: nop                 ; FF
+1E1F: nop                 ; AA
+1E20: cmp a, w            ; 54
+1E21: cmp x, $49          ; 55 49
+1E23: cmp x, $55          ; 55 55
+1E25: cmp x, $55          ; 55 55
+1E27: add a, $A9          ; 29 A9
+1E29: ror a               ; 92
+1E2A: cmp a, w            ; 54
+1E2B: nop                 ; AA
+1E2C: adc a, x            ; 2A
+1E2D: nop                 ; A9
+1E2E: nop                 ; A4
+1E2F: nop                 ; AA
+1E30: nop                 ; AA
+1E31: cmp a, w            ; 54
+1E32: cmp x, $A5          ; 55 A5
+1E34: cmp a, w            ; 54
+1E35: jmp z, w            ; 95
+1E36: cmp a, w            ; 54
+1E37: cmp x, $01          ; 55 01
+1E39: nop                 ; 00
+1E3A: nop                 ; 00
+1E3B: nop                 ; 00
+1E3C: nop                 ; 00
+1E3D: push w              ; 04
+1E3E: load y, $D5DC       ; 10 DC D5
+1E41: nop                 ; 00
+1E42: nop                 ; 00
+1E43: nop                 ; 00
+1E44: nop                 ; 00
+1E45: nop                 ; FC
+1E46: nop                 ; FF
+1E47: nop                 ; A5
+1E48: adc a, x            ; 2A
+1E49: nop                 ; A9
+1E4A: nop                 ; AA
+1E4B: cmp a, y            ; 52
+1E4C: add a, $A5          ; 29 A5
+1E4E: nop                 ; AA
+1E4F: nop                 ; AA
+1E50: nop                 ; AA
+1E51: cmp a, w            ; 54
+1E52: nop                 ; A5
+1E53: inc w               ; 4A
+1E54: inc z               ; 49
+1E55: jmp z, w            ; 95
+1E56: adc a, x            ; 2A
+1E57: inc z               ; 49
+1E58: add a, $55          ; 29 55
+1E5A: cmp x, $55          ; 55 55
+1E5C: add x, $A9          ; 25 A9
+1E5E: nop                 ; AA
+1E5F: cmp a, y            ; 52
+1E60: push x              ; 01
+1E61: load y, $0000       ; 10 00 00
+1E64: load y, $0220       ; 10 20 02
+1E67: not w               ; 74
+1E68: shl x, $00          ; 7F 00
+1E6A: nop                 ; 00
+1E6B: nop                 ; 00
+1E6C: nop                 ; 00
+1E6D: nop                 ; FC
+1E6E: nop                 ; FF
+1E6F: jmp z, w            ; 95
+1E70: nop                 ; AA
+1E71: adc a, x            ; 2A
+1E72: cmp x, $2A          ; 55 2A
+1E74: cmp x, $55          ; 55 55
+1E76: inc w               ; 4A
+1E77: nop                 ; A5
+1E78: jmp x, y            ; 94
+1E79: inc w               ; 4A
+1E7A: jmp z, w            ; 95
+1E7B: cmp a, y            ; 52
+1E7C: nop                 ; AA
+1E7D: cmp a, w            ; 54
+1E7E: nop                 ; AA
+1E7F: adc a, x            ; 2A
+1E80: nop                 ; A5
+1E81: inc w               ; 4A
+1E82: cmp a, y            ; 52
+1E83: adc a, x            ; 2A
+1E84: cmp x, $4A          ; 55 4A
+1E86: ror a               ; 92
+1E87: jmp x, y            ; 94
+1E88: pop z               ; 0A
+1E89: nop                 ; 00
+1E8A: nop                 ; 00
+1E8B: nop                 ; 00
+1E8C: mul a, w            ; 40
 1E8D: nop                 ; 00
 1E8E: nop                 ; 00
-1E8F: nop                 ; 00
-1E90: nop                 ; FC
-1E91: nop                 ; FF
-1E92: or x, w             ; A5
-1E93: add z, a            ; 2A
-1E94: or y, w             ; A9
-1E95: or y, a             ; AA
-1E96: mul x, a            ; 52
-1E97: add z, w            ; 29
-1E98: or x, w             ; A5
-1E99: or y, a             ; AA
-1E9A: or y, a             ; AA
-1E9B: or y, a             ; AA
-1E9C: mul y, y            ; 54
-1E9D: or x, w             ; A5
-1E9E: sub a, y            ; 4A
-1E9F: sub a, x            ; 49
-1EA0: and y, w            ; 95
-1EA1: add z, a            ; 2A
-1EA2: sub a, x            ; 49
-1EA3: add z, w            ; 29
-1EA4: mul y, z            ; 55
-1EA5: mul y, z            ; 55
-1EA6: mul y, z            ; 55
-1EA7: add y, a            ; 25
-1EA8: or y, w             ; A9
-1EA9: or y, a             ; AA
-1EAA: mul x, a            ; 52
-1EAB: push x              ; 01
-1EAC: store $0000, x      ; 10 00 00
-1EAF: store $0220, x      ; 10 20 02
-1EB2: cmp x, w            ; 74
-1EB3: cmp z, a            ; 7F
+1E8F: nop                 ; F8
+1E90: cmp y, $00          ; 56 00
+1E92: nop                 ; 00
+1E93: nop                 ; 00
+1E94: nop                 ; 00
+1E95: nop                 ; FC
+1E96: nop                 ; FF
+1E97: cmp a, w            ; 54
+1E98: inc z               ; 49
+1E99: nop                 ; A5
+1E9A: nop                 ; AA
+1E9B: inc w               ; 4A
+1E9C: nop                 ; A5
+1E9D: jmp x, y            ; 94
+1E9E: cmp a, y            ; 52
+1E9F: nop                 ; AA
+1EA0: cmp a, y            ; 52
+1EA1: add a, $A9          ; 29 A9
+1EA3: jmp x, y            ; 94
+1EA4: ror a               ; 92
+1EA5: cmp a, y            ; 52
+1EA6: inc z               ; 49
+1EA7: cmp a, y            ; 52
+1EA8: cmp x, $52          ; 55 52
+1EAA: cmp x, $A9          ; 55 A9
+1EAC: inc w               ; 4A
+1EAD: nop                 ; A9
+1EAE: nop                 ; AA
+1EAF: nop                 ; AA
+1EB0: pop z               ; 0A
+1EB1: shl w, $00          ; 82 00
+1EB3: nop                 ; 00
 1EB4: nop                 ; 00
-1EB5: nop                 ; 00
-1EB6: nop                 ; 00
-1EB7: nop                 ; 00
-1EB8: nop                 ; FC
-1EB9: nop                 ; FF
-1EBA: and y, w            ; 95
-1EBB: or y, a             ; AA
-1EBC: add z, a            ; 2A
-1EBD: mul y, z            ; 55
-1EBE: add z, a            ; 2A
-1EBF: mul y, z            ; 55
-1EC0: mul y, z            ; 55
-1EC1: sub a, y            ; 4A
-1EC2: or x, w             ; A5
-1EC3: and y, z            ; 94
-1EC4: sub a, y            ; 4A
-1EC5: and y, w            ; 95
-1EC6: mul x, a            ; 52
-1EC7: or y, a             ; AA
-1EC8: mul y, y            ; 54
-1EC9: or y, a             ; AA
-1ECA: add z, a            ; 2A
-1ECB: or x, w             ; A5
-1ECC: sub a, y            ; 4A
-1ECD: mul x, a            ; 52
-1ECE: add z, a            ; 2A
-1ECF: mul y, z            ; 55
-1ED0: sub a, y            ; 4A
-1ED1: and x, a            ; 92
-1ED2: and y, z            ; 94
-1ED3: pop a               ; 0A
-1ED4: nop                 ; 00
-1ED5: nop                 ; 00
-1ED6: nop                 ; 00
-1ED7: sub z, y            ; 40
-1ED8: nop                 ; 00
-1ED9: nop                 ; 00
-1EDA: nop                 ; F8
-1EDB: mul y, w            ; 56
-1EDC: nop                 ; 00
-1EDD: nop                 ; 00
-1EDE: nop                 ; 00
-1EDF: nop                 ; 00
-1EE0: nop                 ; FC
-1EE1: nop                 ; FF
-1EE2: mul y, y            ; 54
-1EE3: sub a, x            ; 49
-1EE4: or x, w             ; A5
-1EE5: or y, a             ; AA
-1EE6: sub a, y            ; 4A
-1EE7: or x, w             ; A5
-1EE8: and y, z            ; 94
-1EE9: mul x, a            ; 52
-1EEA: or y, a             ; AA
-1EEB: mul x, a            ; 52
-1EEC: add z, w            ; 29
-1EED: or y, w             ; A9
-1EEE: and y, z            ; 94
-1EEF: and x, a            ; 92
-1EF0: mul x, a            ; 52
-1EF1: sub a, x            ; 49
-1EF2: mul x, a            ; 52
-1EF3: mul y, z            ; 55
-1EF4: mul x, a            ; 52
-1EF5: mul y, z            ; 55
-1EF6: or y, w             ; A9
-1EF7: sub a, y            ; 4A
-1EF8: or y, w             ; A9
-1EF9: or y, a             ; AA
-1EFA: or y, a             ; AA
-1EFB: pop a               ; 0A
-1EFC: cmp w, z            ; 82
-1EFD: nop                 ; 00
-1EFE: nop                 ; 00
-1EFF: nop                 ; 00
-1F00: cmp w, y            ; 81
-1F01: add x, a            ; 20
-1F02: or y, z             ; A8
-1F03: sub y, y            ; 3B
-1F04: nop                 ; 00
-1F05: nop                 ; 00
+1EB5: shl z, $20          ; 81 20
+1EB7: nop                 ; A8
+1EB8: sub w, $00          ; 3B 00
+1EBA: nop                 ; 00
+1EBB: nop                 ; 00
+1EBC: nop                 ; 00
+1EBD: nop                 ; FC
+1EBE: nop                 ; FF
+1EBF: nop                 ; AA
+1EC0: nop                 ; AA
+1EC1: cmp a, w            ; 54
+1EC2: inc z               ; 49
+1EC3: nop                 ; A9
+1EC4: nop                 ; AA
+1EC5: cmp a, y            ; 52
+1EC6: cmp x, $95          ; 55 95
+1EC8: inc w               ; 4A
+1EC9: nop                 ; AA
+1ECA: inc w               ; 4A
+1ECB: cmp x, $55          ; 55 55
+1ECD: jmp z, w            ; 95
+1ECE: nop                 ; AA
+1ECF: inc w               ; 4A
+1ED0: ror a               ; 92
+1ED1: nop                 ; AA
+1ED2: inc w               ; 4A
+1ED3: jmp z, w            ; 95
+1ED4: cmp a, y            ; 52
+1ED5: add x, $A9          ; 25 A9
+1ED7: inc w               ; 4A
+1ED8: nop                 ; B2
+1ED9: store $0002, y      ; 15 02 00
+1EDC: cmp a, w            ; 54
+1EDD: push w              ; 04
+1EDE: push w              ; 04
+1EDF: nop                 ; E0
+1EE0: set w, $00          ; 1E 00
+1EE2: nop                 ; 00
+1EE3: nop                 ; 00
+1EE4: nop                 ; 00
+1EE5: nop                 ; FC
+1EE6: nop                 ; FF
+1EE7: nop                 ; AA
+1EE8: adc a, x            ; 2A
+1EE9: cmp x, $AA          ; 55 AA
+1EEB: nop                 ; AA
+1EEC: jmp x, y            ; 94
+1EED: adc a, x            ; 2A
+1EEE: jmp z, w            ; 95
+1EEF: cmp a, y            ; 52
+1EF0: cmp x, $A5          ; 55 A5
+1EF2: cmp a, y            ; 52
+1EF3: cmp a, y            ; 52
+1EF4: adc a, x            ; 2A
+1EF5: nop                 ; A5
+1EF6: ror a               ; 92
+1EF7: cmp a, w            ; 54
+1EF8: cmp x, $25          ; 55 25
+1EFA: cmp x, $A5          ; 55 A5
+1EFC: jmp x, y            ; 94
+1EFD: jmp x, y            ; 94
+1EFE: inc w               ; 4A
+1EFF: cmp a, y            ; 52
+1F00: cmp x, $2A          ; 55 2A
+1F02: load y, $2000       ; 10 00 20
+1F05: push x              ; 01
 1F06: nop                 ; 00
-1F07: nop                 ; 00
-1F08: nop                 ; FC
-1F09: nop                 ; FF
-1F0A: or y, a             ; AA
-1F0B: or y, a             ; AA
-1F0C: mul y, y            ; 54
-1F0D: sub a, x            ; 49
-1F0E: or y, w             ; A9
-1F0F: or y, a             ; AA
-1F10: mul x, a            ; 52
-1F11: mul y, z            ; 55
-1F12: and y, w            ; 95
-1F13: sub a, y            ; 4A
-1F14: or y, a             ; AA
-1F15: sub a, y            ; 4A
-1F16: mul y, z            ; 55
-1F17: mul y, z            ; 55
-1F18: and y, w            ; 95
-1F19: or y, a             ; AA
-1F1A: sub a, y            ; 4A
-1F1B: and x, a            ; 92
-1F1C: or y, a             ; AA
-1F1D: sub a, y            ; 4A
-1F1E: and y, w            ; 95
-1F1F: mul x, a            ; 52
-1F20: add y, a            ; 25
-1F21: or y, w             ; A9
-1F22: sub a, y            ; 4A
-1F23: or w, a             ; B2
-1F24: call $0002          ; 15 02 00
-1F27: mul y, y            ; 54
-1F28: push w              ; 04
-1F29: push w              ; 04
-1F2A: rol y               ; E0
-1F2B: add x, z            ; 1E
-1F2C: nop                 ; 00
-1F2D: nop                 ; 00
-1F2E: nop                 ; 00
-1F2F: nop                 ; 00
-1F30: nop                 ; FC
-1F31: nop                 ; FF
-1F32: or y, a             ; AA
-1F33: add z, a            ; 2A
-1F34: mul y, z            ; 55
-1F35: or y, a             ; AA
-1F36: or y, a             ; AA
-1F37: and y, z            ; 94
-1F38: add z, a            ; 2A
-1F39: and y, w            ; 95
-1F3A: mul x, a            ; 52
-1F3B: mul y, z            ; 55
-1F3C: or x, w             ; A5
-1F3D: mul x, a            ; 52
-1F3E: mul x, a            ; 52
-1F3F: add z, a            ; 2A
-1F40: or x, w             ; A5
-1F41: and x, a            ; 92
-1F42: mul y, y            ; 54
-1F43: mul y, z            ; 55
-1F44: add y, a            ; 25
-1F45: mul y, z            ; 55
-1F46: or x, w             ; A5
-1F47: and y, z            ; 94
-1F48: and y, z            ; 94
-1F49: sub a, y            ; 4A
-1F4A: mul x, a            ; 52
-1F4B: mul y, z            ; 55
-1F4C: add z, a            ; 2A
-1F4D: store $2000, x      ; 10 00 20
-1F50: push x              ; 01
-1F51: nop                 ; 00
-1F52: xor x, a            ; C0
-1F53: load x, $0000       ; 0B 00 00
-1F56: nop                 ; 00
+1F07: nop                 ; C0
+1F08: pop w               ; 0B
+1F09: nop                 ; 00
+1F0A: nop                 ; 00
+1F0B: nop                 ; 00
+1F0C: nop                 ; 00
+1F0D: nop                 ; FC
+1F0E: nop                 ; FF
+1F0F: cmp x, $55          ; 55 55
+1F11: jmp z, w            ; 95
+1F12: adc a, x            ; 2A
+1F13: jmp z, w            ; 95
+1F14: cmp a, y            ; 52
+1F15: nop                 ; A9
+1F16: cmp a, y            ; 52
+1F17: cmp x, $29          ; 55 29
+1F19: cmp x, $AA          ; 55 AA
+1F1B: inc w               ; 4A
+1F1C: nop                 ; A5
+1F1D: cmp a, w            ; 54
+1F1E: nop                 ; AA
+1F1F: adc a, x            ; 2A
+1F20: cmp x, $A9          ; 55 A9
+1F22: cmp a, y            ; 52
+1F23: nop                 ; AA
+1F24: nop                 ; AA
+1F25: cmp a, y            ; 52
+1F26: nop                 ; A9
+1F27: adc a, x            ; 2A
+1F28: inc z               ; 49
+1F29: nop                 ; A9
+1F2A: nop                 ; 00
+1F2B: nop                 ; 00
+1F2C: nop                 ; EA
+1F2D: push y              ; 02
+1F2E: push x              ; 01
+1F2F: shl z, $1E          ; 81 1E
+1F31: nop                 ; 00
+1F32: nop                 ; 00
+1F33: nop                 ; 00
+1F34: nop                 ; 00
+1F35: nop                 ; FC
+1F36: nop                 ; FF
+1F37: cmp x, $A5          ; 55 A5
+1F39: cmp a, y            ; 52
+1F3A: nop                 ; A5
+1F3B: nop                 ; A4
+1F3C: adc a, x            ; 2A
+1F3D: nop                 ; A5
+1F3E: cmp a, w            ; 54
+1F3F: inc w               ; 4A
+1F40: nop                 ; AA
+1F41: nop                 ; A4
+1F42: inc w               ; 4A
+1F43: cmp x, $A9          ; 55 A9
+1F45: inc w               ; 4A
+1F46: add x, $49          ; 25 49
+1F48: inc z               ; 49
+1F49: nop                 ; AA
+1F4A: cmp a, w            ; 54
+1F4B: cmp x, $55          ; 55 55
+1F4D: jmp z, w            ; 95
+1F4E: jmp x, y            ; 94
+1F4F: nop                 ; AA
+1F50: adc a, x            ; 2A
+1F51: nop                 ; A5
+1F52: mul x, $00          ; 42 00
+1F54: xor a, z            ; 78
+1F55: push x              ; 01
+1F56: inc y               ; 48
 1F57: nop                 ; 00
-1F58: nop                 ; FC
-1F59: nop                 ; FF
-1F5A: mul y, z            ; 55
-1F5B: mul y, z            ; 55
-1F5C: and y, w            ; 95
-1F5D: add z, a            ; 2A
-1F5E: and y, w            ; 95
-1F5F: mul x, a            ; 52
-1F60: or y, w             ; A9
-1F61: mul x, a            ; 52
-1F62: mul y, z            ; 55
-1F63: add z, w            ; 29
-1F64: mul y, z            ; 55
-1F65: or y, a             ; AA
-1F66: sub a, y            ; 4A
-1F67: or x, w             ; A5
-1F68: mul y, y            ; 54
-1F69: or y, a             ; AA
-1F6A: add z, a            ; 2A
-1F6B: mul y, z            ; 55
-1F6C: or y, w             ; A9
-1F6D: mul x, a            ; 52
-1F6E: or y, a             ; AA
-1F6F: or y, a             ; AA
-1F70: mul x, a            ; 52
-1F71: or y, w             ; A9
-1F72: add z, a            ; 2A
-1F73: sub a, x            ; 49
-1F74: or y, w             ; A9
-1F75: nop                 ; 00
-1F76: nop                 ; 00
-1F77: jmp x, y            ; EA
-1F78: push y              ; 02
-1F79: push x              ; 01
-1F7A: cmp w, y            ; 81
-1F7B: add x, z            ; 1E
-1F7C: nop                 ; 00
-1F7D: nop                 ; 00
+1F58: pop w               ; 0B
+1F59: nop                 ; 00
+1F5A: nop                 ; 00
+1F5B: nop                 ; 00
+1F5C: nop                 ; 00
+1F5D: nop                 ; FC
+1F5E: nop                 ; FF
+1F5F: nop                 ; A4
+1F60: nop                 ; AA
+1F61: cmp a, w            ; 54
+1F62: nop                 ; A9
+1F63: nop                 ; AA
+1F64: nop                 ; A4
+1F65: adc a, x            ; 2A
+1F66: jmp z, w            ; 95
+1F67: cmp a, y            ; 52
+1F68: jmp z, w            ; 95
+1F69: adc a, x            ; 2A
+1F6A: nop                 ; A9
+1F6B: add a, a            ; 24
+1F6C: cmp x, $52          ; 55 52
+1F6E: nop                 ; A9
+1F6F: nop                 ; AA
+1F70: nop                 ; AA
+1F71: inc w               ; 4A
+1F72: jmp z, w            ; 95
+1F73: inc w               ; 4A
+1F74: ror a               ; 92
+1F75: cmp a, w            ; 54
+1F76: inc w               ; 4A
+1F77: inc z               ; 49
+1F78: nop                 ; A5
+1F79: jmp x, y            ; 94
+1F7A: push w              ; 04
+1F7B: push y              ; 02
+1F7C: nop                 ; F4
+1F7D: pop z               ; 0A
 1F7E: nop                 ; 00
 1F7F: nop                 ; 00
-1F80: nop                 ; FC
-1F81: nop                 ; FF
-1F82: mul y, z            ; 55
-1F83: or x, w             ; A5
-1F84: mul x, a            ; 52
-1F85: or x, w             ; A5
-1F86: or x, z             ; A4
-1F87: add z, a            ; 2A
-1F88: or x, w             ; A5
-1F89: mul y, y            ; 54
-1F8A: sub a, y            ; 4A
-1F8B: or y, a             ; AA
-1F8C: or x, z             ; A4
-1F8D: sub a, y            ; 4A
-1F8E: mul y, z            ; 55
-1F8F: or y, w             ; A9
-1F90: sub a, y            ; 4A
-1F91: add y, a            ; 25
-1F92: sub a, x            ; 49
-1F93: sub a, x            ; 49
-1F94: or y, a             ; AA
-1F95: mul y, y            ; 54
-1F96: mul y, z            ; 55
-1F97: mul y, z            ; 55
-1F98: and y, w            ; 95
-1F99: and y, z            ; 94
-1F9A: or y, a             ; AA
-1F9B: add z, a            ; 2A
-1F9C: or x, w             ; A5
-1F9D: sub z, w            ; 42
-1F9E: nop                 ; 00
-1F9F: cmp y, z            ; 78
-1FA0: push x              ; 01
-1FA1: sub w, a            ; 48
-1FA2: nop                 ; 00
-1FA3: load x, $0000       ; 0B 00 00
+1F80: push.a              ; 06
+1F81: nop                 ; 00
+1F82: nop                 ; 00
+1F83: nop                 ; 00
+1F84: nop                 ; 00
+1F85: nop                 ; FC
+1F86: nop                 ; FF
+1F87: cmp x, $AA          ; 55 AA
+1F89: inc w               ; 4A
+1F8A: jmp z, w            ; 95
+1F8B: ror a               ; 92
+1F8C: adc a, x            ; 2A
+1F8D: inc z               ; 49
+1F8E: inc z               ; 49
+1F8F: nop                 ; A9
+1F90: nop                 ; A4
+1F91: inc w               ; 4A
+1F92: jmp z, w            ; 95
+1F93: nop                 ; AA
+1F94: ror a               ; 92
+1F95: adc a, x            ; 2A
+1F96: cmp x, $92          ; 55 92
+1F98: jmp x, y            ; 94
+1F99: nop                 ; AA
+1F9A: nop                 ; AA
+1F9B: cmp a, w            ; 54
+1F9C: cmp x, $A5          ; 55 A5
+1F9E: cmp a, y            ; 52
+1F9F: adc a, x            ; 2A
+1FA0: nop                 ; A9
+1FA1: nop                 ; AA
+1FA2: pop z               ; 0A
+1FA3: pop x               ; 08
+1FA4: nop                 ; F9
+1FA5: push x              ; 01
 1FA6: nop                 ; 00
-1FA7: nop                 ; 00
-1FA8: nop                 ; FC
-1FA9: nop                 ; FF
-1FAA: or x, z             ; A4
-1FAB: or y, a             ; AA
-1FAC: mul y, y            ; 54
-1FAD: or y, w             ; A9
-1FAE: or y, a             ; AA
-1FAF: or x, z             ; A4
-1FB0: add z, a            ; 2A
-1FB1: and y, w            ; 95
-1FB2: mul x, a            ; 52
-1FB3: and y, w            ; 95
-1FB4: add z, a            ; 2A
-1FB5: or y, w             ; A9
-1FB6: add y, w            ; 24
-1FB7: mul y, z            ; 55
-1FB8: mul x, a            ; 52
-1FB9: or y, w             ; A9
-1FBA: or y, a             ; AA
-1FBB: or y, a             ; AA
-1FBC: sub a, y            ; 4A
-1FBD: and y, w            ; 95
-1FBE: sub a, y            ; 4A
-1FBF: and x, a            ; 92
-1FC0: mul y, y            ; 54
-1FC1: sub a, y            ; 4A
-1FC2: sub a, x            ; 49
-1FC3: or x, w             ; A5
-1FC4: and y, z            ; 94
-1FC5: push w              ; 04
-1FC6: push y              ; 02
-1FC7: jmp.lt $000A        ; F4 0A 00
-1FCA: nop                 ; 00
-1FCB: pop x               ; 06
-1FCC: nop                 ; 00
-1FCD: nop                 ; 00
-1FCE: nop                 ; 00
+1FA7: pop x               ; 08
+1FA8: push w              ; 04
+1FA9: nop                 ; 00
+1FAA: nop                 ; 00
+1FAB: nop                 ; 00
+1FAC: nop                 ; 00
+1FAD: nop                 ; FC
+1FAE: nop                 ; FF
+1FAF: nop                 ; AA
+1FB0: adc a, x            ; 2A
+1FB1: cmp x, $AA          ; 55 AA
+1FB3: cmp a, w            ; 54
+1FB4: nop                 ; AA
+1FB5: nop                 ; AA
+1FB6: cmp a, y            ; 52
+1FB7: adc a, x            ; 2A
+1FB8: cmp x, $A9          ; 55 A9
+1FBA: nop                 ; A4
+1FBB: ror a               ; 92
+1FBC: nop                 ; AA
+1FBD: nop                 ; AA
+1FBE: inc w               ; 4A
+1FBF: cmp x, $A5          ; 55 A5
+1FC1: nop                 ; A4
+1FC2: nop                 ; A4
+1FC3: nop                 ; AA
+1FC4: nop                 ; AA
+1FC5: nop                 ; AA
+1FC6: add a, a            ; 24
+1FC7: nop                 ; A5
+1FC8: adc a, x            ; 2A
+1FC9: add x, $55          ; 25 55
+1FCB: add a, x            ; 20
+1FCC: nop                 ; C0
+1FCD: push a              ; 05
+1FCE: ror z               ; 90
 1FCF: nop                 ; 00
-1FD0: nop                 ; FC
-1FD1: nop                 ; FF
-1FD2: mul y, z            ; 55
-1FD3: or y, a             ; AA
-1FD4: sub a, y            ; 4A
-1FD5: and y, w            ; 95
-1FD6: and x, a            ; 92
-1FD7: add z, a            ; 2A
-1FD8: sub a, x            ; 49
-1FD9: sub a, x            ; 49
-1FDA: or y, w             ; A9
-1FDB: or x, z             ; A4
-1FDC: sub a, y            ; 4A
-1FDD: and y, w            ; 95
-1FDE: or y, a             ; AA
-1FDF: and x, a            ; 92
-1FE0: add z, a            ; 2A
-1FE1: mul y, z            ; 55
-1FE2: and x, a            ; 92
-1FE3: and y, z            ; 94
-1FE4: or y, a             ; AA
-1FE5: or y, a             ; AA
-1FE6: mul y, y            ; 54
-1FE7: mul y, z            ; 55
-1FE8: or x, w             ; A5
-1FE9: mul x, a            ; 52
-1FEA: add z, a            ; 2A
-1FEB: or y, w             ; A9
-1FEC: or y, a             ; AA
-1FED: pop a               ; 0A
-1FEE: pop z               ; 08
-1FEF: nop                 ; F9
-1FF0: push x              ; 01
-1FF1: nop                 ; 00
-1FF2: pop z               ; 08
-1FF3: push w              ; 04
-1FF4: nop                 ; 00
-1FF5: nop                 ; 00
+1FD0: nop                 ; 00
+1FD1: nop                 ; 00
+1FD2: nop                 ; 00
+1FD3: nop                 ; 00
+1FD4: nop                 ; 00
+1FD5: nop                 ; FC
+1FD6: nop                 ; FF
+1FD7: ror a               ; 92
+1FD8: cmp a, y            ; 52
+1FD9: cmp x, $29          ; 55 29
+1FDB: nop                 ; A5
+1FDC: cmp a, y            ; 52
+1FDD: ror a               ; 92
+1FDE: jmp x, y            ; 94
+1FDF: ror a               ; 92
+1FE0: adc a, x            ; 2A
+1FE1: cmp x, $55          ; 55 55
+1FE3: nop                 ; AA
+1FE4: add a, a            ; 24
+1FE5: inc z               ; 49
+1FE6: cmp a, y            ; 52
+1FE7: add x, $55          ; 25 55
+1FE9: jmp z, w            ; 95
+1FEA: nop                 ; AA
+1FEB: ror a               ; 92
+1FEC: add a, a            ; 24
+1FED: jmp z, w            ; 95
+1FEE: inc w               ; 4A
+1FEF: nop                 ; A9
+1FF0: cmp a, y            ; 52
+1FF1: nop                 ; AA
+1FF2: cmp a, w            ; 54
+1FF3: inc y               ; 48
+1FF4: cmp a, w            ; 54
+1FF5: push x              ; 01
 1FF6: nop                 ; 00
 1FF7: nop                 ; 00
-1FF8: nop                 ; FC
-1FF9: nop                 ; FF
-1FFA: or y, a             ; AA
-1FFB: add z, a            ; 2A
-1FFC: mul y, z            ; 55
-1FFD: or y, a             ; AA
-1FFE: mul y, y            ; 54
-1FFF: or y, a             ; AA
-2000: or y, a             ; AA
-2001: mul x, a            ; 52
-2002: add z, a            ; 2A
-2003: mul y, z            ; 55
-2004: or y, w             ; A9
-2005: or x, z             ; A4
-2006: and x, a            ; 92
-2007: or y, a             ; AA
-2008: or y, a             ; AA
-2009: sub a, y            ; 4A
-200A: mul y, z            ; 55
-200B: or x, w             ; A5
-200C: or x, z             ; A4
-200D: or x, z             ; A4
-200E: or y, a             ; AA
-200F: or y, a             ; AA
-2010: or y, a             ; AA
-2011: add y, w            ; 24
-2012: or x, w             ; A5
-2013: add z, a            ; 2A
-2014: add y, a            ; 25
-2015: mul y, z            ; 55
-2016: add x, a            ; 20
-2017: xor x, a            ; C0
-2018: push a              ; 05
-2019: and x, z            ; 90
-201A: nop                 ; 00
-201B: nop                 ; 00
-201C: nop                 ; 00
-201D: nop                 ; 00
-201E: nop                 ; 00
-201F: nop                 ; 00
-2020: nop                 ; FC
-2021: nop                 ; FF
-2022: and x, a            ; 92
-2023: mul x, a            ; 52
-2024: mul y, z            ; 55
-2025: add z, w            ; 29
-2026: or x, w             ; A5
-2027: mul x, a            ; 52
-2028: and x, a            ; 92
-2029: and y, z            ; 94
-202A: and x, a            ; 92
-202B: add z, a            ; 2A
-202C: mul y, z            ; 55
-202D: mul y, z            ; 55
-202E: or y, a             ; AA
-202F: add y, w            ; 24
-2030: sub a, x            ; 49
-2031: mul x, a            ; 52
-2032: add y, a            ; 25
-2033: mul y, z            ; 55
-2034: and y, w            ; 95
-2035: or y, a             ; AA
-2036: and x, a            ; 92
-2037: add y, w            ; 24
-2038: and y, w            ; 95
-2039: sub a, y            ; 4A
-203A: or y, w             ; A9
-203B: mul x, a            ; 52
-203C: or y, a             ; AA
-203D: mul y, y            ; 54
-203E: sub w, a            ; 48
-203F: mul y, y            ; 54
-2040: push x              ; 01
-2041: nop                 ; 00
-2042: nop                 ; 00
-2043: nop                 ; 00
-2044: nop                 ; 00
+1FF8: nop                 ; 00
+1FF9: nop                 ; 00
+1FFA: nop                 ; 00
+1FFB: nop                 ; 00
+1FFC: nop                 ; 00
+1FFD: nop                 ; FC
+1FFE: nop                 ; FF
+1FFF: nop                 ; AA
+2000: jmp x, y            ; 94
+2001: ror a               ; 92
+2002: inc w               ; 4A
+2003: jmp z, w            ; 95
+2004: inc w               ; 4A
+2005: cmp x, $AA          ; 55 AA
+2007: nop                 ; A4
+2008: nop                 ; A4
+2009: inc w               ; 4A
+200A: cmp a, y            ; 52
+200B: nop                 ; A9
+200C: nop                 ; AA
+200D: nop                 ; AA
+200E: nop                 ; AA
+200F: cmp a, w            ; 54
+2010: add a, $55          ; 29 55
+2012: adc a, x            ; 2A
+2013: cmp x, $55          ; 55 55
+2015: nop                 ; A9
+2016: adc a, x            ; 2A
+2017: jmp z, w            ; 95
+2018: jmp x, y            ; 94
+2019: ror a               ; 92
+201A: cmp a, y            ; 52
+201B: clc                 ; A3
+201C: load z, $0002       ; 11 02 00
+201F: push y              ; 02
+2020: nop                 ; 00
+2021: nop                 ; 00
+2022: nop                 ; 00
+2023: nop                 ; 00
+2024: nop                 ; 00
+2025: nop                 ; FC
+2026: nop                 ; FF
+2027: cmp x, $55          ; 55 55
+2029: nop                 ; AA
+202A: nop                 ; AA
+202B: cmp a, w            ; 54
+202C: nop                 ; AA
+202D: nop                 ; A4
+202E: ror a               ; 92
+202F: adc a, x            ; 2A
+2030: cmp x, $52          ; 55 52
+2032: jmp z, w            ; 95
+2033: inc w               ; 4A
+2034: nop                 ; AA
+2035: cmp a, y            ; 52
+2036: add x, $55          ; 25 55
+2038: cmp x, $A9          ; 55 A9
+203A: cmp a, y            ; 52
+203B: cmp x, $55          ; 55 55
+203D: cmp x, $52          ; 55 52
+203F: cmp x, $55          ; 55 55
+2041: cmp x, $95          ; 55 95
+2043: shr x, $80          ; 84 80
 2045: nop                 ; 00
-2046: nop                 ; 00
+2046: mul a, w            ; 40
 2047: nop                 ; 00
-2048: nop                 ; FC
-2049: nop                 ; FF
-204A: or y, a             ; AA
-204B: and y, z            ; 94
-204C: and x, a            ; 92
-204D: sub a, y            ; 4A
-204E: and y, w            ; 95
-204F: sub a, y            ; 4A
-2050: mul y, z            ; 55
-2051: or y, a             ; AA
-2052: or x, z             ; A4
-2053: or x, z             ; A4
-2054: sub a, y            ; 4A
-2055: mul x, a            ; 52
-2056: or y, w             ; A9
-2057: or y, a             ; AA
-2058: or y, a             ; AA
-2059: or y, a             ; AA
-205A: mul y, y            ; 54
-205B: add z, w            ; 29
-205C: mul y, z            ; 55
-205D: add z, a            ; 2A
-205E: mul y, z            ; 55
-205F: mul y, z            ; 55
-2060: or y, w             ; A9
-2061: add z, a            ; 2A
-2062: and y, w            ; 95
-2063: and y, z            ; 94
-2064: and x, a            ; 92
-2065: mul x, a            ; 52
-2066: or x, y             ; A3
-2067: store $0002, y      ; 11 02 00
-206A: push y              ; 02
-206B: nop                 ; 00
-206C: nop                 ; 00
-206D: nop                 ; 00
+2048: nop                 ; 00
+2049: nop                 ; 00
+204A: nop                 ; 00
+204B: nop                 ; 00
+204C: nop                 ; 00
+204D: nop                 ; FC
+204E: nop                 ; FF
+204F: inc w               ; 4A
+2050: inc w               ; 4A
+2051: inc z               ; 49
+2052: nop                 ; A9
+2053: nop                 ; AA
+2054: nop                 ; AA
+2055: adc a, x            ; 2A
+2056: cmp x, $92          ; 55 92
+2058: ror a               ; 92
+2059: adc a, x            ; 2A
+205A: cmp x, $55          ; 55 55
+205C: inc z               ; 49
+205D: adc a, x            ; 2A
+205E: nop                 ; A9
+205F: ror a               ; 92
+2060: jmp x, y            ; 94
+2061: inc w               ; 4A
+2062: cmp x, $29          ; 55 29
+2064: add x, $A5          ; 25 A5
+2066: nop                 ; AA
+2067: nop                 ; A4
+2068: inc w               ; 4A
+2069: inc z               ; 49
+206A: cmp a, y            ; 52
+206B: store $000B, y      ; 15 0B 00
 206E: nop                 ; 00
 206F: nop                 ; 00
-2070: nop                 ; FC
-2071: nop                 ; FF
-2072: mul y, z            ; 55
-2073: mul y, z            ; 55
-2074: or y, a             ; AA
-2075: or y, a             ; AA
-2076: mul y, y            ; 54
-2077: or y, a             ; AA
-2078: or x, z             ; A4
-2079: and x, a            ; 92
-207A: add z, a            ; 2A
-207B: mul y, z            ; 55
-207C: mul x, a            ; 52
-207D: and y, w            ; 95
-207E: sub a, y            ; 4A
-207F: or y, a             ; AA
-2080: mul x, a            ; 52
-2081: add y, a            ; 25
-2082: mul y, z            ; 55
-2083: mul y, z            ; 55
-2084: or y, w             ; A9
-2085: mul x, a            ; 52
-2086: mul y, z            ; 55
-2087: mul y, z            ; 55
-2088: mul y, z            ; 55
-2089: mul x, a            ; 52
-208A: mul y, z            ; 55
-208B: mul y, z            ; 55
-208C: mul y, z            ; 55
-208D: and y, w            ; 95
-208E: cmp w, a            ; 84
-208F: cmp w, x            ; 80
-2090: nop                 ; 00
-2091: sub z, y            ; 40
-2092: nop                 ; 00
-2093: nop                 ; 00
-2094: nop                 ; 00
+2070: nop                 ; 00
+2071: nop                 ; 00
+2072: nop                 ; 00
+2073: nop                 ; 00
+2074: nop                 ; 00
+2075: nop                 ; FC
+2076: nop                 ; FF
+2077: nop                 ; AA
+2078: cmp a, y            ; 52
+2079: cmp x, $4A          ; 55 4A
+207B: nop                 ; A9
+207C: ror a               ; 92
+207D: nop                 ; AA
+207E: nop                 ; A4
+207F: nop                 ; AA
+2080: cmp a, w            ; 54
+2081: cmp x, $49          ; 55 49
+2083: nop                 ; AA
+2084: nop                 ; AA
+2085: inc w               ; 4A
+2086: cmp x, $55          ; 55 55
+2088: nop                 ; A5
+2089: cmp a, y            ; 52
+208A: nop                 ; A5
+208B: nop                 ; AA
+208C: cmp a, w            ; 54
+208D: cmp x, $95          ; 55 95
+208F: adc a, x            ; 2A
+2090: add a, $55          ; 29 55
+2092: inc z               ; 49
+2093: add a, $24          ; 29 24
 2095: nop                 ; 00
 2096: nop                 ; 00
 2097: nop                 ; 00
-2098: nop                 ; FC
-2099: nop                 ; FF
-209A: sub a, y            ; 4A
-209B: sub a, y            ; 4A
-209C: sub a, x            ; 49
-209D: or y, w             ; A9
-209E: or y, a             ; AA
-209F: or y, a             ; AA
-20A0: add z, a            ; 2A
-20A1: mul y, z            ; 55
-20A2: and x, a            ; 92
-20A3: and x, a            ; 92
-20A4: add z, a            ; 2A
-20A5: mul y, z            ; 55
-20A6: mul y, z            ; 55
-20A7: sub a, x            ; 49
-20A8: add z, a            ; 2A
-20A9: or y, w             ; A9
-20AA: and x, a            ; 92
-20AB: and y, z            ; 94
-20AC: sub a, y            ; 4A
-20AD: mul y, z            ; 55
-20AE: add z, w            ; 29
-20AF: add y, a            ; 25
-20B0: or x, w             ; A5
-20B1: or y, a             ; AA
-20B2: or x, z             ; A4
-20B3: sub a, y            ; 4A
-20B4: sub a, x            ; 49
-20B5: mul x, a            ; 52
-20B6: call $000B          ; 15 0B 00
-20B9: nop                 ; 00
-20BA: nop                 ; 00
-20BB: nop                 ; 00
-20BC: nop                 ; 00
+2098: nop                 ; 00
+2099: nop                 ; 00
+209A: nop                 ; 00
+209B: nop                 ; 00
+209C: nop                 ; 00
+209D: nop                 ; FC
+209E: nop                 ; FF
+209F: nop                 ; A5
+20A0: nop                 ; AA
+20A1: nop                 ; AA
+20A2: adc a, x            ; 2A
+20A3: jmp z, w            ; 95
+20A4: cmp a, w            ; 54
+20A5: cmp x, $95          ; 55 95
+20A7: add a, a            ; 24
+20A8: inc z               ; 49
+20A9: ror a               ; 92
+20AA: nop                 ; AA
+20AB: adc a, x            ; 2A
+20AC: cmp x, $A9          ; 55 A9
+20AE: jmp x, y            ; 94
+20AF: cmp a, w            ; 54
+20B0: nop                 ; AA
+20B1: cmp a, w            ; 54
+20B2: adc a, x            ; 2A
+20B3: nop                 ; A5
+20B4: nop                 ; AA
+20B5: jmp x, y            ; 94
+20B6: cmp a, w            ; 54
+20B7: cmp x, $55          ; 55 55
+20B9: add x, $55          ; 25 55
+20BB: nop                 ; AA
+20BC: ror z               ; 90
 20BD: nop                 ; 00
 20BE: nop                 ; 00
 20BF: nop                 ; 00
-20C0: nop                 ; FC
-20C1: nop                 ; FF
-20C2: or y, a             ; AA
-20C3: mul x, a            ; 52
-20C4: mul y, z            ; 55
-20C5: sub a, y            ; 4A
-20C6: or y, w             ; A9
-20C7: and x, a            ; 92
-20C8: or y, a             ; AA
-20C9: or x, z             ; A4
-20CA: or y, a             ; AA
-20CB: mul y, y            ; 54
-20CC: mul y, z            ; 55
-20CD: sub a, x            ; 49
-20CE: or y, a             ; AA
-20CF: or y, a             ; AA
-20D0: sub a, y            ; 4A
-20D1: mul y, z            ; 55
-20D2: mul y, z            ; 55
-20D3: or x, w             ; A5
-20D4: mul x, a            ; 52
-20D5: or x, w             ; A5
-20D6: or y, a             ; AA
-20D7: mul y, y            ; 54
-20D8: mul y, z            ; 55
-20D9: and y, w            ; 95
-20DA: add z, a            ; 2A
-20DB: add z, w            ; 29
-20DC: mul y, z            ; 55
-20DD: sub a, x            ; 49
-20DE: add z, w            ; 29
-20DF: add y, w            ; 24
-20E0: nop                 ; 00
-20E1: nop                 ; 00
-20E2: nop                 ; 00
-20E3: nop                 ; 00
-20E4: nop                 ; 00
-20E5: nop                 ; 00
+20C0: nop                 ; 00
+20C1: nop                 ; 00
+20C2: nop                 ; 00
+20C3: nop                 ; 00
+20C4: nop                 ; 00
+20C5: nop                 ; FC
+20C6: nop                 ; FF
+20C7: add a, $95          ; 29 95
+20C9: nop                 ; AA
+20CA: nop                 ; AA
+20CB: cmp a, y            ; 52
+20CC: cmp x, $52          ; 55 52
+20CE: cmp x, $55          ; 55 55
+20D0: nop                 ; A5
+20D1: cmp a, w            ; 54
+20D2: ror a               ; 92
+20D3: nop                 ; A4
+20D4: ror a               ; 92
+20D5: nop                 ; AA
+20D6: nop                 ; AA
+20D7: inc w               ; 4A
+20D8: add a, $55          ; 29 55
+20DA: nop                 ; A9
+20DB: nop                 ; AA
+20DC: ror a               ; 92
+20DD: cmp a, y            ; 52
+20DE: nop                 ; A5
+20DF: nop                 ; A4
+20E0: nop                 ; A4
+20E1: cmp a, w            ; 54
+20E2: inc z               ; 49
+20E3: nop                 ; A5
+20E4: mul x, $00          ; 42 00
 20E6: nop                 ; 00
-20E7: nop                 ; 00
-20E8: nop                 ; FC
-20E9: nop                 ; FF
-20EA: or x, w             ; A5
-20EB: or y, a             ; AA
-20EC: or y, a             ; AA
-20ED: add z, a            ; 2A
-20EE: and y, w            ; 95
-20EF: mul y, y            ; 54
-20F0: mul y, z            ; 55
-20F1: and y, w            ; 95
-20F2: add y, w            ; 24
-20F3: sub a, x            ; 49
-20F4: and x, a            ; 92
-20F5: or y, a             ; AA
-20F6: add z, a            ; 2A
-20F7: mul y, z            ; 55
-20F8: or y, w             ; A9
-20F9: and y, z            ; 94
-20FA: mul y, y            ; 54
-20FB: or y, a             ; AA
-20FC: mul y, y            ; 54
-20FD: add z, a            ; 2A
-20FE: or x, w             ; A5
-20FF: or y, a             ; AA
-2100: and y, z            ; 94
-2101: mul y, y            ; 54
-2102: mul y, z            ; 55
-2103: mul y, z            ; 55
-2104: add y, a            ; 25
-2105: mul y, z            ; 55
-2106: or y, a             ; AA
-2107: and x, z            ; 90
-2108: nop                 ; 00
-2109: nop                 ; 00
-210A: nop                 ; 00
-210B: nop                 ; 00
-210C: nop                 ; 00
-210D: nop                 ; 00
+20E7: push w              ; 04
+20E8: nop                 ; 00
+20E9: nop                 ; 00
+20EA: nop                 ; 00
+20EB: nop                 ; 00
+20EC: nop                 ; 00
+20ED: nop                 ; FC
+20EE: nop                 ; FF
+20EF: cmp x, $A9          ; 55 A9
+20F1: jmp x, y            ; 94
+20F2: inc w               ; 4A
+20F3: cmp x, $55          ; 55 55
+20F5: jmp z, w            ; 95
+20F6: cmp a, y            ; 52
+20F7: ror a               ; 92
+20F8: jmp x, y            ; 94
+20F9: inc w               ; 4A
+20FA: cmp x, $A9          ; 55 A9
+20FC: cmp a, w            ; 54
+20FD: add x, $A5          ; 25 A5
+20FF: nop                 ; AA
+2100: inc w               ; 4A
+2101: add x, $55          ; 25 55
+2103: nop                 ; A9
+2104: nop                 ; AA
+2105: nop                 ; AA
+2106: nop                 ; AA
+2107: adc a, x            ; 2A
+2108: cmp x, $55          ; 55 55
+210A: add x, $49          ; 25 49
+210C: pop z               ; 0A
+210D: push y              ; 02
 210E: nop                 ; 00
 210F: nop                 ; 00
-2110: nop                 ; FC
-2111: nop                 ; FF
-2112: add z, w            ; 29
-2113: and y, w            ; 95
-2114: or y, a             ; AA
-2115: or y, a             ; AA
-2116: mul x, a            ; 52
-2117: mul y, z            ; 55
-2118: mul x, a            ; 52
-2119: mul y, z            ; 55
-211A: mul y, z            ; 55
-211B: or x, w             ; A5
-211C: mul y, y            ; 54
-211D: and x, a            ; 92
-211E: or x, z             ; A4
-211F: and x, a            ; 92
-2120: or y, a             ; AA
-2121: or y, a             ; AA
-2122: sub a, y            ; 4A
-2123: add z, w            ; 29
-2124: mul y, z            ; 55
-2125: or y, w             ; A9
-2126: or y, a             ; AA
-2127: and x, a            ; 92
-2128: mul x, a            ; 52
-2129: or x, w             ; A5
-212A: or x, z             ; A4
-212B: or x, z             ; A4
-212C: mul y, y            ; 54
-212D: sub a, x            ; 49
-212E: or x, w             ; A5
-212F: sub z, w            ; 42
-2130: nop                 ; 00
-2131: nop                 ; 00
-2132: push w              ; 04
-2133: nop                 ; 00
-2134: nop                 ; 00
-2135: nop                 ; 00
-2136: nop                 ; 00
+2110: nop                 ; 00
+2111: nop                 ; 00
+2112: nop                 ; 00
+2113: nop                 ; 00
+2114: nop                 ; 00
+2115: nop                 ; FC
+2116: nop                 ; FF
+2117: nop                 ; A5
+2118: nop                 ; AA
+2119: nop                 ; AA
+211A: cmp a, w            ; 54
+211B: inc w               ; 4A
+211C: ror a               ; 92
+211D: nop                 ; AA
+211E: inc w               ; 4A
+211F: cmp x, $52          ; 55 52
+2121: cmp a, y            ; 52
+2122: nop                 ; A5
+2123: inc w               ; 4A
+2124: cmp x, $AA          ; 55 AA
+2126: adc a, x            ; 2A
+2127: add a, $55          ; 29 55
+2129: nop                 ; A9
+212A: inc w               ; 4A
+212B: inc w               ; 4A
+212C: nop                 ; AA
+212D: inc w               ; 4A
+212E: inc w               ; 4A
+212F: cmp x, $49          ; 55 49
+2131: add x, $55          ; 25 55
+2133: cmp x, $09          ; 55 09
+2135: add w, $00          ; 28 00
 2137: nop                 ; 00
-2138: nop                 ; FC
-2139: nop                 ; FF
-213A: mul y, z            ; 55
-213B: or y, w             ; A9
-213C: and y, z            ; 94
-213D: sub a, y            ; 4A
-213E: mul y, z            ; 55
-213F: mul y, z            ; 55
-2140: and y, w            ; 95
-2141: mul x, a            ; 52
-2142: and x, a            ; 92
-2143: and y, z            ; 94
-2144: sub a, y            ; 4A
-2145: mul y, z            ; 55
-2146: or y, w             ; A9
-2147: mul y, y            ; 54
-2148: add y, a            ; 25
-2149: or x, w             ; A5
-214A: or y, a             ; AA
-214B: sub a, y            ; 4A
-214C: add y, a            ; 25
-214D: mul y, z            ; 55
-214E: or y, w             ; A9
-214F: or y, a             ; AA
-2150: or y, a             ; AA
-2151: or y, a             ; AA
-2152: add z, a            ; 2A
-2153: mul y, z            ; 55
-2154: mul y, z            ; 55
-2155: add y, a            ; 25
-2156: sub a, x            ; 49
-2157: pop a               ; 0A
-2158: push y              ; 02
-2159: nop                 ; 00
-215A: nop                 ; 00
-215B: nop                 ; 00
-215C: nop                 ; 00
-215D: nop                 ; 00
-215E: nop                 ; 00
+2138: nop                 ; 00
+2139: nop                 ; 00
+213A: nop                 ; 00
+213B: nop                 ; 00
+213C: nop                 ; 00
+213D: nop                 ; FC
+213E: nop                 ; FF
+213F: cmp a, w            ; 54
+2140: inc w               ; 4A
+2141: cmp x, $A5          ; 55 A5
+2143: cmp a, y            ; 52
+2144: cmp x, $A5          ; 55 A5
+2146: cmp a, w            ; 54
+2147: inc z               ; 49
+2148: jmp z, w            ; 95
+2149: nop                 ; AA
+214A: cmp a, w            ; 54
+214B: adc a, x            ; 2A
+214C: jmp z, w            ; 95
+214D: nop                 ; AA
+214E: cmp a, y            ; 52
+214F: nop                 ; A5
+2150: cmp a, y            ; 52
+2151: cmp x, $A9          ; 55 A9
+2153: nop                 ; AA
+2154: nop                 ; AA
+2155: cmp a, w            ; 54
+2156: cmp x, $92          ; 55 92
+2158: adc a, x            ; 2A
+2159: nop                 ; A9
+215A: ror a               ; 92
+215B: add a, a            ; 24
+215C: cmp x, $00          ; 55 00
+215E: push x              ; 01
 215F: nop                 ; 00
-2160: nop                 ; FC
-2161: nop                 ; FF
-2162: or x, w             ; A5
-2163: or y, a             ; AA
-2164: or y, a             ; AA
-2165: mul y, y            ; 54
-2166: sub a, y            ; 4A
-2167: and x, a            ; 92
-2168: or y, a             ; AA
-2169: sub a, y            ; 4A
-216A: mul y, z            ; 55
-216B: mul x, a            ; 52
-216C: mul x, a            ; 52
-216D: or x, w             ; A5
-216E: sub a, y            ; 4A
-216F: mul y, z            ; 55
-2170: or y, a             ; AA
-2171: add z, a            ; 2A
-2172: add z, w            ; 29
-2173: mul y, z            ; 55
-2174: or y, w             ; A9
-2175: sub a, y            ; 4A
-2176: sub a, y            ; 4A
-2177: or y, a             ; AA
-2178: sub a, y            ; 4A
-2179: sub a, y            ; 4A
-217A: mul y, z            ; 55
-217B: sub a, x            ; 49
-217C: add y, a            ; 25
-217D: mul y, z            ; 55
-217E: mul y, z            ; 55
-217F: pop w               ; 09
-2180: add z, z            ; 28
-2181: nop                 ; 00
-2182: nop                 ; 00
-2183: nop                 ; 00
-2184: nop                 ; 00
-2185: nop                 ; 00
+2160: nop                 ; 00
+2161: nop                 ; 00
+2162: nop                 ; 00
+2163: nop                 ; 00
+2164: nop                 ; 00
+2165: nop                 ; FC
+2166: nop                 ; FF
+2167: inc w               ; 4A
+2168: nop                 ; A9
+2169: cmp a, y            ; 52
+216A: cmp x, $95          ; 55 95
+216C: nop                 ; A4
+216D: cmp a, w            ; 54
+216E: cmp x, $AA          ; 55 AA
+2170: nop                 ; A4
+2171: add a, a            ; 24
+2172: jmp z, w            ; 95
+2173: cmp a, y            ; 52
+2174: nop                 ; A9
+2175: ror a               ; 92
+2176: cmp a, w            ; 54
+2177: cmp x, $95          ; 55 95
+2179: inc w               ; 4A
+217A: nop                 ; AA
+217B: nop                 ; AA
+217C: ror a               ; 92
+217D: cmp a, y            ; 52
+217E: nop                 ; A9
+217F: nop                 ; AA
+2180: cmp a, y            ; 52
+2181: cmp x, $AA          ; 55 AA
+2183: nop                 ; AA
+2184: cmp a, y            ; 52
+2185: push x              ; 01
 2186: nop                 ; 00
 2187: nop                 ; 00
-2188: nop                 ; FC
-2189: nop                 ; FF
-218A: mul y, y            ; 54
-218B: sub a, y            ; 4A
-218C: mul y, z            ; 55
-218D: or x, w             ; A5
-218E: mul x, a            ; 52
-218F: mul y, z            ; 55
-2190: or x, w             ; A5
-2191: mul y, y            ; 54
-2192: sub a, x            ; 49
-2193: and y, w            ; 95
-2194: or y, a             ; AA
-2195: mul y, y            ; 54
-2196: add z, a            ; 2A
-2197: and y, w            ; 95
-2198: or y, a             ; AA
-2199: mul x, a            ; 52
-219A: or x, w             ; A5
-219B: mul x, a            ; 52
-219C: mul y, z            ; 55
-219D: or y, w             ; A9
-219E: or y, a             ; AA
-219F: or y, a             ; AA
-21A0: mul y, y            ; 54
-21A1: mul y, z            ; 55
-21A2: and x, a            ; 92
-21A3: add z, a            ; 2A
-21A4: or y, w             ; A9
-21A5: and x, a            ; 92
-21A6: add y, w            ; 24
-21A7: mul y, z            ; 55
-21A8: nop                 ; 00
-21A9: push x              ; 01
-21AA: nop                 ; 00
-21AB: nop                 ; 00
-21AC: nop                 ; 00
-21AD: nop                 ; 00
-21AE: nop                 ; 00
-21AF: nop                 ; 00
-21B0: nop                 ; FC
-21B1: nop                 ; FF
-21B2: sub a, y            ; 4A
-21B3: or y, w             ; A9
-21B4: mul x, a            ; 52
-21B5: mul y, z            ; 55
-21B6: and y, w            ; 95
-21B7: or x, z             ; A4
-21B8: mul y, y            ; 54
-21B9: mul y, z            ; 55
-21BA: or y, a             ; AA
-21BB: or x, z             ; A4
-21BC: add y, w            ; 24
-21BD: and y, w            ; 95
-21BE: mul x, a            ; 52
-21BF: or y, w             ; A9
-21C0: and x, a            ; 92
-21C1: mul y, y            ; 54
-21C2: mul y, z            ; 55
-21C3: and y, w            ; 95
-21C4: sub a, y            ; 4A
-21C5: or y, a             ; AA
-21C6: or y, a             ; AA
-21C7: and x, a            ; 92
-21C8: mul x, a            ; 52
-21C9: or y, w             ; A9
-21CA: or y, a             ; AA
-21CB: mul x, a            ; 52
-21CC: mul y, z            ; 55
-21CD: or y, a             ; AA
-21CE: or y, a             ; AA
-21CF: mul x, a            ; 52
-21D0: push x              ; 01
-21D1: nop                 ; 00
-21D2: nop                 ; 00
-21D3: nop                 ; 00
-21D4: nop                 ; 00
-21D5: nop                 ; 00
-21D6: nop                 ; 00
+2188: nop                 ; 00
+2189: nop                 ; 00
+218A: nop                 ; 00
+218B: nop                 ; 00
+218C: nop                 ; 00
+218D: nop                 ; FC
+218E: nop                 ; FF
+218F: cmp a, y            ; 52
+2190: nop                 ; A5
+2191: jmp x, y            ; 94
+2192: jmp x, y            ; 94
+2193: cmp a, w            ; 54
+2194: jmp z, w            ; 95
+2195: ror a               ; 92
+2196: cmp a, y            ; 52
+2197: add x, $29          ; 25 29
+2199: inc z               ; 49
+219A: nop                 ; A5
+219B: nop                 ; AA
+219C: inc w               ; 4A
+219D: cmp x, $95          ; 55 95
+219F: jmp x, y            ; 94
+21A0: cmp a, w            ; 54
+21A1: cmp a, y            ; 52
+21A2: add x, $29          ; 25 29
+21A4: cmp x, $55          ; 55 55
+21A6: inc w               ; 4A
+21A7: nop                 ; A9
+21A8: jmp x, y            ; 94
+21A9: jmp x, y            ; 94
+21AA: inc w               ; 4A
+21AB: inc z               ; 49
+21AC: nop                 ; AA
+21AD: cmp a, w            ; 54
+21AE: add a, $00          ; 29 00
+21B0: nop                 ; 00
+21B1: nop                 ; 00
+21B2: nop                 ; 00
+21B3: nop                 ; 00
+21B4: nop                 ; 00
+21B5: nop                 ; FC
+21B6: nop                 ; FF
+21B7: nop                 ; AA
+21B8: adc a, x            ; 2A
+21B9: cmp x, $55          ; 55 55
+21BB: add x, $A9          ; 25 A9
+21BD: nop                 ; AA
+21BE: inc w               ; 4A
+21BF: cmp x, $A5          ; 55 A5
+21C1: adc a, x            ; 2A
+21C2: add a, $25          ; 29 25
+21C4: cmp x, $AA          ; 55 AA
+21C6: nop                 ; AA
+21C7: nop                 ; AA
+21C8: nop                 ; AA
+21C9: nop                 ; AA
+21CA: nop                 ; AA
+21CB: nop                 ; AA
+21CC: nop                 ; AA
+21CD: inc w               ; 4A
+21CE: cmp x, $4A          ; 55 4A
+21D0: cmp x, $A5          ; 55 A5
+21D2: adc a, x            ; 2A
+21D3: jmp z, w            ; 95
+21D4: add a, a            ; 24
+21D5: add x, $A5          ; 25 A5
 21D7: nop                 ; 00
-21D8: nop                 ; FC
-21D9: nop                 ; FF
-21DA: mul x, a            ; 52
-21DB: or x, w             ; A5
-21DC: and y, z            ; 94
-21DD: and y, z            ; 94
-21DE: mul y, y            ; 54
-21DF: and y, w            ; 95
-21E0: and x, a            ; 92
-21E1: mul x, a            ; 52
-21E2: add y, a            ; 25
-21E3: add z, w            ; 29
-21E4: sub a, x            ; 49
-21E5: or x, w             ; A5
-21E6: or y, a             ; AA
-21E7: sub a, y            ; 4A
-21E8: mul y, z            ; 55
-21E9: and y, w            ; 95
-21EA: and y, z            ; 94
-21EB: mul y, y            ; 54
-21EC: mul x, a            ; 52
-21ED: add y, a            ; 25
-21EE: add z, w            ; 29
-21EF: mul y, z            ; 55
-21F0: mul y, z            ; 55
-21F1: sub a, y            ; 4A
-21F2: or y, w             ; A9
-21F3: and y, z            ; 94
-21F4: and y, z            ; 94
-21F5: sub a, y            ; 4A
-21F6: sub a, x            ; 49
-21F7: or y, a             ; AA
-21F8: mul y, y            ; 54
-21F9: add z, w            ; 29
-21FA: nop                 ; 00
-21FB: nop                 ; 00
-21FC: nop                 ; 00
-21FD: nop                 ; 00
-21FE: nop                 ; 00
-21FF: nop                 ; 00
-2200: nop                 ; FC
-2201: nop                 ; FF
-2202: or y, a             ; AA
-2203: add z, a            ; 2A
-2204: mul y, z            ; 55
-2205: mul y, z            ; 55
-2206: add y, a            ; 25
-2207: or y, w             ; A9
-2208: or y, a             ; AA
-2209: sub a, y            ; 4A
-220A: mul y, z            ; 55
-220B: or x, w             ; A5
-220C: add z, a            ; 2A
-220D: add z, w            ; 29
-220E: add y, a            ; 25
-220F: mul y, z            ; 55
-2210: or y, a             ; AA
-2211: or y, a             ; AA
-2212: or y, a             ; AA
-2213: or y, a             ; AA
-2214: or y, a             ; AA
-2215: or y, a             ; AA
-2216: or y, a             ; AA
-2217: or y, a             ; AA
-2218: sub a, y            ; 4A
-2219: mul y, z            ; 55
-221A: sub a, y            ; 4A
-221B: mul y, z            ; 55
-221C: or x, w             ; A5
-221D: add z, a            ; 2A
-221E: and y, w            ; 95
-221F: add y, w            ; 24
-2220: add y, a            ; 25
-2221: or x, w             ; A5
-2222: nop                 ; 00
-2223: nop                 ; 00
-2224: nop                 ; 00
-2225: nop                 ; 00
-2226: nop                 ; 00
-2227: nop                 ; 00
-2228: nop                 ; FC
-2229: nop                 ; FF
-222A: mul y, z            ; 55
-222B: mul x, a            ; 52
-222C: or x, w             ; A5
-222D: sub a, y            ; 4A
-222E: mul y, z            ; 55
-222F: add y, a            ; 25
-2230: sub a, x            ; 49
-2231: or y, a             ; AA
-2232: mul y, y            ; 54
-2233: call $5249          ; 15 49 52
-2236: or y, w             ; A9
-2237: mul x, a            ; 52
-2238: add y, a            ; 25
-2239: sub a, x            ; 49
-223A: or x, w             ; A5
-223B: sub a, y            ; 4A
-223C: and y, w            ; 95
-223D: mul x, a            ; 52
-223E: or x, w             ; A5
-223F: mul y, y            ; 54
-2240: or y, a             ; AA
-2241: mul x, a            ; 52
-2242: mul y, z            ; 55
-2243: sub a, y            ; 4A
-2244: or y, a             ; AA
-2245: or x, z             ; A4
-2246: or x, z             ; A4
-2247: sub a, y            ; 4A
-2248: and y, w            ; 95
-2249: store $0001, a      ; 14 01 00
-224C: nop                 ; 00
-224D: nop                 ; 00
-224E: nop                 ; 00
-224F: nop                 ; 00
-2250: nop                 ; FC
-2251: nop                 ; FF
-2252: and y, w            ; 95
-2253: sub a, y            ; 4A
-2254: and y, w            ; 95
-2255: mul y, y            ; 54
-2256: mul x, a            ; 52
-2257: or y, a             ; AA
-2258: or y, a             ; AA
-2259: add z, a            ; 2A
-225A: add y, a            ; 25
-225B: or y, w             ; A9
-225C: or x, z             ; A4
-225D: sub a, y            ; 4A
-225E: sub a, y            ; 4A
-225F: or y, a             ; AA
-2260: or y, a             ; AA
-2261: or y, a             ; AA
-2262: mul y, y            ; 54
-2263: add z, a            ; 2A
-2264: or y, w             ; A9
-2265: and y, z            ; 94
-2266: mul y, y            ; 54
-2267: or x, w             ; A5
-2268: mul x, a            ; 52
-2269: sub a, y            ; 4A
-226A: or y, w             ; A9
-226B: mul x, a            ; 52
-226C: sub a, x            ; 49
-226D: mul y, z            ; 55
-226E: mul y, z            ; 55
-226F: mul x, a            ; 52
-2270: mul x, a            ; 52
-2271: mul x, a            ; 52
-2272: push y              ; 02
-2273: nop                 ; 00
-2274: nop                 ; 00
-2275: nop                 ; 00
-2276: nop                 ; 00
-2277: nop                 ; 00
-2278: nop                 ; FC
-2279: nop                 ; FF
-227A: mul x, a            ; 52
-227B: add z, w            ; 29
-227C: or y, w             ; A9
-227D: sub a, y            ; 4A
-227E: and y, w            ; 95
-227F: and x, a            ; 92
-2280: add y, w            ; 24
-2281: or x, w             ; A5
-2282: or y, a             ; AA
-2283: sub a, y            ; 4A
-2284: and y, w            ; 95
-2285: mul y, y            ; 54
-2286: mul y, z            ; 55
-2287: add z, w            ; 29
-2288: or y, w             ; A9
-2289: or y, a             ; AA
-228A: or y, a             ; AA
-228B: mul x, a            ; 52
-228C: add y, a            ; 25
-228D: mul y, z            ; 55
-228E: and y, w            ; 95
-228F: or y, a             ; AA
-2290: or y, a             ; AA
-2291: add z, a            ; 2A
-2292: and y, w            ; 95
-2293: or y, a             ; AA
-2294: add z, a            ; 2A
-2295: sub a, x            ; 49
-2296: and x, a            ; 92
-2297: add z, a            ; 2A
-2298: or y, w             ; A9
-2299: sub a, y            ; 4A
-229A: pop w               ; 09
-229B: nop                 ; 00
-229C: nop                 ; 00
-229D: nop                 ; 00
-229E: nop                 ; 00
-229F: nop                 ; 00
-22A0: nop                 ; FC
-22A1: nop                 ; FF
-22A2: mul y, y            ; 54
-22A3: mul y, z            ; 55
-22A4: add y, a            ; 25
-22A5: add z, w            ; 29
-22A6: or y, w             ; A9
-22A7: mul y, y            ; 54
-22A8: mul y, z            ; 55
-22A9: or y, w             ; A9
-22AA: mul y, y            ; 54
-22AB: add z, a            ; 2A
-22AC: sub a, x            ; 49
-22AD: and x, a            ; 92
-22AE: or x, z             ; A4
-22AF: sub a, y            ; 4A
-22B0: add y, a            ; 25
-22B1: sub a, x            ; 49
-22B2: and y, w            ; 95
-22B3: or y, a             ; AA
-22B4: or y, a             ; AA
-22B5: add z, a            ; 2A
-22B6: or y, w             ; A9
-22B7: mul y, y            ; 54
-22B8: and y, w            ; 95
-22B9: or y, a             ; AA
-22BA: mul x, a            ; 52
-22BB: sub a, y            ; 4A
-22BC: mul x, a            ; 52
-22BD: mul y, z            ; 55
-22BE: mul y, z            ; 55
-22BF: mul x, a            ; 52
-22C0: add y, a            ; 25
-22C1: add z, w            ; 29
-22C2: add y, a            ; 25
-22C3: nop                 ; 00
-22C4: nop                 ; 00
-22C5: nop                 ; 00
-22C6: nop                 ; 00
-22C7: nop                 ; 00
-22C8: nop                 ; FC
-22C9: nop                 ; FF
-22CA: and y, w            ; 95
-22CB: and y, z            ; 94
-22CC: mul y, y            ; 54
-22CD: mul y, z            ; 55
-22CE: and y, w            ; 95
-22CF: sub a, y            ; 4A
-22D0: and x, a            ; 92
-22D1: and y, z            ; 94
-22D2: sub a, y            ; 4A
-22D3: or x, w             ; A5
-22D4: mul x, a            ; 52
-22D5: mul y, z            ; 55
-22D6: mul y, z            ; 55
-22D7: or y, a             ; AA
-22D8: or y, a             ; AA
-22D9: add z, a            ; 2A
-22DA: or x, w             ; A5
-22DB: or y, a             ; AA
-22DC: and y, z            ; 94
-22DD: or x, z             ; A4
-22DE: sub a, y            ; 4A
-22DF: and y, w            ; 95
-22E0: mul y, y            ; 54
-22E1: or x, w             ; A5
-22E2: or y, a             ; AA
-22E3: mul x, a            ; 52
-22E4: and y, w            ; 95
-22E5: add y, w            ; 24
-22E6: sub a, x            ; 49
-22E7: and y, w            ; 95
-22E8: and y, z            ; 94
-22E9: sub a, y            ; 4A
-22EA: store $0000, z      ; 12 00 00
-22ED: nop                 ; 00
-22EE: nop                 ; 00
-22EF: nop                 ; 00
-22F0: nop                 ; FC
-22F1: nop                 ; FF
-22F2: or y, w             ; A9
-22F3: mul x, a            ; 52
-22F4: mul y, z            ; 55
-22F5: mul x, a            ; 52
-22F6: mul x, a            ; 52
-22F7: mul x, a            ; 52
-22F8: sub a, x            ; 49
-22F9: or x, w             ; A5
-22FA: mul y, y            ; 54
-22FB: or y, w             ; A9
-22FC: sub a, y            ; 4A
-22FD: and x, a            ; 92
-22FE: add y, w            ; 24
-22FF: add z, w            ; 29
-2300: mul y, z            ; 55
-2301: mul y, z            ; 55
-2302: mul y, z            ; 55
-2303: sub a, y            ; 4A
-2304: mul y, z            ; 55
-2305: mul x, a            ; 52
-2306: mul x, a            ; 52
-2307: or y, w             ; A9
-2308: or y, a             ; AA
-2309: and y, z            ; 94
-230A: or x, z             ; A4
-230B: and y, z            ; 94
-230C: or x, z             ; A4
-230D: mul x, a            ; 52
-230E: mul y, z            ; 55
-230F: mul x, a            ; 52
-2310: mul x, a            ; 52
-2311: mul x, a            ; 52
-2312: sub a, x            ; 49
-2313: nop                 ; 00
-2314: nop                 ; 00
-2315: nop                 ; 00
-2316: nop                 ; 00
-2317: nop                 ; 00
-2318: nop                 ; FC
-2319: nop                 ; FF
-231A: sub a, y            ; 4A
-231B: sub a, y            ; 4A
-231C: and x, a            ; 92
-231D: sub a, y            ; 4A
-231E: or x, w             ; A5
-231F: sub a, y            ; 4A
-2320: or y, a             ; AA
-2321: and y, z            ; 94
-2322: mul x, a            ; 52
-2323: add z, a            ; 2A
-2324: or y, w             ; A9
-2325: add y, w            ; 24
-2326: mul y, z            ; 55
-2327: or x, w             ; A5
-2328: add y, w            ; 24
-2329: or x, w             ; A5
-232A: mul y, y            ; 54
-232B: add z, w            ; 29
-232C: or x, w             ; A5
-232D: add z, a            ; 2A
-232E: mul y, z            ; 55
-232F: sub a, y            ; 4A
-2330: or x, w             ; A5
-2331: or y, a             ; AA
-2332: add z, a            ; 2A
-2333: mul y, z            ; 55
-2334: mul y, z            ; 55
-2335: sub a, y            ; 4A
-2336: and x, a            ; 92
-2337: sub a, y            ; 4A
-2338: and y, w            ; 95
-2339: add y, w            ; 24
-233A: or y, a             ; AA
-233B: push y              ; 02
-233C: nop                 ; 00
-233D: nop                 ; 00
-233E: nop                 ; 00
-233F: nop                 ; 00
-2340: nop                 ; FC
-2341: nop                 ; FF
-2342: mul x, a            ; 52
-2343: or y, w             ; A9
-2344: sub a, y            ; 4A
-2345: add z, w            ; 29
-2346: sub a, x            ; 49
-2347: and x, a            ; 92
-2348: store $A529, z      ; 12 29 A5
-234B: mul x, a            ; 52
-234C: and y, w            ; 95
-234D: sub a, y            ; 4A
-234E: sub a, x            ; 49
-234F: mul y, z            ; 55
-2350: mul y, z            ; 55
-2351: mul y, z            ; 55
-2352: mul y, z            ; 55
-2353: mul y, z            ; 55
-2354: or y, w             ; A9
-2355: sub w, x            ; 44
-2356: or x, w             ; A5
-2357: add z, a            ; 2A
-2358: and y, w            ; 95
-2359: or y, a             ; AA
-235A: sub a, y            ; 4A
-235B: add z, w            ; 29
-235C: sub a, x            ; 49
-235D: add z, w            ; 29
-235E: or y, w             ; A9
-235F: and y, z            ; 94
-2360: or x, z             ; A4
-2361: sub a, y            ; 4A
-2362: and x, w            ; 91
-2363: pop z               ; 08
-2364: nop                 ; 00
-2365: nop                 ; 00
-2366: nop                 ; 00
-2367: nop                 ; 00
-2368: nop                 ; FC
-2369: nop                 ; FF
-236A: mul y, z            ; 55
-236B: sub a, y            ; 4A
-236C: mul x, a            ; 52
-236D: or x, w             ; A5
-236E: add z, a            ; 2A
-236F: or y, w             ; A9
-2370: or x, z             ; A4
-2371: sub a, y            ; 4A
-2372: add z, w            ; 29
-2373: and y, w            ; 95
-2374: mul x, a            ; 52
-2375: mul x, a            ; 52
-2376: add z, a            ; 2A
-2377: sub a, x            ; 49
-2378: mul x, a            ; 52
-2379: add z, w            ; 29
-237A: add y, a            ; 25
-237B: mul y, z            ; 55
-237C: and y, w            ; 95
-237D: or y, a             ; AA
-237E: and y, z            ; 94
-237F: mul x, a            ; 52
-2380: or y, w             ; A9
-2381: mul x, a            ; 52
-2382: mul x, a            ; 52
-2383: or x, w             ; A5
-2384: mul x, a            ; 52
-2385: sub a, y            ; 4A
-2386: and y, w            ; 95
-2387: mul x, a            ; 52
-2388: sub a, x            ; 49
-2389: and x, a            ; 92
-238A: sub a, y            ; 4A
-238B: store $0000, z      ; 12 00 00
-238E: nop                 ; 00
-238F: nop                 ; 00
-2390: nop                 ; FC
-2391: nop                 ; FF
-2392: add y, a            ; 25
-2393: or x, w             ; A5
-2394: and y, z            ; 94
-2395: and y, z            ; 94
-2396: or x, z             ; A4
-2397: add y, w            ; 24
-2398: mul y, z            ; 55
-2399: mul x, a            ; 52
-239A: sub a, y            ; 4A
-239B: or y, w             ; A9
-239C: mul y, y            ; 54
-239D: sub a, x            ; 49
-239E: mul x, w            ; 51
-239F: mul y, z            ; 55
-23A0: and y, w            ; 95
-23A1: or y, a             ; AA
-23A2: mul y, y            ; 54
-23A3: sub a, x            ; 49
-23A4: mul y, z            ; 55
-23A5: add z, w            ; 29
-23A6: mul y, z            ; 55
-23A7: or y, a             ; AA
-23A8: or y, a             ; AA
-23A9: or y, a             ; AA
-23AA: add z, a            ; 2A
-23AB: and y, w            ; 95
-23AC: and y, z            ; 94
-23AD: mul x, a            ; 52
-23AE: add y, y            ; 22
-23AF: sub a, x            ; 49
-23B0: add z, a            ; 2A
-23B1: add z, w            ; 29
-23B2: add z, w            ; 29
-23B3: sub w, y            ; 45
-23B4: nop                 ; 00
-23B5: nop                 ; 00
-23B6: nop                 ; 00
-23B7: nop                 ; 00
-23B8: nop                 ; FC
-23B9: nop                 ; FF
-23BA: mul y, y            ; 54
-23BB: and y, w            ; 95
-23BC: mul x, a            ; 52
-23BD: add z, a            ; 2A
-23BE: and y, w            ; 95
-23BF: sub a, y            ; 4A
-23C0: and x, a            ; 92
-23C1: add y, w            ; 24
-23C2: or y, w             ; A9
-23C3: sub a, y            ; 4A
-23C4: and y, w            ; 95
-23C5: add z, a            ; 2A
-23C6: and y, w            ; 95
-23C7: add y, w            ; 24
-23C8: mul y, z            ; 55
-23C9: sub a, y            ; 4A
-23CA: mul y, z            ; 55
-23CB: mul y, z            ; 55
-23CC: or x, w             ; A5
-23CD: or y, a             ; AA
-23CE: sub a, y            ; 4A
-23CF: and y, w            ; 95
-23D0: mul y, y            ; 54
-23D1: add z, a            ; 2A
-23D2: sub a, x            ; 49
-23D3: mul x, a            ; 52
-23D4: or x, w             ; A5
-23D5: and y, z            ; 94
-23D6: mul y, y            ; 54
-23D7: add z, a            ; 2A
-23D8: or x, w             ; A5
-23D9: or x, z             ; A4
-23DA: sub w, x            ; 44
-23DB: and x, a            ; 92
-23DC: nop                 ; 00
-23DD: nop                 ; 00
-23DE: nop                 ; 00
-23DF: nop                 ; 00
-23E0: nop                 ; FC
-23E1: nop                 ; FF
-23E2: sub a, x            ; 49
-23E3: mul x, a            ; 52
-23E4: sub a, y            ; 4A
-23E5: sub a, x            ; 49
-23E6: sub a, x            ; 49
-23E7: mul x, a            ; 52
-23E8: sub a, x            ; 49
-23E9: and y, w            ; 95
-23EA: and x, a            ; 92
-23EB: mul y, y            ; 54
-23EC: mul x, a            ; 52
-23ED: and x, a            ; 92
-23EE: or x, z             ; A4
-23EF: or y, a             ; AA
-23F0: or x, z             ; A4
-23F1: mul x, a            ; 52
-23F2: sub a, x            ; 49
-23F3: mul y, z            ; 55
-23F4: add z, a            ; 2A
-23F5: or x, w             ; A5
-23F6: mul y, y            ; 54
-23F7: or y, w             ; A9
-23F8: and x, a            ; 92
-23F9: mul x, a            ; 52
-23FA: mul y, z            ; 55
-23FB: sub a, x            ; 49
-23FC: and x, a            ; 92
-23FD: mul x, a            ; 52
-23FE: or x, w             ; A5
-23FF: mul x, a            ; 52
-2400: sub a, x            ; 49
-2401: and x, a            ; 92
-2402: mul x, a            ; 52
-2403: sub a, x            ; 49
-2404: push y              ; 02
-2405: nop                 ; 00
-2406: nop                 ; 00
-2407: nop                 ; 00
-2408: nop                 ; FC
-2409: nop                 ; FF
-240A: or y, a             ; AA
-240B: and y, z            ; 94
-240C: and x, a            ; 92
-240D: mul x, a            ; 52
-240E: mul x, a            ; 52
-240F: sub a, x            ; 49
-2410: or y, a             ; AA
-2411: or x, z             ; A4
-2412: mul y, y            ; 54
-2413: and x, a            ; 92
-2414: sub a, y            ; 4A
-2415: mul y, z            ; 55
-2416: add z, w            ; 29
-2417: sub a, x            ; 49
-2418: mul y, z            ; 55
-2419: mul y, z            ; 55
-241A: add z, a            ; 2A
-241B: sub a, x            ; 49
-241C: or y, w             ; A9
-241D: add z, a            ; 2A
-241E: add y, a            ; 25
-241F: or x, w             ; A5
-2420: or y, a             ; AA
-2421: sub a, y            ; 4A
-2422: add y, a            ; 25
-2423: and y, w            ; 95
-2424: sub a, y            ; 4A
-2425: sub a, y            ; 4A
-2426: store $2A49, z      ; 12 49 2A
-2429: add y, a            ; 25
-242A: add z, w            ; 29
-242B: and x, a            ; 92
-242C: push w              ; 04
-242D: nop                 ; 00
-242E: nop                 ; 00
-242F: nop                 ; 00
-2430: nop                 ; FC
-2431: nop                 ; FF
-2432: and x, a            ; 92
-2433: mul x, a            ; 52
-2434: add z, a            ; 2A
-2435: and y, w            ; 95
-2436: sub a, y            ; 4A
-2437: add z, a            ; 2A
-2438: cmp a, a            ; 89
-2439: and x, a            ; 92
-243A: and x, a            ; 92
-243B: or y, a             ; AA
-243C: mul y, y            ; 54
-243D: sub a, x            ; 49
-243E: sub a, y            ; 4A
-243F: add z, a            ; 2A
-2440: sub a, x            ; 49
-2441: sub a, y            ; 4A
-2442: mul y, z            ; 55
-2443: mul y, z            ; 55
-2444: mul y, z            ; 55
-2445: or y, a             ; AA
-2446: or y, a             ; AA
-2447: add z, a            ; 2A
-2448: or x, w             ; A5
-2449: mul y, y            ; 54
-244A: or y, a             ; AA
-244B: mul x, a            ; 52
-244C: and x, a            ; 92
-244D: add y, w            ; 24
-244E: sub a, x            ; 49
-244F: add z, a            ; 2A
-2450: sub a, x            ; 49
-2451: sub a, x            ; 49
-2452: sub w, x            ; 44
-2453: sub a, x            ; 49
-2454: store $0000, z      ; 12 00 00
-2457: nop                 ; 00
-2458: nop                 ; FC
-2459: nop                 ; FF
-245A: mul y, y            ; 54
-245B: sub a, y            ; 4A
-245C: sub a, x            ; 49
-245D: sub a, x            ; 49
-245E: and x, a            ; 92
-245F: sub w, x            ; 44
-2460: add y, a            ; 25
-2461: or y, w             ; A9
-2462: or x, z             ; A4
-2463: and x, a            ; 92
-2464: mul x, a            ; 52
-2465: or y, a             ; AA
-2466: mul x, a            ; 52
-2467: sub a, x            ; 49
-2468: mul y, z            ; 55
-2469: or y, w             ; A9
-246A: mul x, a            ; 52
-246B: mul y, z            ; 55
-246C: sub a, y            ; 4A
-246D: sub a, x            ; 49
-246E: or y, w             ; A9
-246F: or y, a             ; AA
-2470: and y, z            ; 94
-2471: or y, a             ; AA
-2472: mul x, a            ; 52
-2473: sub a, y            ; 4A
-2474: add z, w            ; 29
-2475: or y, w             ; A9
-2476: or y, a             ; AA
-2477: and x, a            ; 92
-2478: and x, a            ; 92
-2479: and y, z            ; 94
-247A: mul x, a            ; 52
-247B: and x, a            ; 92
-247C: add y, w            ; 24
-247D: nop                 ; 00
-247E: nop                 ; 00
-247F: nop                 ; 00
-2480: nop                 ; FC
-2481: nop                 ; FF
-2482: or x, w             ; A5
-2483: and x, a            ; 92
-2484: add y, w            ; 24
-2485: add y, a            ; 25
-2486: or y, w             ; A9
-2487: and x, a            ; 92
-2488: mul y, y            ; 54
-2489: sub a, y            ; 4A
-248A: add z, a            ; 2A
-248B: or y, w             ; A9
-248C: sub a, y            ; 4A
-248D: add y, a            ; 25
-248E: sub a, x            ; 49
-248F: mul x, a            ; 52
-2490: and x, a            ; 92
-2491: add z, a            ; 2A
-2492: and y, w            ; 95
-2493: or x, z             ; A4
-2494: or y, a             ; AA
-2495: or y, a             ; AA
-2496: sub a, y            ; 4A
-2497: mul x, a            ; 52
-2498: mul y, z            ; 55
-2499: sub a, x            ; 49
-249A: and y, w            ; 95
-249B: add z, a            ; 2A
-249C: or x, w             ; A5
-249D: sub w, x            ; 44
-249E: add y, y            ; 22
-249F: or x, z             ; A4
-24A0: mul y, y            ; 54
-24A1: mul x, a            ; 52
-24A2: cmpbit x            ; 8A 24
-24A4: and x, w            ; 91
-24A5: nop                 ; 00
-24A6: nop                 ; 00
-24A7: nop                 ; 00
-24A8: nop                 ; FC
-24A9: nop                 ; FF
-24AA: and x, a            ; 92
-24AB: mul y, y            ; 54
-24AC: or y, a             ; AA
-24AD: or y, z             ; A8
-24AE: add y, w            ; 24
-24AF: add z, w            ; 29
-24B0: and x, w            ; 91
-24B1: and x, a            ; 92
-24B2: and x, a            ; 92
-24B3: and y, z            ; 94
-24B4: and y, z            ; 94
-24B5: mul y, y            ; 54
-24B6: and y, w            ; 95
-24B7: and y, z            ; 94
-24B8: mul y, y            ; 54
-24B9: or x, w             ; A5
-24BA: or y, a             ; AA
-24BB: add z, a            ; 2A
-24BC: or x, w             ; A5
-24BD: or y, a             ; AA
-24BE: mul y, y            ; 54
-24BF: and y, w            ; 95
-24C0: sub a, y            ; 4A
-24C1: add z, a            ; 2A
-24C2: or y, w             ; A9
-24C3: or x, z             ; A4
-24C4: store $4929, a      ; 14 29 49
-24C7: add z, w            ; 29
-24C8: add y, a            ; 25
-24C9: add y, a            ; 25
-24CA: add y, x            ; 21
-24CB: sub a, x            ; 49
-24CC: add y, w            ; 24
-24CD: push x              ; 01
-24CE: nop                 ; 00
-24CF: nop                 ; 00
-24D0: nop                 ; FC
-24D1: nop                 ; FF
-24D2: mul y, y            ; 54
-24D3: and x, a            ; 92
-24D4: and x, a            ; 92
-24D5: sub a, y            ; 4A
-24D6: and x, a            ; 92
-24D7: or x, z             ; A4
-24D8: add y, w            ; 24
-24D9: sub a, x            ; 49
-24DA: sub a, y            ; 4A
-24DB: or x, w             ; A5
-24DC: mul x, a            ; 52
-24DD: add y, a            ; 25
-24DE: or y, w             ; A9
-24DF: mul x, a            ; 52
-24E0: add y, a            ; 25
-24E1: mul y, z            ; 55
-24E2: or y, w             ; A9
-24E3: or y, a             ; AA
-24E4: add z, a            ; 2A
-24E5: sub a, x            ; 49
-24E6: and y, w            ; 95
-24E7: mul y, y            ; 54
-24E8: mul x, a            ; 52
-24E9: or x, w             ; A5
-24EA: sub a, y            ; 4A
-24EB: add z, w            ; 29
-24EC: sub a, x            ; 49
-24ED: and x, a            ; 92
-24EE: and y, z            ; 94
-24EF: sub w, x            ; 44
-24F0: sub w, a            ; 48
-24F1: and y, z            ; 94
-24F2: and y, z            ; 94
-24F3: add y, w            ; 24
-24F4: cmp a, a            ; 89
-24F5: push w              ; 04
-24F6: nop                 ; 00
-24F7: nop                 ; 00
-24F8: nop                 ; FC
-24F9: nop                 ; FF
-24FA: add y, a            ; 25
-24FB: add y, a            ; 25
-24FC: sub a, x            ; 49
-24FD: and x, a            ; 92
-24FE: add z, a            ; 2A
-24FF: call $A495          ; 15 95 A4
-2502: add y, w            ; 24
-2503: sub a, x            ; 49
-2504: add z, a            ; 2A
-2505: or y, w             ; A9
-2506: sub a, y            ; 4A
-2507: sub a, y            ; 4A
-2508: mul x, a            ; 52
-2509: add z, w            ; 29
-250A: add y, a            ; 25
-250B: or x, w             ; A5
-250C: mul x, a            ; 52
-250D: mul y, z            ; 55
-250E: mul x, a            ; 52
-250F: or x, w             ; A5
-2510: add z, a            ; 2A
-2511: mul y, z            ; 55
-2512: mul x, a            ; 52
-2513: sub a, y            ; 4A
-2514: or x, w             ; A5
-2515: add y, w            ; 24
-2516: sub w, y            ; 45
-2517: and x, a            ; 92
-2518: and x, a            ; 92
-2519: add y, y            ; 22
-251A: add y, a            ; 25
-251B: sub a, x            ; 49
-251C: add y, y            ; 22
-251D: pop w               ; 09
-251E: nop                 ; 00
-251F: nop                 ; 00
-2520: nop                 ; FC
-2521: nop                 ; FF
-2522: sub w, a            ; 48
-2523: or y, w             ; A9
-2524: add y, w            ; 24
-2525: sub a, x            ; 49
-2526: sub w, x            ; 44
-2527: and a, w            ; A2
-2528: sub w, a            ; 48
-2529: and x, a            ; 92
-252A: mul x, a            ; 52
-252B: add z, a            ; 2A
-252C: sub a, x            ; 49
-252D: and y, w            ; 95
-252E: or x, z             ; A4
-252F: add y, w            ; 24
-2530: and y, w            ; 95
-2531: sub a, y            ; 4A
-2532: mul y, z            ; 55
-2533: add z, w            ; 29
-2534: mul y, z            ; 55
-2535: and y, w            ; 95
-2536: or y, a             ; AA
-2537: or y, a             ; AA
-2538: mul y, y            ; 54
-2539: sub a, x            ; 49
-253A: and y, w            ; 95
-253B: mul x, a            ; 52
-253C: and x, a            ; 92
-253D: and x, a            ; 92
-253E: add z, z            ; 28
-253F: sub a, x            ; 49
-2540: or y, a             ; AA
-2541: and y, z            ; 94
-2542: sub w, a            ; 48
-2543: and x, a            ; 92
-2544: and y, z            ; 94
-2545: add y, w            ; 24
-2546: nop                 ; 00
-2547: nop                 ; 00
-2548: nop                 ; FC
-2549: nop                 ; FF
-254A: mul x, a            ; 52
-254B: store $54A9, z      ; 12 A9 54
-254E: add z, w            ; 29
-254F: sub a, x            ; 49
-2550: and x, a            ; 92
-2551: mul y, y            ; 54
-2552: and y, z            ; 94
-2553: or x, z             ; A4
-2554: and x, a            ; 92
-2555: or x, z             ; A4
-2556: add z, a            ; 2A
-2557: or y, w             ; A9
-2558: mul x, a            ; 52
-2559: or y, w             ; A9
-255A: or y, a             ; AA
-255B: or y, a             ; AA
-255C: and y, z            ; 94
-255D: or x, z             ; A4
-255E: sub a, y            ; 4A
-255F: and x, a            ; 92
-2560: and x, a            ; 92
-2561: add z, a            ; 2A
-2562: sub a, x            ; 49
-2563: add z, a            ; 2A
-2564: add z, w            ; 29
-2565: sub a, x            ; 49
-2566: and x, a            ; 92
-2567: add y, w            ; 24
-2568: pop w               ; 09
-2569: or x, w             ; A5
-256A: and x, a            ; 92
-256B: add y, w            ; 24
-256C: add y, x            ; 21
-256D: sub a, x            ; 49
-256E: nop                 ; 00
-256F: nop                 ; 00
-2570: nop                 ; FC
-2571: nop                 ; FF
-2572: cmpbit x            ; 8A 4A
-2574: sub w, y            ; 45
-2575: add y, y            ; 22
-2576: or x, w             ; A5
-2577: and y, z            ; 94
-2578: sub a, y            ; 4A
-2579: add y, y            ; 22
-257A: sub a, x            ; 49
-257B: sub a, x            ; 49
-257C: or y, a             ; AA
-257D: add z, a            ; 2A
-257E: sub a, x            ; 49
-257F: add y, a            ; 25
-2580: sub a, y            ; 4A
-2581: add z, a            ; 2A
-2582: add z, w            ; 29
-2583: mul y, z            ; 55
-2584: or x, w             ; A5
-2585: or y, a             ; AA
-2586: mul y, y            ; 54
-2587: mul y, z            ; 55
-2588: mul y, z            ; 55
-2589: mul x, a            ; 52
-258A: or y, a             ; AA
-258B: or x, z             ; A4
-258C: sub a, y            ; 4A
-258D: store $9249, z      ; 12 49 92
-2590: or x, z             ; A4
-2591: sub w, a            ; 48
-2592: sub a, y            ; 4A
-2593: and x, a            ; 92
-2594: and y, z            ; 94
-2595: add y, w            ; 24
-2596: push x              ; 01
-2597: nop                 ; 00
-2598: nop                 ; FC
-2599: nop                 ; FF
-259A: or x, z             ; A4
-259B: or x, z             ; A4
-259C: and x, z            ; 90
-259D: and y, z            ; 94
-259E: store $2125, x      ; 10 25 21
-25A1: sub a, x            ; 49
-25A2: add y, a            ; 25
-25A3: and y, w            ; 95
-25A4: add y, w            ; 24
-25A5: sub a, x            ; 49
-25A6: mul y, z            ; 55
-25A7: sub a, y            ; 4A
-25A8: and x, w            ; 91
-25A9: sub a, y            ; 4A
-25AA: or x, w             ; A5
-25AB: and x, a            ; 92
-25AC: or y, a             ; AA
-25AD: add z, a            ; 2A
-25AE: add y, a            ; 25
-25AF: add z, w            ; 29
-25B0: sub a, x            ; 49
-25B1: and y, w            ; 95
-25B2: and x, a            ; 92
-25B3: sub a, y            ; 4A
-25B4: mul x, a            ; 52
-25B5: sub a, x            ; 49
-25B6: and x, a            ; 92
-25B7: add y, w            ; 24
-25B8: add z, w            ; 29
-25B9: add y, a            ; 25
-25BA: and x, w            ; 91
-25BB: add y, w            ; 24
-25BC: add y, y            ; 22
-25BD: sub a, x            ; 49
-25BE: nop                 ; 00
-25BF: nop                 ; 00
-25C0: nop                 ; FC
-25C1: nop                 ; FF
-25C2: store $5509, z      ; 12 09 55
-25C5: mul x, a            ; 52
-25C6: sub a, y            ; 4A
-25C7: and x, z            ; 90
-25C8: and y, z            ; 94
-25C9: add y, w            ; 24
-25CA: and x, a            ; 92
-25CB: or x, z             ; A4
-25CC: and x, a            ; 92
-25CD: mul y, y            ; 54
-25CE: and x, a            ; 92
-25CF: or y, a             ; AA
-25D0: mul y, y            ; 54
-25D1: mul x, a            ; 52
-25D2: or y, a             ; AA
-25D3: mul y, y            ; 54
-25D4: add z, w            ; 29
-25D5: sub a, x            ; 49
-25D6: or y, w             ; A9
-25D7: sub a, y            ; 4A
-25D8: add y, a            ; 25
-25D9: or y, w             ; A9
-25DA: add y, w            ; 24
-25DB: add z, w            ; 29
-25DC: cmp a, a            ; 89
-25DD: add y, w            ; 24
-25DE: sub a, x            ; 49
-25DF: and x, a            ; 92
-25E0: sub w, x            ; 44
-25E1: and x, a            ; 92
-25E2: add y, w            ; 24
-25E3: and x, w            ; 91
-25E4: cmp a, w            ; 88
-25E5: add x, a            ; 20
-25E6: push a              ; 05
-25E7: nop                 ; 00
-25E8: nop                 ; FC
-25E9: nop                 ; FF
-25EA: mul y, y            ; 54
-25EB: mul x, a            ; 52
-25EC: pop w               ; 09
-25ED: cmp a, a            ; 89
-25EE: mul x, a            ; 52
-25EF: add y, a            ; 25
-25F0: sub a, x            ; 49
-25F1: and x, a            ; 92
-25F2: add z, z            ; 28
-25F3: add z, w            ; 29
-25F4: or y, w             ; A9
-25F5: and x, a            ; 92
-25F6: mul y, y            ; 54
-25F7: sub a, x            ; 49
-25F8: sub a, y            ; 4A
-25F9: or y, w             ; A9
-25FA: add z, a            ; 2A
-25FB: mul y, z            ; 55
-25FC: sub a, y            ; 4A
-25FD: mul y, z            ; 55
-25FE: and y, w            ; 95
-25FF: mul y, y            ; 54
-2600: or y, w             ; A9
-2601: add y, w            ; 24
-2602: mul y, z            ; 55
-2603: sub a, y            ; 4A
-2604: mul y, z            ; 55
-2605: sub a, y            ; 4A
-2606: and x, a            ; 92
-2607: sub w, x            ; 44
-2608: and x, a            ; 92
-2609: add y, w            ; 24
-260A: and y, w            ; 95
-260B: add y, w            ; 24
-260C: add y, y            ; 22
-260D: sub a, y            ; 4A
-260E: store $FC00, x      ; 10 00 FC
-2611: nop                 ; FF
-2612: add y, y            ; 22
-2613: add z, w            ; 29
-2614: or x, z             ; A4
-2615: add y, w            ; 24
-2616: cmp w, a            ; 84
-2617: and y, z            ; 94
-2618: add y, w            ; 24
-2619: sub a, x            ; 49
-261A: or x, w             ; A5
-261B: sub w, x            ; 44
-261C: sub a, y            ; 4A
-261D: sub a, y            ; 4A
-261E: add y, a            ; 25
-261F: or x, w             ; A5
-2620: and x, a            ; 92
-2621: sub a, y            ; 4A
-2622: sub a, x            ; 49
-2623: or x, w             ; A5
-2624: or y, a             ; AA
-2625: mul x, a            ; 52
-2626: or y, a             ; AA
-2627: and x, a            ; 92
-2628: sub a, y            ; 4A
-2629: and y, w            ; 95
-262A: or x, z             ; A4
-262B: mul x, a            ; 52
-262C: and x, a            ; 92
-262D: add z, z            ; 28
-262E: sub z, z            ; 41
-262F: store $9249, z      ; 12 49 92
-2632: mul x, z            ; 50
-2633: and x, a            ; 92
-2634: and y, z            ; 94
-2635: add x, a            ; 20
-2636: sub w, y            ; 45
-2637: nop                 ; 00
-2638: nop                 ; FC
-2639: nop                 ; FF
-263A: cmp a, a            ; 89
-263B: sub w, x            ; 44
-263C: add z, w            ; 29
-263D: sub a, x            ; 49
-263E: add z, w            ; 29
-263F: add y, x            ; 21
-2640: sub a, x            ; 49
-2641: mul x, a            ; 52
-2642: sub w, a            ; 48
-2643: and x, a            ; 92
-2644: and x, a            ; 92
-2645: mul x, a            ; 52
-2646: and x, a            ; 92
-2647: and y, z            ; 94
-2648: mul y, y            ; 54
-2649: mul x, a            ; 52
-264A: or y, a             ; AA
-264B: and y, z            ; 94
-264C: mul x, a            ; 52
-264D: sub a, y            ; 4A
-264E: sub a, x            ; 49
-264F: or y, a             ; AA
-2650: and y, z            ; 94
-2651: or x, z             ; A4
-2652: and x, a            ; 92
-2653: add y, w            ; 24
-2654: sub a, x            ; 49
-2655: cmp a, x            ; 85
-2656: and y, z            ; 94
-2657: sub w, a            ; 48
-2658: add y, w            ; 24
-2659: sub a, x            ; 49
-265A: cmpbit x            ; 8A 24
-265C: add y, x            ; 21
-265D: sub a, y            ; 4A
-265E: store $FC00, x      ; 10 00 FC
-2661: nop                 ; FF
-2662: add z, a            ; 2A
-2663: add z, w            ; 29
-2664: cmp a, x            ; 85
-2665: add y, w            ; 24
-2666: or x, w             ; A5
-2667: and y, z            ; 94
-2668: add y, w            ; 24
-2669: pop w               ; 09
-266A: add y, a            ; 25
-266B: add z, w            ; 29
-266C: add y, w            ; 24
-266D: sub a, x            ; 49
-266E: or y, w             ; A9
-266F: mul x, a            ; 52
-2670: add y, a            ; 25
-2671: sub a, x            ; 49
-2672: add z, w            ; 29
-2673: mul y, z            ; 55
-2674: sub a, y            ; 4A
-2675: mul y, z            ; 55
-2676: mul y, z            ; 55
-2677: add y, a            ; 25
-2678: or x, w             ; A5
-2679: mul x, a            ; 52
-267A: sub a, y            ; 4A
-267B: sub a, y            ; 4A
-267C: add y, a            ; 25
-267D: add z, w            ; 29
-267E: pop w               ; 09
-267F: add y, y            ; 22
-2680: and x, w            ; 91
-2681: add y, w            ; 24
-2682: mul x, w            ; 51
-2683: and x, a            ; 92
-2684: and y, z            ; 94
-2685: add x, a            ; 20
-2686: sub w, y            ; 45
-2687: push x              ; 01
-2688: nop                 ; FC
-2689: nop                 ; FF
-268A: cmp w, y            ; 81
-268B: sub w, x            ; 44
-268C: add z, z            ; 28
-268D: sub a, x            ; 49
-268E: pop z               ; 08
-268F: add y, y            ; 22
-2690: sub a, x            ; 49
-2691: mul x, a            ; 52
-2692: sub a, x            ; 49
-2693: sub a, y            ; 4A
-2694: sub a, x            ; 49
-2695: add z, a            ; 2A
-2696: sub a, y            ; 4A
-2697: sub a, y            ; 4A
-2698: and x, a            ; 92
-2699: mul y, y            ; 54
-269A: sub a, y            ; 4A
-269B: sub a, x            ; 49
-269C: or y, w             ; A9
-269D: mul x, a            ; 52
-269E: sub a, y            ; 4A
-269F: mul x, a            ; 52
-26A0: mul x, a            ; 52
-26A1: add z, a            ; 2A
-26A2: or y, w             ; A9
-26A3: mul x, a            ; 52
-26A4: mul x, a            ; 52
-26A5: mul x, a            ; 52
-26A6: and a, w            ; A2
-26A7: sub w, a            ; 48
-26A8: add y, w            ; 24
-26A9: sub a, x            ; 49
-26AA: cmpbit x            ; 8A 24
-26AC: add y, x            ; 21
-26AD: sub a, y            ; 4A
-26AE: store $FC04, x      ; 10 04 FC
-26B1: nop                 ; FF
-26B2: add z, a            ; 2A
-26B3: add z, w            ; 29
-26B4: sub w, y            ; 45
-26B5: and x, a            ; 92
-26B6: and a, w            ; A2
-26B7: cmp a, w            ; 88
-26B8: add y, w            ; 24
-26B9: pop w               ; 09
-26BA: and x, a            ; 92
-26BB: add x, a            ; 20
-26BC: add y, a            ; 25
-26BD: and x, w            ; 91
-26BE: and x, a            ; 92
-26BF: add y, w            ; 24
-26C0: mul y, z            ; 55
-26C1: and x, a            ; 92
-26C2: mul x, a            ; 52
-26C3: or y, a             ; AA
-26C4: add z, a            ; 2A
-26C5: and y, w            ; 95
-26C6: mul x, a            ; 52
-26C7: and y, w            ; 95
-26C8: sub a, y            ; 4A
-26C9: sub a, x            ; 49
-26CA: add y, a            ; 25
-26CB: cmp a, a            ; 89
-26CC: and y, z            ; 94
-26CD: sub w, x            ; 44
-26CE: pop w               ; 09
-26CF: add y, y            ; 22
-26D0: and x, w            ; 91
-26D1: add y, w            ; 24
-26D2: add y, x            ; 21
-26D3: and x, a            ; 92
-26D4: and y, z            ; 94
-26D5: add x, a            ; 20
-26D6: sub w, y            ; 45
-26D7: store $FFFC, y      ; 11 FC FF
-26DA: and x, z            ; 90
-26DB: sub w, x            ; 44
-26DC: and x, w            ; 91
-26DD: add y, w            ; 24
-26DE: add z, z            ; 28
-26DF: add y, a            ; 25
-26E0: sub a, x            ; 49
-26E1: and a, w            ; A2
-26E2: add y, w            ; 24
-26E3: and y, w            ; 95
-26E4: and x, z            ; 90
-26E5: or x, z             ; A4
-26E6: add y, w            ; 24
-26E7: or y, w             ; A9
-26E8: and x, a            ; 92
-26E9: sub a, y            ; 4A
-26EA: or y, a             ; AA
-26EB: sub a, y            ; 4A
-26EC: sub a, y            ; 4A
-26ED: sub a, x            ; 49
-26EE: add z, w            ; 29
-26EF: sub a, x            ; 49
-26F0: mul x, a            ; 52
-26F1: and x, a            ; 92
-26F2: sub w, a            ; 48
-26F3: add z, a            ; 2A
-26F4: add y, a            ; 25
-26F5: add z, w            ; 29
-26F6: or y, a             ; AA
-26F7: sub w, a            ; 48
-26F8: add y, w            ; 24
-26F9: sub a, x            ; 49
-26FA: and y, z            ; 94
-26FB: add y, w            ; 24
-26FC: add y, y            ; 22
-26FD: pop a               ; 0A
-26FE: store $FC04, x      ; 10 04 FC
-2701: nop                 ; FF
-2702: sub a, y            ; 4A
-2703: store $9244, z      ; 12 44 92
-2706: cmp w, z            ; 82
-2707: and x, z            ; 90
-2708: add y, w            ; 24
-2709: sub a, x            ; 49
-270A: and x, a            ; 92
-270B: sub w, x            ; 44
-270C: sub a, y            ; 4A
-270D: sub a, y            ; 4A
-270E: mul x, a            ; 52
-270F: add y, a            ; 25
-2710: sub a, x            ; 49
-2711: add y, w            ; 24
-2712: sub a, x            ; 49
-2713: mul x, a            ; 52
-2714: add z, w            ; 29
-2715: mul y, z            ; 55
-2716: sub a, y            ; 4A
-2717: mul y, z            ; 55
-2718: sub a, x            ; 49
-2719: mul y, z            ; 55
-271A: add z, a            ; 2A
-271B: mul x, w            ; 51
-271C: and x, a            ; 92
-271D: sub w, x            ; 44
-271E: add y, x            ; 21
-271F: push a              ; 05
-2720: and x, w            ; 91
-2721: add y, w            ; 24
-2722: sub a, x            ; 49
-2723: and x, a            ; 92
-2724: cmp a, w            ; 88
-2725: and a, y            ; A0
-2726: sub z, w            ; 42
-2727: mul x, a            ; 52
-2728: nop                 ; FC
-2729: nop                 ; FF
-272A: and x, a            ; 92
-272B: or x, z             ; A4
-272C: and x, a            ; 92
-272D: add y, w            ; 24
-272E: add z, w            ; 29
-272F: add y, a            ; 25
-2730: pop w               ; 09
-2731: and x, a            ; 92
-2732: add y, w            ; 24
-2733: and x, w            ; 91
-2734: and x, a            ; 92
-2735: and x, a            ; 92
-2736: and y, z            ; 94
-2737: and y, z            ; 94
-2738: mul y, y            ; 54
-2739: or y, w             ; A9
-273A: mul x, a            ; 52
-273B: add z, w            ; 29
-273C: or x, w             ; A5
-273D: mul x, a            ; 52
-273E: or x, w             ; A5
-273F: add y, w            ; 24
-2740: and y, w            ; 95
-2741: add y, w            ; 24
-2742: sub w, y            ; 45
-2743: pop a               ; 0A
-2744: sub a, x            ; 49
-2745: add z, w            ; 29
-2746: sub a, y            ; 4A
-2747: mul x, z            ; 50
-2748: push w              ; 04
-2749: sub a, x            ; 49
-274A: and x, a            ; 92
-274B: add y, w            ; 24
-274C: add y, y            ; 22
-274D: pop a               ; 0A
-274E: and y, z            ; 94
-274F: cmp w, x            ; 80
-2750: nop                 ; FC
-2751: nop                 ; FF
-2752: sub w, a            ; 48
-2753: and x, a            ; 92
-2754: sub w, a            ; 48
-2755: and x, a            ; 92
-2756: sub w, x            ; 44
-2757: and y, z            ; 94
-2758: or x, z             ; A4
-2759: sub w, a            ; 48
-275A: and x, a            ; 92
-275B: add y, w            ; 24
-275C: add y, w            ; 24
-275D: sub w, a            ; 48
-275E: add y, y            ; 22
-275F: or y, w             ; A9
-2760: and x, a            ; 92
-2761: sub z, w            ; 42
-2762: sub a, y            ; 4A
-2763: sub a, y            ; 4A
-2764: add z, w            ; 29
-2765: sub a, x            ; 49
-2766: add z, a            ; 2A
-2767: sub a, x            ; 49
-2768: mul x, a            ; 52
-2769: and x, a            ; 92
-276A: mul y, y            ; 54
-276B: or y, w             ; A9
-276C: add y, w            ; 24
-276D: and x, a            ; 92
-276E: add y, w            ; 24
-276F: push a              ; 05
-2770: mul x, w            ; 51
-2771: add y, w            ; 24
-2772: sub a, x            ; 49
-2773: and x, a            ; 92
-2774: and y, z            ; 94
-2775: and a, y            ; A0
-2776: nop                 ; 00
-2777: pop a               ; 0A
-2778: nop                 ; FE
-2779: nop                 ; FF
-277A: and x, a            ; 92
-277B: add y, w            ; 24
-277C: and x, a            ; 92
-277D: add y, w            ; 24
-277E: store $0821, y      ; 11 21 08
-2781: and x, a            ; 92
-2782: add y, w            ; 24
-2783: sub a, x            ; 49
-2784: cmp a, a            ; 89
-2785: and x, a            ; 92
-2786: and y, z            ; 94
-2787: sub w, x            ; 44
-2788: sub a, y            ; 4A
-2789: add z, a            ; 2A
-278A: add z, w            ; 29
-278B: mul y, z            ; 55
-278C: sub a, y            ; 4A
-278D: add z, a            ; 2A
-278E: sub a, x            ; 49
-278F: or y, a             ; AA
-2790: and y, z            ; 94
-2791: or y, a             ; AA
-2792: add y, y            ; 22
-2793: add y, y            ; 22
-2794: or y, w             ; A9
-2795: add y, w            ; 24
-2796: sub a, x            ; 49
-2797: or y, w             ; A9
-2798: push w              ; 04
-2799: sub a, x            ; 49
-279A: and x, a            ; 92
-279B: add y, w            ; 24
-279C: add y, x            ; 21
-279D: pop a               ; 0A
-279E: mul y, z            ; 55
-279F: and a, y            ; A0
-27A0: nop                 ; FC
-27A1: nop                 ; FF
-27A2: sub w, a            ; 48
-27A3: and x, a            ; 92
-27A4: sub w, a            ; 48
-27A5: and x, a            ; 92
-27A6: sub w, x            ; 44
-27A7: and y, z            ; 94
-27A8: and a, w            ; A2
-27A9: sub w, a            ; 48
-27AA: and x, a            ; 92
-27AB: add y, w            ; 24
-27AC: mul x, a            ; 52
-27AD: sub a, y            ; 4A
-27AE: mul x, a            ; 52
-27AF: and x, a            ; 92
-27B0: add y, w            ; 24
-27B1: sub a, x            ; 49
-27B2: and x, a            ; 92
-27B3: or x, z             ; A4
-27B4: mul x, a            ; 52
-27B5: or x, w             ; A5
-27B6: mul x, a            ; 52
-27B7: sub a, x            ; 49
-27B8: sub a, x            ; 49
-27B9: add y, y            ; 22
-27BA: sub a, y            ; 4A
-27BB: sub a, x            ; 49
-27BC: sub z, w            ; 42
-27BD: and x, a            ; 92
-27BE: add y, w            ; 24
-27BF: add y, w            ; 24
-27C0: mul x, a            ; 52
-27C1: add y, w            ; 24
-27C2: sub a, x            ; 49
-27C3: and x, a            ; 92
-27C4: and y, z            ; 94
-27C5: add x, a            ; 20
-27C6: nop                 ; 00
-27C7: pop w               ; 09
-27C8: nop                 ; FC
-27C9: nop                 ; FF
-27CA: and x, a            ; 92
-27CB: sub w, x            ; 44
-27CC: store $2904, z      ; 12 04 29
-27CF: add y, x            ; 21
-27D0: pop z               ; 08
-27D1: cmp w, z            ; 82
-27D2: add y, w            ; 24
-27D3: cmp a, a            ; 89
-27D4: cmp w, a            ; 84
-27D5: and x, z            ; 90
-27D6: push w              ; 04
-27D7: add z, w            ; 29
-27D8: or y, w             ; A9
-27D9: and y, z            ; 94
-27DA: or x, z             ; A4
-27DB: store $4929, z      ; 12 29 49
-27DE: add z, a            ; 2A
-27DF: add y, a            ; 25
-27E0: mul x, a            ; 52
-27E1: sub a, x            ; 49
-27E2: and x, w            ; 91
-27E3: and y, z            ; 94
-27E4: and y, z            ; 94
-27E5: add y, w            ; 24
-27E6: sub a, x            ; 49
-27E7: cmp a, a            ; 89
-27E8: push w              ; 04
-27E9: sub a, x            ; 49
-27EA: and x, a            ; 92
-27EB: add y, w            ; 24
-27EC: add y, x            ; 21
-27ED: cmpbit x            ; 8A 4A
-27EF: sub z, y            ; 40
-27F0: nop                 ; FE
-27F1: nop                 ; FF
-27F2: sub w, a            ; 48
-27F3: store $5149, z      ; 12 49 51
-27F6: cmp w, a            ; 84
-27F7: and y, z            ; 94
-27F8: and a, w            ; A2
-27F9: add z, z            ; 28
-27FA: and x, a            ; 92
-27FB: add y, w            ; 24
-27FC: mul x, a            ; 52
-27FD: sub a, y            ; 4A
-27FE: mul x, a            ; 52
-27FF: or x, w             ; A5
-2800: sub w, x            ; 44
-2801: mul x, a            ; 52
-2802: and x, a            ; 92
-2803: mul y, y            ; 54
-2804: or x, w             ; A5
-2805: and y, z            ; 94
-2806: or x, z             ; A4
-2807: mul y, y            ; 54
-2808: add y, a            ; 25
-2809: and y, w            ; 95
-280A: mul y, y            ; 54
-280B: mul x, a            ; 52
-280C: mul x, a            ; 52
-280D: and x, a            ; 92
-280E: add y, w            ; 24
-280F: add y, y            ; 22
-2810: mul x, w            ; 51
-2811: add y, w            ; 24
-2812: sub a, x            ; 49
-2813: cmp w, z            ; 82
-2814: cmp w, a            ; 84
-2815: add x, a            ; 20
-2816: add x, a            ; 20
-2817: store $FFFC, z      ; 12 FC FF
-281A: store $1244, z      ; 12 44 12
-281D: push w              ; 04
-281E: add z, w            ; 29
-281F: add y, x            ; 21
-2820: pop z               ; 08
-2821: cmp w, z            ; 82
-2822: push w              ; 04
-2823: cmp a, a            ; 89
-2824: store $9491, a      ; 14 91 94
-2827: store $2529, x      ; 10 29 25
-282A: sub a, x            ; 49
-282B: and x, a            ; 92
-282C: store $92A5, a      ; 14 A5 92
-282F: and x, a            ; 92
-2830: and y, z            ; 94
-2831: add y, w            ; 24
-2832: cmp a, a            ; 89
-2833: cmp w, a            ; 84
-2834: cmp w, a            ; 84
-2835: add y, w            ; 24
-2836: cmp a, a            ; 89
-2837: sub w, a            ; 48
-2838: store $9249, a      ; 14 49 92
-283B: add z, z            ; 28
-283C: add z, w            ; 29
-283D: cmpbit x            ; 8A 8A
-283F: push w              ; 04
-2840: nop                 ; FD
-2841: nop                 ; FF
-2842: sub w, a            ; 48
-2843: store $5149, y      ; 11 49 51
-2846: cmp w, x            ; 80
-2847: cmp w, a            ; 84
-2848: and a, w            ; A2
-2849: add z, z            ; 28
-284A: mul x, a            ; 52
-284B: add y, w            ; 24
-284C: sub z, w            ; 42
-284D: sub w, x            ; 44
-284E: add y, y            ; 22
-284F: sub a, y            ; 4A
-2850: and x, a            ; 92
-2851: and y, z            ; 94
-2852: add y, w            ; 24
-2853: add y, a            ; 25
-2854: or y, w             ; A9
-2855: and y, z            ; 94
-2856: mul y, y            ; 54
-2857: sub a, y            ; 4A
-2858: mul x, a            ; 52
-2859: mul x, a            ; 52
-285A: mul x, a            ; 52
-285B: mul x, a            ; 52
-285C: mul x, a            ; 52
-285D: and x, a            ; 92
-285E: add y, w            ; 24
-285F: add y, a            ; 25
-2860: sub z, z            ; 41
-2861: add y, w            ; 24
-2862: pop w               ; 09
-2863: cmp w, z            ; 82
-2864: cmp w, x            ; 80
-2865: add x, a            ; 20
-2866: add x, a            ; 20
-2867: add x, a            ; 20
-2868: nop                 ; FC
-2869: nop                 ; FF
-286A: store $1244, z      ; 12 44 12
-286D: cmp w, a            ; 84
-286E: add z, a            ; 2A
-286F: add z, w            ; 29
-2870: pop z               ; 08
-2871: cmp w, z            ; 82
+21D8: nop                 ; 00
+21D9: nop                 ; 00
+21DA: nop                 ; 00
+21DB: nop                 ; 00
+21DC: nop                 ; 00
+21DD: nop                 ; FC
+21DE: nop                 ; FF
+21DF: cmp x, $52          ; 55 52
+21E1: nop                 ; A5
+21E2: inc w               ; 4A
+21E3: cmp x, $25          ; 55 25
+21E5: inc z               ; 49
+21E6: nop                 ; AA
+21E7: cmp a, w            ; 54
+21E8: store $5249, y      ; 15 49 52
+21EB: nop                 ; A9
+21EC: cmp a, y            ; 52
+21ED: add x, $49          ; 25 49
+21EF: nop                 ; A5
+21F0: inc w               ; 4A
+21F1: jmp z, w            ; 95
+21F2: cmp a, y            ; 52
+21F3: nop                 ; A5
+21F4: cmp a, w            ; 54
+21F5: nop                 ; AA
+21F6: cmp a, y            ; 52
+21F7: cmp x, $4A          ; 55 4A
+21F9: nop                 ; AA
+21FA: nop                 ; A4
+21FB: nop                 ; A4
+21FC: inc w               ; 4A
+21FD: jmp z, w            ; 95
+21FE: store $0001, x      ; 14 01 00
+2201: nop                 ; 00
+2202: nop                 ; 00
+2203: nop                 ; 00
+2204: nop                 ; 00
+2205: nop                 ; FC
+2206: nop                 ; FF
+2207: jmp z, w            ; 95
+2208: inc w               ; 4A
+2209: jmp z, w            ; 95
+220A: cmp a, w            ; 54
+220B: cmp a, y            ; 52
+220C: nop                 ; AA
+220D: nop                 ; AA
+220E: adc a, x            ; 2A
+220F: add x, $A9          ; 25 A9
+2211: nop                 ; A4
+2212: inc w               ; 4A
+2213: inc w               ; 4A
+2214: nop                 ; AA
+2215: nop                 ; AA
+2216: nop                 ; AA
+2217: cmp a, w            ; 54
+2218: adc a, x            ; 2A
+2219: nop                 ; A9
+221A: jmp x, y            ; 94
+221B: cmp a, w            ; 54
+221C: nop                 ; A5
+221D: cmp a, y            ; 52
+221E: inc w               ; 4A
+221F: nop                 ; A9
+2220: cmp a, y            ; 52
+2221: inc z               ; 49
+2222: cmp x, $55          ; 55 55
+2224: cmp a, y            ; 52
+2225: cmp a, y            ; 52
+2226: cmp a, y            ; 52
+2227: push y              ; 02
+2228: nop                 ; 00
+2229: nop                 ; 00
+222A: nop                 ; 00
+222B: nop                 ; 00
+222C: nop                 ; 00
+222D: nop                 ; FC
+222E: nop                 ; FF
+222F: cmp a, y            ; 52
+2230: add a, $A9          ; 29 A9
+2232: inc w               ; 4A
+2233: jmp z, w            ; 95
+2234: ror a               ; 92
+2235: add a, a            ; 24
+2236: nop                 ; A5
+2237: nop                 ; AA
+2238: inc w               ; 4A
+2239: jmp z, w            ; 95
+223A: cmp a, w            ; 54
+223B: cmp x, $29          ; 55 29
+223D: nop                 ; A9
+223E: nop                 ; AA
+223F: nop                 ; AA
+2240: cmp a, y            ; 52
+2241: add x, $55          ; 25 55
+2243: jmp z, w            ; 95
+2244: nop                 ; AA
+2245: nop                 ; AA
+2246: adc a, x            ; 2A
+2247: jmp z, w            ; 95
+2248: nop                 ; AA
+2249: adc a, x            ; 2A
+224A: inc z               ; 49
+224B: ror a               ; 92
+224C: adc a, x            ; 2A
+224D: nop                 ; A9
+224E: inc w               ; 4A
+224F: pop y               ; 09
+2250: nop                 ; 00
+2251: nop                 ; 00
+2252: nop                 ; 00
+2253: nop                 ; 00
+2254: nop                 ; 00
+2255: nop                 ; FC
+2256: nop                 ; FF
+2257: cmp a, w            ; 54
+2258: cmp x, $25          ; 55 25
+225A: add a, $A9          ; 29 A9
+225C: cmp a, w            ; 54
+225D: cmp x, $A9          ; 55 A9
+225F: cmp a, w            ; 54
+2260: adc a, x            ; 2A
+2261: inc z               ; 49
+2262: ror a               ; 92
+2263: nop                 ; A4
+2264: inc w               ; 4A
+2265: add x, $49          ; 25 49
+2267: jmp z, w            ; 95
+2268: nop                 ; AA
+2269: nop                 ; AA
+226A: adc a, x            ; 2A
+226B: nop                 ; A9
+226C: cmp a, w            ; 54
+226D: jmp z, w            ; 95
+226E: nop                 ; AA
+226F: cmp a, y            ; 52
+2270: inc w               ; 4A
+2271: cmp a, y            ; 52
+2272: cmp x, $55          ; 55 55
+2274: cmp a, y            ; 52
+2275: add x, $29          ; 25 29
+2277: add x, $00          ; 25 00
+2279: nop                 ; 00
+227A: nop                 ; 00
+227B: nop                 ; 00
+227C: nop                 ; 00
+227D: nop                 ; FC
+227E: nop                 ; FF
+227F: jmp z, w            ; 95
+2280: jmp x, y            ; 94
+2281: cmp a, w            ; 54
+2282: cmp x, $95          ; 55 95
+2284: inc w               ; 4A
+2285: ror a               ; 92
+2286: jmp x, y            ; 94
+2287: inc w               ; 4A
+2288: nop                 ; A5
+2289: cmp a, y            ; 52
+228A: cmp x, $55          ; 55 55
+228C: nop                 ; AA
+228D: nop                 ; AA
+228E: adc a, x            ; 2A
+228F: nop                 ; A5
+2290: nop                 ; AA
+2291: jmp x, y            ; 94
+2292: nop                 ; A4
+2293: inc w               ; 4A
+2294: jmp z, w            ; 95
+2295: cmp a, w            ; 54
+2296: nop                 ; A5
+2297: nop                 ; AA
+2298: cmp a, y            ; 52
+2299: jmp z, w            ; 95
+229A: add a, a            ; 24
+229B: inc z               ; 49
+229C: jmp z, w            ; 95
+229D: jmp x, y            ; 94
+229E: inc w               ; 4A
+229F: load w, $0000       ; 12 00 00
+22A2: nop                 ; 00
+22A3: nop                 ; 00
+22A4: nop                 ; 00
+22A5: nop                 ; FC
+22A6: nop                 ; FF
+22A7: nop                 ; A9
+22A8: cmp a, y            ; 52
+22A9: cmp x, $52          ; 55 52
+22AB: cmp a, y            ; 52
+22AC: cmp a, y            ; 52
+22AD: inc z               ; 49
+22AE: nop                 ; A5
+22AF: cmp a, w            ; 54
+22B0: nop                 ; A9
+22B1: inc w               ; 4A
+22B2: ror a               ; 92
+22B3: add a, a            ; 24
+22B4: add a, $55          ; 29 55
+22B6: cmp x, $55          ; 55 55
+22B8: inc w               ; 4A
+22B9: cmp x, $52          ; 55 52
+22BB: cmp a, y            ; 52
+22BC: nop                 ; A9
+22BD: nop                 ; AA
+22BE: jmp x, y            ; 94
+22BF: nop                 ; A4
+22C0: jmp x, y            ; 94
+22C1: nop                 ; A4
+22C2: cmp a, y            ; 52
+22C3: cmp x, $52          ; 55 52
+22C5: cmp a, y            ; 52
+22C6: cmp a, y            ; 52
+22C7: inc z               ; 49
+22C8: nop                 ; 00
+22C9: nop                 ; 00
+22CA: nop                 ; 00
+22CB: nop                 ; 00
+22CC: nop                 ; 00
+22CD: nop                 ; FC
+22CE: nop                 ; FF
+22CF: inc w               ; 4A
+22D0: inc w               ; 4A
+22D1: ror a               ; 92
+22D2: inc w               ; 4A
+22D3: nop                 ; A5
+22D4: inc w               ; 4A
+22D5: nop                 ; AA
+22D6: jmp x, y            ; 94
+22D7: cmp a, y            ; 52
+22D8: adc a, x            ; 2A
+22D9: nop                 ; A9
+22DA: add a, a            ; 24
+22DB: cmp x, $A5          ; 55 A5
+22DD: add a, a            ; 24
+22DE: nop                 ; A5
+22DF: cmp a, w            ; 54
+22E0: add a, $A5          ; 29 A5
+22E2: adc a, x            ; 2A
+22E3: cmp x, $4A          ; 55 4A
+22E5: nop                 ; A5
+22E6: nop                 ; AA
+22E7: adc a, x            ; 2A
+22E8: cmp x, $55          ; 55 55
+22EA: inc w               ; 4A
+22EB: ror a               ; 92
+22EC: inc w               ; 4A
+22ED: jmp z, w            ; 95
+22EE: add a, a            ; 24
+22EF: nop                 ; AA
+22F0: push y              ; 02
+22F1: nop                 ; 00
+22F2: nop                 ; 00
+22F3: nop                 ; 00
+22F4: nop                 ; 00
+22F5: nop                 ; FC
+22F6: nop                 ; FF
+22F7: cmp a, y            ; 52
+22F8: nop                 ; A9
+22F9: inc w               ; 4A
+22FA: add a, $49          ; 29 49
+22FC: ror a               ; 92
+22FD: load w, $A529       ; 12 29 A5
+2300: cmp a, y            ; 52
+2301: jmp z, w            ; 95
+2302: inc w               ; 4A
+2303: inc z               ; 49
+2304: cmp x, $55          ; 55 55
+2306: cmp x, $55          ; 55 55
+2308: cmp x, $A9          ; 55 A9
+230A: mul z, $A5          ; 44 A5
+230C: adc a, x            ; 2A
+230D: jmp z, w            ; 95
+230E: nop                 ; AA
+230F: inc w               ; 4A
+2310: add a, $49          ; 29 49
+2312: add a, $A9          ; 29 A9
+2314: jmp x, y            ; 94
+2315: nop                 ; A4
+2316: inc w               ; 4A
+2317: ror w               ; 91
+2318: pop x               ; 08
+2319: nop                 ; 00
+231A: nop                 ; 00
+231B: nop                 ; 00
+231C: nop                 ; 00
+231D: nop                 ; FC
+231E: nop                 ; FF
+231F: cmp x, $4A          ; 55 4A
+2321: cmp a, y            ; 52
+2322: nop                 ; A5
+2323: adc a, x            ; 2A
+2324: nop                 ; A9
+2325: nop                 ; A4
+2326: inc w               ; 4A
+2327: add a, $95          ; 29 95
+2329: cmp a, y            ; 52
+232A: cmp a, y            ; 52
+232B: adc a, x            ; 2A
+232C: inc z               ; 49
+232D: cmp a, y            ; 52
+232E: add a, $25          ; 29 25
+2330: cmp x, $95          ; 55 95
+2332: nop                 ; AA
+2333: jmp x, y            ; 94
+2334: cmp a, y            ; 52
+2335: nop                 ; A9
+2336: cmp a, y            ; 52
+2337: cmp a, y            ; 52
+2338: nop                 ; A5
+2339: cmp a, y            ; 52
+233A: inc w               ; 4A
+233B: jmp z, w            ; 95
+233C: cmp a, y            ; 52
+233D: inc z               ; 49
+233E: ror a               ; 92
+233F: inc w               ; 4A
+2340: load w, $0000       ; 12 00 00
+2343: nop                 ; 00
+2344: nop                 ; 00
+2345: nop                 ; FC
+2346: nop                 ; FF
+2347: add x, $A5          ; 25 A5
+2349: jmp x, y            ; 94
+234A: jmp x, y            ; 94
+234B: nop                 ; A4
+234C: add a, a            ; 24
+234D: cmp x, $52          ; 55 52
+234F: inc w               ; 4A
+2350: nop                 ; A9
+2351: cmp a, w            ; 54
+2352: inc z               ; 49
+2353: cmp a, x            ; 51
+2354: cmp x, $95          ; 55 95
+2356: nop                 ; AA
+2357: cmp a, w            ; 54
+2358: inc z               ; 49
+2359: cmp x, $29          ; 55 29
+235B: cmp x, $AA          ; 55 AA
+235D: nop                 ; AA
+235E: nop                 ; AA
+235F: adc a, x            ; 2A
+2360: jmp z, w            ; 95
+2361: jmp x, y            ; 94
+2362: cmp a, y            ; 52
+2363: add a, z            ; 22
+2364: inc z               ; 49
+2365: adc a, x            ; 2A
+2366: add a, $29          ; 29 29
+2368: mul w, $00          ; 45 00
+236A: nop                 ; 00
+236B: nop                 ; 00
+236C: nop                 ; 00
+236D: nop                 ; FC
+236E: nop                 ; FF
+236F: cmp a, w            ; 54
+2370: jmp z, w            ; 95
+2371: cmp a, y            ; 52
+2372: adc a, x            ; 2A
+2373: jmp z, w            ; 95
+2374: inc w               ; 4A
+2375: ror a               ; 92
+2376: add a, a            ; 24
+2377: nop                 ; A9
+2378: inc w               ; 4A
+2379: jmp z, w            ; 95
+237A: adc a, x            ; 2A
+237B: jmp z, w            ; 95
+237C: add a, a            ; 24
+237D: cmp x, $4A          ; 55 4A
+237F: cmp x, $55          ; 55 55
+2381: nop                 ; A5
+2382: nop                 ; AA
+2383: inc w               ; 4A
+2384: jmp z, w            ; 95
+2385: cmp a, w            ; 54
+2386: adc a, x            ; 2A
+2387: inc z               ; 49
+2388: cmp a, y            ; 52
+2389: nop                 ; A5
+238A: jmp x, y            ; 94
+238B: cmp a, w            ; 54
+238C: adc a, x            ; 2A
+238D: nop                 ; A5
+238E: nop                 ; A4
+238F: mul z, $92          ; 44 92
+2391: nop                 ; 00
+2392: nop                 ; 00
+2393: nop                 ; 00
+2394: nop                 ; 00
+2395: nop                 ; FC
+2396: nop                 ; FF
+2397: inc z               ; 49
+2398: cmp a, y            ; 52
+2399: inc w               ; 4A
+239A: inc z               ; 49
+239B: inc z               ; 49
+239C: cmp a, y            ; 52
+239D: inc z               ; 49
+239E: jmp z, w            ; 95
+239F: ror a               ; 92
+23A0: cmp a, w            ; 54
+23A1: cmp a, y            ; 52
+23A2: ror a               ; 92
+23A3: nop                 ; A4
+23A4: nop                 ; AA
+23A5: nop                 ; A4
+23A6: cmp a, y            ; 52
+23A7: inc z               ; 49
+23A8: cmp x, $2A          ; 55 2A
+23AA: nop                 ; A5
+23AB: cmp a, w            ; 54
+23AC: nop                 ; A9
+23AD: ror a               ; 92
+23AE: cmp a, y            ; 52
+23AF: cmp x, $49          ; 55 49
+23B1: ror a               ; 92
+23B2: cmp a, y            ; 52
+23B3: nop                 ; A5
+23B4: cmp a, y            ; 52
+23B5: inc z               ; 49
+23B6: ror a               ; 92
+23B7: cmp a, y            ; 52
+23B8: inc z               ; 49
+23B9: push y              ; 02
+23BA: nop                 ; 00
+23BB: nop                 ; 00
+23BC: nop                 ; 00
+23BD: nop                 ; FC
+23BE: nop                 ; FF
+23BF: nop                 ; AA
+23C0: jmp x, y            ; 94
+23C1: ror a               ; 92
+23C2: cmp a, y            ; 52
+23C3: cmp a, y            ; 52
+23C4: inc z               ; 49
+23C5: nop                 ; AA
+23C6: nop                 ; A4
+23C7: cmp a, w            ; 54
+23C8: ror a               ; 92
+23C9: inc w               ; 4A
+23CA: cmp x, $29          ; 55 29
+23CC: inc z               ; 49
+23CD: cmp x, $55          ; 55 55
+23CF: adc a, x            ; 2A
+23D0: inc z               ; 49
+23D1: nop                 ; A9
+23D2: adc a, x            ; 2A
+23D3: add x, $A5          ; 25 A5
+23D5: nop                 ; AA
+23D6: inc w               ; 4A
+23D7: add x, $95          ; 25 95
+23D9: inc w               ; 4A
+23DA: inc w               ; 4A
+23DB: load w, $2A49       ; 12 49 2A
+23DE: add x, $29          ; 25 29
+23E0: ror a               ; 92
+23E1: push w              ; 04
+23E2: nop                 ; 00
+23E3: nop                 ; 00
+23E4: nop                 ; 00
+23E5: nop                 ; FC
+23E6: nop                 ; FF
+23E7: ror a               ; 92
+23E8: cmp a, y            ; 52
+23E9: adc a, x            ; 2A
+23EA: jmp z, w            ; 95
+23EB: inc w               ; 4A
+23EC: adc a, x            ; 2A
+23ED: rol x               ; 89
+23EE: ror a               ; 92
+23EF: ror a               ; 92
+23F0: nop                 ; AA
+23F1: cmp a, w            ; 54
+23F2: inc z               ; 49
+23F3: inc w               ; 4A
+23F4: adc a, x            ; 2A
+23F5: inc z               ; 49
+23F6: inc w               ; 4A
+23F7: cmp x, $55          ; 55 55
+23F9: cmp x, $AA          ; 55 AA
+23FB: nop                 ; AA
+23FC: adc a, x            ; 2A
+23FD: nop                 ; A5
+23FE: cmp a, w            ; 54
+23FF: nop                 ; AA
+2400: cmp a, y            ; 52
+2401: ror a               ; 92
+2402: add a, a            ; 24
+2403: inc z               ; 49
+2404: adc a, x            ; 2A
+2405: inc z               ; 49
+2406: inc z               ; 49
+2407: mul z, $49          ; 44 49
+2409: load w, $0000       ; 12 00 00
+240C: nop                 ; 00
+240D: nop                 ; FC
+240E: nop                 ; FF
+240F: cmp a, w            ; 54
+2410: inc w               ; 4A
+2411: inc z               ; 49
+2412: inc z               ; 49
+2413: ror a               ; 92
+2414: mul z, $25          ; 44 25
+2416: nop                 ; A9
+2417: nop                 ; A4
+2418: ror a               ; 92
+2419: cmp a, y            ; 52
+241A: nop                 ; AA
+241B: cmp a, y            ; 52
+241C: inc z               ; 49
+241D: cmp x, $A9          ; 55 A9
+241F: cmp a, y            ; 52
+2420: cmp x, $4A          ; 55 4A
+2422: inc z               ; 49
+2423: nop                 ; A9
+2424: nop                 ; AA
+2425: jmp x, y            ; 94
+2426: nop                 ; AA
+2427: cmp a, y            ; 52
+2428: inc w               ; 4A
+2429: add a, $A9          ; 29 A9
+242B: nop                 ; AA
+242C: ror a               ; 92
+242D: ror a               ; 92
+242E: jmp x, y            ; 94
+242F: cmp a, y            ; 52
+2430: ror a               ; 92
+2431: add a, a            ; 24
+2432: nop                 ; 00
+2433: nop                 ; 00
+2434: nop                 ; 00
+2435: nop                 ; FC
+2436: nop                 ; FF
+2437: nop                 ; A5
+2438: ror a               ; 92
+2439: add a, a            ; 24
+243A: add x, $A9          ; 25 A9
+243C: ror a               ; 92
+243D: cmp a, w            ; 54
+243E: inc w               ; 4A
+243F: adc a, x            ; 2A
+2440: nop                 ; A9
+2441: inc w               ; 4A
+2442: add x, $49          ; 25 49
+2444: cmp a, y            ; 52
+2445: ror a               ; 92
+2446: adc a, x            ; 2A
+2447: jmp z, w            ; 95
+2448: nop                 ; A4
+2449: nop                 ; AA
+244A: nop                 ; AA
+244B: inc w               ; 4A
+244C: cmp a, y            ; 52
+244D: cmp x, $49          ; 55 49
+244F: jmp z, w            ; 95
+2450: adc a, x            ; 2A
+2451: nop                 ; A5
+2452: mul z, $22          ; 44 22
+2454: nop                 ; A4
+2455: cmp a, w            ; 54
+2456: cmp a, y            ; 52
+2457: rol y               ; 8A
+2458: add a, a            ; 24
+2459: ror w               ; 91
+245A: nop                 ; 00
+245B: nop                 ; 00
+245C: nop                 ; 00
+245D: nop                 ; FC
+245E: nop                 ; FF
+245F: ror a               ; 92
+2460: cmp a, w            ; 54
+2461: nop                 ; AA
+2462: nop                 ; A8
+2463: add a, a            ; 24
+2464: add a, $91          ; 29 91
+2466: ror a               ; 92
+2467: ror a               ; 92
+2468: jmp x, y            ; 94
+2469: jmp x, y            ; 94
+246A: cmp a, w            ; 54
+246B: jmp z, w            ; 95
+246C: jmp x, y            ; 94
+246D: cmp a, w            ; 54
+246E: nop                 ; A5
+246F: nop                 ; AA
+2470: adc a, x            ; 2A
+2471: nop                 ; A5
+2472: nop                 ; AA
+2473: cmp a, w            ; 54
+2474: jmp z, w            ; 95
+2475: inc w               ; 4A
+2476: adc a, x            ; 2A
+2477: nop                 ; A9
+2478: nop                 ; A4
+2479: store $4929, x      ; 14 29 49
+247C: add a, $25          ; 29 25
+247E: add x, $21          ; 25 21
+2480: inc z               ; 49
+2481: add a, a            ; 24
+2482: push x              ; 01
+2483: nop                 ; 00
+2484: nop                 ; 00
+2485: nop                 ; FC
+2486: nop                 ; FF
+2487: cmp a, w            ; 54
+2488: ror a               ; 92
+2489: ror a               ; 92
+248A: inc w               ; 4A
+248B: ror a               ; 92
+248C: nop                 ; A4
+248D: add a, a            ; 24
+248E: inc z               ; 49
+248F: inc w               ; 4A
+2490: nop                 ; A5
+2491: cmp a, y            ; 52
+2492: add x, $A9          ; 25 A9
+2494: cmp a, y            ; 52
+2495: add x, $55          ; 25 55
+2497: nop                 ; A9
+2498: nop                 ; AA
+2499: adc a, x            ; 2A
+249A: inc z               ; 49
+249B: jmp z, w            ; 95
+249C: cmp a, w            ; 54
+249D: cmp a, y            ; 52
+249E: nop                 ; A5
+249F: inc w               ; 4A
+24A0: add a, $49          ; 29 49
+24A2: ror a               ; 92
+24A3: jmp x, y            ; 94
+24A4: mul z, $48          ; 44 48
+24A6: jmp x, y            ; 94
+24A7: jmp x, y            ; 94
+24A8: add a, a            ; 24
+24A9: rol x               ; 89
+24AA: push w              ; 04
+24AB: nop                 ; 00
+24AC: nop                 ; 00
+24AD: nop                 ; FC
+24AE: nop                 ; FF
+24AF: add x, $25          ; 25 25
+24B1: inc z               ; 49
+24B2: ror a               ; 92
+24B3: adc a, x            ; 2A
+24B4: store $A495, y      ; 15 95 A4
+24B7: add a, a            ; 24
+24B8: inc z               ; 49
+24B9: adc a, x            ; 2A
+24BA: nop                 ; A9
+24BB: inc w               ; 4A
+24BC: inc w               ; 4A
+24BD: cmp a, y            ; 52
+24BE: add a, $25          ; 29 25
+24C0: nop                 ; A5
+24C1: cmp a, y            ; 52
+24C2: cmp x, $52          ; 55 52
+24C4: nop                 ; A5
+24C5: adc a, x            ; 2A
+24C6: cmp x, $52          ; 55 52
+24C8: inc w               ; 4A
+24C9: nop                 ; A5
+24CA: add a, a            ; 24
+24CB: mul w, $92          ; 45 92
+24CD: ror a               ; 92
+24CE: add a, z            ; 22
+24CF: add x, $49          ; 25 49
+24D1: add a, z            ; 22
+24D2: pop y               ; 09
+24D3: nop                 ; 00
+24D4: nop                 ; 00
+24D5: nop                 ; FC
+24D6: nop                 ; FF
+24D7: inc y               ; 48
+24D8: nop                 ; A9
+24D9: add a, a            ; 24
+24DA: inc z               ; 49
+24DB: mul z, $A2          ; 44 A2
+24DD: inc y               ; 48
+24DE: ror a               ; 92
+24DF: cmp a, y            ; 52
+24E0: adc a, x            ; 2A
+24E1: inc z               ; 49
+24E2: jmp z, w            ; 95
+24E3: nop                 ; A4
+24E4: add a, a            ; 24
+24E5: jmp z, w            ; 95
+24E6: inc w               ; 4A
+24E7: cmp x, $29          ; 55 29
+24E9: cmp x, $95          ; 55 95
+24EB: nop                 ; AA
+24EC: nop                 ; AA
+24ED: cmp a, w            ; 54
+24EE: inc z               ; 49
+24EF: jmp z, w            ; 95
+24F0: cmp a, y            ; 52
+24F1: ror a               ; 92
+24F2: ror a               ; 92
+24F3: add w, $49          ; 28 49
+24F5: nop                 ; AA
+24F6: jmp x, y            ; 94
+24F7: inc y               ; 48
+24F8: ror a               ; 92
+24F9: jmp x, y            ; 94
+24FA: add a, a            ; 24
+24FB: nop                 ; 00
+24FC: nop                 ; 00
+24FD: nop                 ; FC
+24FE: nop                 ; FF
+24FF: cmp a, y            ; 52
+2500: load w, $54A9       ; 12 A9 54
+2503: add a, $49          ; 29 49
+2505: ror a               ; 92
+2506: cmp a, w            ; 54
+2507: jmp x, y            ; 94
+2508: nop                 ; A4
+2509: ror a               ; 92
+250A: nop                 ; A4
+250B: adc a, x            ; 2A
+250C: nop                 ; A9
+250D: cmp a, y            ; 52
+250E: nop                 ; A9
+250F: nop                 ; AA
+2510: nop                 ; AA
+2511: jmp x, y            ; 94
+2512: nop                 ; A4
+2513: inc w               ; 4A
+2514: ror a               ; 92
+2515: ror a               ; 92
+2516: adc a, x            ; 2A
+2517: inc z               ; 49
+2518: adc a, x            ; 2A
+2519: add a, $49          ; 29 49
+251B: ror a               ; 92
+251C: add a, a            ; 24
+251D: pop y               ; 09
+251E: nop                 ; A5
+251F: ror a               ; 92
+2520: add a, a            ; 24
+2521: add a, y            ; 21
+2522: inc z               ; 49
+2523: nop                 ; 00
+2524: nop                 ; 00
+2525: nop                 ; FC
+2526: nop                 ; FF
+2527: rol y               ; 8A
+2528: inc w               ; 4A
+2529: mul w, $22          ; 45 22
+252B: nop                 ; A5
+252C: jmp x, y            ; 94
+252D: inc w               ; 4A
+252E: add a, z            ; 22
+252F: inc z               ; 49
+2530: inc z               ; 49
+2531: nop                 ; AA
+2532: adc a, x            ; 2A
+2533: inc z               ; 49
+2534: add x, $4A          ; 25 4A
+2536: adc a, x            ; 2A
+2537: add a, $55          ; 29 55
+2539: nop                 ; A5
+253A: nop                 ; AA
+253B: cmp a, w            ; 54
+253C: cmp x, $55          ; 55 55
+253E: cmp a, y            ; 52
+253F: nop                 ; AA
+2540: nop                 ; A4
+2541: inc w               ; 4A
+2542: load w, $9249       ; 12 49 92
+2545: nop                 ; A4
+2546: inc y               ; 48
+2547: inc w               ; 4A
+2548: ror a               ; 92
+2549: jmp x, y            ; 94
+254A: add a, a            ; 24
+254B: push x              ; 01
+254C: nop                 ; 00
+254D: nop                 ; FC
+254E: nop                 ; FF
+254F: nop                 ; A4
+2550: nop                 ; A4
+2551: ror z               ; 90
+2552: jmp x, y            ; 94
+2553: load y, $2125       ; 10 25 21
+2556: inc z               ; 49
+2557: add x, $95          ; 25 95
+2559: add a, a            ; 24
+255A: inc z               ; 49
+255B: cmp x, $4A          ; 55 4A
+255D: ror w               ; 91
+255E: inc w               ; 4A
+255F: nop                 ; A5
+2560: ror a               ; 92
+2561: nop                 ; AA
+2562: adc a, x            ; 2A
+2563: add x, $29          ; 25 29
+2565: inc z               ; 49
+2566: jmp z, w            ; 95
+2567: ror a               ; 92
+2568: inc w               ; 4A
+2569: cmp a, y            ; 52
+256A: inc z               ; 49
+256B: ror a               ; 92
+256C: add a, a            ; 24
+256D: add a, $25          ; 29 25
+256F: ror w               ; 91
+2570: add a, a            ; 24
+2571: add a, z            ; 22
+2572: inc z               ; 49
+2573: nop                 ; 00
+2574: nop                 ; 00
+2575: nop                 ; FC
+2576: nop                 ; FF
+2577: load w, $5509       ; 12 09 55
+257A: cmp a, y            ; 52
+257B: inc w               ; 4A
+257C: ror z               ; 90
+257D: jmp x, y            ; 94
+257E: add a, a            ; 24
+257F: ror a               ; 92
+2580: nop                 ; A4
+2581: ror a               ; 92
+2582: cmp a, w            ; 54
+2583: ror a               ; 92
+2584: nop                 ; AA
+2585: cmp a, w            ; 54
+2586: cmp a, y            ; 52
+2587: nop                 ; AA
+2588: cmp a, w            ; 54
+2589: add a, $49          ; 29 49
+258B: nop                 ; A9
+258C: inc w               ; 4A
+258D: add x, $A9          ; 25 A9
+258F: add a, a            ; 24
+2590: add a, $89          ; 29 89
+2592: add a, a            ; 24
+2593: inc z               ; 49
+2594: ror a               ; 92
+2595: mul z, $92          ; 44 92
+2597: add a, a            ; 24
+2598: ror w               ; 91
+2599: shr a, $20          ; 88 20
+259B: push a              ; 05
+259C: nop                 ; 00
+259D: nop                 ; FC
+259E: nop                 ; FF
+259F: cmp a, w            ; 54
+25A0: cmp a, y            ; 52
+25A1: pop y               ; 09
+25A2: rol x               ; 89
+25A3: cmp a, y            ; 52
+25A4: add x, $49          ; 25 49
+25A6: ror a               ; 92
+25A7: add w, $29          ; 28 29
+25A9: nop                 ; A9
+25AA: ror a               ; 92
+25AB: cmp a, w            ; 54
+25AC: inc z               ; 49
+25AD: inc w               ; 4A
+25AE: nop                 ; A9
+25AF: adc a, x            ; 2A
+25B0: cmp x, $4A          ; 55 4A
+25B2: cmp x, $95          ; 55 95
+25B4: cmp a, w            ; 54
+25B5: nop                 ; A9
+25B6: add a, a            ; 24
+25B7: cmp x, $4A          ; 55 4A
+25B9: cmp x, $4A          ; 55 4A
+25BB: ror a               ; 92
+25BC: mul z, $92          ; 44 92
+25BE: add a, a            ; 24
+25BF: jmp z, w            ; 95
+25C0: add a, a            ; 24
+25C1: add a, z            ; 22
+25C2: inc w               ; 4A
+25C3: load y, $FC00       ; 10 00 FC
+25C6: nop                 ; FF
+25C7: add a, z            ; 22
+25C8: add a, $A4          ; 29 A4
+25CA: add a, a            ; 24
+25CB: shr x, $94          ; 84 94
+25CD: add a, a            ; 24
+25CE: inc z               ; 49
+25CF: nop                 ; A5
+25D0: mul z, $4A          ; 44 4A
+25D2: inc w               ; 4A
+25D3: add x, $A5          ; 25 A5
+25D5: ror a               ; 92
+25D6: inc w               ; 4A
+25D7: inc z               ; 49
+25D8: nop                 ; A5
+25D9: nop                 ; AA
+25DA: cmp a, y            ; 52
+25DB: nop                 ; AA
+25DC: ror a               ; 92
+25DD: inc w               ; 4A
+25DE: jmp z, w            ; 95
+25DF: nop                 ; A4
+25E0: cmp a, y            ; 52
+25E1: ror a               ; 92
+25E2: add w, $41          ; 28 41
+25E4: load w, $9249       ; 12 49 92
+25E7: dec a               ; 50
+25E8: ror a               ; 92
+25E9: jmp x, y            ; 94
+25EA: add a, x            ; 20
+25EB: mul w, $00          ; 45 00
+25ED: nop                 ; FC
+25EE: nop                 ; FF
+25EF: rol x               ; 89
+25F0: mul z, $29          ; 44 29
+25F2: inc z               ; 49
+25F3: add a, $21          ; 29 21
+25F5: inc z               ; 49
+25F6: cmp a, y            ; 52
+25F7: inc y               ; 48
+25F8: ror a               ; 92
+25F9: ror a               ; 92
+25FA: cmp a, y            ; 52
+25FB: ror a               ; 92
+25FC: jmp x, y            ; 94
+25FD: cmp a, w            ; 54
+25FE: cmp a, y            ; 52
+25FF: nop                 ; AA
+2600: jmp x, y            ; 94
+2601: cmp a, y            ; 52
+2602: inc w               ; 4A
+2603: inc z               ; 49
+2604: nop                 ; AA
+2605: jmp x, y            ; 94
+2606: nop                 ; A4
+2607: ror a               ; 92
+2608: add a, a            ; 24
+2609: inc z               ; 49
+260A: shr y, $94          ; 85 94
+260C: inc y               ; 48
+260D: add a, a            ; 24
+260E: inc z               ; 49
+260F: rol y               ; 8A
+2610: add a, a            ; 24
+2611: add a, y            ; 21
+2612: inc w               ; 4A
+2613: load y, $FC00       ; 10 00 FC
+2616: nop                 ; FF
+2617: adc a, x            ; 2A
+2618: add a, $85          ; 29 85
+261A: add a, a            ; 24
+261B: nop                 ; A5
+261C: jmp x, y            ; 94
+261D: add a, a            ; 24
+261E: pop y               ; 09
+261F: add x, $29          ; 25 29
+2621: add a, a            ; 24
+2622: inc z               ; 49
+2623: nop                 ; A9
+2624: cmp a, y            ; 52
+2625: add x, $49          ; 25 49
+2627: add a, $55          ; 29 55
+2629: inc w               ; 4A
+262A: cmp x, $55          ; 55 55
+262C: add x, $A5          ; 25 A5
+262E: cmp a, y            ; 52
+262F: inc w               ; 4A
+2630: inc w               ; 4A
+2631: add x, $29          ; 25 29
+2633: pop y               ; 09
+2634: add a, z            ; 22
+2635: ror w               ; 91
+2636: add a, a            ; 24
+2637: cmp a, x            ; 51
+2638: ror a               ; 92
+2639: jmp x, y            ; 94
+263A: add a, x            ; 20
+263B: mul w, $01          ; 45 01
+263D: nop                 ; FC
+263E: nop                 ; FF
+263F: shl z, $44          ; 81 44
+2641: add w, $49          ; 28 49
+2643: pop x               ; 08
+2644: add a, z            ; 22
+2645: inc z               ; 49
+2646: cmp a, y            ; 52
+2647: inc z               ; 49
+2648: inc w               ; 4A
+2649: inc z               ; 49
+264A: adc a, x            ; 2A
+264B: inc w               ; 4A
+264C: inc w               ; 4A
+264D: ror a               ; 92
+264E: cmp a, w            ; 54
+264F: inc w               ; 4A
+2650: inc z               ; 49
+2651: nop                 ; A9
+2652: cmp a, y            ; 52
+2653: inc w               ; 4A
+2654: cmp a, y            ; 52
+2655: cmp a, y            ; 52
+2656: adc a, x            ; 2A
+2657: nop                 ; A9
+2658: cmp a, y            ; 52
+2659: cmp a, y            ; 52
+265A: cmp a, y            ; 52
+265B: sec                 ; A2
+265C: inc y               ; 48
+265D: add a, a            ; 24
+265E: inc z               ; 49
+265F: rol y               ; 8A
+2660: add a, a            ; 24
+2661: add a, y            ; 21
+2662: inc w               ; 4A
+2663: load y, $FC04       ; 10 04 FC
+2666: nop                 ; FF
+2667: adc a, x            ; 2A
+2668: add a, $45          ; 29 45
+266A: ror a               ; 92
+266B: sec                 ; A2
+266C: shr a, $24          ; 88 24
+266E: pop y               ; 09
+266F: ror a               ; 92
+2670: add a, x            ; 20
+2671: add x, $91          ; 25 91
+2673: ror a               ; 92
+2674: add a, a            ; 24
+2675: cmp x, $92          ; 55 92
+2677: cmp a, y            ; 52
+2678: nop                 ; AA
+2679: adc a, x            ; 2A
+267A: jmp z, w            ; 95
+267B: cmp a, y            ; 52
+267C: jmp z, w            ; 95
+267D: inc w               ; 4A
+267E: inc z               ; 49
+267F: add x, $89          ; 25 89
+2681: jmp x, y            ; 94
+2682: mul z, $09          ; 44 09
+2684: add a, z            ; 22
+2685: ror w               ; 91
+2686: add a, a            ; 24
+2687: add a, y            ; 21
+2688: ror a               ; 92
+2689: jmp x, y            ; 94
+268A: add a, x            ; 20
+268B: mul w, $11          ; 45 11
+268D: nop                 ; FC
+268E: nop                 ; FF
+268F: ror z               ; 90
+2690: mul z, $91          ; 44 91
+2692: add a, a            ; 24
+2693: add w, $25          ; 28 25
+2695: inc z               ; 49
+2696: sec                 ; A2
+2697: add a, a            ; 24
+2698: jmp z, w            ; 95
+2699: ror z               ; 90
+269A: nop                 ; A4
+269B: add a, a            ; 24
+269C: nop                 ; A9
+269D: ror a               ; 92
+269E: inc w               ; 4A
+269F: nop                 ; AA
+26A0: inc w               ; 4A
+26A1: inc w               ; 4A
+26A2: inc z               ; 49
+26A3: add a, $49          ; 29 49
+26A5: cmp a, y            ; 52
+26A6: ror a               ; 92
+26A7: inc y               ; 48
+26A8: adc a, x            ; 2A
+26A9: add x, $29          ; 25 29
+26AB: nop                 ; AA
+26AC: inc y               ; 48
+26AD: add a, a            ; 24
+26AE: inc z               ; 49
+26AF: jmp x, y            ; 94
+26B0: add a, a            ; 24
+26B1: add a, z            ; 22
+26B2: pop z               ; 0A
+26B3: load y, $FC04       ; 10 04 FC
+26B6: nop                 ; FF
+26B7: inc w               ; 4A
+26B8: load w, $9244       ; 12 44 92
+26BB: shl w, $90          ; 82 90
+26BD: add a, a            ; 24
+26BE: inc z               ; 49
+26BF: ror a               ; 92
+26C0: mul z, $4A          ; 44 4A
+26C2: inc w               ; 4A
+26C3: cmp a, y            ; 52
+26C4: add x, $49          ; 25 49
+26C6: add a, a            ; 24
+26C7: inc z               ; 49
+26C8: cmp a, y            ; 52
+26C9: add a, $55          ; 29 55
+26CB: inc w               ; 4A
+26CC: cmp x, $49          ; 55 49
+26CE: cmp x, $2A          ; 55 2A
+26D0: cmp a, x            ; 51
+26D1: ror a               ; 92
+26D2: mul z, $21          ; 44 21
+26D4: push a              ; 05
+26D5: ror w               ; 91
+26D6: add a, a            ; 24
+26D7: inc z               ; 49
+26D8: ror a               ; 92
+26D9: shr a, $A0          ; 88 A0
+26DB: mul x, $52          ; 42 52
+26DD: nop                 ; FC
+26DE: nop                 ; FF
+26DF: ror a               ; 92
+26E0: nop                 ; A4
+26E1: ror a               ; 92
+26E2: add a, a            ; 24
+26E3: add a, $25          ; 29 25
+26E5: pop y               ; 09
+26E6: ror a               ; 92
+26E7: add a, a            ; 24
+26E8: ror w               ; 91
+26E9: ror a               ; 92
+26EA: ror a               ; 92
+26EB: jmp x, y            ; 94
+26EC: jmp x, y            ; 94
+26ED: cmp a, w            ; 54
+26EE: nop                 ; A9
+26EF: cmp a, y            ; 52
+26F0: add a, $A5          ; 29 A5
+26F2: cmp a, y            ; 52
+26F3: nop                 ; A5
+26F4: add a, a            ; 24
+26F5: jmp z, w            ; 95
+26F6: add a, a            ; 24
+26F7: mul w, $0A          ; 45 0A
+26F9: inc z               ; 49
+26FA: add a, $4A          ; 29 4A
+26FC: dec a               ; 50
+26FD: push w              ; 04
+26FE: inc z               ; 49
+26FF: ror a               ; 92
+2700: add a, a            ; 24
+2701: add a, z            ; 22
+2702: pop z               ; 0A
+2703: jmp x, y            ; 94
+2704: shl y, $FC          ; 80 FC
+2706: nop                 ; FF
+2707: inc y               ; 48
+2708: ror a               ; 92
+2709: inc y               ; 48
+270A: ror a               ; 92
+270B: mul z, $94          ; 44 94
+270D: nop                 ; A4
+270E: inc y               ; 48
+270F: ror a               ; 92
+2710: add a, a            ; 24
+2711: add a, a            ; 24
+2712: inc y               ; 48
+2713: add a, z            ; 22
+2714: nop                 ; A9
+2715: ror a               ; 92
+2716: mul x, $4A          ; 42 4A
+2718: inc w               ; 4A
+2719: add a, $49          ; 29 49
+271B: adc a, x            ; 2A
+271C: inc z               ; 49
+271D: cmp a, y            ; 52
+271E: ror a               ; 92
+271F: cmp a, w            ; 54
+2720: nop                 ; A9
+2721: add a, a            ; 24
+2722: ror a               ; 92
+2723: add a, a            ; 24
+2724: push a              ; 05
+2725: cmp a, x            ; 51
+2726: add a, a            ; 24
+2727: inc z               ; 49
+2728: ror a               ; 92
+2729: jmp x, y            ; 94
+272A: int $00             ; A0 00
+272C: pop z               ; 0A
+272D: nop                 ; FE
+272E: nop                 ; FF
+272F: ror a               ; 92
+2730: add a, a            ; 24
+2731: ror a               ; 92
+2732: add a, a            ; 24
+2733: load z, $0821       ; 11 21 08
+2736: ror a               ; 92
+2737: add a, a            ; 24
+2738: inc z               ; 49
+2739: rol x               ; 89
+273A: ror a               ; 92
+273B: jmp x, y            ; 94
+273C: mul z, $4A          ; 44 4A
+273E: adc a, x            ; 2A
+273F: add a, $55          ; 29 55
+2741: inc w               ; 4A
+2742: adc a, x            ; 2A
+2743: inc z               ; 49
+2744: nop                 ; AA
+2745: jmp x, y            ; 94
+2746: nop                 ; AA
+2747: add a, z            ; 22
+2748: add a, z            ; 22
+2749: nop                 ; A9
+274A: add a, a            ; 24
+274B: inc z               ; 49
+274C: nop                 ; A9
+274D: push w              ; 04
+274E: inc z               ; 49
+274F: ror a               ; 92
+2750: add a, a            ; 24
+2751: add a, y            ; 21
+2752: pop z               ; 0A
+2753: cmp x, $A0          ; 55 A0
+2755: nop                 ; FC
+2756: nop                 ; FF
+2757: inc y               ; 48
+2758: ror a               ; 92
+2759: inc y               ; 48
+275A: ror a               ; 92
+275B: mul z, $94          ; 44 94
+275D: sec                 ; A2
+275E: inc y               ; 48
+275F: ror a               ; 92
+2760: add a, a            ; 24
+2761: cmp a, y            ; 52
+2762: inc w               ; 4A
+2763: cmp a, y            ; 52
+2764: ror a               ; 92
+2765: add a, a            ; 24
+2766: inc z               ; 49
+2767: ror a               ; 92
+2768: nop                 ; A4
+2769: cmp a, y            ; 52
+276A: nop                 ; A5
+276B: cmp a, y            ; 52
+276C: inc z               ; 49
+276D: inc z               ; 49
+276E: add a, z            ; 22
+276F: inc w               ; 4A
+2770: inc z               ; 49
+2771: mul x, $92          ; 42 92
+2773: add a, a            ; 24
+2774: add a, a            ; 24
+2775: cmp a, y            ; 52
+2776: add a, a            ; 24
+2777: inc z               ; 49
+2778: ror a               ; 92
+2779: jmp x, y            ; 94
+277A: add a, x            ; 20
+277B: nop                 ; 00
+277C: pop y               ; 09
+277D: nop                 ; FC
+277E: nop                 ; FF
+277F: ror a               ; 92
+2780: mul z, $12          ; 44 12
+2782: push w              ; 04
+2783: add a, $21          ; 29 21
+2785: pop x               ; 08
+2786: shl w, $24          ; 82 24
+2788: rol x               ; 89
+2789: shr x, $90          ; 84 90
+278B: push w              ; 04
+278C: add a, $A9          ; 29 A9
+278E: jmp x, y            ; 94
+278F: nop                 ; A4
+2790: load w, $4929       ; 12 29 49
+2793: adc a, x            ; 2A
+2794: add x, $52          ; 25 52
+2796: inc z               ; 49
+2797: ror w               ; 91
+2798: jmp x, y            ; 94
+2799: jmp x, y            ; 94
+279A: add a, a            ; 24
+279B: inc z               ; 49
+279C: rol x               ; 89
+279D: push w              ; 04
+279E: inc z               ; 49
+279F: ror a               ; 92
+27A0: add a, a            ; 24
+27A1: add a, y            ; 21
+27A2: rol y               ; 8A
+27A3: inc w               ; 4A
+27A4: mul a, w            ; 40
+27A5: nop                 ; FE
+27A6: nop                 ; FF
+27A7: inc y               ; 48
+27A8: load w, $5149       ; 12 49 51
+27AB: shr x, $94          ; 84 94
+27AD: sec                 ; A2
+27AE: add w, $92          ; 28 92
+27B0: add a, a            ; 24
+27B1: cmp a, y            ; 52
+27B2: inc w               ; 4A
+27B3: cmp a, y            ; 52
+27B4: nop                 ; A5
+27B5: mul z, $52          ; 44 52
+27B7: ror a               ; 92
+27B8: cmp a, w            ; 54
+27B9: nop                 ; A5
+27BA: jmp x, y            ; 94
+27BB: nop                 ; A4
+27BC: cmp a, w            ; 54
+27BD: add x, $95          ; 25 95
+27BF: cmp a, w            ; 54
+27C0: cmp a, y            ; 52
+27C1: cmp a, y            ; 52
+27C2: ror a               ; 92
+27C3: add a, a            ; 24
+27C4: add a, z            ; 22
+27C5: cmp a, x            ; 51
+27C6: add a, a            ; 24
+27C7: inc z               ; 49
+27C8: shl w, $84          ; 82 84
+27CA: add a, x            ; 20
+27CB: add a, x            ; 20
+27CC: load w, $FFFC       ; 12 FC FF
+27CF: load w, $1244       ; 12 44 12
+27D2: push w              ; 04
+27D3: add a, $21          ; 29 21
+27D5: pop x               ; 08
+27D6: shl w, $04          ; 82 04
+27D8: rol x               ; 89
+27D9: store $9491, x      ; 14 91 94
+27DC: load y, $2529       ; 10 29 25
+27DF: inc z               ; 49
+27E0: ror a               ; 92
+27E1: store $92A5, x      ; 14 A5 92
+27E4: ror a               ; 92
+27E5: jmp x, y            ; 94
+27E6: add a, a            ; 24
+27E7: rol x               ; 89
+27E8: shr x, $84          ; 84 84
+27EA: add a, a            ; 24
+27EB: rol x               ; 89
+27EC: inc y               ; 48
+27ED: store $9249, x      ; 14 49 92
+27F0: add w, $29          ; 28 29
+27F2: rol y               ; 8A
+27F3: rol y               ; 8A
+27F4: push w              ; 04
+27F5: nop                 ; FD
+27F6: nop                 ; FF
+27F7: inc y               ; 48
+27F8: load z, $5149       ; 11 49 51
+27FB: shl y, $84          ; 80 84
+27FD: sec                 ; A2
+27FE: add w, $52          ; 28 52
+2800: add a, a            ; 24
+2801: mul x, $44          ; 42 44
+2803: add a, z            ; 22
+2804: inc w               ; 4A
+2805: ror a               ; 92
+2806: jmp x, y            ; 94
+2807: add a, a            ; 24
+2808: add x, $A9          ; 25 A9
+280A: jmp x, y            ; 94
+280B: cmp a, w            ; 54
+280C: inc w               ; 4A
+280D: cmp a, y            ; 52
+280E: cmp a, y            ; 52
+280F: cmp a, y            ; 52
+2810: cmp a, y            ; 52
+2811: cmp a, y            ; 52
+2812: ror a               ; 92
+2813: add a, a            ; 24
+2814: add x, $41          ; 25 41
+2816: add a, a            ; 24
+2817: pop y               ; 09
+2818: shl w, $80          ; 82 80
+281A: add a, x            ; 20
+281B: add a, x            ; 20
+281C: add a, x            ; 20
+281D: nop                 ; FC
+281E: nop                 ; FF
+281F: load w, $1244       ; 12 44 12
+2822: shr x, $2A          ; 84 2A
+2824: add a, $08          ; 29 08
+2826: shl w, $04          ; 82 04
+2828: rol x               ; 89
+2829: jmp x, y            ; 94
+282A: ror a               ; 92
+282B: shr a, $52          ; 88 52
+282D: inc z               ; 49
+282E: add a, z            ; 22
+282F: inc z               ; 49
+2830: nop                 ; A9
+2831: ror a               ; 92
+2832: cmp a, y            ; 52
+2833: rol y               ; 8A
+2834: cmp a, y            ; 52
+2835: add x, $89          ; 25 89
+2837: rol y               ; 8A
+2838: jmp x, y            ; 94
+2839: jmp x, y            ; 94
+283A: add a, a            ; 24
+283B: inc z               ; 49
+283C: inc y               ; 48
+283D: store $A241, x      ; 14 41 A2
+2840: add w, $2A          ; 28 2A
+2842: rol y               ; 8A
+2843: pop z               ; 0A
+2844: pop y               ; 09
+2845: nop                 ; FD
+2846: nop                 ; FF
+2847: inc y               ; 48
+2848: load z, $5141       ; 11 41 51
+284B: shl y, $80          ; 80 80
+284D: sec                 ; A2
+284E: add w, $52          ; 28 52
+2850: add a, a            ; 24
+2851: mul x, $48          ; 42 48
+2853: cmp a, y            ; 52
+2854: shr x, $24          ; 84 24
+2856: inc z               ; 49
+2857: add x, $4A          ; 25 4A
+2859: inc w               ; 4A
+285A: inc w               ; 4A
+285B: nop                 ; A9
+285C: add a, a            ; 24
+285D: inc z               ; 49
+285E: cmp a, y            ; 52
+285F: add a, a            ; 24
+2860: mul a, a            ; 41
+2861: mul x, $92          ; 42 92
+2863: add a, a            ; 24
+2864: add x, $A1          ; 25 A1
+2866: store $8209, x      ; 14 09 82
+2869: shl y, $20          ; 80 20
+286B: add a, x            ; 20
+286C: mul z, $FC          ; 44 FC
+286E: nop                 ; FF
+286F: load w, $1444       ; 12 44 14
 2872: push w              ; 04
-2873: cmp a, a            ; 89
-2874: and y, z            ; 94
-2875: and x, a            ; 92
-2876: cmp a, w            ; 88
-2877: mul x, a            ; 52
-2878: sub a, x            ; 49
-2879: add y, y            ; 22
-287A: sub a, x            ; 49
-287B: or y, w             ; A9
-287C: and x, a            ; 92
-287D: mul x, a            ; 52
-287E: cmpbit x            ; 8A 52
-2880: add y, a            ; 25
-2881: cmp a, a            ; 89
-2882: cmpbit x            ; 8A 94
-2884: and y, z            ; 94
-2885: add y, w            ; 24
-2886: sub a, x            ; 49
-2887: sub w, a            ; 48
-2888: store $A241, a      ; 14 41 A2
-288B: add z, z            ; 28
-288C: add z, a            ; 2A
-288D: cmpbit x            ; 8A 0A
-288F: pop w               ; 09
-2890: nop                 ; FD
-2891: nop                 ; FF
-2892: sub w, a            ; 48
-2893: store $5141, y      ; 11 41 51
-2896: cmp w, x            ; 80
-2897: cmp w, x            ; 80
-2898: and a, w            ; A2
-2899: add z, z            ; 28
-289A: mul x, a            ; 52
-289B: add y, w            ; 24
-289C: sub z, w            ; 42
-289D: sub w, a            ; 48
-289E: mul x, a            ; 52
-289F: cmp w, a            ; 84
-28A0: add y, w            ; 24
-28A1: sub a, x            ; 49
-28A2: add y, a            ; 25
-28A3: sub a, y            ; 4A
-28A4: sub a, y            ; 4A
-28A5: sub a, y            ; 4A
-28A6: or y, w             ; A9
-28A7: add y, w            ; 24
-28A8: sub a, x            ; 49
-28A9: mul x, a            ; 52
-28AA: add y, w            ; 24
-28AB: sub z, z            ; 41
-28AC: sub z, w            ; 42
-28AD: and x, a            ; 92
-28AE: add y, w            ; 24
-28AF: add y, a            ; 25
-28B0: and a, z            ; A1
-28B1: store $8209, a      ; 14 09 82
-28B4: cmp w, x            ; 80
-28B5: add x, a            ; 20
-28B6: add x, a            ; 20
-28B7: sub w, x            ; 44
-28B8: nop                 ; FC
-28B9: nop                 ; FF
-28BA: store $1444, z      ; 12 44 14
-28BD: push w              ; 04
-28BE: add z, a            ; 2A
-28BF: add z, a            ; 2A
-28C0: pop z               ; 08
-28C1: cmp w, z            ; 82
+2873: adc a, x            ; 2A
+2874: adc a, x            ; 2A
+2875: pop x               ; 08
+2876: shl w, $04          ; 82 04
+2878: rol x               ; 89
+2879: jmp x, y            ; 94
+287A: ror a               ; 92
+287B: add a, a            ; 24
+287C: add a, $92          ; 29 92
+287E: jmp x, y            ; 94
+287F: ror z               ; 90
+2880: add a, z            ; 22
+2881: nop                 ; A9
+2882: add a, a            ; 24
+2883: add x, $49          ; 25 49
+2885: ror a               ; 92
+2886: add a, a            ; 24
+2887: nop                 ; A9
+2888: jmp x, y            ; 94
+2889: jmp x, y            ; 94
+288A: add a, a            ; 24
+288B: rol x               ; 89
+288C: inc y               ; 48
+288D: pop z               ; 0A
+288E: mul a, a            ; 41
+288F: sec                 ; A2
+2890: add w, $2A          ; 28 2A
+2892: rol y               ; 8A
+2893: mul z, $01          ; 44 01
+2895: nop                 ; FC
+2896: nop                 ; FF
+2897: inc y               ; 48
+2898: load z, $5141       ; 11 41 51
+289B: shl z, $80          ; 81 80
+289D: sec                 ; A2
+289E: add w, $50          ; 28 50
+28A0: add a, a            ; 24
+28A1: mul x, $48          ; 42 48
+28A3: ror a               ; 92
+28A4: nop                 ; A4
+28A5: add a, a            ; 24
+28A6: cmp a, x            ; 51
+28A7: inc w               ; 4A
+28A8: jmp x, y            ; 94
+28A9: add a, a            ; 24
+28AA: nop                 ; A9
+28AB: jmp x, y            ; 94
+28AC: adc a, x            ; 2A
+28AD: inc z               ; 49
+28AE: ror a               ; 92
+28AF: shr x, $52          ; 84 52
+28B1: add a, z            ; 22
+28B2: ror a               ; 92
+28B3: add a, a            ; 24
+28B4: add a, z            ; 22
+28B5: resume              ; A1
+28B6: store $8209, x      ; 14 09 82
+28B9: shl y, $20          ; 80 20
+28BB: load w, $FD28       ; 12 28 FD
+28BE: nop                 ; FF
+28BF: load w, $1444       ; 12 44 14
 28C2: push w              ; 04
-28C3: cmp a, a            ; 89
-28C4: and y, z            ; 94
-28C5: and x, a            ; 92
-28C6: add y, w            ; 24
-28C7: add z, w            ; 29
-28C8: and x, a            ; 92
-28C9: and y, z            ; 94
-28CA: and x, z            ; 90
-28CB: add y, y            ; 22
-28CC: or y, w             ; A9
-28CD: add y, w            ; 24
-28CE: add y, a            ; 25
-28CF: sub a, x            ; 49
-28D0: and x, a            ; 92
-28D1: add y, w            ; 24
-28D2: or y, w             ; A9
-28D3: and y, z            ; 94
-28D4: and y, z            ; 94
-28D5: add y, w            ; 24
-28D6: cmp a, a            ; 89
-28D7: sub w, a            ; 48
-28D8: pop a               ; 0A
-28D9: sub z, z            ; 41
-28DA: and a, w            ; A2
-28DB: add z, z            ; 28
-28DC: add z, a            ; 2A
-28DD: cmpbit x            ; 8A 44
-28DF: push x              ; 01
-28E0: nop                 ; FC
-28E1: nop                 ; FF
-28E2: sub w, a            ; 48
-28E3: store $5141, y      ; 11 41 51
-28E6: cmp w, y            ; 81
-28E7: cmp w, x            ; 80
-28E8: and a, w            ; A2
-28E9: add z, z            ; 28
-28EA: mul x, z            ; 50
-28EB: add y, w            ; 24
-28EC: sub z, w            ; 42
-28ED: sub w, a            ; 48
-28EE: and x, a            ; 92
-28EF: or x, z             ; A4
-28F0: add y, w            ; 24
-28F1: mul x, w            ; 51
-28F2: sub a, y            ; 4A
-28F3: and y, z            ; 94
-28F4: add y, w            ; 24
-28F5: or y, w             ; A9
-28F6: and y, z            ; 94
-28F7: add z, a            ; 2A
-28F8: sub a, x            ; 49
-28F9: and x, a            ; 92
-28FA: cmp w, a            ; 84
-28FB: mul x, a            ; 52
-28FC: add y, y            ; 22
-28FD: and x, a            ; 92
-28FE: add y, w            ; 24
-28FF: add y, y            ; 22
-2900: and a, z            ; A1
-2901: store $8209, a      ; 14 09 82
-2904: cmp w, x            ; 80
-2905: add x, a            ; 20
-2906: store $FD28, z      ; 12 28 FD
-2909: nop                 ; FF
-290A: store $1444, z      ; 12 44 14
-290D: push w              ; 04
-290E: add z, z            ; 28
-290F: add z, a            ; 2A
-2910: pop z               ; 08
-2911: sub z, w            ; 42
-2912: push a              ; 05
-2913: cmp a, a            ; 89
-2914: and x, z            ; 90
-2915: and x, a            ; 92
-2916: add y, w            ; 24
-2917: pop w               ; 09
-2918: sub a, x            ; 49
-2919: cmpbit x            ; 8A 24
-291B: or x, w             ; A5
-291C: and x, a            ; 92
-291D: sub a, y            ; 4A
-291E: and a, w            ; A2
-291F: sub w, x            ; 44
-2920: add z, a            ; 2A
-2921: sub a, x            ; 49
-2922: mul x, a            ; 52
-2923: cmp w, a            ; 84
-2924: cmp a, w            ; 88
-2925: add y, w            ; 24
-2926: cmp a, a            ; 89
-2927: pop z               ; 08
-2928: pop a               ; 0A
-2929: sub z, z            ; 41
-292A: and a, w            ; A2
-292B: add z, z            ; 28
-292C: add z, a            ; 2A
-292D: cmp a, a            ; 89
-292E: sub z, y            ; 40
-292F: push y              ; 02
-2930: nop                 ; FC
-2931: nop                 ; FF
-2932: sub w, a            ; 48
-2933: store $5141, y      ; 11 41 51
-2936: cmp a, x            ; 85
-2937: cmp w, x            ; 80
-2938: and a, w            ; A2
-2939: pop z               ; 08
-293A: mul x, z            ; 50
-293B: add x, a            ; 20
-293C: pop a               ; 0A
-293D: sub w, a            ; 48
-293E: and x, a            ; 92
-293F: or x, z             ; A4
-2940: add y, w            ; 24
-2941: mul x, w            ; 51
-2942: and x, a            ; 92
-2943: store $9249, x      ; 10 49 92
-2946: add z, a            ; 2A
-2947: add z, w            ; 29
-2948: and x, w            ; 91
-2949: add y, w            ; 24
-294A: pop w               ; 09
-294B: add z, w            ; 29
-294C: mul x, a            ; 52
-294D: and x, a            ; 92
-294E: add y, w            ; 24
-294F: or x, w             ; A5
-2950: add x, a            ; 20
-2951: store $8209, a      ; 14 09 82
+28C3: add w, $2A          ; 28 2A
+28C5: pop x               ; 08
+28C6: mul x, $05          ; 42 05
+28C8: rol x               ; 89
+28C9: ror z               ; 90
+28CA: ror a               ; 92
+28CB: add a, a            ; 24
+28CC: pop y               ; 09
+28CD: inc z               ; 49
+28CE: rol y               ; 8A
+28CF: add a, a            ; 24
+28D0: nop                 ; A5
+28D1: ror a               ; 92
+28D2: inc w               ; 4A
+28D3: sec                 ; A2
+28D4: mul z, $2A          ; 44 2A
+28D6: inc z               ; 49
+28D7: cmp a, y            ; 52
+28D8: shr x, $88          ; 84 88
+28DA: add a, a            ; 24
+28DB: rol x               ; 89
+28DC: pop x               ; 08
+28DD: pop z               ; 0A
+28DE: mul a, a            ; 41
+28DF: sec                 ; A2
+28E0: add w, $2A          ; 28 2A
+28E2: rol x               ; 89
+28E3: mul a, w            ; 40
+28E4: push y              ; 02
+28E5: nop                 ; FC
+28E6: nop                 ; FF
+28E7: inc y               ; 48
+28E8: load z, $5141       ; 11 41 51
+28EB: shr y, $80          ; 85 80
+28ED: sec                 ; A2
+28EE: pop x               ; 08
+28EF: dec a               ; 50
+28F0: add a, x            ; 20
+28F1: pop z               ; 0A
+28F2: inc y               ; 48
+28F3: ror a               ; 92
+28F4: nop                 ; A4
+28F5: add a, a            ; 24
+28F6: cmp a, x            ; 51
+28F7: ror a               ; 92
+28F8: load y, $9249       ; 10 49 92
+28FB: adc a, x            ; 2A
+28FC: add a, $91          ; 29 91
+28FE: add a, a            ; 24
+28FF: pop y               ; 09
+2900: add a, $52          ; 29 52
+2902: ror a               ; 92
+2903: add a, a            ; 24
+2904: nop                 ; A5
+2905: add a, x            ; 20
+2906: store $8209, x      ; 14 09 82
+2909: nop                 ; 00
+290A: mul z, $04          ; 44 04
+290C: ror w               ; 91
+290D: nop                 ; FC
+290E: nop                 ; FF
+290F: nop                 ; 00
+2910: store $6C66, a      ; 18 66 6C
+2913: store $3846, a      ; 18 46 38
+2916: store $0C30, a      ; 18 30 0C
+2919: sub a, z            ; 36
+291A: nop                 ; 00
+291B: nop                 ; 00
+291C: nop                 ; 00
+291D: nop                 ; 00
+291E: mul a, w            ; 40
+291F: sub a, $18          ; 3C 18
+2921: sub a, $3C          ; 3C 3C
+2923: sub x, $7E          ; 38 7E
+2925: sub a, $7E          ; 3C 7E
+2927: sub a, $3C          ; 3C 3C
+2929: nop                 ; 00
+292A: nop                 ; 00
+292B: and a, y            ; 60
+292C: nop                 ; 00
+292D: pop a               ; 0C
+292E: sub a, $3C          ; 3C 3C
+2930: sub a, $3E          ; 3C 3E
+2932: sub a, $3E          ; 3C 3E
+2934: xor a, $7E          ; 7E 7E
+2936: sub a, $66          ; 3C 66
+2938: sub a, $60          ; 3C 60
+293A: and w, $06          ; 66 06
+293C: and x, $66          ; 63 66
+293E: sub a, $3E          ; 3C 3E
+2940: sub a, $3E          ; 3C 3E
+2942: sub a, $7E          ; 3C 7E
+2944: and w, $66          ; 66 66
+2946: and x, $66          ; 63 66
+2948: and w, $7E          ; 66 7E
+294A: sub a, $02          ; 3C 02
+294C: sub a, $10          ; 3C 10
+294E: nop                 ; 00
+294F: store $0600, a      ; 18 00 06
+2952: nop                 ; 00
+2953: and a, y            ; 60
 2954: nop                 ; 00
-2955: sub w, x            ; 44
-2956: push w              ; 04
-2957: and x, w            ; 91
-2958: nop                 ; FC
-2959: nop                 ; FF
+2955: or a, $00           ; 70 00
+2957: push.a              ; 06
+2958: store $0660, a      ; 18 60 06
+295B: sub x, $00          ; 38 00
+295D: nop                 ; 00
+295E: nop                 ; 00
+295F: nop                 ; 00
+2960: nop                 ; 00
+2961: nop                 ; 00
+2962: nop                 ; 00
+2963: store $0000, a      ; 18 00 00
+2966: nop                 ; 00
+2967: nop                 ; 00
+2968: nop                 ; 00
+2969: nop                 ; 00
+296A: nop                 ; 00
+296B: nop                 ; 00
+296C: nop                 ; 00
+296D: nop                 ; 00
+296E: nop                 ; 00
+296F: nop                 ; 00
+2970: store $FE66, a      ; 18 66 FE
+2973: xor z, $66          ; 7C 66
+2975: or x, $18           ; 6C 18
+2977: store $1C18, a      ; 18 18 1C
+297A: load y, $0000       ; 10 00 00
+297D: nop                 ; 00
+297E: and a, y            ; 60
+297F: and w, $1C          ; 66 1C
+2981: and w, $66          ; 66 66
+2983: sub a, $06          ; 3C 06
+2985: and w, $60          ; 66 60
+2987: and w, $66          ; 66 66
+2989: store $3018, a      ; 18 18 30
+298C: nop                 ; 00
+298D: store $4262, a      ; 18 62 42
+2990: and w, $66          ; 66 66
+2992: and w, $66          ; 66 66
+2994: push.a              ; 06
+2995: push.a              ; 06
+2996: and w, $66          ; 66 66
+2998: store $3660, a      ; 18 60 36
+299B: push.a              ; 06
+299C: xor a, y            ; 77
+299D: and w, $66          ; 66 66
+299F: and w, $66          ; 66 66
+29A1: and w, $66          ; 66 66
+29A3: store $6666, a      ; 18 66 66
+29A6: and x, $66          ; 63 66
+29A8: and w, $60          ; 66 60
+29AA: pop a               ; 0C
+29AB: push.a              ; 06
+29AC: adc y, $38          ; 30 38
+29AE: nop                 ; 00
+29AF: adc y, $00          ; 30 00
+29B1: push.a              ; 06
+29B2: nop                 ; 00
+29B3: and a, y            ; 60
+29B4: nop                 ; 00
+29B5: store $0600, a      ; 18 00 06
+29B8: nop                 ; 00
+29B9: nop                 ; 00
+29BA: push.a              ; 06
+29BB: adc y, $00          ; 30 00
+29BD: nop                 ; 00
+29BE: nop                 ; 00
+29BF: nop                 ; 00
+29C0: nop                 ; 00
+29C1: nop                 ; 00
+29C2: nop                 ; 00
+29C3: store $0000, a      ; 18 00 00
+29C6: nop                 ; 00
+29C7: nop                 ; 00
+29C8: nop                 ; 00
+29C9: nop                 ; 00
+29CA: nop                 ; 00
+29CB: nop                 ; 00
+29CC: nop                 ; 00
+29CD: nop                 ; 00
+29CE: nop                 ; 00
+29CF: nop                 ; 00
+29D0: store $6C66, a      ; 18 66 6C
+29D3: push.a              ; 06
+29D4: adc y, $6C          ; 30 6C
+29D6: store $300C, a      ; 18 0C 30
+29D9: shl x, $10          ; 7F 10
+29DB: nop                 ; 00
+29DC: nop                 ; 00
+29DD: nop                 ; 00
+29DE: adc y, $66          ; 30 66
+29E0: store $6060, a      ; 18 60 60
+29E3: sub a, z            ; 36
+29E4: mul a, y            ; 3E
+29E5: push.a              ; 06
+29E6: adc y, $66          ; 30 66
+29E8: and w, $18          ; 66 18
+29EA: store $7E18, a      ; 18 18 7E
+29ED: adc y, $60          ; 30 60
+29EF: jmp $6666, w        ; 99 66 66
+29F2: push.a              ; 06
+29F3: and w, $06          ; 66 06
+29F5: push.a              ; 06
+29F6: push.a              ; 06
+29F7: and w, $18          ; 66 18
+29F9: and a, y            ; 60
+29FA: set w, $06          ; 1E 06
+29FC: shl x, $6E          ; 7F 6E
+29FE: and w, $66          ; 66 66
+2A00: and w, $66          ; 66 66
+2A02: push.a              ; 06
+2A03: store $6666, a      ; 18 66 66
+2A06: and x, $3C          ; 63 3C
+2A08: and w, $30          ; 66 30
+2A0A: pop a               ; 0C
+2A0B: pop a               ; 0C
+2A0C: adc y, $6C          ; 30 6C
+2A0E: nop                 ; 00
+2A0F: nop                 ; 00
+2A10: sub a, $3E          ; 3C 3E
+2A12: sub a, $7C          ; 3C 7C
+2A14: sub a, $3C          ; 3C 3C
+2A16: xor z, $3E          ; 7C 3E
+2A18: set y, $70          ; 1C 70
+2A1A: and w, $30          ; 66 30
+2A1C: sub a, w            ; 37
+2A1D: mul a, y            ; 3E
+2A1E: sub a, $3E          ; 3C 3E
+2A20: xor z, $76          ; 7C 76
+2A22: xor z, $3C          ; 7C 3C
+2A24: and w, $66          ; 66 66
+2A26: or a, w             ; 6B
+2A27: and w, $66          ; 66 66
+2A29: xor a, $00          ; 7E 00
+2A2B: nop                 ; 00
+2A2C: nop                 ; 00
+2A2D: nop                 ; 00
+2A2E: nop                 ; 00
+2A2F: nop                 ; 00
+2A30: store $6C00, a      ; 18 00 6C
+2A33: sub a, $18          ; 3C 18
+2A35: sub x, $00          ; 38 00
+2A37: pop a               ; 0C
+2A38: adc y, $1C          ; 30 1C
+2A3A: xor z, $00          ; 7C 00
+2A3C: xor a, $00          ; 7E 00
+2A3E: store $1866, a      ; 18 66 18
+2A41: sub x, $38          ; 38 38
+2A43: sub a, z            ; 36
+2A44: and a, y            ; 60
+2A45: mul a, y            ; 3E
+2A46: store $7C3C, a      ; 18 3C 7C
+2A49: nop                 ; 00
+2A4A: nop                 ; 00
+2A4B: pop a               ; 0C
+2A4C: nop                 ; 00
+2A4D: and a, y            ; 60
+2A4E: sub x, $A5          ; 38 A5
+2A50: xor a, $3E          ; 7E 3E
+2A52: push.a              ; 06
+2A53: and w, $1E          ; 66 1E
+2A55: set w, $76          ; 1E 76
+2A57: xor a, $18          ; 7E 18
+2A59: and a, y            ; 60
+2A5A: pop.f               ; 0E
+2A5B: push.a              ; 06
+2A5C: or a, w             ; 6B
+2A5D: xor a, $66          ; 7E 66
+2A5F: mul a, y            ; 3E
+2A60: and w, $3E          ; 66 3E
+2A62: sub a, $18          ; 3C 18
+2A64: and w, $66          ; 66 66
+2A66: or a, w             ; 6B
+2A67: store $183C, a      ; 18 3C 18
+2A6A: pop a               ; 0C
+2A6B: store $4430, a      ; 18 30 44
+2A6E: nop                 ; 00
+2A6F: nop                 ; 00
+2A70: and a, y            ; 60
+2A71: and w, $66          ; 66 66
+2A73: and w, $66          ; 66 66
+2A75: store $6666, a      ; 18 66 66
+2A78: store $3660, a      ; 18 60 36
+2A7B: adc y, $7F          ; 30 7F
+2A7D: and w, $66          ; 66 66
+2A7F: and w, $66          ; 66 66
+2A81: pop.f               ; 0E
+2A82: push.a              ; 06
+2A83: store $6666, a      ; 18 66 66
+2A86: or a, w             ; 6B
+2A87: sub a, $66          ; 3C 66
+2A89: adc y, $00          ; 30 00
+2A8B: nop                 ; 00
+2A8C: nop                 ; 00
+2A8D: nop                 ; 00
+2A8E: nop                 ; 00
+2A8F: nop                 ; 00
+2A90: store $6C00, a      ; 18 00 6C
+2A93: and a, y            ; 60
+2A94: pop a               ; 0C
+2A95: nop                 ; EC
+2A96: nop                 ; 00
+2A97: pop a               ; 0C
+2A98: adc y, $36          ; 30 36
+2A9A: load y, $0018       ; 10 18 00
+2A9D: nop                 ; 00
+2A9E: pop a               ; 0C
+2A9F: and w, $18          ; 66 18
+2AA1: pop a               ; 0C
+2AA2: and a, y            ; 60
+2AA3: xor a, $60          ; 7E 60
+2AA5: and w, $18          ; 66 18
+2AA7: and w, $60          ; 66 60
+2AA9: store $1818, a      ; 18 18 18
+2AAC: xor a, $30          ; 7E 30
+2AAE: store $66A5, a      ; 18 A5 66
+2AB1: and w, $06          ; 66 06
+2AB3: and w, $06          ; 66 06
+2AB5: push.a              ; 06
+2AB6: and w, $66          ; 66 66
+2AB8: store $1E60, a      ; 18 60 1E
+2ABB: push.a              ; 06
+2ABC: and x, $76          ; 63 76
+2ABE: and w, $06          ; 66 06
+2AC0: and w, $1E          ; 66 1E
+2AC2: and a, y            ; 60
+2AC3: store $6666, a      ; 18 66 66
+2AC6: shl x, $3C          ; 7F 3C
+2AC8: store $0C0C, a      ; 18 0C 0C
+2ACB: adc y, $30          ; 30 30
+2ACD: nop                 ; 00
+2ACE: nop                 ; 00
+2ACF: nop                 ; 00
+2AD0: xor z, $66          ; 7C 66
+2AD2: push.a              ; 06
+2AD3: and w, $3E          ; 66 3E
+2AD5: store $6666, a      ; 18 66 66
+2AD8: store $1E60, a      ; 18 60 1E
+2ADB: adc y, $6B          ; 30 6B
+2ADD: and w, $66          ; 66 66
+2ADF: and w, $66          ; 66 66
+2AE1: push.a              ; 06
+2AE2: sub a, $18          ; 3C 18
+2AE4: and w, $66          ; 66 66
+2AE6: shl x, $18          ; 7F 18
+2AE8: and w, $18          ; 66 18
+2AEA: nop                 ; 00
+2AEB: nop                 ; 00
+2AEC: nop                 ; 00
+2AED: nop                 ; 00
+2AEE: nop                 ; 00
+2AEF: nop                 ; 00
+2AF0: nop                 ; 00
+2AF1: nop                 ; 00
+2AF2: nop                 ; FE
+2AF3: mul a, y            ; 3E
+2AF4: and w, $66          ; 66 66
+2AF6: nop                 ; 00
+2AF7: store $0018, a      ; 18 18 00
+2AFA: load y, $0018       ; 10 18 00
+2AFD: store $6606, a      ; 18 06 66
+2B00: store $6606, a      ; 18 06 66
+2B03: adc y, $66          ; 30 66
+2B05: and w, $18          ; 66 18
+2B07: and w, $66          ; 66 66
+2B09: store $3018, a      ; 18 18 30
+2B0C: nop                 ; 00
+2B0D: store $7900, a      ; 18 00 79
+2B10: and w, $66          ; 66 66
+2B12: and w, $66          ; 66 66
+2B14: push.a              ; 06
+2B15: push.a              ; 06
+2B16: and w, $66          ; 66 66
+2B18: store $3666, a      ; 18 66 36
+2B1B: push.a              ; 06
+2B1C: and x, $66          ; 63 66
+2B1E: and w, $06          ; 66 06
+2B20: and w, $36          ; 66 36
+2B22: and w, $18          ; 66 18
+2B24: and w, $3C          ; 66 3C
+2B26: xor a, y            ; 77
+2B27: and w, $18          ; 66 18
+2B29: push.a              ; 06
+2B2A: pop a               ; 0C
+2B2B: and a, y            ; 60
+2B2C: adc y, $00          ; 30 00
+2B2E: nop                 ; 00
+2B2F: nop                 ; 00
+2B30: and w, $66          ; 66 66
+2B32: and w, $66          ; 66 66
+2B34: push.a              ; 06
+2B35: store $667C, a      ; 18 7C 66
+2B38: store $3660, a      ; 18 60 36
+2B3B: adc y, $6B          ; 30 6B
+2B3D: and w, $66          ; 66 66
+2B3F: and w, $66          ; 66 66
+2B41: push.a              ; 06
+2B42: and a, y            ; 60
+2B43: store $3C66, a      ; 18 66 3C
+2B46: mul a, y            ; 3E
+2B47: sub a, $7C          ; 3C 7C
+2B49: pop a               ; 0C
+2B4A: nop                 ; 00
+2B4B: nop                 ; 00
+2B4C: nop                 ; 00
+2B4D: nop                 ; 00
+2B4E: nop                 ; 00
+2B4F: nop                 ; 00
+2B50: store $6C00, a      ; 18 00 6C
+2B53: store $FC62, a      ; 18 62 FC
+2B56: nop                 ; 00
+2B57: adc y, $0C          ; 30 0C
+2B59: nop                 ; 00
+2B5A: nop                 ; 00
+2B5B: pop a               ; 0C
+2B5C: nop                 ; 00
+2B5D: store $3C02, a      ; 18 02 3C
+2B60: xor a, $7E          ; 7E 7E
+2B62: sub a, $78          ; 3C 78
+2B64: sub a, $3C          ; 3C 3C
+2B66: store $3C3C, a      ; 18 3C 3C
+2B69: nop                 ; 00
+2B6A: pop x               ; 08
+2B6B: and a, y            ; 60
+2B6C: nop                 ; 00
+2B6D: pop a               ; 0C
+2B6E: store $6602, a      ; 18 02 66
+2B71: mul a, y            ; 3E
+2B72: sub a, $3E          ; 3C 3E
+2B74: xor a, $06          ; 7E 06
+2B76: sub a, $66          ; 3C 66
+2B78: sub a, $3C          ; 3C 3C
+2B7A: and w, $7E          ; 66 7E
+2B7C: and x, $66          ; 63 66
+2B7E: sub a, $06          ; 3C 06
+2B80: sub a, $66          ; 3C 66
+2B82: sub a, $18          ; 3C 18
+2B84: sub a, $18          ; 3C 18
+2B86: and x, $66          ; 63 66
+2B88: store $3C7E, a      ; 18 7E 3C
+2B8B: mul a, w            ; 40
+2B8C: sub a, $00          ; 3C 00
+2B8E: nop                 ; 00
+2B8F: nop                 ; 00
+2B90: xor z, $3E          ; 7C 3E
+2B92: sub a, $7C          ; 3C 7C
+2B94: xor z, $18          ; 7C 18
+2B96: and a, y            ; 60
+2B97: and w, $3C          ; 66 3C
+2B99: and w, $66          ; 66 66
+2B9B: xor a, z            ; 78
+2B9C: or a, w             ; 6B
+2B9D: and w, $3C          ; 66 3C
+2B9F: mul a, y            ; 3E
+2BA0: xor z, $06          ; 7C 06
+2BA2: mul a, y            ; 3E
+2BA3: adc y, $7C          ; 30 7C
+2BA5: store $6636, a      ; 18 36 66
+2BA8: and a, y            ; 60
+2BA9: xor a, $00          ; 7E 00
+2BAB: nop                 ; 00
+2BAC: nop                 ; 00
+2BAD: nop                 ; 00
+2BAE: nop                 ; 00
+2BAF: nop                 ; 00
+2BB0: nop                 ; 00
+2BB1: nop                 ; 00
+2BB2: nop                 ; 00
+2BB3: nop                 ; 00
+2BB4: nop                 ; 00
+2BB5: nop                 ; 00
+2BB6: nop                 ; 00
+2BB7: nop                 ; 00
+2BB8: nop                 ; 00
+2BB9: nop                 ; 00
+2BBA: nop                 ; 00
+2BBB: nop                 ; 00
+2BBC: nop                 ; 00
+2BBD: nop                 ; 00
+2BBE: nop                 ; 00
+2BBF: nop                 ; 00
+2BC0: nop                 ; 00
+2BC1: nop                 ; 00
+2BC2: nop                 ; 00
+2BC3: nop                 ; 00
+2BC4: nop                 ; 00
+2BC5: nop                 ; 00
+2BC6: nop                 ; 00
+2BC7: nop                 ; 00
+2BC8: nop                 ; 00
+2BC9: nop                 ; 00
+2BCA: nop                 ; 00
+2BCB: nop                 ; 00
+2BCC: nop                 ; 00
+2BCD: nop                 ; 00
+2BCE: nop                 ; 00
+2BCF: sub a, $00          ; 3C 00
+2BD1: nop                 ; 00
+2BD2: nop                 ; 00
+2BD3: nop                 ; 00
+2BD4: nop                 ; 00
+2BD5: nop                 ; 00
+2BD6: nop                 ; 00
+2BD7: nop                 ; 00
+2BD8: nop                 ; 00
+2BD9: nop                 ; 00
+2BDA: nop                 ; 00
+2BDB: nop                 ; 00
+2BDC: nop                 ; 00
+2BDD: nop                 ; 00
+2BDE: nop                 ; 00
+2BDF: nop                 ; 00
+2BE0: and a, y            ; 60
+2BE1: nop                 ; 00
+2BE2: nop                 ; 00
+2BE3: nop                 ; 00
+2BE4: nop                 ; 00
+2BE5: nop                 ; 00
+2BE6: nop                 ; 00
+2BE7: nop                 ; 00
+2BE8: nop                 ; 00
+2BE9: nop                 ; 00
+2BEA: nop                 ; 00
+2BEB: nop                 ; 00
+2BEC: nop                 ; 00
+2BED: nop                 ; 00
+2BEE: nop                 ; FF
+2BEF: nop                 ; 00
+2BF0: nop                 ; 00
+2BF1: nop                 ; 00
+2BF2: nop                 ; 00
+2BF3: nop                 ; 00
+2BF4: nop                 ; 00
+2BF5: nop                 ; 00
+2BF6: sub a, $00          ; 3C 00
+2BF8: nop                 ; 00
+2BF9: sub a, $00          ; 3C 00
+2BFB: nop                 ; 00
+2BFC: nop                 ; 00
+2BFD: nop                 ; 00
+2BFE: nop                 ; 00
+2BFF: push.a              ; 06
+2C00: and a, y            ; 60
+2C01: nop                 ; 00
+2C02: nop                 ; 00
+2C03: nop                 ; 00
+2C04: nop                 ; 00
+2C05: nop                 ; 00
+2C06: nop                 ; 00
+2C07: nop                 ; 00
+2C08: sub a, $00          ; 3C 00
+2C0A: nop                 ; 00
+2C0B: nop                 ; 00
+2C0C: nop                 ; 00
+2C0D: nop                 ; 00
+2C0E: nop                 ; 00

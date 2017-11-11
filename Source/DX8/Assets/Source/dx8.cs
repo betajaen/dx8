@@ -163,7 +163,7 @@ namespace DX8
       {
         IsOpen = true;
         FirstCycle = true;
-        IsRunning = true;
+        IsRunning = false;
       }
       else
       {
@@ -266,11 +266,51 @@ namespace DX8
       if (!IsRunning && GUI.Button(new Rect(200,0,100,25), "Step"))
       {
         RunOnce(-1.0f);
+        
+       Debug.LogFormat(
+        "A={0:X2} X={1:X2} Y={2:X2} Z={3:X2} W={4:X2} Pc={5:X4}, St={6:X2}, Fl={7:X2}, Steps={8}, Opcode={9:X2}, Operand={10:X4} GpuTimer={11}",
+          Library.GetValue(Api.A),
+          Library.GetValue(Api.X),
+          Library.GetValue(Api.Y),
+          Library.GetValue(Api.Z),
+          Library.GetValue(Api.W),
+          Library.GetValue(Api.Pc),
+          Library.GetValue(Api.Stack),
+          Library.GetValue(Api.Flags),
+          LastSteps,
+          Library.GetValue(Api.LastOpcode),
+          Library.GetValue(Api.LastOperand),
+          Library.GetValue(Api.GpuTimer)
+       );
+
       }
       
+
       if (!IsRunning && GUI.RepeatButton(new Rect(200,25,100,25), "FWD"))
       {
         RunOnce(-1.0f);
+        
+       Debug.LogFormat(
+        "A={0:X2} X={1:X2} Y={2:X2} Z={3:X2} W={4:X2} Pc={5:X4}, St={6:X2}, Fl={7:X2}, Steps={8}, Opcode={9:X2}, Operand={10:X4} GpuTimer={11}",
+          Library.GetValue(Api.A),
+          Library.GetValue(Api.X),
+          Library.GetValue(Api.Y),
+          Library.GetValue(Api.Z),
+          Library.GetValue(Api.W),
+          Library.GetValue(Api.Pc),
+          Library.GetValue(Api.Stack),
+          Library.GetValue(Api.Flags),
+          LastSteps,
+          Library.GetValue(Api.LastOpcode),
+          Library.GetValue(Api.LastOperand),
+          Library.GetValue(Api.GpuTimer)
+       );
+
+      }
+
+      if (!IsRunning && GUI.Button(new Rect(300,25,100,25), "Frame"))
+      {
+        RunOnce(1.0f / 60.0f);
       }
 
       if (GUI.Button(new Rect(300, 0, 100, 25), "Load"))
@@ -312,7 +352,14 @@ namespace DX8
         LoadProgram();
         FirstCycle = false;
       }
+      
       int ms = (int) (timeSec * 1000.0f);
+      
+      if (ms == 0)
+      {
+        ms = 15 * 1000;
+      }
+      
       LastSteps = Library.Call(Api.CycleFn, ms);
       UpdateCrt();
     }

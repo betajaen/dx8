@@ -11,7 +11,8 @@ ENTRY_POINT:
         jmp MAIN
 
 HBLANK:
-        push z
+        nop
+        ;push z
         ;load  z, RAND
         ;store GFX_SCNW0R, z
         ;load  z, RAND
@@ -24,8 +25,8 @@ HBLANK:
        ; store GFX_BGCOLG, z
        ; load  z, RAND
        ; store GFX_BGCOLB, z
-
-       pop z
+       ;inc x
+       ;pop z
 resume
 
 VBLANK:
@@ -36,6 +37,18 @@ resume
 ; Functions
 ; =============================================================
 
+;LOGOTEXT:
+        ;db 3, 'DX8'
+
+BEGIN DisplayLogo
+        APUTCHAR 0, 4, 4, 'D'
+        APUTCHAR 0, 5, 4, 'X'
+        APUTCHAR 0, 6, 4, '8'
+        APUTCHAR 1, 8, 4, '/'
+        APUTCHAR 2, 9, 4, '/'
+        APUTCHAR 3,10, 4, '/'
+        ;PRINT LOGOTEXT, 4, 5
+END
 
 ; =============================================================
 ; MAIN
@@ -43,12 +56,18 @@ resume
 
 MAIN:
         APOKE    GFX_PLANES, 4
+        PRG2GPU  GFX_TILES, FNT_VICTORIA_DATA, FNT_VICTORIA_SIZE
 
-        ;CLS   3, $FF
-        SPLAT 0, (IMG_COBRA_ADDR)
+        CLS 0, ' '
+        CLS 1, ' '
+        CLS 2, ' '
+        CLS 3, ' '
+
+        ;SPLAT 0, IMG_COBRA_ADDR
+
+        call DisplayLogo
 IDLE:
         nop
-        inc x
         jmp IDLE
 
 ; =============================================================
@@ -56,4 +75,4 @@ IDLE:
 ; =============================================================
 
 include "cobra.png.s"
-;include "victoria.png.s"
+include "victoria.png.s"

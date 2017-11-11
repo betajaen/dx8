@@ -34,6 +34,7 @@
 #include "log_c/src/log.h"
 
 Cpu cpu;
+Cpu interrupt;
 
 #define REG_A     (cpu.a)
 #define REG_PC    (cpu.pc.w)
@@ -44,6 +45,7 @@ Cpu cpu;
 #define FL_Z      (cpu.flags.bZero)
 #define FL_N      (cpu.flags.bNegative)
 #define FL_C      (cpu.flags.bCarry)
+#define REG_IMM   (data.lo)
 
 typedef CPU_REGISTER(w, lo, hi) Data;
 
@@ -76,13 +78,6 @@ void Cpu_Reset(bool soft)
     Mmu_Reset();
   }
 
-  LOGF("Mem[0] $%02X", Mmu_Get(0));
-  LOGF("Mem[1] $%02X", Mmu_Get(1));
-  LOGF("Mem[2] $%02X", Mmu_Get(2));
-  LOGF("Mem[3] $%02X", Mmu_Get(3));
-  LOGF("Mem[4] $%02X", Mmu_Get(4));
-  LOGF("Mem[5] $%02X", Mmu_Get(5));
-  
   cpu.pc.lo = Mmu_Get(0);
   cpu.pc.hi = Mmu_Get(1);
 
@@ -117,29 +112,58 @@ void Cpu_Reset(bool soft)
 // ROL      --
 // ROR      --
 
-#define DO_OP_NOP()                 REG_PC += Opf_Single;
-#define DO_OP_PUSH(R0)              PushToStack(R0);             REG_PC += Opf_Single; 
-#define DO_OP_POP(R0)               R0 = PopFromStack(cpu);           REG_PC += Opf_Single; 
-#define DO_OP_LOAD(R0)              R0 = LoadFromMemory(data.w);      REG_PC += Opf_Address;
-#define DO_OP_STORE(R0)             StoreToMemory(data.w, R0);        REG_PC += Opf_Address;
+#define DO_OP_NOP()                                                    REG_PC += Opf_Single;
+#define DO_OP_PUSH(R0)              PushToStack(R0);                   REG_PC += Opf_Single; 
+#define DO_OP_POP(R0)               R0 = PopFromStack();               REG_PC += Opf_Single; 
+#define DO_OP_PUSHF()               PushFlagsToStack();                REG_PC += Opf_Single; 
+#define DO_OP_POPF()                PopFlagsFromStack();               REG_PC += Opf_Single; 
+#define DO_OP_PUSHA()               PushAllToStack();                  REG_PC += Opf_Single; 
+#define DO_OP_POPA()                PopAllFromStack();                 REG_PC += Opf_Single; 
+#define DO_OP_LOAD(R0)              R0 = LoadFromMemory(data.w);       REG_PC += Opf_Address;
+#define DO_OP_STORE(R0)             StoreToMemory(data.w, R0);         REG_PC += Opf_Address;
 #define DO_OP_CALL()                Do_Call(Opf_Address, data.w);
 #define DO_OP_RETURN()              Return(cpu);
-#define DO_OP_SET(R0)               R0 = data.lo;                      REG_PC += Opf_Byte;
+#define DO_OP_SET(R0)               R0 = REG_IMM;                      REG_PC += Opf_Byte;
+
 #define DO_OP_ADD(R0, R1)           R0 = FlagsOp(R0 + R1);             REG_PC += Opf_Single;
+#define DO_OP_ADDC(R0, R1)          R0 = ADC(R0, R1);                  REG_PC += Opf_Single;
+
+#define DO_OP_ADD_IMM(R0)           R0 = FlagsOp(R0 + REG_IMM);        REG_PC += Opf_Byte;
+#define DO_OP_ADC_IMM(R0)           R0 = ADC(R0, REG_IMM);             REG_PC += Opf_Byte;
+
 #define DO_OP_SUB(R0, R1)           R0 = FlagsOp(R0 - R1);             REG_PC += Opf_Single;
+#define DO_OP_SUB_IMM(R0)           R0 = FlagsOp(R0 - REG_IMM);        REG_PC += Opf_Byte;
+
 #define DO_OP_MUL(R0, R1)           R0 = FlagsOp(R0 * R1);             REG_PC += Opf_Single;
+#define DO_OP_MUL_IMM(R0)           R0 = FlagsOp(R0 * REG_IMM);        REG_PC += Opf_Byte;
+
 #define DO_OP_INC(R0)               R0 = FlagsOp(R0 + 1);              REG_PC += Opf_Single;
 #define DO_OP_DEC(R0)               R0 = FlagsOp(R0 - 1);              REG_PC += Opf_Single;
+
 #define DO_OP_AND(R0, R1)           R0 &= R1;                          REG_PC += Opf_Single;
+#define DO_OP_AND_IMM(R0)           R0 &= REG_IMM;                     REG_PC += Opf_Byte;
+
 #define DO_OP_OR(R0, R1)            R0 |= R1;                          REG_PC += Opf_Single;
+#define DO_OP_OR_IMM(R0)            R0 |= REG_IMM;                     REG_PC += Opf_Byte;
+
 #define DO_OP_XOR(R0, R1)           R0 ^= R1;                          REG_PC += Opf_Single;
+#define DO_OP_XOR_IMM(R0)           R0 ^= REG_IMM;                     REG_PC += Opf_Byte;
+
 #define DO_OP_NOT(R0)               R0 = ~R0;                          REG_PC += Opf_Single;
-#define DO_OP_SHIFT_LEFT(R0)        R0 <<= 1;                          REG_PC += Opf_Byte;  
-#define DO_OP_SHIFT_RIGHT(R0)       R0 >>= 1;                          REG_PC += Opf_Byte;  
+
+#define DO_OP_CLC()                 cpu.flags.bCarry = 0;              REG_PC += Opf_Single;
+#define DO_OP_SEC()                 cpu.flags.bCarry = 1;              REG_PC += Opf_Single;
+#define DO_OP_SHIFT_LEFT(R0, R1)    R0 <<= R1;                          REG_PC += Opf_Single;  
+#define DO_OP_SHIFT_RIGHT(R0, R1)   R0 >>= R1;                          REG_PC += Opf_Single;  
+
 #define DO_OP_ROLL_LEFT(R0)         /*  */                             REG_PC += Opf_Single;
 #define DO_OP_ROLL_RIGHT(R0)        /*  */                             REG_PC += Opf_Single;
+
 #define DO_OP_CMP(R0, R1)           Compare(R0, R1);                   REG_PC += Opf_Single;
+#define DO_OP_CMP_IMM(R0)           Compare(R0, REG_IMM);              REG_PC += Opf_Byte;
+
 #define DO_OP_CMP_BIT(R0)           CompareBit(R0, data.lo);           REG_PC += Opf_Byte;  
+
 #define DO_OP_JMP_ADD(LO, HI)       JumpAdd(data.w, LO, HI);
 #define DO_OP_JMP_ABS(LO, HI)       JumpAbs(LO, HI);
 #define DO_OP_JMP_EQ()              JumpCond(FL_Z == 1, data.w, REG_PC + Opf_Address);
@@ -163,6 +187,40 @@ inline Byte PopFromStack()
   Byte value = Stack_Get(cpu.stack);
  // LOGF("Popped %02X from stack. Stack size is %i", value, cpu.stack);
   return value;
+}
+
+inline void PushFlagsToStack()
+{
+  PushToStack(cpu.flags._data);
+}
+
+inline void PopFlagsFromStack()
+{
+  cpu.flags._data = PopFromStack(); 
+}
+
+inline void PushAllToStack()
+{
+  PushToStack(REG_X);
+  PushToStack(REG_Y);
+  PushToStack(REG_Z);
+  PushToStack(REG_W);
+  PushToStack(REG_A);
+  PushToStack(cpu.flags._data);
+  PushToStack(cpu.pc.lo);
+  PushToStack(cpu.pc.hi);
+}
+
+inline void PopAllFromStack()
+{
+  PopFromStack(cpu.pc.hi);
+  PopFromStack(cpu.pc.lo);
+  PopFromStack(cpu.flags._data);
+  PopFromStack(REG_A);
+  PopFromStack(REG_W);
+  PopFromStack(REG_Z);
+  PopFromStack(REG_Y);
+  PopFromStack(REG_X);
 }
 
 inline void Do_Call(Byte lo_offset, Word callAddress)
@@ -209,7 +267,12 @@ inline void Compare(Byte lhs, Byte rhs)
 
 inline void CompareBit(Byte val, Byte bit)
 {
-  // TODO
+  // @TODO
+}
+
+inline Byte ADC(Byte r0, Byte r1)
+{
+  return 0; // @TODO
 }
 
 inline void JumpAdd(Word addr, Word lo, Word hi)
@@ -219,7 +282,9 @@ inline void JumpAdd(Word addr, Word lo, Word hi)
 
 inline void JumpAbs(Word lo, Word hi)
 {
+  //Word lastPc = cpu.pc.w;
   cpu.pc.w = (lo + hi * 256) & ~PROGRAM_SIZE;
+  //LOGF("JMP hi= %2X lo=%2X pc  from %4X  to %4X", hi, lo, lastPc, cpu.pc.w);
 }
 
 inline void JumpCond(bool cond, Word ifTrue, Word ifFalse)
@@ -251,13 +316,12 @@ void Cpu_Interrupt(Byte name)
 {
   if (cpu.flags.bInterrupt)
   {
-    //LOGF("Interupt already happening $%2X!!!", name);
+    LOGF("Interupt already happening $%2X!!!", name);
     return;
   }
 
-  //LOGF("Interrupt $%2X", name);
-
-  cpu.flags.bInterrupt = true;
+  interrupt = cpu;
+  memset(&cpu, 0, sizeof(cpu));
 
   // Grab interrupt address
   Word interruptAddress;
@@ -276,44 +340,52 @@ void Cpu_Interrupt(Byte name)
       interruptAddress |= Mmu_Get(5) << 8;
     break;
   }
- 
-  //LOGF("Interrupt address = $%4X", interruptAddress);
 
-  Do_Call(0, interruptAddress);
+  cpu.flags.bInterrupt = true;
+  cpu.pc.w = interruptAddress;
 }
 
 void Cpu_ResumeInterrupt()
 {
   if (!cpu.flags.bInterrupt)
   {
-    //LOGF("Interupt not happening!!!");
+    LOGF("Interupt not happening!!!");
     return;
   }
 
-  Return();
-
-  //LOGF("Resume from interrupt $%04X", cpu.pc.w);
-
   cpu.flags.bInterrupt = false;
+  cpu = interrupt;
+
+  // LOGF("Resume from interrupt $%04X", cpu.pc.w);
+}
+
+bool IsInterrupt()
+{
+  return cpu.flags.bInterrupt;
 }
 
 void Mmu_Int_MemCpy();
 void Mmu_Int_MemSet();
 void Mmu_Int_PrgCpy();
+void Gpu_Interrupt(Byte name);
 
 inline void DoInterrupt(Byte name)
 {
  // LOGF("Interrupt for %i", name);
   switch(name)
   {
-    case INT_MMU_MEMCPY:
-    case INT_MMU_MEMSET:
-    case INT_MMU_PRGCPY:
+    case INT_MEMCPY:
+    case INT_MEMSET:
+    case INT_PRG2MEM:
       Mmu_Interrupt(name);
       return;
     case INT_CPU_RESET:
       Cpu_Reset(true);
       return;
+    case INT_PRG2GPU:
+    case INT_GPUSET:
+      Gpu_Interrupt(name);
+    break;
   }
  // LOGF("** Unknown Interrupt %i", name);
 }
@@ -337,15 +409,13 @@ int Cpu_Step()
   data.lo = Mmu_Get(REG_PC + 1);
   data.hi = Mmu_Get(REG_PC + 2);
   
- // LOGF("Step %Pc: %4x, Op: %2x Lo:%2x Hi: %2x", REG_PC, opcode, data.lo, data.hi);
+  //LOGF("Step %Pc: %4X, Op: %2X:%s Lo:%2X Hi: %2X", REG_PC, opcode, OpcodeStr[opcode], data.lo, data.hi);
 
 #undef OP
 #define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; return TIME;
 
   cpu.lastOpcode = opcode;
   cpu.lastOperand = data.w;
-
- // LOGF("OPCODE = %s:%i", OpcodeStr[opcode], opcode);
 
   switch(opcode)
   {

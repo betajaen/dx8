@@ -35,6 +35,8 @@
 #include <stdlib.h>
 #include "log_c/src/log.h"
 
+#define TEXT_TEST
+
 #if defined(_WIN32)
 #define EXPORT extern __declspec(dllexport)
 #else
@@ -115,7 +117,7 @@ void Gpu_Setup()
   //LOGF("GPU Crt = Ptr=%p Size=%ix%ix%i", sCrt, CRT_W, CRT_H, CRT_DEPTH);
   //LOGF("GPU ScaneLine = Ptr=%p Size=%i", sScanLine, CRT_W * 3);
 
-  memset(sGpuMem + Gpu_GFX_TILES_Relative, 0xAA, 0x800);
+  memset(sGpuMem + Gpu_GFX_TILES_Relative, 0xFF, 0x800);
 
   sCrtDirty = true;
 }
@@ -136,6 +138,15 @@ void GpuMmu_Set(Word address, Byte value)
 Byte GpuMmu_Get(Word address)
 {
   return sGpuMem[address & ~GPU_MEM_SIZE];
+}
+
+Word GpuMmu_GetWord(Word address)
+{
+  Word v;
+  v = sGpuMem[(address)  & ~GPU_MEM_SIZE];
+  v |= sGpuMem[(address + 1)  & ~GPU_MEM_SIZE] << 8;
+
+  return v;
 }
 
 Byte activity = 0;
@@ -218,6 +229,10 @@ inline bool Gpu_Coroutine_Common()
 {
   if (GpuTimer == 0)
   {
+    // LOGF("! $%2X", sGpuMem[Gpu_GFX_TILES_Relative + '!']);
+    // LOGF("\" $%2X", sGpuMem[Gpu_GFX_TILES_Relative + '\"']);
+    // LOGF("# $%2X", sGpuMem[Gpu_GFX_TILES_Relative + '#']);
+    // LOGF("? $%2X", sGpuMem[Gpu_GFX_TILES_Relative + '#' + 1]);
     Gpu_FrameStart();
     return false;
   }
@@ -264,15 +279,24 @@ inline bool Gpu_Coroutine_Common()
       }
       case 4:
       {
+        int y = scanline;
+        int rows = y / 8;
+
+        // LOGF("Y = %i  Row = %i", y, rows);
+
+        // ORIGINAL.
+        #if defined(TEXT_TEST)
+        memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 0) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 1) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sGpuMemLines + (2 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 2) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sGpuMemLines + (3 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 3) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+        #else
+        // ORIGINAL.
         memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
         memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 1) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
         memcpy(sGpuMemLines + (2 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 2) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
         memcpy(sGpuMemLines + (3 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 3) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
-
-        // LOGF("[0] %4X", 0x8000 + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W));
-        // LOGF("[1] %4X", 0x8000 + (GPU_PLANE_SIZE * 1) + (scanline * GPU_BUFFER_W));
-        // LOGF("[2] %4X", 0x8000 + (GPU_PLANE_SIZE * 2) + (scanline * GPU_BUFFER_W));
-        // LOGF("[3] %4X", 0x8000 + (GPU_PLANE_SIZE * 3) + (scanline * GPU_BUFFER_W));
+        #endif
       }
       break;
     }
@@ -295,6 +319,9 @@ void Gpu_ElectronBeam()
   // Okay draw.
   int x = scanpos - CRT_H_BLANK;
   int y = scanline;
+
+  int cols = x / 8;
+  int rows = y / 8;
 
   if (x == 0)
   {
@@ -358,10 +385,33 @@ void Gpu_ElectronBeam()
     break;
     case 4:
     {
+      #if defined(TEXT_TEST)
+      int  charRow = y % 8;
+      //LOGF("Y = %i, Row = %i, CharRow = %i", y, rows, charRow);
+      Byte b;
+      Byte invert = 0;
+
+      b = sGpuMemLines[(GPU_BUFFER_W * 0) + offset] - ' ';
+      col |= (!!(sGpuMem[Gpu_GFX_TILES_Relative + b + (charRow * 96)] & bitShift));
+
+
+      b = sGpuMemLines[(GPU_BUFFER_W * 1) + offset] - ' ';
+      col |= (!!(sGpuMem[Gpu_GFX_TILES_Relative + b + (charRow * 96)] & bitShift)) << 1;
+
+      b = sGpuMemLines[(GPU_BUFFER_W * 2) + offset] - ' ';
+      col |= (!!(sGpuMem[Gpu_GFX_TILES_Relative + b + (charRow * 96)] & bitShift)) << 2;
+
+      b = sGpuMemLines[(GPU_BUFFER_W * 3) + offset] - ' ';
+      col |= (!!(sGpuMem[Gpu_GFX_TILES_Relative + b + (charRow * 96)] & bitShift)) << 3;
+      #else
+
       col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 0) + offset] & bitShift)));
       col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 1) + offset] & bitShift))) << 1;
       col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 2) + offset] & bitShift))) << 2;
       col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 3) + offset] & bitShift))) << 3;
+
+#endif
+
     }
     break;
   }
@@ -398,7 +448,7 @@ Gpu_CoroutineData gpuCoroutineData;
 #define GPU_RETURN     GPU_DATA.op = 0xFF; LOGF("Returned Gpu Coop");return 1;
 #define GPU_YIELD_FAIL GPU_DATA.state = 0xFF; GPU_DATA.op = 0xFF; LOGF("Failed Gpu Coop"); return -1;
 
-int Gpu_Start_Coroutine(int type)
+int Gpu_Coroutine_Start(Byte type)
 {
   GPU_DATA.op = type;
   GPU_DATA.cycles = 0;
@@ -406,12 +456,12 @@ int Gpu_Start_Coroutine(int type)
 
   switch (GPU_DATA.op)
   {
-    case INT_GPU_MEMCPY:
+    case INT_PRG2GPU:
     {
       GPU_DATA.cycles += 2;
-      GPU_DATA.opGpuCpy.dst = ChipRam_GetWord(Gpu_GFX_W1_Relative);
-      GPU_DATA.opGpuCpy.src = ChipRam_GetWord(Gpu_GFX_W2_Relative);
-      GPU_DATA.opGpuCpy.len = ChipRam_GetWord(Gpu_GFX_W3_Relative) & ~SHARED_SIZE;
+      GPU_DATA.opGpuCpy.dst = GpuMmu_GetWord(Gpu_GFX_W1_Relative);
+      GPU_DATA.opGpuCpy.src = GpuMmu_GetWord(Gpu_GFX_W2_Relative);
+      GPU_DATA.opGpuCpy.len = GpuMmu_GetWord(Gpu_GFX_W3_Relative);
 
       LOGF("ogGpuCpy.dst = %4X", GPU_DATA.opGpuCpy.dst);
       LOGF("ogGpuCpy.src = %4X", GPU_DATA.opGpuCpy.src);
@@ -434,12 +484,12 @@ int Gpu_Start_Coroutine(int type)
       GPU_YIELD;
     }
     break;
-    case INT_GPU_MEMSET:
+    case INT_GPUSET:
     {
       GPU_DATA.cycles += 2;
-      GPU_DATA.opGpuSet.dst = ChipRam_GetWord(Gpu_GFX_W1_Relative);
-      GPU_DATA.opGpuSet.len = ChipRam_GetWord(Gpu_GFX_W2_Relative) & ~HALF_SHARED_SIZE;
-      GPU_DATA.opGpuSet.val = ChipRam_Get(Gpu_GFX_B1_Relative);
+      GPU_DATA.opGpuSet.dst = GpuMmu_GetWord(Gpu_GFX_W1_Relative);
+      GPU_DATA.opGpuSet.len = GpuMmu_GetWord(Gpu_GFX_W2_Relative);
+      GPU_DATA.opGpuSet.val = GpuMmu_Get(Gpu_GFX_B1_Relative);
 
       LOGF("ogGpuSet.dst = %4X", GPU_DATA.opGpuSet.dst);
       LOGF("ogGpuSet.len = %4X", GPU_DATA.opGpuSet.len);
@@ -480,7 +530,7 @@ int Gpu_Coroutine()
 
   switch (GPU_DATA.op)
   {
-    case INT_GPU_MEMSET:
+    case INT_GPUSET:
     {
       int subCycles = 16;
 
@@ -495,13 +545,14 @@ int Gpu_Coroutine()
 
       if (GPU_DATA.opGpuSet.len <= 0)
       {
+        LOGF("opGpuSet Done.");
         GPU_RETURN;
       }
 
       GPU_YIELD;
     }
     break;
-    case INT_GPU_MEMCPY:
+    case INT_PRG2GPU:
     {
       int subCycles = 16;
 
@@ -516,6 +567,7 @@ int Gpu_Coroutine()
 
       if (GPU_DATA.opGpuCpy.len <= 0)
       {
+        LOGF("opGpuCpy Done.");
         GPU_RETURN;
       }
 
@@ -527,10 +579,19 @@ int Gpu_Coroutine()
   GPU_RETURN;
 }
 
+void Gpu_Interrupt(Byte interrupt)
+{
+  Gpu_Coroutine_Start(interrupt);
+}
+
+bool IsInterrupt();
+
 void Gpu_Clock()
 {
   Gpu_ElectronBeam();
-  Gpu_Coroutine();
+  if (!IsInterrupt())
+    Gpu_Coroutine();
+
   GpuTimer++;
   if (GpuTimer == CRT_SCAN_TOTAL_TIME)
   {

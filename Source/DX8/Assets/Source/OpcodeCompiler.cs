@@ -22,12 +22,17 @@ namespace DX8
       Nop,
       Push,
       Pop,
+      PushF,
+      PopF,
+      PushA,
+      PopA,
       Load,
       Store,
       Call,
       Return,
       Set,
       Add,
+      Adc,
       Sub,
       Mul,
       Inc,
@@ -50,6 +55,8 @@ namespace DX8
       JmpZ,
       Int,
       Resume,
+      Clc,
+      Sec,
       COUNT
     }
 
@@ -57,12 +64,17 @@ namespace DX8
       "nop",
       "push",
       "pop",
+      "push.f",
+      "pop.f",
+      "push.a",
+      "pop.a",
       "load",
       "store",
       "call",
       "return",
       "set",
       "add",
+      "adc",
       "sub",
       "mul",
       "inc",
@@ -84,7 +96,9 @@ namespace DX8
       "jmp.lt",
       "jmp.z",
       "int",
-      "resume"
+      "resume",
+      "sec",
+      "clc"
     };
 
     public enum Operand
@@ -102,7 +116,7 @@ namespace DX8
 
     public static String[] OperandAsm = new String[(int) Operand.COUNT] {
       "",
-      "#$00",
+      "$00",
       "$0000",
       "x",
       "y",
@@ -480,8 +494,21 @@ namespace DX8
 
       System.Text.StringBuilder sb = new System.Text.StringBuilder(len * 30);
       StringBuilder temp = new StringBuilder(100);
+      
+      for(int ii=0;ii < 16;ii+=2)
+      {
+        byte   lo = 0, hi = 0;
+        
+        lo = data[ii+0];
+        hi = data[ii+1];
+        
+        sb.AppendFormat("Interrupt[${0:X2}] = ${1:X2}{2:X2}", ii / 2, hi, lo);
+        sb.AppendLine();
+      }
+      
+      sb.AppendLine();
 
-      for(int ii=0;ii < len;)
+      for(int ii=16;ii < len;)
       {
         byte   lo = 0, hi = 0;
 
@@ -606,6 +633,11 @@ namespace DX8
             }
             
             ops[idx] = new Op(idx, op, operand1, operand2, length);
+        }
+        else
+        {
+          Debug.LogErrorFormat("Unknown Syntax: {0}", line);
+          nextIdx++; // Reserve this, so don't break the chain.
         }
         
       }

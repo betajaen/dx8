@@ -35,25 +35,32 @@
 
 void Gpu_Clock();
 
+// Step
+//  CPU: 2x
+//  MMU: 1x
+//  GPU: 1x
+#define STEP_ONCE \
+  Cpu_Step();\
+  Cpu_Step();\
+  Mmu_Step(1);\
+  Gpu_Clock()
+
 int Clock(int ms)
 {
   int count = 0;
   if (ms < 0)
   {
-    Cpu_Step();
-    Mmu_Step(1);
-    Gpu_Clock();
+    STEP_ONCE;
 
     count = 1;
   }
   else
   {
-    // Temp. Will need to call this multiple times, based on time passed
-    for (int i = 0; i < (CRT_SCAN_TOTAL_TIME / SLOWDOWN_RATE); i++)
+    // Temp: Take milliseconds into account.
+    count = (CRT_SCAN_TOTAL_TIME / SLOWDOWN_RATE);
+    for (int ii = 0; ii < count; ii++)
     {
-      Cpu_Step();
-      Mmu_Step(1);
-      Gpu_Clock();
+      STEP_ONCE;
     }
   }
 
