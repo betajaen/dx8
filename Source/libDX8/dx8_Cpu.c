@@ -254,12 +254,12 @@ inline void PushRegisters()
 
 inline void PopRegisters()
 {
-  PopFromStack(cpu.flags._data);
-  PopFromStack(REG_A);
-  PopFromStack(REG_W);
-  PopFromStack(REG_Z);
-  PopFromStack(REG_Y);
-  PopFromStack(REG_X);
+  cpu.flags._data = PopFromStack();
+  REG_A = PopFromStack();
+  REG_W = PopFromStack();
+  REG_Z = PopFromStack();
+  REG_Y = PopFromStack();
+  REG_X = PopFromStack();
 }
 
 inline void PushPc()
