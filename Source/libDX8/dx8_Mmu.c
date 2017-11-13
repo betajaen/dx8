@@ -38,6 +38,7 @@
 #include "log_c/src/log.h"
 
 Byte* sChipRam;
+Byte* sIoRam;
 Byte* sProgramRam;
 Byte* sSharedRam;
 
@@ -109,6 +110,16 @@ void Bank_Set(Byte bank, Word address, Byte value)
   sSharedRam[address] = value;
 }
 
+void IoMmu_Set(Word address, Byte value)
+{
+  sChipRam[address & ~IO_SIZE] = value;
+}
+
+Byte IoMmu_Get(Word address)
+{
+  return sIoRam[address & ~IO_SIZE];
+}
+
 void Stack_Set(Byte offset, Byte value)
 {
   sChipRam[Chip_STACK_END_Relative - offset] = value;
@@ -142,16 +153,20 @@ void Mmu_Setup()
   memset(sProgramRam, 0, PROGRAM_SIZE);
   sSharedRam = malloc(SHARED_SIZE);
   memset(sSharedRam, 0xAA, SHARED_SIZE);
+  sIoRam = malloc(IO_SIZE);
+  memset(sIoRam, 0, IO_SIZE);
 
   Bank_SetMask(0);
 
   LOGF("Mmu Chip Ptr=%p Size=%i", sChipRam, CHIP_SIZE);
   LOGF("Mmu Program Ptr=%p Size=%i", sProgramRam, PROGRAM_SIZE);
   LOGF("Mmu Shared Ptr=%p Size=%i", sSharedRam, SHARED_SIZE);
+  LOGF("Mmu Io Ptr=%p Size=%i", sIoRam, IO_SIZE);
 }
 
 void Mmu_Teardown()
 {
+  free(sIoRam);
   free(sSharedRam);
   free(sProgramRam);
   free(sChipRam);
@@ -270,6 +285,14 @@ Byte Mmu_Get(Word address)
       return Bank_Get(7, address & 0x0FFF);
   }
   return 0;
+}
+
+Word Mmu_GetWord(Word address)
+{
+  Word v;
+  v = Mmu_Get(address);
+  v |= ((Word) Mmu_Get(address + 1)) << 8;
+  return v;
 }
 
 typedef struct

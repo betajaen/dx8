@@ -37,6 +37,9 @@ GFX_W1 = $5032
 GFX_W2 = $5034
 GFX_W3 = $5036
 GFX_TILES = $5800
+FPY_INTMSG = $7001
+FPY_STATE = $7002
+FPY_TRACK = $7003
 GFX_PLANE0 = $8000
 GFX_PLANE1 = $A800
 GFX_PLANE2 = $D000
@@ -50,6 +53,13 @@ GFX_FLG_COUNTERS_4 = $0004
 GFX_FLG_COUNTERS_8 = $0008
 GFX_FLG_COUNTERS_15 = $0010
 GFX_FLG_COUNTERS_30 = $0020
+IO_FPY_MSG_INSERT = $0000
+IO_FPY_MSG_REMOVE = $0001
+IO_FPY_MSG_SEEK = $0002
+IO_FPY_MSG_READ = $0004
+IO_FPY_MSG_WRITE = $0008
+IO_FPY_MSG_ERROR = $0080
+IO_FPY_STATE_DISK = $0001
 
 ; Interrupts commands (int $01)
 INT_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length
@@ -59,9 +69,10 @@ INT_DEFLATE = $04    ; Copy RLE Program Memory to Shared Memory and expand: W1=d
 INT_GPUSET = $10    ; Set GPU Memory:  B1=value W1=address W2=length
 INT_PRG2GPU = $11    ; Copy Memory to GPU Memory: W1=dst W2=src W3=length
 INT_CPU_RESET = $FF    ; Soft Reset
-CPU_RESET = $01    ; Reset
-CPU_HBLANK = $02    ; HBlank
-CPU_VBLANK = $03    ; VBlank
+CPU_RESET = $00    ; Reset
+CPU_HBLANK = $01    ; HBlank
+CPU_VBLANK = $02    ; VBlank
+CPU_FLOPPY = $03    ; Floppy
 
 ; Interrupts commands (int $01)
 INT_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length
@@ -71,9 +82,10 @@ INT_DEFLATE = $04    ; Copy RLE Program Memory to Shared Memory and expand: W1=d
 INT_GPUSET = $10    ; Set GPU Memory:  B1=value W1=address W2=length
 INT_PRG2GPU = $11    ; Copy Memory to GPU Memory: W1=dst W2=src W3=length
 INT_CPU_RESET = $FF    ; Soft Reset
-CPU_RESET = $01    ; Reset
-CPU_HBLANK = $02    ; HBlank
-CPU_VBLANK = $03    ; VBlank
+CPU_RESET = $00    ; Reset
+CPU_HBLANK = $01    ; HBlank
+CPU_VBLANK = $02    ; VBlank
+CPU_FLOPPY = $03    ; Floppy
 
 ; X8 Processor Instructions
 macro nop [A, B] {

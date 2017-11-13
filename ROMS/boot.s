@@ -5,7 +5,7 @@ include "macros.inc"
 ; Interrupts
 ; =============================================================
 
-INTERRUPT_TABLE ENTRY_POINT, HBLANK, VBLANK
+INTERRUPT_TABLE ENTRY_POINT, HBLANK, VBLANK, FLOPPY
 
 FRAME_COUNTER  = $8000
 SECOND_COUNTER = $8001
@@ -36,20 +36,42 @@ VBLANK:
         nop
 resume
 
+FLOPPY:
+        MMU.z $00
+        APUTCHAR 0, 0,0, 'F'
+resume
+
 ; =============================================================
 ; Functions
 ; =============================================================
 
+TXT_INSERTFLOPPY:
+        db "INSERT FLOPPY"
+
+
 BEGIN DisplayLogo
-        PUSH_MMUBANK
-                MMU.z $00
-                APUTCHAR 0,17+0, 29, 'D'
-                APUTCHAR 0,17+1, 29, 'X'
-                APUTCHAR 0,17+2, 29, '8'
-                APUTCHAR 1,17+4, 29, '/'
-                APUTCHAR 2,17+5, 29, '/'
-                APUTCHAR 3,17+6, 29, '/'
-        POP_MMUBANK
+        MMU.z $00
+        APUTCHAR 0,17+0, 29, 'D'
+        APUTCHAR 0,17+1, 29, 'X'
+        APUTCHAR 0,17+2, 29, '8'
+        APUTCHAR 1,17+4, 29, '/'
+        APUTCHAR 2,17+5, 29, '/'
+        APUTCHAR 3,17+6, 29, '/'
+
+        APUTCHAR 0,17+0, 15, 'I'
+        APUTCHAR 0,17+1, 15, 'N'
+        APUTCHAR 0,17+2, 15, 'S'
+        APUTCHAR 0,17+3, 15, 'E'
+        APUTCHAR 0,17+4, 15, 'R'
+        APUTCHAR 0,17+5, 15, 'T'
+
+
+        APUTCHAR 0,17+0, 16, 'F'
+        APUTCHAR 0,17+1, 16, 'L'
+        APUTCHAR 0,17+2, 16, 'O'
+        APUTCHAR 0,17+3, 16, 'P'
+        APUTCHAR 0,17+4, 16, 'P'
+        APUTCHAR 0,17+5, 16, 'Y'
 END
 
 BEGIN DrawCursor
@@ -90,12 +112,10 @@ MAIN:
         call DisplayLogo
 IDLE:
         call DrawCursor
-        ;call DisplayWait
         jmp IDLE
 
 ; =============================================================
 ; DATA
 ; =============================================================
 
-include "cobra.png.s"
 include "victoria.png.s"

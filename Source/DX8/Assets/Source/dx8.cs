@@ -113,6 +113,7 @@ namespace DX8
     public  bool                   IsOpen;
     public  bool                   IsRunning;
     public  string                 RomPath = @"C:\dev\dx8\ROMS\boot.bin";
+    public  string                 FloppyPath = @"C:\dev\dx8\ROMS\floppy_test.bin.fd";
     public  int                    LastSteps = 0;
     public  Texture2D              Crt;
     public  bool FirstCycle = false;
@@ -333,6 +334,17 @@ namespace DX8
       {
         System.IO.File.WriteAllBytes("crt.png", Crt.EncodeToPNG());
       }
+      
+      if (GUI.Button(new Rect(500, 0, 100, 25), "FD Insert"))
+      {
+        LoadFloppy();
+        Library.Call(Api.InsertDisk, 0);
+      }
+      
+      if (GUI.Button(new Rect(600, 0, 100, 25), "FD Remove"))
+      {
+        Library.Call(Api.RemoveDisk, 0);
+      }
 
       InspectShared = GUI.Toggle(new Rect(500, 0, 100, 25), InspectShared, "Inspect");
 
@@ -420,6 +432,17 @@ namespace DX8
       Library.Call(Api.HardReset, 0);
       int r = Library.SetData(Api.ProgramRam, romPtr, data.Length);
       Debug.LogFormat("Loaded Program = {0}, Length: {1}", r, data.Length);
+      Marshal.FreeHGlobal(romPtr);
+    }
+
+    void LoadFloppy()
+    {
+      byte[] fd = System.IO.File.ReadAllBytes(FloppyPath);
+      IntPtr romPtr = Marshal.AllocHGlobal(fd.Length);
+      Marshal.Copy(fd, 0, romPtr, fd.Length);
+      
+      int r = Library.SetData(Api.FloppyDisk, romPtr, fd.Length);
+      Debug.LogFormat("Loaded Floppy = {0}, Length: {1}", r, fd.Length);
       Marshal.FreeHGlobal(romPtr);
     }
 

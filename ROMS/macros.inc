@@ -36,11 +36,11 @@ macro COPY [DST, SRC] {
       add DST, SRC
 }
 
-macro INTERRUPT_TABLE RESET_ADDR, HBLANK_ADDR, VBLANK_ADDR {
+macro INTERRUPT_TABLE RESET_ADDR, HBLANK_ADDR, VBLANK_ADDR, FLOPPY_ADDR {
       dw RESET_ADDR           ; Reset
       dw HBLANK_ADDR          ; HBlank
       dw VBLANK_ADDR          ; VBlank
-      dw 0                    ; 4
+      dw FLOPPY_ADDR          ; Floppy
       dw 0                    ; 5
       dw 0                    ; 6
       dw 0                    ; 7

@@ -24,4 +24,6 @@ namespace DX8 { class Api {
   public const int HardReset = 201;
   public const int SoftReset = 202;
   public const int CycleFn = 203;
+  public const int InsertDisk = 204;
+  public const int RemoveDisk = 205;
 }}

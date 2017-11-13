@@ -37,6 +37,7 @@
 
 #define PROGRAM_SIZE 0x4000
 #define CHIP_SIZE    0x400
+#define IO_SIZE      0x1000
 #define SHARED_SIZE  0xFFFF
 #define HALF_SHARED_SIZE 0x8000
 #define BANK_SIZE    0x1000

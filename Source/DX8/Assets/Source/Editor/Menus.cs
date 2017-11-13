@@ -305,5 +305,28 @@ namespace DX8
       System.IO.File.WriteAllText(path + ".s", sb.ToString());
       // System.IO.File.WriteAllBytes(path + ".raw", data);
     }
+
+    
+    [MenuItem("DX8/Create Program Disk from ROM")]
+    public static void CreateProgramDiskFromRom()
+    {
+      string path = EditorUtility.OpenFilePanel("Open ROM file", @"C:\dev\dx8\ROMS", "bin");
+      byte[] data = System.IO.File.ReadAllBytes(path);
+
+      List<byte> fd = new List<byte>(163840);
+      fd.Add(0x00); // Program Data + flags
+      int dataLen = data.Length;
+      fd.Add((byte) (dataLen & 0xFF));
+      fd.Add((byte) (dataLen >> 8));
+      fd.AddRange(data);
+
+      // Padding.
+      int pad = 163840 - fd.Count;
+      for(int i=0;i < pad;i++)
+        fd.Add(0x00);
+
+      System.IO.File.WriteAllBytes(path + ".fd", fd.ToArray());
+    }
+
   }
 }

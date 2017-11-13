@@ -558,7 +558,10 @@ namespace DX8
         }
         else if (op.Length == 2)
         {
-          sb.AppendFormat("; {0:X2} {1:X2}", op.Index, lo);
+          if (lo >= '!' && lo <= 127)
+            sb.AppendFormat("; {0:X2} {1:X2}({2})", op.Index, lo, (char) lo);
+          else
+            sb.AppendFormat("; {0:X2} {1:X2}", op.Index, lo);
         }
         else if (op.Length == 3)
         {

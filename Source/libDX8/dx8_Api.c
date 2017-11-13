@@ -50,6 +50,9 @@ void Mmu_Teardown();
 void Gpu_Setup();
 void Gpu_Teardown();
 
+void Fpy_InsertDisk();
+void Fpy_RemoveDisk();
+
 bool Crt_IsDirty();
 int  Gpu_GetTimer();
 
@@ -154,13 +157,17 @@ EXPORT int SetValue(int name, int value)
   return -1;
 }
 
+bool Mmu_CopyToProgramRam(void* data, int length);
+bool Fpy_CopyToFloppyController(void* data, int length);
+
 EXPORT int SetData(int name, void* data, int length)
 {
   switch(name)
   {
     case Api_ProgramRam:
       return Mmu_CopyToProgramRam(data, length);
-    
+    case Api_FloppyDisk:
+      return Fpy_CopyToFloppyController(data, length);
   }
   return -1;
 }
@@ -181,6 +188,12 @@ EXPORT int Call(int name, int value)
       return 0;
     case Api_HardReset:
       Cpu_Reset(false);
+      return 0;
+    case Api_InsertDisk:
+      Fpy_InsertDisk();
+      return 0;
+    case Api_RemoveDisk:
+      Fpy_RemoveDisk();
       return 0;
   }
 

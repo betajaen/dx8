@@ -71,7 +71,7 @@ void Mmu_Reset();
 
 void Cpu_Print(const char* name, Cpu* c)
 {
-  LOGF("Cpu[%s] Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X", name, c->pc.w, c->interrupt, c->a, c->I.x, c->I.y, c->J.z, c->J.w);
+  LOGF("Cpu[%s] Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", name, c->pc.w, c->interrupt, c->a, c->I.x, c->I.y, c->J.z, c->J.w, c->lastOpcode, LO_BYTE(c->lastOperand), HI_BYTE(c->lastOperand));
 }
 
 void Cpu_Reset(bool soft)
@@ -140,7 +140,7 @@ void Cpu_Reset(bool soft)
 
 #define DO_OP_RETURN()              Return(cpu);
 
-#define DO_OP_SET(R0)               R0 = REG_IMM;                      REG_PC += Opf_Byte;
+#define DO_OP_SET(R0)               R0 = REG_IMM;  REG_PC += Opf_Byte;
 #define DO_OP_SETW(R0, R1)          R0 = data.lo; R1 = data.hi;        REG_PC += Opf_Address;
 
 #define DO_OP_ADD(R0, R1)           R0 = FlagsOp(R0 + R1);             REG_PC += Opf_Single;
@@ -305,6 +305,12 @@ inline Byte LoadFromMemoryW(Byte lo, Byte hi)
 
 inline void StoreToMemory(Word address, Byte value)
 {
+  if (address == 0x826E)
+  {
+    LOGF("$%4X >>> $%2X %c", address, value, value);
+    Cpu_Print("CPU", &cpu);
+  }
+
   Mmu_Set(address, value);
 }
 
@@ -312,6 +318,7 @@ inline void StoreToMemoryW(Byte lo, Byte hi, Byte value)
 {
   Word address = lo;
   address |= ((Word)(hi) << 8);
+
   Mmu_Set(address, value);
 }
 
@@ -402,34 +409,24 @@ inline void BranchCond(bool cond, Word ifTrue, Word ifFalse)
 }
 
 
+Word Mmu_GetWord(Word address);
+
 void Cpu_Interrupt(Byte name)
 {
   if (cpu.interrupt)
   {
-    LOGF("Interupt already happening $%2X!!!", cpu.interrupt);
+    LOGF("Interupt already happening $%2X when I want $%2X!!!", cpu.interrupt, name);
     return;
   }
+
+  // Grab interrupt address
+  Word interruptAddress = Mmu_GetWord(0x02 * name);
 
   PushRegisters();
   PushPc();
 
-  // Grab interrupt address
-  Word interruptAddress;
-  switch(name)
-  {
-    case CPU_RESET:
-      interruptAddress = Mmu_Get(0);
-      interruptAddress |= Mmu_Get(1) << 8;
-    break;
-    case CPU_HBLANK:
-      interruptAddress = Mmu_Get(2);
-      interruptAddress |= Mmu_Get(3) << 8;
-    break;
-    case CPU_VBLANK:
-      interruptAddress = Mmu_Get(4);
-      interruptAddress |= Mmu_Get(5) << 8;
-    break;
-  }
+ // interruptAddress = Mmu_Get((name * 2));
+ // interruptAddress |= ((Word) Mmu_Get((name * 2) + 1)) << 8;
 
   cpu.interrupt = name;
   cpu.pc.w = interruptAddress;
@@ -450,19 +447,22 @@ void Cpu_ResumeInterrupt()
     return;
   }
 
+  int wasInterrupt = cpu.interrupt;
+
   cpu.interrupt = 0;
 
   PopPc();
   PopRegisters();
   
-  //if (interruptWas == 3)
-  //{
-  //  LOGF("Resume from interrupt %i to $%04X", interruptWas, cpu.pc.w);
-  //
-  //  Cpu_Print("CPU", &cpu);
-  //  Stack_Print();
-  //}
-
+  
+  
+  if (wasInterrupt == CPU_FLOPPY)
+  {
+    LOGF("Resume from interrupt %i to $%04X", wasInterrupt, cpu.pc.w);
+  
+    Cpu_Print("CPU", &cpu);
+    Stack_Print();
+  }
 }
 
 bool IsInterrupt()
