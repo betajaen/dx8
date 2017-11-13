@@ -21,13 +21,13 @@ HBLANK:
         and x, $E0
         shr x, 2
 
-        set a, 0x3B
+        set a, 0xF2
         add a,x
         store GFX_BGCOLR, a
-        set a, 0x3F
+        set a, 0x4C
         add a,x
         store GFX_BGCOLG, a
-        set a, 0x42
+        set a, 0x27
         add a,x
         store GFX_BGCOLB, a
 resume
@@ -43,12 +43,12 @@ resume
 BEGIN DisplayLogo
         PUSH_MMUBANK
                 MMU.z $00
-                APUTCHAR 0,17+0, 29, 'D'
-                APUTCHAR 0,17+1, 29, 'X'
-                APUTCHAR 0,17+2, 29, '8'
-                APUTCHAR 1,17+4, 29, '/'
-                APUTCHAR 2,17+5, 29, '/'
-                APUTCHAR 3,17+6, 29, '/'
+                APUTCHAR 0,17+0, 29, 'F'
+                APUTCHAR 0,17+1, 29, 'L'
+                APUTCHAR 0,17+2, 29, 'O'
+                APUTCHAR 1,17+4, 29, 'P'
+                APUTCHAR 2,17+5, 29, 'P'
+                APUTCHAR 3,17+6, 29, 'Y'
         POP_MMUBANK
 END
 
@@ -60,16 +60,20 @@ BEGIN DrawCursor
                         jmp.z .DrawBlank
                         jmp .DrawDot
                 .DrawBlank:
-                        set x, ' '
-                        PRINT_AT(1,17+4, 29), x
-                        PRINT_AT(2,17+5, 29), x
-                        PRINT_AT(3,17+6, 29), x
+                  APUTCHAR 0,17+0, 29, ' '
+                  APUTCHAR 0,17+1, 29, ' '
+                  APUTCHAR 0,17+2, 29, ' '
+                  APUTCHAR 1,17+4, 29, ' '
+                  APUTCHAR 2,17+5, 29, ' '
+                  APUTCHAR 3,17+6, 29, ' '
                         jmp .EndDraw
                 .DrawDot:
-                        set x, '/'
-                        PRINT_AT(1,17+4, 29), x
-                        PRINT_AT(2,17+5, 29), x
-                        PRINT_AT(3,17+6, 29), x
+                  APUTCHAR 0,17+0, 29, 'F'
+                  APUTCHAR 0,17+1, 29, 'L'
+                  APUTCHAR 0,17+2, 29, 'O'
+                  APUTCHAR 1,17+4, 29, 'P'
+                  APUTCHAR 2,17+5, 29, 'P'
+                  APUTCHAR 3,17+6, 29, 'Y'
                 .EndDraw:
         POP_MMUBANK
 END
@@ -80,7 +84,6 @@ END
 
 MAIN:
         APOKE    GFX_PLANES, 4
-        PRG2GPU  GFX_TILES, FNT_VICTORIA_DATA, FNT_VICTORIA_SIZE
 
         CLS 0, ' '
         CLS 1, ' '
@@ -92,10 +95,3 @@ IDLE:
         call DrawCursor
         ;call DisplayWait
         jmp IDLE
-
-; =============================================================
-; DATA
-; =============================================================
-
-include "cobra.png.s"
-include "victoria.png.s"

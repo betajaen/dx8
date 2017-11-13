@@ -174,7 +174,7 @@ namespace DX8
       {
         IsOpen = true;
         FirstCycle = true;
-        IsRunning = false;
+        IsRunning = true;
       }
       else
       {
