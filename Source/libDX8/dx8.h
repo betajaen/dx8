@@ -75,7 +75,7 @@ typedef struct {
       Byte  bZero : 1;
       Byte  bNegative : 1;
       Byte  bCarry : 1;
-      Byte  bInterrupt : 1;
+      Byte  flag4 : 1;
       Byte  flag5 : 1;
       Byte  flag6 : 1;
       Byte  flag7 : 1;
@@ -87,6 +87,7 @@ typedef struct {
 
   Byte lastOpcode;
   Word lastOperand;
+  Byte interrupt;
 } Cpu;
 
 int Clock(int ms);
@@ -173,6 +174,8 @@ void Mmu_Step(int steps);
 #define Gpu_Begin     (0x5000)
 #define Sfx_Begin     (0x6000)
 #define Io_Begin      (0x7000)
+#define Flags_Begin   (0x0000)
+#define Values_Begin  (0x0000)
 
 enum
 {

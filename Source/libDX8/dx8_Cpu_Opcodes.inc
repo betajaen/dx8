@@ -2,22 +2,23 @@
 OP(Nop, None, Opf_Single, 1, { DO_OP_NOP(); })
 
 // Push
-OP(Push, x, Opf_Single, 3,  { DO_OP_PUSH(REG_X); })
-OP(Push, y, Opf_Single, 3,  { DO_OP_PUSH(REG_Y); })
-OP(Push, z, Opf_Single, 3,  { DO_OP_PUSH(REG_Z); })
-OP(Push, w, Opf_Single, 3,  { DO_OP_PUSH(REG_W); })
-OP(Push, a, Opf_Single, 3,  { DO_OP_PUSH(REG_A); })
-OP(PushA, None, Opf_Single, 3,  { DO_OP_PUSHA(); })
+OP(Push, x, Opf_Single, 3,      { DO_OP_PUSH(REG_X); })
+OP(Push, y, Opf_Single, 3,      { DO_OP_PUSH(REG_Y); })
+OP(Push, z, Opf_Single, 3,      { DO_OP_PUSH(REG_Z); })
+OP(Push, w, Opf_Single, 3,      { DO_OP_PUSH(REG_W); })
+OP(Push, a, Opf_Single, 3,      { DO_OP_PUSH(REG_A); })
 OP(PushF, None, Opf_Single, 3,  { DO_OP_PUSHF(); })
+OP(PushR, None, Opf_Single, 3,  { DO_OP_PUSHR(); })
 
 // Pop
-OP(Pop, x, Opf_Single, 3,   { DO_OP_POP(REG_X) })
-OP(Pop, y, Opf_Single, 3,   { DO_OP_POP(REG_Y) })
-OP(Pop, z, Opf_Single, 3,   { DO_OP_POP(REG_Z) })
-OP(Pop, w, Opf_Single, 3,   { DO_OP_POP(REG_W) })
-OP(Pop, a, Opf_Single, 3,   { DO_OP_POP(REG_A) })
-OP(PopA, None, Opf_Single, 3,   { DO_OP_POPA() })
+OP(Pop, x, Opf_Single, 3,       { DO_OP_POP(REG_X) })
+OP(Pop, y, Opf_Single, 3,       { DO_OP_POP(REG_Y) })
+OP(Pop, z, Opf_Single, 3,       { DO_OP_POP(REG_Z) })
+OP(Pop, w, Opf_Single, 3,       { DO_OP_POP(REG_W) })
+OP(Pop, a, Opf_Single, 3,       { DO_OP_POP(REG_A) })
 OP(PopF, None, Opf_Single, 3,   { DO_OP_POPF() })
+OP(PopR, None, Opf_Single, 3,   { DO_OP_POPR() })
+
 
 // Load
 OP(Load, xA, Opf_Address, 4, { DO_OP_LOAD(REG_X); })
@@ -26,6 +27,11 @@ OP(Load, zA, Opf_Address, 4, { DO_OP_LOAD(REG_Z); })
 OP(Load, wA, Opf_Address, 4, { DO_OP_LOAD(REG_W); })
 OP(Load, aA, Opf_Address, 4, { DO_OP_LOAD(REG_A); })
 
+// LoadXY
+OP(LoadXY, a, Opf_Single, 4, { DO_OP_LOADXY(REG_A); })
+OP(LoadXY, z, Opf_Single, 4, { DO_OP_LOADXY(REG_Z); })
+OP(LoadXY, w, Opf_Single, 4, { DO_OP_LOADXY(REG_W); })
+
 // Store
 OP(Store, Ax, Opf_Address, 4, { DO_OP_STORE(REG_X); })
 OP(Store, Ay, Opf_Address, 4, { DO_OP_STORE(REG_Y); })
@@ -33,8 +39,13 @@ OP(Store, Az, Opf_Address, 4, { DO_OP_STORE(REG_Z); })
 OP(Store, Aw, Opf_Address, 4, { DO_OP_STORE(REG_W); })
 OP(Store, Aa, Opf_Address, 4, { DO_OP_STORE(REG_A); })
 
+// StoreXY
+OP(StoreXY, a, Opf_Single,  8, { DO_OP_STOREXY(REG_A); })
+OP(StoreXY, z, Opf_Single,  8, { DO_OP_STOREXY(REG_Z); })
+OP(StoreXY, w, Opf_Single,  8, { DO_OP_STOREXY(REG_W); })
+
 // Call
-OP(Call, A, Opf_Address, 4, { DO_OP_CALL();  })
+OP(Call,  A, Opf_Address, 4, { DO_OP_CALL();  })
 
 // Return
 OP(Return, None, Opf_Single, 4,   { DO_OP_RETURN(); })
@@ -45,6 +56,10 @@ OP(Set, yB, Opf_Byte, 3, { DO_OP_SET(REG_Y); })
 OP(Set, zB, Opf_Byte, 3, { DO_OP_SET(REG_Z); })
 OP(Set, wB, Opf_Byte, 3, { DO_OP_SET(REG_W); })
 OP(Set, aB, Opf_Byte, 3, { DO_OP_SET(REG_A); })
+
+// SetXy
+OP(SetXY, A, Opf_Address, 3, { DO_OP_SETW(REG_X, REG_Y); })
+OP(SetZW, A, Opf_Address, 3, { DO_OP_SETW(REG_Z, REG_W); })
 
 // Add
 OP(Add, ax, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_X); })
@@ -60,17 +75,20 @@ OP(Add, wB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_W); })
 OP(Add, aB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_A); })
 
 // Adc
-OP(Adc, ax, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_X); })
-OP(Adc, ay, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_Y); })
-OP(Adc, az, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_Z); })
-OP(Adc, aw, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_W); })
-OP(Adc, aa, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_A); })
+OP(Adc, ax, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_X); })
+OP(Adc, ay, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_Y); })
+OP(Adc, az, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_Z); })
+OP(Adc, aw, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_W); })
+OP(Adc, aa, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_A); })
 
-OP(Adc, xB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_X); })
-OP(Adc, yB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_Y); })
-OP(Adc, zB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_Z); })
-OP(Adc, wB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_W); })
-OP(Adc, aB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_A); })
+OP(Adc, xB, Opf_Byte,   3, { DO_OP_ADC_IMM(REG_X); })
+OP(Adc, yB, Opf_Byte,   3, { DO_OP_ADC_IMM(REG_Y); })
+OP(Adc, zB, Opf_Byte,   3, { DO_OP_ADC_IMM(REG_Z); })
+OP(Adc, wB, Opf_Byte,   3, { DO_OP_ADC_IMM(REG_W); })
+OP(Adc, aB, Opf_Byte,   3, { DO_OP_ADC_IMM(REG_A); })
+
+// Adw
+OP(Adw, None, Opf_Byte, 6, { DO_OP_ADDW();     })
 
 // Sub
 OP(Sub, ax, Opf_Single, 3, { DO_OP_SUB(REG_A, REG_X); })
@@ -117,18 +135,18 @@ OP(Cmp, ay, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_Y); })
 OP(Cmp, az, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_Z); })
 OP(Cmp, aw, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_W); })
 
-OP(Cmp, xB, Opf_Byte, 3,   { DO_OP_CMP(REG_X, REG_IMM); })
-OP(Cmp, yB, Opf_Byte, 3,   { DO_OP_CMP(REG_Y, REG_IMM); })
-OP(Cmp, zB, Opf_Byte, 3,   { DO_OP_CMP(REG_Z, REG_IMM); })
-OP(Cmp, wB, Opf_Byte, 3,   { DO_OP_CMP(REG_W, REG_IMM); })
-OP(Cmp, aB, Opf_Byte, 3,   { DO_OP_CMP(REG_A, REG_IMM); })
+OP(Cmp, xB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_X); })
+OP(Cmp, yB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_Y); })
+OP(Cmp, zB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_Z); })
+OP(Cmp, wB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_W); })
+OP(Cmp, aB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_A); })
 
 // Bit Test
-OP(CmpBit, x, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_A); })
-OP(CmpBit, y, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_X); })
-OP(CmpBit, z, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_Y); })
-OP(CmpBit, w, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_Z); })
-OP(CmpBit, a, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_W); })
+OP(CmpBit, xB, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_X); })
+OP(CmpBit, yB, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_Y); })
+OP(CmpBit, zB, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_Z); })
+OP(CmpBit, wB, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_W); })
+OP(CmpBit, aB, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_A); })
 
 // And
 OP(And, ax, Opf_Single, 1, { DO_OP_AND(REG_A, REG_X); })
@@ -227,12 +245,17 @@ OP(JmpLt, A, Opf_Address, 2, { DO_OP_JMP_LT(); })
 // Jmp If Zero
 OP(JmpZ, A, Opf_Address, 2, { DO_OP_JMP_Z(); })
 
+// Jmp If Not Zero
+OP(JmpNotZ, A, Opf_Address, 2, { DO_OP_JMP_NOT_Z(); })
+
 // Interrupt
 OP(Int, B, Opf_Byte, 4, { DO_OP_INT(); })
 
 // Resume
 OP(Resume, None, Opf_Single, 4, { DO_OP_RESUME(); })
 
+// Carry Clear
 OP(Clc, None, Opf_Single, 1,   { DO_OP_CLC() })
 
+// Set Clear
 OP(Sec, None, Opf_Single, 1,   { DO_OP_SEC() })

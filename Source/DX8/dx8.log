@@ -1,34 +1,40 @@
-2017-11-11 23:14:25 INFO  dx8_Mmu.c:137: Mmu Chip Ptr=000000003C1D3F40 Size=1024
-2017-11-11 23:14:25 INFO  dx8_Mmu.c:138: Mmu Program Ptr=000000003D418E60 Size=16384
-2017-11-11 23:14:25 INFO  dx8_Mmu.c:139: Mmu Shared Ptr=000000003D42CDF0 Size=65535
-2017-11-11 23:14:25 INFO  dx8_Cpu.c:74: Cpu Reset. Soft = 1
-2017-11-11 23:14:25 INFO  dx8_Cpu.c:84: Entry point $   0
-2017-11-11 23:14:26 INFO  dx8_Cpu.c:74: Cpu Reset. Soft = 0
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:154: Mmu Reset
-2017-11-11 23:14:26 INFO  dx8_Cpu.c:84: Entry point $   0
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:164: Loaded Program ROM Length=11279
-2017-11-11 23:14:26 INFO  dx8_Cpu.c:74: Cpu Reset. Soft = 1
-2017-11-11 23:14:26 INFO  dx8_Cpu.c:84: Entry point $  10
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:543: Returned Coop
-2017-11-11 23:14:26 INFO  dx8_Gpu.c:579: Returned Gpu Coop
-2017-11-11 23:14:26 INFO  dx8_Gpu.c:466: ogGpuCpy.dst = 5800
-2017-11-11 23:14:26 INFO  dx8_Gpu.c:467: ogGpuCpy.src = 290F
-2017-11-11 23:14:26 INFO  dx8_Gpu.c:468: ogGpuCpy.len =  300
-2017-11-11 23:14:26 INFO  dx8_Gpu.c:570: opGpuCpy Done.
-2017-11-11 23:14:26 INFO  dx8_Gpu.c:571: Returned Gpu Coop
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:346: ogMemSet.dst = 8000
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:347: ogMemSet.len = 2800
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:348: ogMemSet.val = 20
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:460: Returned Coop
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:346: ogMemSet.dst = A800
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:347: ogMemSet.len = 2800
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:348: ogMemSet.val = 20
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:460: Returned Coop
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:346: ogMemSet.dst = D000
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:347: ogMemSet.len = 2800
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:348: ogMemSet.val = 20
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:460: Returned Coop
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:346: ogMemSet.dst = F800
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:347: ogMemSet.len = 2800
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:348: ogMemSet.val = 20
-2017-11-11 23:14:26 INFO  dx8_Mmu.c:460: Returned Coop
+2017-11-13 10:04:03 INFO  dx8_Mmu.c:148: Mmu Chip Ptr=000000003D559610 Size=1024
+2017-11-13 10:04:03 INFO  dx8_Mmu.c:149: Mmu Program Ptr=000000003D33E810 Size=16384
+2017-11-13 10:04:03 INFO  dx8_Mmu.c:150: Mmu Shared Ptr=000000003DE34380 Size=65535
+2017-11-13 10:04:03 INFO  dx8_Cpu.c:79: Cpu Reset. Soft = 1
+2017-11-13 10:04:03 INFO  dx8_Cpu.c:74: Cpu[CPU] Pc=$   0 Int=$ 0 A=$ 0 X=$ 0 Y=$ 0 Z=$ 0 W=$ 0
+2017-11-13 10:04:03 INFO  dx8_Cpu.c:74: Cpu[INT] Pc=$   0 Int=$ 0 A=$ 0 X=$ 0 Y=$ 0 Z=$ 0 W=$ 0
+2017-11-13 10:04:03 INFO  dx8_Cpu.c:92: Entry point $   0
+2017-11-13 10:04:04 INFO  dx8_Cpu.c:79: Cpu Reset. Soft = 0
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:165: Mmu Reset
+2017-11-13 10:04:04 INFO  dx8_Cpu.c:74: Cpu[CPU] Pc=$   0 Int=$ 0 A=$ 0 X=$ 0 Y=$ 0 Z=$ 0 W=$ 0
+2017-11-13 10:04:04 INFO  dx8_Cpu.c:74: Cpu[INT] Pc=$   0 Int=$ 0 A=$ 0 X=$ 0 Y=$ 0 Z=$ 0 W=$ 0
+2017-11-13 10:04:04 INFO  dx8_Cpu.c:92: Entry point $   0
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:175: Loaded Program ROM Length=11369
+2017-11-13 10:04:04 INFO  dx8_Cpu.c:79: Cpu Reset. Soft = 1
+2017-11-13 10:04:04 INFO  dx8_Cpu.c:74: Cpu[CPU] Pc=$   0 Int=$ 0 A=$ 0 X=$ 0 Y=$ 0 Z=$ 0 W=$ 0
+2017-11-13 10:04:04 INFO  dx8_Cpu.c:74: Cpu[INT] Pc=$   0 Int=$ 0 A=$ 0 X=$ 0 Y=$ 0 Z=$ 0 W=$ 0
+2017-11-13 10:04:04 INFO  dx8_Cpu.c:92: Entry point $  10
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:554: Returned Coop
+2017-11-13 10:04:04 INFO  dx8_Gpu.c:616: Returned Gpu Coop
+2017-11-13 10:04:04 INFO  dx8_Gpu.c:503: ogGpuCpy.dst = 5800
+2017-11-13 10:04:04 INFO  dx8_Gpu.c:504: ogGpuCpy.src = 2969
+2017-11-13 10:04:04 INFO  dx8_Gpu.c:505: ogGpuCpy.len =  300
+2017-11-13 10:04:04 INFO  dx8_Gpu.c:607: opGpuCpy Done.
+2017-11-13 10:04:04 INFO  dx8_Gpu.c:608: Returned Gpu Coop
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:357: ogMemSet.dst = 8000
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:358: ogMemSet.len = 2800
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:359: ogMemSet.val = 20
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:471: Returned Coop
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:357: ogMemSet.dst = A800
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:358: ogMemSet.len = 2800
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:359: ogMemSet.val = 20
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:471: Returned Coop
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:357: ogMemSet.dst = D000
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:358: ogMemSet.len = 2800
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:359: ogMemSet.val = 20
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:471: Returned Coop
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:357: ogMemSet.dst = F800
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:358: ogMemSet.len = 2800
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:359: ogMemSet.val = 20
+2017-11-13 10:04:04 INFO  dx8_Mmu.c:471: Returned Coop

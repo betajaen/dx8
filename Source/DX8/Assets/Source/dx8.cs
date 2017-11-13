@@ -30,6 +30,9 @@ namespace DX8
       internal static extern int GetValue(int name);
 
       [DllImport(Name, CallingConvention = CallingConvention.Cdecl)]
+      internal static extern int GetRam(int name, int addr);
+
+      [DllImport(Name, CallingConvention = CallingConvention.Cdecl)]
       internal static extern int SetData(int name, IntPtr data, int length);
 
       [DllImport(Name, CallingConvention = CallingConvention.Cdecl)]
@@ -48,6 +51,7 @@ namespace DX8
       internal static extern int Shutdown()    { return 0; }
       internal static extern int SetValue(int name, int value)   { return 0; }
       internal static extern int GetValue(int name)   { return 0; }
+      internal static extern int GetRam(int name, int addr)   { return 0xCD; }
       internal static extern int SetData(int name, IntPtr data, int length)   { return 0; }
       internal static extern int GetData(int name, IntPtr data, int length)   { return 0; }
       internal static extern int Call(int name, int value)   { return 0; }
@@ -74,6 +78,11 @@ namespace DX8
     internal static int GetValue(int name)
     {
       return Dll.GetValue(name);
+    }
+    
+    internal static int GetRam(int name, int addr)
+    {
+      return Dll.GetRam(name, addr);
     }
     
     internal static int GetData(int name, IntPtr data, int length)
@@ -107,7 +116,9 @@ namespace DX8
     public  int                    LastSteps = 0;
     public  Texture2D              Crt;
     public  bool FirstCycle = false;
-
+    public  bool InspectShared = false;
+    public  bool HigherBank = false;
+    public  int  InspectAddress = 0;
 
 #if UNITY_EDITOR
     static System.IO.FileSystemWatcher DllWatcher;
@@ -318,12 +329,29 @@ namespace DX8
         LoadProgram();
       }
       
-      if (GUI.Button(new Rect(256, 0, 100, 25), "Save Crt"))
+      if (GUI.Button(new Rect(400, 0, 100, 25), "Save Crt"))
       {
         System.IO.File.WriteAllBytes("crt.png", Crt.EncodeToPNG());
       }
 
-      GUI.Label(new Rect(0, 25, Screen.width, 60), String.Format(
+      InspectShared = GUI.Toggle(new Rect(500, 0, 100, 25), InspectShared, "Inspect");
+
+      if (InspectShared)
+      {
+        GUI.changed = false;
+        string strV = GUI.TextField(new Rect(600, 0, 200, 25), String.Format("{0:X4}", InspectAddress));
+        if (GUI.changed)
+        {
+          int newAddress = 0;
+          if (int.TryParse(strV, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out newAddress))
+          {
+            InspectAddress = newAddress;
+          }
+        }
+        HigherBank = GUI.Toggle(new Rect(800, 0, 100, 25), HigherBank, "High");
+      }
+
+      GUI.Label(new Rect(0, 50, Screen.width, 90), String.Format(
         "A={0:X2} X={1:X2} Y={2:X2} Z={3:X2} W={4:X2} Pc={5:X4}, St={6:X2}, Fl={7:X2}, Steps={8}, Opcode={9:X2}, Operand={10:X4} GpuTimer={11}",
           Library.GetValue(Api.A),
           Library.GetValue(Api.X),
@@ -339,6 +367,15 @@ namespace DX8
           Library.GetValue(Api.GpuTimer)
        ));
 
+       if (InspectShared)
+       {
+         for(int i=0;i < 8;i++)
+         {
+          //int val = Api.
+          int val = Library.GetRam(Api.SharedAddr, i + (HigherBank ? 0x8000 : 0x000));
+          GUI.Label(new Rect(i * 25, 75, 25, 25), String.Format("{0:X2}", val));
+         }
+       }
        int s = 2;
        int sw = 320 * s;
        int sh = 256 * s;

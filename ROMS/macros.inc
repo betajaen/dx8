@@ -4,6 +4,11 @@ macro APOKE [ADDR, VALUE] {
       store (ADDR), a
 }
 
+macro ZPOKE [ADDR, VALUE] {
+      set z, VALUE
+      store (ADDR), z
+}
+
 macro APOKE_WORD [ADDR, VALUE] {
       set a, ((VALUE) and $FF)
       store ADDR, a
@@ -11,9 +16,15 @@ macro APOKE_WORD [ADDR, VALUE] {
       store ADDR+1, a
 }
 
+
 macro APEEK [ADDR] {
       load a, ADDR
 }
+
+macro ZPEEK [ADDR] {
+      load a, ADDR
+}
+
 
 macro interrupt [A] {
       db $EB
@@ -116,4 +127,43 @@ macro APUTCHAR P, X, Y, C {
 
 macro APUTCHAR1 P, X, Y, C {
       APOKE ((GFX_PLANE1) + X + (Y * 40)), C
+}
+
+macro PRINT_AT [P, X, Y, x] {
+      store ((GFX_PLANE0 + (GFX_PSIZE * P)) + X + (Y * 40)), x
+}
+
+macro PUSH_MMUBANK {
+      load a, MMU_BANK
+      push a
+}
+
+macro POP_MMUBANK {
+      pop a
+      store MMU_BANK, a
+}
+
+macro PUSH_MMUBANKZ {
+      load z, MMU_BANK
+      push z
+}
+
+macro POP_MMUBANKZ {
+      pop z
+      store MMU_BANK, z
+}
+
+macro STORE_IMM ADDR, VAL {
+      push a
+      set a, VAL
+      store ADDR, a
+      pop a
+}
+
+macro MMU.a V {
+      APOKE MMU_BANK, V
+}
+
+macro MMU.z V {
+      ZPOKE MMU_BANK, V
 }

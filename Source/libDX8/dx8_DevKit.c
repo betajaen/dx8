@@ -46,6 +46,7 @@ typedef int(*InitialiseFn)();
 typedef int(*ShutdownFn)();
 typedef int(*SetValueFn)(int name, int value);
 typedef int(*GetValueFn)(int name);
+typedef int(*GetRamFn)(int name, int addr);
 typedef int(*SetDataFn)(int name, void* data, int length);
 typedef int(*GetDataFn)(int name, void* data, int length);
 typedef int(*CallFn)(int name, int value);
@@ -59,6 +60,7 @@ InitialiseFn initialiseFn;
 ShutdownFn   shutdownFn;
 SetValueFn   setValueFn;
 GetValueFn   getValueFn;
+GetRamFn     getRamFn;
 SetDataFn    setDataFn;
 GetDataFn    getDataFn;
 CallFn       callFn;
@@ -88,6 +90,7 @@ EXPORT int Initialise()
   shutdownFn = (ShutdownFn)GetProcAddress(dll, "Shutdown");
   setValueFn = (SetValueFn)GetProcAddress(dll, "SetValue");
   getValueFn = (GetValueFn)GetProcAddress(dll, "GetValue");
+  getRamFn = (GetRamFn)GetProcAddress(dll, "GetRam");
   setDataFn = (SetDataFn)GetProcAddress(dll, "SetData");
   getDataFn = (GetDataFn)GetProcAddress(dll, "GetData");
   callFn = (CallFn)GetProcAddress(dll, "Call");
@@ -113,6 +116,7 @@ EXPORT int Initialise()
     shutdownFn = NULL;
     setValueFn = NULL;
     getValueFn = NULL;
+    getRamFn = NULL;
     setDataFn = NULL;
     getDataFn = NULL;
     callFn = NULL;
@@ -145,6 +149,7 @@ EXPORT int Shutdown()
   shutdownFn = NULL;
   setValueFn = NULL;
   getValueFn = NULL;
+  getRamFn = NULL;
   setDataFn = NULL;
   getDataFn = NULL;
   callFn = NULL;
@@ -165,6 +170,19 @@ EXPORT int GetValue(int name)
 
   return getValueFn(name);
 }
+
+EXPORT int GetRam(int name, int addr)
+{
+#if defined(_WIN32)
+  if (dll == NULL)
+    return 0;
+#else
+  return 0;
+#endif
+
+  return getRamFn(name, addr);
+}
+
 
 EXPORT int SetValue(int name, int value)
 {

@@ -11,6 +11,9 @@ API_NAME(LastOpcode, 8)
 API_NAME(LastOperand, 9)
 API_NAME(CrtDirty, 10)
 API_NAME(GpuTimer, 11)
+API_NAME(ChipAddr, 12)
+API_NAME(ProgramAddr, 13)
+API_NAME(SharedAddr, 14)
 
 // Data
 API_NAME(ProgramRam, 100)

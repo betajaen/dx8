@@ -53,6 +53,8 @@ void Gpu_Teardown();
 bool Crt_IsDirty();
 int  Gpu_GetTimer();
 
+Byte Program_Get(Word address);
+
 FILE* logFp;
 
 EXPORT int Initialise()
@@ -103,6 +105,20 @@ EXPORT int GetValue(int name)
       return Gpu_GetTimer();
   }
   return 0;
+}
+
+EXPORT int GetRam(int name, int addr)
+{
+  switch(name)
+  {
+    case Api_ChipAddr:
+      return ChipRam_Get(addr);
+    case Api_ProgramAddr:
+      return Program_Get(addr);
+    case Api_SharedAddr:
+      return Shared_Get(addr);
+  }
+  return 0xCD;
 }
 
 EXPORT int SetValue(int name, int value)

@@ -78,8 +78,17 @@ void Bank_SetMask(Byte mask)
 
 Byte Bank_Get(Byte bank, Word address)
 {
-  address = (((Bank_GetMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
-  return sSharedRam[address & ~SHARED_SIZE];
+  //address = (((Bank_GetMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
+  Word originalAddress = address;
+
+  Byte mask = Bank_GetMask();
+  if ((mask & (1 << bank)) != 0)
+  {
+    address += 0x8000;
+    bank += 8;
+  }
+
+  return sSharedRam[address];
 }
 
 void Bank_Set(Byte bank, Word address, Byte value)
@@ -88,13 +97,15 @@ void Bank_Set(Byte bank, Word address, Byte value)
   
   //LOGF("Bank Mask = $%2X", Bank_GetMask());
 
-  if ((Bank_GetMask() & (1 << bank)) != 0)
+  //LOGF("MMU MASK = %i:$%2X", Bank_GetMask(), Bank_GetMask());
+  Byte mask = Bank_GetMask();
+  if ((mask & (1 << bank)) != 0)
   {
     address += 0x8000;
     bank += 8;
   }
   
-  // LOGF("Bank = $%2X, Original = $%4X, Calculate = $%4X, Value = $%4X", bank, originalAddress, address, value);
+  //  LOGF("Mask = $%2X, Bank = $%2X, Original = $%4X, Calculate = $%4X, Value = $%4X", mask, bank, originalAddress, address, value);
   sSharedRam[address] = value;
 }
 
@@ -115,7 +126,7 @@ void Shared_Set(Word absoluteAddress, Byte value)
 
 Byte Shared_Get(Word absoluteAddress)
 {
-  return sSharedRam[absoluteAddress & SHARED_SIZE];
+  return sSharedRam[absoluteAddress]; // & SHARED_SIZE];
 }
 
 Byte* Shared_GetPtr()

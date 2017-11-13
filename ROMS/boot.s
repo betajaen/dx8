@@ -7,26 +7,29 @@ include "macros.inc"
 
 INTERRUPT_TABLE ENTRY_POINT, HBLANK, VBLANK
 
+FRAME_COUNTER  = $8000
+SECOND_COUNTER = $8001
+FLIP_COUNTER   = $8002
+
+WAIT_TIME      = $8003
+
 ENTRY_POINT:
         jmp MAIN
-
 HBLANK:
-        nop
-        ;push z
-        ;load  z, RAND
-        ;store GFX_SCNW0R, z
-        ;load  z, RAND
-        ;store GFX_SCNW0G, z
-        ;load  z, RAND
-        ;store GFX_SCNW0B, z
-        ;load  z, RAND
-       ; store GFX_BGCOLR, z
-       ; load  z, RAND
-       ; store GFX_BGCOLG, z
-       ; load  z, RAND
-       ; store GFX_BGCOLB, z
-       ;inc x
-       ;pop z
+        load x, GFX_SCANLINE
+        not x
+        and x, $E0
+        shr x, 2
+
+        set a, 0x3B
+        add a,x
+        store GFX_BGCOLR, a
+        set a, 0x3F
+        add a,x
+        store GFX_BGCOLG, a
+        set a, 0x42
+        add a,x
+        store GFX_BGCOLB, a
 resume
 
 VBLANK:
@@ -37,17 +40,38 @@ resume
 ; Functions
 ; =============================================================
 
-;LOGOTEXT:
-        ;db 3, 'DX8'
-
 BEGIN DisplayLogo
-        APUTCHAR 0, 4, 4, 'D'
-        APUTCHAR 0, 5, 4, 'X'
-        APUTCHAR 0, 6, 4, '8'
-        APUTCHAR 1, 8, 4, '/'
-        APUTCHAR 2, 9, 4, '/'
-        APUTCHAR 3,10, 4, '/'
-        ;PRINT LOGOTEXT, 4, 5
+        PUSH_MMUBANK
+                MMU.z $00
+                APUTCHAR 0,17+0, 29, 'D'
+                APUTCHAR 0,17+1, 29, 'X'
+                APUTCHAR 0,17+2, 29, '8'
+                APUTCHAR 1,17+4, 29, '/'
+                APUTCHAR 2,17+5, 29, '/'
+                APUTCHAR 3,17+6, 29, '/'
+        POP_MMUBANK
+END
+
+BEGIN DrawCursor
+        PUSH_MMUBANK
+                MMU.z $00
+                        load x, GFX_COUNTERS
+                        cmpbit x, GFX_FLG_COUNTERS_ODDEVEN
+                        jmp.nz .DrawBlank
+                        jmp .DrawDot
+                .DrawBlank:
+                        set x, ' '
+                        PRINT_AT(1,17+4, 29), x
+                        PRINT_AT(2,17+5, 29), x
+                        PRINT_AT(3,17+6, 29), x
+                        jmp .EndDraw
+                .DrawDot:
+                        set x, '/'
+                        PRINT_AT(1,17+4, 29), x
+                        PRINT_AT(2,17+5, 29), x
+                        PRINT_AT(3,17+6, 29), x
+                .EndDraw:
+        POP_MMUBANK
 END
 
 ; =============================================================
@@ -63,11 +87,10 @@ MAIN:
         CLS 2, ' '
         CLS 3, ' '
 
-        ;SPLAT 0, IMG_COBRA_ADDR
-
         call DisplayLogo
 IDLE:
-        nop
+        call DrawCursor
+        ;call DisplayWait
         jmp IDLE
 
 ; =============================================================
