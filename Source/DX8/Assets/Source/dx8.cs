@@ -116,7 +116,7 @@ namespace DX8
     public  string                 FloppyPath = @"C:\dev\dx8\ROMS\floppy_test.bin.fd";
     public  int                    LastSteps = 0;
     public  Texture2D              Crt;
-    public  bool FirstCycle = false;
+    public  bool IsOff = false;
     public  bool InspectShared = false;
     public  bool HigherBank = false;
     public  int  InspectAddress = 0;
@@ -174,8 +174,8 @@ namespace DX8
       if (r == 0)
       {
         IsOpen = true;
-        FirstCycle = true;
-        IsRunning = true;
+        IsOff = true;
+        IsRunning = false;
       }
       else
       {
@@ -325,9 +325,9 @@ namespace DX8
         RunOnce(1.0f / 60.0f);
       }
 
-      if (GUI.Button(new Rect(300, 0, 100, 25), "Load"))
+      if (GUI.Button(new Rect(300, 0, 100, 25), "Turn On"))
       {
-        LoadProgram();
+        TurnOn();
       }
       
       if (GUI.Button(new Rect(400, 0, 100, 25), "Save Crt"))
@@ -346,12 +346,12 @@ namespace DX8
         Library.Call(Api.RemoveDisk, 0);
       }
 
-      InspectShared = GUI.Toggle(new Rect(500, 0, 100, 25), InspectShared, "Inspect");
+      InspectShared = GUI.Toggle(new Rect(500, 50, 100, 25), InspectShared, "Inspect");
 
       if (InspectShared)
       {
         GUI.changed = false;
-        string strV = GUI.TextField(new Rect(600, 0, 200, 25), String.Format("{0:X4}", InspectAddress));
+        string strV = GUI.TextField(new Rect(600, 50, 200, 25), String.Format("{0:X4}", InspectAddress));
         if (GUI.changed)
         {
           int newAddress = 0;
@@ -360,7 +360,7 @@ namespace DX8
             InspectAddress = newAddress;
           }
         }
-        HigherBank = GUI.Toggle(new Rect(800, 0, 100, 25), HigherBank, "High");
+        HigherBank = GUI.Toggle(new Rect(800, 50, 100, 25), HigherBank, "High");
       }
 
       GUI.Label(new Rect(0, 50, Screen.width, 90), String.Format(
@@ -396,10 +396,10 @@ namespace DX8
 
     void RunOnce(float timeSec)
     {
-      if (FirstCycle)
+      if (IsOff)
       {
-        LoadProgram();
-        FirstCycle = false;
+        TurnOn();
+        IsOff = false;
       }
       
       int ms = (int) (timeSec * 1000.0f);
@@ -422,19 +422,7 @@ namespace DX8
         Crt.Apply();
       }
     }
-
-    void LoadProgram()
-    {
-      byte[] data = System.IO.File.ReadAllBytes(RomPath);
-      IntPtr romPtr = Marshal.AllocHGlobal(data.Length);
-      Marshal.Copy(data, 0, romPtr, data.Length);
-        
-      Library.Call(Api.HardReset, 0);
-      int r = Library.SetData(Api.ProgramRam, romPtr, data.Length);
-      Debug.LogFormat("Loaded Program = {0}, Length: {1}", r, data.Length);
-      Marshal.FreeHGlobal(romPtr);
-    }
-
+    
     void LoadFloppy()
     {
       byte[] fd = System.IO.File.ReadAllBytes(FloppyPath);
@@ -444,6 +432,20 @@ namespace DX8
       int r = Library.SetData(Api.FloppyDisk, romPtr, fd.Length);
       Debug.LogFormat("Loaded Floppy = {0}, Length: {1}", r, fd.Length);
       Marshal.FreeHGlobal(romPtr);
+    }
+
+
+    void TurnOn()
+    {
+      byte[] data = System.IO.File.ReadAllBytes(RomPath);
+      IntPtr romPtr = Marshal.AllocHGlobal(data.Length);
+      Marshal.Copy(data, 0, romPtr, data.Length);
+      
+      int r = Library.SetData(Api.Rom, romPtr, data.Length);
+      Debug.LogFormat("Loaded Program = {0}, Length: {1}", r, data.Length);
+      Marshal.FreeHGlobal(romPtr);
+
+      Library.Call(Api.HardReset, 0);
     }
 
   }

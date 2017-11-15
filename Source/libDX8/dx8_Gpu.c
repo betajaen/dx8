@@ -47,77 +47,36 @@
 
 Byte* sCrt;
 bool  sCrtDirty;
-Byte* sGpuMem;
-Byte* sSharedRam;
-int*  sSharedRamInt;
+//Byte* sGpuMem;
 Byte* sScanLine;
 Byte*  sGpuMemLines;
+Byte* sBufferRam;
+Byte* Ram_Get();
+Byte  Gpu_Halt;
+Byte*    Tiles;
 
-Byte* Shared_GetPtr();
-
-inline void SetBitPixel(int offset, int x, int y, int w, int h)
-{
-  int addr = offset + (x / 8) + (y * w);
-  Byte b = Shared_Get(addr);
-  b |= 1 << (x % 8);
-  Shared_Set(addr, b);
-}
-
-inline void ClearBitPixel(int offset, int x, int y, int w, int h)
-{
-  int addr = offset + (x / 8) + (y * w);
-  Byte b = Shared_Get(addr);
-  b &= ~(1 << (x % 8));
-  Shared_Set(addr, b);
-}
-
-inline Byte GetBitPixel(int offset, int x, int y, int w, int h)
-{
-  int addr = offset + (x / 8) + (y * w);
-  return (Shared_Get(addr) >> (x % 8)) & 1;
-}
+int      GpuFrame = 0;  //
+int      GpuTimer = 0;  //
+Word     frame, currentFrame;
+Byte     lineR[16], lineG[16], lineB[16];
+Byte     planeModes[4];
+int      scanpos, scanline;
+int      numPlanes;
+int      tilesAddr;
 
 void Gpu_Setup()
 {
-  sGpuMem = malloc(GPU_MEM_SIZE);
-  memset(sGpuMem, 0, GPU_MEM_SIZE);
-
+  //sGpuMem = malloc(GPU_MEM_SIZE);
   sCrt = malloc(CRT_W * CRT_H * CRT_DEPTH);
-  memset(sCrt, 0, GPU_MEM_SIZE);
-
-  sSharedRam = Shared_GetPtr();
-  sSharedRamInt = (int*) sSharedRam;
   sScanLine = malloc(CRT_W * 3);
   sGpuMemLines = malloc((CRT_W * 4) / 8);
-  memset(sScanLine, 0, CRT_W * 3);
   
-  memset(sCrt, 0x00, CRT_W * CRT_H * CRT_DEPTH);
-
-  GpuMmu_Set(Gpu_GFX_PLANES_Relative, 0x01);
-  GpuMmu_Set(Gpu_GFX_BGCOLR_Relative, 0x3B);
-  GpuMmu_Set(Gpu_GFX_BGCOLG_Relative, 0x3F);
-  GpuMmu_Set(Gpu_GFX_BGCOLB_Relative, 0x42);
-
-  GpuMmu_Set(Gpu_GFX_SCNW0R_Relative, 0xFE);
-  GpuMmu_Set(Gpu_GFX_SCNW0G_Relative, 0xFE);
-  GpuMmu_Set(Gpu_GFX_SCNW0B_Relative, 0xFE);
-
-  GpuMmu_Set(Gpu_GFX_SCNW1R_Relative, 0xF2);
-  GpuMmu_Set(Gpu_GFX_SCNW1G_Relative, 0x4C);
-  GpuMmu_Set(Gpu_GFX_SCNW1B_Relative, 0x27);
-
-  GpuMmu_Set(Gpu_GFX_SCNW2R_Relative, 0xFB);
-  GpuMmu_Set(Gpu_GFX_SCNW2G_Relative, 0xBA);
-  GpuMmu_Set(Gpu_GFX_SCNW2B_Relative, 0x42);
-
-  GpuMmu_Set(Gpu_GFX_SCNW3R_Relative, 0x56);
-  GpuMmu_Set(Gpu_GFX_SCNW3G_Relative, 0xB9);
-  GpuMmu_Set(Gpu_GFX_SCNW3B_Relative, 0xD0);
+  sBufferRam = Ram_Get(); 
 
   //LOGF("GPU Crt = Ptr=%p Size=%ix%ix%i", sCrt, CRT_W, CRT_H, CRT_DEPTH);
   //LOGF("GPU ScaneLine = Ptr=%p Size=%i", sScanLine, CRT_W * 3);
 
-  memset(sGpuMem + Gpu_GFX_TILES_Relative, 0xFF, 0x800);
+  //memset(sGpuMem + Gpu_GFX_TILES_Relative, 0xFF, 0x800);
 
   sCrtDirty = true;
 }
@@ -127,26 +86,44 @@ void Gpu_Teardown()
   free(sGpuMemLines);
   free(sScanLine);
   free(sCrt);
-  free(sGpuMem);
+  //free(sGpuMem);
 }
 
-void GpuMmu_Set(Word address, Byte value)
+void Gpu_TurnOn()
 {
-  sGpuMem[address & ~GPU_MEM_SIZE] = value;
-}
+  Gpu_Halt = true;
 
-Byte GpuMmu_Get(Word address)
-{
-  return sGpuMem[address & ~GPU_MEM_SIZE];
-}
+  //memset(sGpuMem, 0, GPU_MEM_SIZE);
+  memset(sCrt, 0, GPU_MEM_SIZE);
+  memset(sScanLine, 0, CRT_W * 3);
+  memset(sCrt, 0x00, CRT_W * CRT_H * CRT_DEPTH);
 
-Word GpuMmu_GetWord(Word address)
-{
-  Word v;
-  v = sGpuMem[(address)  & ~GPU_MEM_SIZE];
-  v |= sGpuMem[(address + 1)  & ~GPU_MEM_SIZE] << 8;
+  LOGF("GPU Pre-init");
 
-  return v;
+  Mmu_Set(REG_GFX_PLANES_COUNT, 0x01);
+  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 0, 0x3B);
+  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 1, 0x3F);
+  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 2, 0x42);
+
+  Mmu_Set(REG_GFX_PLANE0_COLOUR + 0, 0xFE);
+  Mmu_Set(REG_GFX_PLANE0_COLOUR + 1, 0xFE);
+  Mmu_Set(REG_GFX_PLANE0_COLOUR + 2, 0xFE);
+
+  Mmu_Set(REG_GFX_PLANE1_COLOUR + 0, 0xF2);
+  Mmu_Set(REG_GFX_PLANE1_COLOUR + 1, 0x4C);
+  Mmu_Set(REG_GFX_PLANE1_COLOUR + 2, 0x27);
+
+  Mmu_Set(REG_GFX_PLANE2_COLOUR + 0, 0xFB);
+  Mmu_Set(REG_GFX_PLANE2_COLOUR + 1, 0xBA);
+  Mmu_Set(REG_GFX_PLANE2_COLOUR + 2, 0x42);
+
+  Mmu_Set(REG_GFX_PLANE3_COLOUR + 0, 0x56);
+  Mmu_Set(REG_GFX_PLANE3_COLOUR + 1, 0xB9);
+  Mmu_Set(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
+
+  // @TODO - Reset GPU state here.
+
+  LOGF("GPU Turn On.");
 }
 
 Byte activity = 0;
@@ -162,39 +139,39 @@ EXPORT void* GetCrt()
   return sCrt;
 }
 
-int GpuFrame = 0;  //
-int GpuTimer = 0;  //
-Word     frame, currentFrame;
-Byte     lineR[16], lineG[16], lineB[16];
-Byte     planeModes[4];
-int      scanpos, scanline;
-int      numPlanes;
 
 void Gpu_FrameStart()
 {
   // Reset Colours
-  GpuMmu_Set(Gpu_GFX_BGCOLR_Relative, 0x3B);
-  GpuMmu_Set(Gpu_GFX_BGCOLG_Relative, 0x3F);
-  GpuMmu_Set(Gpu_GFX_BGCOLB_Relative, 0x42);
+  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 0, 0x3B);
+  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 1, 0x3F);
+  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 2, 0x42);
 
-  GpuMmu_Set(Gpu_GFX_SCNW0R_Relative, 0xFE);
-  GpuMmu_Set(Gpu_GFX_SCNW0G_Relative, 0xFE);
-  GpuMmu_Set(Gpu_GFX_SCNW0B_Relative, 0xFE);
+  Mmu_Set(REG_GFX_PLANE0_COLOUR + 0, 0xFE);
+  Mmu_Set(REG_GFX_PLANE0_COLOUR + 1, 0xFE);
+  Mmu_Set(REG_GFX_PLANE0_COLOUR + 2, 0xFE);
 
-  GpuMmu_Set(Gpu_GFX_SCNW1R_Relative, 0xF2);
-  GpuMmu_Set(Gpu_GFX_SCNW1G_Relative, 0x4C);
-  GpuMmu_Set(Gpu_GFX_SCNW1B_Relative, 0x27);
+  Mmu_Set(REG_GFX_PLANE1_COLOUR + 0, 0xF2);
+  Mmu_Set(REG_GFX_PLANE1_COLOUR + 1, 0x4C);
+  Mmu_Set(REG_GFX_PLANE1_COLOUR + 2, 0x27);
 
-  GpuMmu_Set(Gpu_GFX_SCNW2R_Relative, 0xFB);
-  GpuMmu_Set(Gpu_GFX_SCNW2G_Relative, 0xBA);
-  GpuMmu_Set(Gpu_GFX_SCNW2B_Relative, 0x42);
+  Mmu_Set(REG_GFX_PLANE2_COLOUR + 0, 0xFB);
+  Mmu_Set(REG_GFX_PLANE2_COLOUR + 1, 0xBA);
+  Mmu_Set(REG_GFX_PLANE2_COLOUR + 2, 0x42);
 
-  GpuMmu_Set(Gpu_GFX_SCNW3R_Relative, 0x56);
-  GpuMmu_Set(Gpu_GFX_SCNW3G_Relative, 0xB9);
-  GpuMmu_Set(Gpu_GFX_SCNW3B_Relative, 0xD0);
+  Mmu_Set(REG_GFX_PLANE3_COLOUR + 0, 0x56);
+  Mmu_Set(REG_GFX_PLANE3_COLOUR + 1, 0xB9);
+  Mmu_Set(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
 
-  int  numFrames = GpuMmu_Get(Gpu_GFX_FRAMENUM_Relative);
-  int  seconds   = GpuMmu_Get(Gpu_GFX_SECNDNUM_Relative);
+  tilesAddr = Mmu_GetWord(REG_GFX_TILES_ADDR);
+
+
+  Tiles = &sBufferRam[tilesAddr];
+
+  LOGF("tilesaddr = $%4X %p", tilesAddr);
+
+  int  numFrames = Mmu_Get(REG_GFX_FRAME_NUM);
+  int  seconds   = Mmu_Get(REG_GFX_SECOND_NUM);
   Byte counters = 0;
   numFrames++;
 
@@ -202,36 +179,36 @@ void Gpu_FrameStart()
   {
     numFrames = 0;
     seconds++;
-    counters |= Flags_GFX_FLG_COUNTERS_NEWFRAME;
+    counters |= GFX_FLG_COUNTERS_NEWFRAME;
   }
 
   if ((seconds & 1) == 0)
   {
-    counters |= Flags_GFX_FLG_COUNTERS_ODDEVEN;
+    counters |= GFX_FLG_COUNTERS_ODDEVEN;
   }
 
   if ((numFrames & 2) == 2)
-    counters |= Flags_GFX_FLG_COUNTERS_2;
+    counters |= GFX_FLG_COUNTERS_2;
 
   if ((numFrames & 4) == 4)
-    counters |= Flags_GFX_FLG_COUNTERS_4;
+    counters |= GFX_FLG_COUNTERS_4;
 
   if ((numFrames & 8) == 8)
-    counters |= Flags_GFX_FLG_COUNTERS_8;
+    counters |= GFX_FLG_COUNTERS_8;
 
   if (numFrames == 15)
-    counters |= Flags_GFX_FLG_COUNTERS_15;
+    counters |= GFX_FLG_COUNTERS_15;
 
   if (numFrames == 30)
-    counters |= Flags_GFX_FLG_COUNTERS_30;
+    counters |= GFX_FLG_COUNTERS_30;
 
   // LOGF("Counters= $%2X Seconds = $%2X Frames = $%2X", counters, seconds, numFrames);
 
-  GpuMmu_Set(Gpu_GFX_COUNTERS_Relative, counters);
-  GpuMmu_Set(Gpu_GFX_SECNDNUM_Relative, seconds & 0xFF);
-  GpuMmu_Set(Gpu_GFX_FRAMENUM_Relative, numFrames);
+  Mmu_Set(REG_GFX_COUNTERS, counters);
+  Mmu_Set(REG_GFX_SECOND_NUM, seconds & 0xFF);
+  Mmu_Set(REG_GFX_FRAME_NUM, numFrames);
 
-  numPlanes = GpuMmu_Get(Gpu_GFX_PLANES_Relative);
+  numPlanes = Mmu_Get(REG_GFX_PLANES_COUNT);
 
   switch(numPlanes)
   {
@@ -280,7 +257,7 @@ inline bool Gpu_Coroutine_Common()
   {
     if (GpuTimer == (CRT_SCAN_TOTAL_TIME - (CRT_V_BLANK_TIME)))
     {
-      Cpu_Interrupt(CPU_VBLANK);
+      Cpu_Interrupt(INTVEC_VBLANK);
       // Copy previous scanline to CRT.
       SubmitLine(CRT_H - 1);
       Gpu_FrameEnd();
@@ -301,8 +278,8 @@ inline bool Gpu_Coroutine_Common()
       SubmitLine(scanline - 1);
     }
 
-    GpuMmu_Set(Gpu_GFX_SCANLINE_Relative, scanline);
-    Cpu_Interrupt(CPU_HBLANK);
+    Mmu_Set(REG_GFX_SCANLINE_NUM, scanline);
+    Cpu_Interrupt(INTVEC_HBLANK);
 
     // Fetch current Graphics mem, and cache it.
     // Graphics and Text mode stuff here, so we don't have to do it per coroutine.
@@ -310,12 +287,12 @@ inline bool Gpu_Coroutine_Common()
     {
       case 1:
       {
-        memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
       }
       case 2:
       {
-        memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
-        memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 1) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 1) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
       }
       case 4:
       {
@@ -326,10 +303,10 @@ inline bool Gpu_Coroutine_Common()
 
         #if defined(TEXT_TEST)
           // TEXT MODES.
-          memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 0) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
-          memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 1) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
-          memcpy(sGpuMemLines + (2 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 2) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
-          memcpy(sGpuMemLines + (3 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 3) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+          memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+          memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 1) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+          memcpy(sGpuMemLines + (2 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 2) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+          memcpy(sGpuMemLines + (3 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 3) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
         #else
           // ORIGINAL.
           memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
@@ -353,6 +330,9 @@ inline bool Gpu_Coroutine_Common()
 
 void Gpu_ElectronBeam()
 {
+  if (Gpu_Halt)
+    return;
+
   if (Gpu_Coroutine_Common() == false)
     return;
 
@@ -365,21 +345,21 @@ void Gpu_ElectronBeam()
 
   if (x == 0)
   {
-    int lineR1 = GpuMmu_Get(Gpu_GFX_SCNW0R_Relative);
-    int lineG1 = GpuMmu_Get(Gpu_GFX_SCNW0G_Relative);
-    int lineB1 = GpuMmu_Get(Gpu_GFX_SCNW0B_Relative);
-    int lineR2 = GpuMmu_Get(Gpu_GFX_SCNW1R_Relative);
-    int lineG2 = GpuMmu_Get(Gpu_GFX_SCNW1G_Relative);
-    int lineB2 = GpuMmu_Get(Gpu_GFX_SCNW1B_Relative);
-    int lineR3 = GpuMmu_Get(Gpu_GFX_SCNW2R_Relative);
-    int lineG3 = GpuMmu_Get(Gpu_GFX_SCNW2G_Relative);
-    int lineB3 = GpuMmu_Get(Gpu_GFX_SCNW2B_Relative);
-    int lineR4 = GpuMmu_Get(Gpu_GFX_SCNW3R_Relative);
-    int lineG4 = GpuMmu_Get(Gpu_GFX_SCNW3G_Relative);
-    int lineB4 = GpuMmu_Get(Gpu_GFX_SCNW3B_Relative);
-    int backR  = GpuMmu_Get(Gpu_GFX_BGCOLR_Relative);
-    int backG  = GpuMmu_Get(Gpu_GFX_BGCOLG_Relative);
-    int backB  = GpuMmu_Get(Gpu_GFX_BGCOLB_Relative);
+    int lineR1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 0);
+    int lineG1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 1);
+    int lineB1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 2);
+    int lineR2 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 0);
+    int lineG2 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 1);
+    int lineB2 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 2);
+    int lineR3 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 0);
+    int lineG3 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 1);
+    int lineB3 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 2);
+    int lineR4 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 0);
+    int lineG4 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 1);
+    int lineB4 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 2);
+    int backR  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 0);
+    int backG  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 1);
+    int backB  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 2);
 
     #define COLOUR_MASK(IDX, R, G, B) \
       lineR[IDX] = R; \
@@ -432,16 +412,23 @@ void Gpu_ElectronBeam()
         Byte invert = 0;
 
         b = sGpuMemLines[(GPU_BUFFER_W * 0) + offset] - ' ';
-        col |= (!!(sGpuMem[Gpu_GFX_TILES_Relative + b + (charRow * 96)] & bitShift));
+   //     col = 1;
+//        col |= (!!(sGpuMem[tilesAddr + b + (charRow * 96)] & bitShift));
+
+        col |= (!!(Tiles[b + (charRow * 96)] & bitShift));
 
         b = sGpuMemLines[(GPU_BUFFER_W * 1) + offset] - ' ';
-        col |= (!!(sGpuMem[Gpu_GFX_TILES_Relative + b + (charRow * 96)] & bitShift)) << 1;
+        col |= (!!(Tiles[b + (charRow * 96)] & bitShift)) << 1;
+//        col |= (!!(sGpuMem[tilesAddr + b + (charRow * 96)] & bitShift)) << 1;
+
 
         b = sGpuMemLines[(GPU_BUFFER_W * 2) + offset] - ' ';
-        col |= (!!(sGpuMem[Gpu_GFX_TILES_Relative + b + (charRow * 96)] & bitShift)) << 2;
+        col |= (!!(Tiles[b + (charRow * 96)] & bitShift)) << 2;
+//        col |= (!!(sGpuMem[tilesAddr + b + (charRow * 96)] & bitShift)) << 2;
 
         b = sGpuMemLines[(GPU_BUFFER_W * 3) + offset] - ' ';
-        col |= (!!(sGpuMem[Gpu_GFX_TILES_Relative + b + (charRow * 96)] & bitShift)) << 3;
+        col |= (!!(Tiles[b + (charRow * 96)] & bitShift)) << 3;
+//        col |= (!!(sGpuMem[tilesAddr + b + (charRow * 96)] & bitShift)) << 3;
       #else
         col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 0) + offset] & bitShift)));
         col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 1) + offset] & bitShift))) << 1;
@@ -493,62 +480,6 @@ int Gpu_Coroutine_Start(Byte type)
 
   switch (GPU_DATA.op)
   {
-    case INT_PRG2GPU:
-    {
-      GPU_DATA.cycles += 2;
-      GPU_DATA.opGpuCpy.dst = GpuMmu_GetWord(Gpu_GFX_W1_Relative);
-      GPU_DATA.opGpuCpy.src = GpuMmu_GetWord(Gpu_GFX_W2_Relative);
-      GPU_DATA.opGpuCpy.len = GpuMmu_GetWord(Gpu_GFX_W3_Relative);
-
-      LOGF("ogGpuCpy.dst = %4X", GPU_DATA.opGpuCpy.dst);
-      LOGF("ogGpuCpy.src = %4X", GPU_DATA.opGpuCpy.src);
-      LOGF("ogGpuCpy.len = %4X", GPU_DATA.opGpuCpy.len);
-
-      if (GPU_DATA.opGpuCpy.len == 0)
-      {
-        LOGF("Failed. Length zero.");
-        GPU_YIELD_FAIL;
-      }
-
-      if (GPU_DATA.opGpuCpy.dst < Gpu_Begin || GPU_DATA.opGpuCpy.dst > (Gpu_Begin + 0x1000))
-      {
-        LOGF("Failed. Dst out of bounds!");
-        GPU_YIELD_FAIL;
-      }
-
-      GPU_DATA.opGpuCpy.dst -= Gpu_Begin;
-
-      GPU_YIELD;
-    }
-    break;
-    case INT_GPUSET:
-    {
-      GPU_DATA.cycles += 2;
-      GPU_DATA.opGpuSet.dst = GpuMmu_GetWord(Gpu_GFX_W1_Relative);
-      GPU_DATA.opGpuSet.len = GpuMmu_GetWord(Gpu_GFX_W2_Relative);
-      GPU_DATA.opGpuSet.val = GpuMmu_Get(Gpu_GFX_B1_Relative);
-
-      LOGF("ogGpuSet.dst = %4X", GPU_DATA.opGpuSet.dst);
-      LOGF("ogGpuSet.len = %4X", GPU_DATA.opGpuSet.len);
-      LOGF("ogGpuSet.val = %0X", GPU_DATA.opGpuSet.val);
-
-      if (GPU_DATA.opGpuSet.len == 0)
-      {
-        LOGF("Failed. Length zero.");
-        GPU_YIELD_FAIL;
-      }
-
-      if (GPU_DATA.opGpuSet.dst < Gpu_Begin || GPU_DATA.opGpuSet.dst >(Gpu_Begin + 0x1000))
-      {
-        LOGF("Failed. Dst out of bounds!");
-        GPU_YIELD_FAIL;
-      }
-
-      GPU_DATA.opGpuSet.dst -= Gpu_Begin;
-
-      GPU_YIELD;
-    }
-    break;
   }
   return 0;
 
@@ -567,50 +498,6 @@ int Gpu_Coroutine()
 
   switch (GPU_DATA.op)
   {
-    case INT_GPUSET:
-    {
-      int subCycles = 16;
-
-      while (GPU_DATA.opGpuSet.len > 0 || subCycles > 0)
-      {
-        sGpuMem[GPU_DATA.opGpuSet.dst++] = GPU_DATA.opGpuSet.val;
-        --subCycles;
-        --GPU_DATA.opGpuSet.len;
-      }
-
-      GPU_DATA.cycles++;
-
-      if (GPU_DATA.opGpuSet.len <= 0)
-      {
-        LOGF("opGpuSet Done.");
-        GPU_RETURN;
-      }
-
-      GPU_YIELD;
-    }
-    break;
-    case INT_PRG2GPU:
-    {
-      int subCycles = 16;
-
-      while (GPU_DATA.opGpuCpy.len > 0 || subCycles > 0)
-      {
-        sGpuMem[GPU_DATA.opGpuCpy.dst++] = Mmu_Get(GPU_DATA.opGpuCpy.src++);
-        --subCycles;
-        --GPU_DATA.opGpuCpy.len;
-      }
-
-      GPU_DATA.cycles++;
-
-      if (GPU_DATA.opGpuCpy.len <= 0)
-      {
-        LOGF("opGpuCpy Done.");
-        GPU_RETURN;
-      }
-
-      GPU_YIELD;
-    }
-    break;
   }
 
   GPU_RETURN;
@@ -623,13 +510,23 @@ void Gpu_Interrupt(Byte interrupt)
 
 bool IsInterrupt();
 
+void Gpu_On()
+{
+  Gpu_Halt = false;
+}
+
 void Gpu_Clock()
 {
   Gpu_ElectronBeam();
-  if (!IsInterrupt())
-    Gpu_Coroutine();
+
+  if (Gpu_Halt == false)
+  {
+    if (!IsInterrupt())
+      Gpu_Coroutine();
+  }
 
   GpuTimer++;
+  
   if (GpuTimer == CRT_SCAN_TOTAL_TIME)
   {
     GpuTimer = 0;

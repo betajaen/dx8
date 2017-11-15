@@ -1,51 +1,59 @@
-; Common Addresses and Registers
-MMU_BANK = $4000
-RAND = $4001
-MMU_B1 = $4010
-MMU_B2 = $4011
-MMU_W1 = $4012
-MMU_W2 = $4014
-MMU_W3 = $4016
-STACK_END = $4200
-GFX_PLANES = $5000
-GFX_BGCOLR = $5001
-GFX_BGCOLG = $5002
-GFX_BGCOLB = $5003
-GFX_SCNW0R = $5004
-GFX_SCNW0G = $5005
-GFX_SCNW0B = $5006
-GFX_SCNW1R = $5007
-GFX_SCNW1G = $5008
-GFX_SCNW1B = $5009
-GFX_SCNW2R = $500A
-GFX_SCNW2G = $500B
-GFX_SCNW2B = $500C
-GFX_SCNW3R = $500D
-GFX_SCNW3G = $500E
-GFX_SCNW3B = $500F
-GFX_PTYPE0 = $5010
-GFX_PTYPE1 = $5011
-GFX_PTYPE2 = $5012
-GFX_PTYPE3 = $5013
-GFX_SCANLINE = $5014
-GFX_FRAMENUM = $5015
-GFX_SECNDNUM = $5016
-GFX_COUNTERS = $5017
-GFX_B1 = $5030
-GFX_B2 = $5031
-GFX_W1 = $5032
-GFX_W2 = $5034
-GFX_W3 = $5036
-GFX_TILES = $5800
-FPY_INTMSG = $7001
-FPY_STATE = $7002
-FPY_TRACK = $7003
-GFX_PLANE0 = $8000
-GFX_PLANE1 = $A800
-GFX_PLANE2 = $D000
-GFX_PLANE3 = $F800
-GFX_PSIZE = $2800
-GFX_TILE_SIZE = $0008
+; DX8 FASM Instruction Set and Common Constants
+; Registers
+REG_IVT_RESET = $0000
+REG_IVT_HBLANK = $0002
+REG_IVT_VBLANK = $0004
+REG_IVT_FLOPPY = $0006
+REG_IVT_RESERVED_5 = $0008
+REG_IVT_RESERVED_6 = $000A
+REG_IVT_RESERVED_7 = $000C
+REG_IVT_RESERVED_8 = $000E
+REG_STACK_BEGIN = $0010
+REG_STACK_END = $0110
+REG_MMU_BANK = $0110
+REG_MMU_B1 = $0118
+REG_MMU_B2 = $0119
+REG_MMU_W1 = $011A
+REG_MMU_W2 = $011C
+REG_MMU_W3 = $011E
+REG_GFX_B1 = $0120
+REG_GFX_B2 = $0121
+REG_GFX_W1 = $0122
+REG_GFX_W2 = $0124
+REG_GFX_W3 = $0126
+REG_GFX_PLANES_COUNT = $0128
+REG_GFX_PLANE0_TYPE = $0129
+REG_GFX_PLANE1_TYPE = $012A
+REG_GFX_PLANE2_TYPE = $012B
+REG_GFX_PLANE3_TYPE = $012C
+REG_GFX_BACKGROUND_COLOUR = $012D
+REG_GFX_PLANE0_COLOUR = $0130
+REG_GFX_PLANE1_COLOUR = $0133
+REG_GFX_PLANE2_COLOUR = $0136
+REG_GFX_PLANE3_COLOUR = $0139
+REG_GFX_SCANLINE_NUM = $013C
+REG_GFX_FRAME_NUM = $013D
+REG_GFX_SECOND_NUM = $013E
+REG_GFX_COUNTERS = $013F
+REG_GFX_TILES_ADDR = $0140
+REG_GFX_TILES_START = $0142
+REG_GFX_TILES_COUNT = $0143
+REG_FPY_MSG = $0144
+REG_FPY_STATE = $0145
+REG_FPY_TRACK = $0146
+
+; Macros
+
+macro DX8_HEADER_ROM {
+  db 'DX8r'
+  dw 0
+}
+
+macro DX8_HEADER_FDD {
+  db 'DX8f'
+  dw 0
+}
+; Constants
 GFX_FLG_COUNTERS_NEWFRAME = $0080
 GFX_FLG_COUNTERS_ODDEVEN = $0040
 GFX_FLG_COUNTERS_2 = $0002
@@ -60,34 +68,32 @@ IO_FPY_MSG_READ = $0004
 IO_FPY_MSG_WRITE = $0008
 IO_FPY_MSG_ERROR = $0080
 IO_FPY_STATE_DISK = $0001
+MEM_CHIP_ADDR = $0000
+MEM_CHIP_SIZE = $0100
+MEM_PROGRAM_ADDR = $0800
+MEM_PROGRAM_SIZE = $7800
+MEM_SHARED_ADDR = $8000
+MEM_GFX_PLANE_SIZE = $2800
+INTVEC_RESET = $0000
+INTVEC_HBLANK = $0001
+INTVEC_VBLANK = $0002
+INTVEC_FLOPPY = $0003
+INTVEC_ADDR_RESET = $0000
+INTVEC_ADDR_HBLANK = $0002
+INTVEC_ADDR_VBLANK = $0004
+INTVEC_ADDR_FLOPPY = $0006
 
-; Interrupts commands (int $01)
-INT_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length
-INT_MEMCPY = $02    ; Copy Shared Memory: W1=dst W2=src W3=length
-INT_PRG2MEM = $03    ; Copy Program Memory to Shared Memory: W1=dst W2=src W3=length
-INT_DEFLATE = $04    ; Copy RLE Program Memory to Shared Memory and expand: W1=dst W2=src W3=length
-INT_GPUSET = $10    ; Set GPU Memory:  B1=value W1=address W2=length
-INT_PRG2GPU = $11    ; Copy Memory to GPU Memory: W1=dst W2=src W3=length
-INT_CPU_RESET = $FF    ; Soft Reset
-CPU_RESET = $00    ; Reset
-CPU_HBLANK = $01    ; HBlank
-CPU_VBLANK = $02    ; VBlank
-CPU_FLOPPY = $03    ; Floppy
+; Interrupts
+INT_MEMSET = $0001 ; Set Shared Memory:  B1=value W1=address W2=length 
+INT_MEMCPY = $0002 ; Copy Shared Memory: W1=dst W2=src W3=length 
+INT_PRG2MEM = $0003 ; Copy Program Memory to Shared Memory: W1=dst W2=src W3=length 
+INT_DEFLATE = $0004 ; Copy RLE Program Memory to Shared Memory and expand: W1=dst W2=src W3=length 
+INT_GPUSET = $0010 ; Set GPU Memory:  B1=value W1=address W2=length 
+INT_PRG2GPU = $0011 ; Copy Memory to GPU Memory: W1=dst W2=src W3=length 
+INT_GPUON = $00FE ; Turn on the GPU 
+INT_RESET = $00FF ; Soft Reset 
 
-; Interrupts commands (int $01)
-INT_MEMSET = $01    ; Set Shared Memory:  B1=value W1=address W2=length
-INT_MEMCPY = $02    ; Copy Shared Memory: W1=dst W2=src W3=length
-INT_PRG2MEM = $03    ; Copy Program Memory to Shared Memory: W1=dst W2=src W3=length
-INT_DEFLATE = $04    ; Copy RLE Program Memory to Shared Memory and expand: W1=dst W2=src W3=length
-INT_GPUSET = $10    ; Set GPU Memory:  B1=value W1=address W2=length
-INT_PRG2GPU = $11    ; Copy Memory to GPU Memory: W1=dst W2=src W3=length
-INT_CPU_RESET = $FF    ; Soft Reset
-CPU_RESET = $00    ; Reset
-CPU_HBLANK = $01    ; HBlank
-CPU_VBLANK = $02    ; VBlank
-CPU_FLOPPY = $03    ; Floppy
-
-; X8 Processor Instructions
+; Instructions
 macro nop [A, B] {
   ; [$00] nop
   db $00
@@ -788,49 +794,89 @@ macro jmp [A, B] {
   end if
 }
 macro jmp.eq [A, B] {
-  ; [$A4] jmp.eq $0000
-  db $A4
-  dw A
-}
-macro jmp.neq [A, B] {
-  ; [$A5] jmp.neq $0000
+  ; [$A5] jmp.eq $0000
   db $A5
   dw A
 }
-macro jmp.gt [A, B] {
-  ; [$A6] jmp.gt $0000
-  db $A6
-  dw A
-}
-macro jmp.lt [A, B] {
-  ; [$A7] jmp.lt $0000
+macro jmp.neq [A, B] {
+  ; [$A7] jmp.neq $0000
   db $A7
   dw A
 }
-macro jmp.z [A, B] {
-  ; [$A8] jmp.z $0000
-  db $A8
-  dw A
-}
-macro jmp.nz [A, B] {
-  ; [$A9] jmp.nz $0000
+macro jmp.gt [A, B] {
+  ; [$A9] jmp.gt $0000
   db $A9
   dw A
 }
-macro int [A, B] {
-  ; [$AA] int $00
+macro jmp.lt [A, B] {
+  ; [$AB] jmp.lt $0000
+  db $AB
+  dw A
+}
+macro jmp.z [A, B] {
+  ; [$AD] jmp.z $0000
+  db $AD
+  dw A
+}
+macro jmp.nz [A, B] {
+  ; [$AF] jmp.nz $0000
+  db $AF
+  dw A
+}
+macro rjmp [A, B] {
+  ; [$A4] rjmp $00
+  db $A4
+  db A
+}
+macro rjmp.eq [A, B] {
+  ; [$A6] rjmp.eq $00
+  db $A6
+  db A
+}
+macro rjmp.neq [A, B] {
+  ; [$A8] rjmp.neq $00
+  db $A8
+  db A
+}
+macro rjmp.gt [A, B] {
+  ; [$AA] rjmp.gt $00
   db $AA
   db A
 }
+macro rjmp.lt [A, B] {
+  ; [$AC] rjmp.lt $00
+  db $AC
+  db A
+}
+macro rjmp.z [A, B] {
+  ; [$AE] rjmp.z $00
+  db $AE
+  db A
+}
+macro rjmp.nz [A, B] {
+  ; [$B0] rjmp.nz $00
+  db $B0
+  db A
+}
+macro int [A, B] {
+  ; [$B1] int $00
+  db $B1
+  db A
+}
 macro resume [A, B] {
-  ; [$AB] resume
-  db $AB
+  ; [$B2] resume
+  db $B2
 }
 macro sec [A, B] {
-  ; [$AC] sec
-  db $AC
+  ; [$B3] sec
+  db $B3
 }
 macro clc [A, B] {
-  ; [$AD] clc
-  db $AD
+  ; [$B4] clc
+  db $B4
+}
+macro offset [A, B] {
+  ; [$B5] offset $0000
+  db $B5
+  dw A
 }

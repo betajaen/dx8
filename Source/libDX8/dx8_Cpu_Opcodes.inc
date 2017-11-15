@@ -19,7 +19,6 @@ OP(Pop, a, Opf_Single, 3,       { DO_OP_POP(REG_A) })
 OP(PopF, None, Opf_Single, 3,   { DO_OP_POPF() })
 OP(PopR, None, Opf_Single, 3,   { DO_OP_POPR() })
 
-
 // Load
 OP(Load, xA, Opf_Address, 4, { DO_OP_LOAD(REG_X); })
 OP(Load, yA, Opf_Address, 4, { DO_OP_LOAD(REG_Y); })
@@ -221,7 +220,7 @@ OP(RollRight, w, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_W); })
 OP(RollRight, a, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_A); })
 
 // Jmp
-OP(Jmp, A, Opf_Address, 2, { REG_PC = data.w & ~PROGRAM_SIZE; })
+OP(Jmp, A, Opf_Address, 2, { DO_OP_JMP(); })
 OP(Jmp, xy, Opf_Single, 3, { DO_OP_JMP_ABS(REG_X, REG_Y); })
 OP(Jmp, zw, Opf_Single, 3, { DO_OP_JMP_ABS(REG_Z, REG_W); })
 OP(Jmp, Ax, Opf_Address, 4, { DO_OP_JMP_ADD(REG_X, 0); })
@@ -229,24 +228,31 @@ OP(Jmp, Ay, Opf_Address, 4, { DO_OP_JMP_ADD(REG_Y, 0); })
 OP(Jmp, Az, Opf_Address, 4, { DO_OP_JMP_ADD(REG_Z, 0); })
 OP(Jmp, Aw, Opf_Address, 4, { DO_OP_JMP_ADD(REG_W, 0); })
 OP(Jmp, Aa, Opf_Address, 4, { DO_OP_JMP_ADD(REG_A, 0); })
+OP(RJmp, B, Opf_Byte, 2,     { DO_OP_JMP_REL(); })
 
 // Jmp Eq
 OP(JmpEq, A, Opf_Address, 2, { DO_OP_JMP_EQ(); })
+OP(RJmpEq, B, Opf_Byte, 2,    { DO_OP_JMP_REL_EQ(); })
 
 // Jmp Neq
 OP(JmpNeq, A, Opf_Address, 2, { DO_OP_JMP_NEQ(); })
+OP(RJmpNeq, B, Opf_Byte, 2, { DO_OP_JMP_REL_NEQ(); })
 
 // Jmp Gt
 OP(JmpGt, A, Opf_Address, 2, { DO_OP_JMP_GT(); })
+OP(RJmpGt, B, Opf_Byte, 2, { DO_OP_JMP_REL_GT(); })
 
 // Jmp Lt
 OP(JmpLt, A, Opf_Address, 2, { DO_OP_JMP_LT(); })
+OP(RJmpLt, B, Opf_Byte, 2, { DO_OP_JMP_REL_LT(); })
 
 // Jmp If Zero
 OP(JmpZ, A, Opf_Address, 2, { DO_OP_JMP_Z(); })
+OP(RJmpZ, B, Opf_Byte, 2, { DO_OP_JMP_REL_Z(); })
 
 // Jmp If Not Zero
 OP(JmpNotZ, A, Opf_Address, 2, { DO_OP_JMP_NOT_Z(); })
+OP(RJmpNotZ, B, Opf_Byte, 2, { DO_OP_JMP_REL_NOT_Z(); })
 
 // Interrupt
 OP(Int, B, Opf_Byte, 4, { DO_OP_INT(); })
@@ -259,3 +265,6 @@ OP(Clc, None, Opf_Single, 1,   { DO_OP_CLC() })
 
 // Set Clear
 OP(Sec, None, Opf_Single, 1,   { DO_OP_SEC() })
+
+//
+OP(Offset, A, Opf_Address, 2, { DO_OP_SET_PC_OFFSET(); })

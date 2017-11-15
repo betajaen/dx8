@@ -76,7 +76,7 @@ typedef struct {
 
 bool Fpy_HasDisk()
 {
-  return (IoMmu_Get(Io_FPY_STATE_Relative) & Flags_IO_FPY_STATE_DISK) != 0;
+  return (Mmu_Get(REG_FPY_STATE) & IO_FPY_STATE_DISK) != 0;
 }
 
 void Cpu_Interrupt(Byte name);
@@ -85,30 +85,30 @@ void Fpy_Interrupt(Byte msg, bool isError)
 {
   Byte state = msg;
   if (isError)
-    state |= Flags_IO_FPY_MSG_ERROR;
+    state |= IO_FPY_MSG_ERROR;
 
-  IoMmu_Set(Io_FPY_INTMSG_Relative, state);
-  Cpu_Interrupt(CPU_FLOPPY);
+  Mmu_Set(REG_FPY_MSG, state);
+  Cpu_Interrupt(INTVEC_FLOPPY);
 }
 
 void Fpy_InsertDisk()
 {
-  Byte state = IoMmu_Get(Io_FPY_STATE_Relative);
-  state |= Flags_IO_FPY_STATE_DISK;
-  IoMmu_Set(Io_FPY_STATE_Relative, state);
+  Byte state = Mmu_Get(REG_FPY_STATE);
+  state |= IO_FPY_STATE_DISK;
+  Mmu_Set(REG_FPY_STATE, state);
 
-  Fpy_Interrupt(Flags_IO_FPY_MSG_INSERT_Relative, false);
+  Fpy_Interrupt(IO_FPY_MSG_INSERT, false);
 }
 
 void Fpy_RemoveDisk()
 {
-  Byte state = IoMmu_Get(Io_FPY_STATE_Relative);
-  state &= ~Flags_IO_FPY_STATE_DISK;
-  IoMmu_Set(Io_FPY_STATE_Relative, state);
+  Byte state = Mmu_Get(REG_FPY_STATE);
+  state &= ~IO_FPY_STATE_DISK;
+  Mmu_Set(REG_FPY_STATE, state);
 
   memset(sFloppy, 0x00, FLOPPY_SIZE);
 
-  Fpy_Interrupt(Flags_IO_FPY_MSG_REMOVE_Relative, false);
+  Fpy_Interrupt(IO_FPY_MSG_REMOVE, false);
 }
 
 bool Fpy_CopyToFloppyController(void* data, int length)

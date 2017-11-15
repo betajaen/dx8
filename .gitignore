@@ -38,3 +38,4 @@ genie.exe
 .obj
 Build
 *.vcxproj*
+Source/DX8/dx8\.log

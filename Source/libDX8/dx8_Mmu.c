@@ -37,254 +37,174 @@
 
 #include "log_c/src/log.h"
 
-Byte* sChipRam;
-Byte* sIoRam;
-Byte* sProgramRam;
-Byte* sSharedRam;
+Byte* sRam;
 
-#define SHARED_BANK_0 0x8000
-
-Byte Program_Get(Word address)
+Byte Bank_Get(Byte bank, int address)
 {
-  return sProgramRam[address & ~PROGRAM_SIZE];
-}
+  Byte mask = sRam[REG_MMU_BANK + bank];
 
-Byte ChipRam_Get(Word address)
-{
-  return sChipRam[address & ~CHIP_SIZE];
-}
+  //LOGF("Get Bank=%i Mask=$%2X Address=%i", bank, mask, address);
 
-Word ChipRam_GetWord(Word address)
-{
-  Word v;
-  v  = sChipRam[(address    )  & ~CHIP_SIZE];
-  v |= sChipRam[(address + 1)  & ~CHIP_SIZE]  << 8;
-  return v;
-}
-
-void ChipRam_Set(Word address, Byte value)
-{
-  sChipRam[address & ~CHIP_SIZE] = value;
-}
-
-Byte Bank_GetMask()
-{
-  return sChipRam[Chip_MMU_BANK_Relative];
-}
-
-void Bank_SetMask(Byte mask)
-{
-  sChipRam[Chip_MMU_BANK_Relative] = mask;
-}
-
-Byte Bank_Get(Byte bank, Word address)
-{
-  //address = (((Bank_GetMask() & bank) != 0) * HALF_SHARED_SIZE) + (bank * BANK_SIZE) + address;
-  Word originalAddress = address;
-
-  Byte mask = Bank_GetMask();
-  if ((mask & (1 << bank)) != 0)
+  switch(mask)
   {
-    address += 0x8000;
-    bank += 8;
+    default:
+    case 0:
+      return sRam[0x8000 + (bank * 0x1000) + address];
+    case 1:
+      return sRam[0xFFFF + (bank * 0x1000) + address];
+    case 0xFF:
+      return Rom_Get(address);
   }
-
-  return sSharedRam[address];
 }
 
-void Bank_Set(Byte bank, Word address, Byte value)
+void Bank_Set(Byte bank, int address, Byte value)
 {
-  Word originalAddress = address;
-  
-  //LOGF("Bank Mask = $%2X", Bank_GetMask());
+  Byte mask = sRam[REG_MMU_BANK + bank];
+  //LOGF("Set Bank=%i Mask=$%2X Address=%i", bank, mask, address);
 
-  //LOGF("MMU MASK = %i:$%2X", Bank_GetMask(), Bank_GetMask());
-  Byte mask = Bank_GetMask();
-  if ((mask & (1 << bank)) != 0)
+  switch (address)
   {
-    address += 0x8000;
-    bank += 8;
+    default:
+    case 0:
+      sRam[0x8000 + (bank * 0x1000) + address] = value;
+    case 1:
+      sRam[0xFFFF + (bank * 0x1000) + address] = value;
+    case 0xFF:
+      return; // Can't write to the ROM!
   }
-  
-  //  LOGF("Mask = $%2X, Bank = $%2X, Original = $%4X, Calculate = $%4X, Value = $%4X", mask, bank, originalAddress, address, value);
-  sSharedRam[address] = value;
-}
-
-void IoMmu_Set(Word address, Byte value)
-{
-  sChipRam[address & ~IO_SIZE] = value;
-}
-
-Byte IoMmu_Get(Word address)
-{
-  return sIoRam[address & ~IO_SIZE];
 }
 
 void Stack_Set(Byte offset, Byte value)
 {
-  sChipRam[Chip_STACK_END_Relative - offset] = value;
+  sRam[REG_STACK_END - offset] = value;
 }
 
 Byte Stack_Get(Byte offset)
 {
-  return sChipRam[Chip_STACK_END_Relative - offset];
+  return sRam[REG_STACK_END - offset];
 }
 
-void Shared_Set(Word absoluteAddress, Byte value)
+void Chip_Set(Word address, Byte value)
 {
-  sSharedRam[absoluteAddress & SHARED_SIZE] = value;
+  sRam[address] = value;
 }
 
-Byte Shared_Get(Word absoluteAddress)
+Byte Chip_Get(Word address)
 {
-  return sSharedRam[absoluteAddress]; // & SHARED_SIZE];
+  return sRam[address];
 }
 
-Byte* Shared_GetPtr()
+Byte* Ram_Get()
 {
-  return sSharedRam;
+  return sRam;
 }
 
 void Mmu_Setup()
 {
-  sChipRam = malloc(CHIP_SIZE);
-  memset(sChipRam, 0, CHIP_SIZE);
-  sProgramRam = malloc(PROGRAM_SIZE);
-  memset(sProgramRam, 0, PROGRAM_SIZE);
-  sSharedRam = malloc(SHARED_SIZE);
-  memset(sSharedRam, 0xAA, SHARED_SIZE);
-  sIoRam = malloc(IO_SIZE);
-  memset(sIoRam, 0, IO_SIZE);
-
-  Bank_SetMask(0);
-
-  LOGF("Mmu Chip Ptr=%p Size=%i", sChipRam, CHIP_SIZE);
-  LOGF("Mmu Program Ptr=%p Size=%i", sProgramRam, PROGRAM_SIZE);
-  LOGF("Mmu Shared Ptr=%p Size=%i", sSharedRam, SHARED_SIZE);
-  LOGF("Mmu Io Ptr=%p Size=%i", sIoRam, IO_SIZE);
+  sRam = malloc(RAM_SIZE);
+  LOGF("Mmu Ram Ptr=%p Size=%i", sRam, RAM_SIZE);
 }
 
 void Mmu_Teardown()
 {
-  free(sIoRam);
-  free(sSharedRam);
-  free(sProgramRam);
-  free(sChipRam);
+  free(sRam);
 }
 
-void Mmu_Reset()
+void Mmu_TurnOn()
 {
-  memset(sChipRam, 0, CHIP_SIZE);
-  memset(sProgramRam, 0, PROGRAM_SIZE);
-  memset(sSharedRam, 0, SHARED_SIZE);
-  LOGF("Mmu Reset");
-}
-
-bool Mmu_CopyToProgramRam(void* data, int length)
-{
-  if (data != NULL)
-  {
-    int len = length & ~PROGRAM_SIZE;
-
-    memcpy(sProgramRam, data, len);
-    LOGF("Loaded Program ROM Length=%i", len);
-    Cpu_Reset(true);
-
-    // FILE* f = fopen("program.dat", "wb");
-    // fwrite(&len, 4, 1, f);
-    // fwrite(sProgramRam, len, 1, f);
-    // fclose(f);
-    
-    return true;
-  }
-  return false;
+  LOGF("MMU Turn on");
+  memset(sRam, 0xFF, RAM_SIZE); // Memory is initialised with 0xFF's
 }
 
 void Mmu_Set(Word address, Byte value)
 {
+  int m = address & 0xF000;
+
   switch(address & 0xF000)
   {
-    case Program_Begin:
-    case Program_Begin + 0x1000:
-    case Program_Begin + 0x2000:
-    case Program_Begin + 0x3000:
+    // Chip or var
+    case 0x0000:
+      if (address < 512)  // Chip
+        Chip_Set(address, value);
+      else                // Var
+        sRam[address] = value;
       return;
-    case Chip_Begin:
-      ChipRam_Set(address & 0xBFFF, value);
-      return;
-    case Gpu_Begin:
-      GpuMmu_Set(address & 0xAFFF, value);
-      return;
-    case Sfx_Begin:
-      SfxMmu_Set(address & 0x9FFF, value);
-      return;
-    case Io_Begin:
-      IoMmu_Set(address & 0x8FFF, value);
-      return;
-    case 0x8000:
+    // Program
+    case 0x1000:
+    case 0x2000:
+    case 0x3000:
+    case 0x4000:
+    case 0x5000:
+    case 0x6000:
+    case 0x7000:
+       sRam[address] = value;
+       return;
+    // Shared
+    case 0x8000:  // Bank 0
       Bank_Set(0, address - 0x8000, value);
       return;
-    case 0x9000:
-      Bank_Set(1, address - 0x8000, value);
+    case 0x9000:  // Bank 1
+      Bank_Set(1, address - 0x9000, value);
       return;
-    case 0xA000:
-      Bank_Set(2, address - 0x8000, value);
+    case 0xA000:  // Bank 2
+      Bank_Set(2, address - 0xA000, value);
       return;
-    case 0xB000:
-      Bank_Set(3, address - 0x8000, value);
+    case 0xB000:  // Bank 3
+      Bank_Set(3, address - 0xB000, value);
       return;
-    case 0xC000:
-      Bank_Set(4, address - 0x8000, value);
+    case 0xC000:  // Bank 4
+      Bank_Set(4, address - 0xC000, value);
       return;
-    case 0xD000:
-      Bank_Set(5, address - 0x8000, value);
+    case 0xD000:  // Bank 5
+      Bank_Set(5, address - 0xD000, value);
       return;
-    case 0xE000:
-      Bank_Set(6, address - 0x8000, value);
+    case 0xE000:  // Bank 6
+      Bank_Set(6, address - 0xE000, value);
       return;
-    case 0xF000:
-      Bank_Set(7, address - 0x8000, value);
+    case 0xF000:  // Bank 7
+      Bank_Set(7, address - 0xF000, value);
       return;
   }
 }
 
 Byte Mmu_Get(Word address)
 {
-  switch (address & 0xF000)
+  switch(address & 0xF000)
   {
-    case Program_Begin:
-    case Program_Begin + 0x1000:
-    case Program_Begin + 0x2000:
-    case Program_Begin + 0x3000:
-      return Program_Get(address);
-    case Chip_Begin:
-      case Chip_RAND:
-        return rand() & 0xFF;   // TODO: Make this more authentic. Use clocks, etc. 
-      return ChipRam_Get(address & 0xBFFF);
-    case Gpu_Begin:
-      return GpuMmu_Get(address & 0xAFFF);
-    case Sfx_Begin:
-      return SfxMmu_Get(address & 0x9FFF);
-    case Io_Begin:
-      return IoMmu_Get(address & 0x8FFF);
-    case 0x8000:
-      return Bank_Get(0, address & 0x7FFF);
-    case 0x9000:
-      return Bank_Get(1, address & 0x6FFF);
-    case 0xA000:
-      return Bank_Get(2, address & 0x5FFF);
-    case 0xB000:
-      return Bank_Get(3, address & 0x4FFF);
-    case 0xC000:
-      return Bank_Get(4, address & 0x3FFF);
-    case 0xD000:
-      return Bank_Get(5, address & 0x2FFF);
-    case 0xE000:
-      return Bank_Get(6, address & 0x1FFF);
-    case 0xF000:
-      return Bank_Get(7, address & 0x0FFF);
+    // Chip or var
+    case 0x0000:
+      if (address < 512)  // Chip
+        return Chip_Get(address);
+      else                // Var
+        return sRam[address];
+    // Program
+    case 0x1000:
+    case 0x2000:
+    case 0x3000:
+    case 0x4000:
+    case 0x5000:
+    case 0x6000:
+    case 0x7000:
+       return sRam[address];
+    // Shared
+    case 0x8000:  // Bank 0
+      return Bank_Get(0, address - 0x8000);
+    case 0x9000:  // Bank 1
+      return Bank_Get(1, address - 0x9000);
+    case 0xA000:  // Bank 2
+      return Bank_Get(2, address - 0xA000);
+    case 0xB000:  // Bank 3
+      return Bank_Get(3, address - 0xB000);
+    case 0xC000:  // Bank 4
+      return Bank_Get(4, address - 0xC000);
+    case 0xD000:  // Bank 5
+      return Bank_Get(5, address - 0xD000);
+    case 0xE000:  // Bank 6
+      return Bank_Get(6, address - 0xE000);
+    case 0xF000:  // Bank 7
+      return Bank_Get(7, address - 0xF000);
   }
-  return 0;
+  return 0xFF;
 }
 
 Word Mmu_GetWord(Word address)
@@ -292,6 +212,21 @@ Word Mmu_GetWord(Word address)
   Word v;
   v = Mmu_Get(address);
   v |= ((Word) Mmu_Get(address + 1)) << 8;
+  return v;
+}
+
+Byte Mmu_GetAbs(int address)
+{
+  if (address >= RAM_SIZE)
+    address = address % RAM_SIZE;
+  return sRam[address];
+}
+
+Word Mmu_GetWordAbs(int address)
+{
+  Word v;
+  v = Mmu_GetAbs(address);
+  v |= ((Word)Mmu_GetAbs(address + 1)) << 8;
   return v;
 }
 
@@ -330,8 +265,8 @@ Mmu_CoroutineData mmuCoroutineData;
 
 #define MMU_DATA       mmuCoroutineData
 #define MMU_YIELD      return 2;
-#define MMU_RETURN     MMU_DATA.op = 0xFF; LOGF("Returned Coop");return 1;
-#define MMU_YIELD_FAIL MMU_DATA.state = 0xFF; MMU_DATA.op = 0xFF; LOGF("Failed Coop"); return -1;
+#define MMU_RETURN     MMU_DATA.op = 0xFF; return 1;
+#define MMU_YIELD_FAIL MMU_DATA.state = 0xFF; MMU_DATA.op = 0xFF; return -1;
 
 int Mmu_Coroutine_Start(Byte type)
 {
@@ -339,14 +274,16 @@ int Mmu_Coroutine_Start(Byte type)
   MMU_DATA.cycles = 0;
   MMU_DATA.state  = 0;
 
+  LOGF("Mmu_Coroutine_Start $%2X", MMU_DATA.op);
+
   switch(MMU_DATA.op)
   {
     case INT_MEMCPY:
     {
       MMU_DATA.cycles += 2;
-      MMU_DATA.opMemCpy.dst = ChipRam_GetWord(Chip_MMU_W1_Relative);
-      MMU_DATA.opMemCpy.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
-      MMU_DATA.opMemCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative); // & ~SHARED_SIZE;
+      MMU_DATA.opMemCpy.dst = Mmu_GetWord(REG_MMU_W1);
+      MMU_DATA.opMemCpy.src = Mmu_GetWord(REG_MMU_W2);
+      MMU_DATA.opMemCpy.len = Mmu_GetWord(REG_MMU_W3); // & ~SHARED_SIZE;
 
       LOGF("ogMemCpy.dst = %4X", MMU_DATA.opMemCpy.dst);
       LOGF("ogMemCpy.src = %4X", MMU_DATA.opMemCpy.src);
@@ -358,14 +295,14 @@ int Mmu_Coroutine_Start(Byte type)
         MMU_YIELD_FAIL;
       }
 
-      if (MMU_DATA.opMemCpy.src < SHARED_BANK_0 || 
-          MMU_DATA.opMemCpy.dst < SHARED_BANK_0)
-      {
-        MMU_YIELD_FAIL;
-      }
+//     if (MMU_DATA.opMemCpy.src < SHARED_BANK_0 || 
+//          MMU_DATA.opMemCpy.dst < SHARED_BANK_0)
+//      {
+//        MMU_YIELD_FAIL;
+//      }
 
-      MMU_DATA.opMemCpy.src -= SHARED_BANK_0;
-      MMU_DATA.opMemCpy.dst -= SHARED_BANK_0;
+//      MMU_DATA.opMemCpy.src -= SHARED_BANK_0;
+//      MMU_DATA.opMemCpy.dst -= SHARED_BANK_0;
 
       MMU_YIELD;
     }
@@ -373,9 +310,9 @@ int Mmu_Coroutine_Start(Byte type)
     case INT_MEMSET:
     {
       MMU_DATA.cycles += 2;
-      MMU_DATA.opMemSet.dst = ChipRam_GetWord(Chip_MMU_W1_Relative);
-      MMU_DATA.opMemSet.len = ChipRam_GetWord(Chip_MMU_W2_Relative) & ~HALF_SHARED_SIZE;
-      MMU_DATA.opMemSet.val = ChipRam_Get(Chip_MMU_B1_Relative);
+      MMU_DATA.opMemSet.dst = Mmu_GetWord(REG_MMU_W1);
+      MMU_DATA.opMemSet.len = Mmu_GetWord(REG_MMU_W2);
+      MMU_DATA.opMemSet.val = Mmu_Get(REG_MMU_B1);
 
       LOGF("ogMemSet.dst = %4X", MMU_DATA.opMemSet.dst);
       LOGF("ogMemSet.len = %4X", MMU_DATA.opMemSet.len);
@@ -387,12 +324,12 @@ int Mmu_Coroutine_Start(Byte type)
         MMU_YIELD_FAIL;
       }
 
-      if (MMU_DATA.opMemSet.dst < SHARED_BANK_0)
-      {
-        MMU_YIELD_FAIL;
-      }
+//      if (MMU_DATA.opMemSet.dst < SHARED_BANK_0)
+//      {
+//        MMU_YIELD_FAIL;
+//      }
 
-      MMU_DATA.opMemSet.dst -= SHARED_BANK_0;
+//      MMU_DATA.opMemSet.dst -= SHARED_BANK_0;
 
       MMU_YIELD;
     }
@@ -400,9 +337,9 @@ int Mmu_Coroutine_Start(Byte type)
     case INT_PRG2MEM:
     {
       MMU_DATA.cycles += 2;
-      MMU_DATA.opPrgCpy.dst = ChipRam_GetWord(Chip_MMU_W1_Relative); //& ~PROGRAM_SIZE;
-      MMU_DATA.opPrgCpy.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
-      MMU_DATA.opPrgCpy.len = ChipRam_GetWord(Chip_MMU_W3_Relative); //& ~PROGRAM_SIZE;
+      MMU_DATA.opPrgCpy.dst = Mmu_GetWord(REG_MMU_W1); //& ~PROGRAM_SIZE;
+      MMU_DATA.opPrgCpy.src = Mmu_GetWord(REG_MMU_W2);
+      MMU_DATA.opPrgCpy.len = Mmu_GetWord(REG_MMU_W3); //& ~PROGRAM_SIZE;
 
       LOGF("ogPrgCpy.dst = %4X", MMU_DATA.opPrgCpy.dst);
       LOGF("ogPrgCpy.src = %4X", MMU_DATA.opPrgCpy.src);
@@ -414,19 +351,19 @@ int Mmu_Coroutine_Start(Byte type)
         MMU_YIELD_FAIL;
       }
 
-      if (MMU_DATA.opPrgCpy.dst < SHARED_BANK_0 || 
-          MMU_DATA.opPrgCpy.src > PROGRAM_SIZE)
-      {
-        LOGF("Failed. (MMU_DATA.opPrgCpy.dst < SHARED_BANK_0) == %i, MMU_DATA.opPrgCpy.src > PROGRAM_SIZE == %i",
-          MMU_DATA.opPrgCpy.dst < SHARED_BANK_0,
-          MMU_DATA.opPrgCpy.src > PROGRAM_SIZE
-        );
-        MMU_YIELD_FAIL;
-      }
+//      if (MMU_DATA.opPrgCpy.dst < SHARED_BANK_0 || 
+//          MMU_DATA.opPrgCpy.src > PROGRAM_SIZE)
+//      {
+//        LOGF("Failed. (MMU_DATA.opPrgCpy.dst < SHARED_BANK_0) == %i, MMU_DATA.opPrgCpy.src > PROGRAM_SIZE == %i",
+//          MMU_DATA.opPrgCpy.dst < SHARED_BANK_0,
+//          MMU_DATA.opPrgCpy.src > PROGRAM_SIZE
+//        );
+//        MMU_YIELD_FAIL;
+//      }
 
-      LOGF("ogPrgCpy seems to be okay");
+//      LOGF("ogPrgCpy seems to be okay");
 
-      MMU_DATA.opPrgCpy.dst -= SHARED_BANK_0;
+//      MMU_DATA.opPrgCpy.dst -= SHARED_BANK_0;
 
       MMU_YIELD;
     }
@@ -434,9 +371,9 @@ int Mmu_Coroutine_Start(Byte type)
     case INT_DEFLATE:
     {
       MMU_DATA.cycles += 2;
-      MMU_DATA.opBitExp.dst = ChipRam_GetWord(Chip_MMU_W1_Relative) & ~PROGRAM_SIZE;
-      MMU_DATA.opBitExp.src = ChipRam_GetWord(Chip_MMU_W2_Relative);
-      MMU_DATA.opBitExp.len = ChipRam_GetWord(Chip_MMU_W3_Relative) & ~PROGRAM_SIZE;
+      MMU_DATA.opBitExp.dst = Mmu_GetWord(REG_MMU_W1);
+      MMU_DATA.opBitExp.src = Mmu_GetWord(REG_MMU_W2);
+      MMU_DATA.opBitExp.len = Mmu_GetWord(REG_MMU_W3);
 
       LOGF("ogRleCpy.dst = %4X", MMU_DATA.opBitExp.dst);
       LOGF("ogRleCpy.src = %4X", MMU_DATA.opBitExp.src);
@@ -448,19 +385,19 @@ int Mmu_Coroutine_Start(Byte type)
         MMU_YIELD_FAIL;
       }
 
-      if (MMU_DATA.opBitExp.dst < SHARED_BANK_0 ||
-        MMU_DATA.opBitExp.src > PROGRAM_SIZE)
-      {
-        LOGF("Failed. (MMU_DATA.opBitExp.dst < SHARED_BANK_0) == %i, MMU_DATA.opBitExp.src > PROGRAM_SIZE == %i",
-          MMU_DATA.opBitExp.dst < SHARED_BANK_0,
-          MMU_DATA.opBitExp.src > PROGRAM_SIZE
-        );
-        MMU_YIELD_FAIL;
-      }
+//      if (MMU_DATA.opBitExp.dst < SHARED_BANK_0 ||
+//        MMU_DATA.opBitExp.src > PROGRAM_SIZE)
+//      {
+//        LOGF("Failed. (MMU_DATA.opBitExp.dst < SHARED_BANK_0) == %i, MMU_DATA.opBitExp.src > PROGRAM_SIZE == %i",
+//          MMU_DATA.opBitExp.dst < SHARED_BANK_0,
+//          MMU_DATA.opBitExp.src > PROGRAM_SIZE
+//        );
+//        MMU_YIELD_FAIL;
+//      }
 
       LOGF("ogRleCpy seems to be okay");
 
-      MMU_DATA.opBitExp.dst -= SHARED_BANK_0;
+//      MMU_DATA.opBitExp.dst -= SHARED_BANK_0;
 
       MMU_YIELD;
     }
@@ -471,9 +408,11 @@ int Mmu_Coroutine_Start(Byte type)
 
 int Mmu_Coroutine()
 {
+  LOGF("Mmu_Interrupt $%2X About to do", MMU_DATA.op);
   if (MMU_DATA.op == 0xFF)
     return 0;
 
+  LOGF("Mmu_Interrupt $%2X - Okay!", MMU_DATA.op);
   switch(MMU_DATA.op)
   {
     case INT_MEMSET:
@@ -482,7 +421,7 @@ int Mmu_Coroutine()
 
       while(MMU_DATA.opMemSet.len > 0 || subCycles > 0)
       {
-        sSharedRam[MMU_DATA.opMemSet.dst++] = MMU_DATA.opMemSet.val;
+        sRam[MMU_DATA.opMemSet.dst++] = MMU_DATA.opMemSet.val;
         --subCycles;
         --MMU_DATA.opMemSet.len;
       }
@@ -503,7 +442,7 @@ int Mmu_Coroutine()
       
       while (MMU_DATA.opMemCpy.len > 0 || subCycles > 0)
       {
-        sSharedRam[MMU_DATA.opMemCpy.dst++] = sSharedRam[MMU_DATA.opMemCpy.src++];
+        sRam[MMU_DATA.opMemCpy.dst++] = sRam[MMU_DATA.opMemCpy.src++];
         --subCycles;
         --MMU_DATA.opMemCpy.len;
       }
@@ -524,7 +463,7 @@ int Mmu_Coroutine()
       
       while (MMU_DATA.opPrgCpy.len > 0 || subCycles > 0)
       {
-        sSharedRam[MMU_DATA.opPrgCpy.dst++] = sProgramRam[MMU_DATA.opPrgCpy.src++];
+        sRam[MMU_DATA.opPrgCpy.dst++] = sRam[MMU_DATA.opPrgCpy.src++];
         --subCycles;
         --MMU_DATA.opPrgCpy.len;
       }
@@ -549,7 +488,7 @@ int Mmu_Coroutine()
         // Simple bit-length compression.
         // 7th bit is 0 or 1 (data)
         // 6-0 bits is length (max of 126)
-        Byte m = sProgramRam[MMU_DATA.opBitExp.src++];
+        Byte m = sRam[MMU_DATA.opBitExp.src++];
         Byte len = m & 0x7F;
         Byte v = (m & 0x80) >> 7;
         
@@ -574,12 +513,15 @@ int Mmu_Coroutine()
     break;
   }
 
+  LOGF("Mmu_Interrupt Pass through???");
+
   MMU_RETURN;
 }
 
 
 void Mmu_Interrupt(Byte interrupt)
 {
+  LOGF("Mmu_Interrupt $%2X", interrupt);
   Mmu_Coroutine_Start(interrupt);
 }
 

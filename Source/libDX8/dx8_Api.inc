@@ -16,12 +16,12 @@ API_NAME(ProgramAddr, 13)
 API_NAME(SharedAddr, 14)
 
 // Data
-API_NAME(ProgramRam, 100)
-API_NAME(ChipRam, 101)
-API_NAME(SharedRam, 102)
+API_NAME(Rom,        100)
+API_NAME(ChipRam,    101)
+API_NAME(SharedRam,  102)
 API_NAME(FloppyDisk, 103)
-API_NAME(GpuCrt, 104)
-API_NAME(SfxBuffer, 105)
+API_NAME(GpuCrt,     104)
+API_NAME(SfxBuffer,  105)
 
 // Functions
 API_NAME(HardReset, 201)

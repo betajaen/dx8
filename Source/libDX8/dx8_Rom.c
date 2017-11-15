@@ -30,4 +30,41 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
+#include <malloc.h>
 
+#include "log_c/src/log.h"
+
+Byte* sRom;
+
+void Rom_Setup()
+{
+  sRom = malloc(ROM_SIZE);
+  memset(sRom, 0x00, ROM_SIZE);
+}
+
+void Rom_Teardown()
+{
+  free(sRom);
+}
+
+Byte Rom_Get(Word address)
+{
+  int actual = address & (ROM_SIZE - 1);
+  Byte value = sRom[actual];
+  //LOGF("Get Rom $%X:%i $%X:%i => $%2X", address, address, actual, actual, value);
+  return value;
+}
+
+bool Rom_CopyToProgramRom(void* data, int length)
+{
+  if (data != NULL)
+  {
+    int len = length; // & ROM_SIZE;
+
+    memcpy(sRom, data, len);
+    LOGF("Loaded Program ROM Length=%i", len);
+
+    return true;
+  }
+  return false;
+}

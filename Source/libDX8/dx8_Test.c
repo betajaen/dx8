@@ -29,77 +29,60 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
+#if DX8_TEST
+
+#if defined(_WIN32)
+#define _CRT_SECURE_NO_WARNINGS
+#define IMPORT extern __declspec(dllimport)
+#else
+#error Platform not supported :(
+#endif
+
 #include "dx8.h"
-#include "log_c/src/log.h"
+#include <stdio.h>
+#include <malloc.h>
 
-#define SLOWDOWN_RATE 1
 
-void Gpu_Clock();
+IMPORT int Initialise();
+IMPORT int Shutdown();
+IMPORT int GetValue(int name);
+IMPORT int GetRam(int name, int addr);
+IMPORT int SetValue(int name, int value);
+IMPORT int SetData(int name, void* data, int length);
+IMPORT int GetData(int name, void* data, int length);
+IMPORT int Call(int name, int value);
 
-// Step
-//  CPU: 2x
-//  MMU: 1x
-//  GPU: 1x
 
-inline void ClockOnce()
+enum ApiName
 {
-  //LOGF("**Clock");
-  Cpu_Step();
-  Cpu_Step();
-  Mmu_Step(1);
-  Gpu_Clock();
+#define API_NAME(NAME, VALUE) Api_##NAME = VALUE,
+#include "dx8_Api.inc"
+#undef API_NAME
+};
+
+int main()
+{
+  const char* romPath= "C:\\dev\\dx8\\ROMS\\boot.bin";
+
+  Byte* rom = malloc(2048);
+  FILE* f = fopen(romPath, "rb");
+  fseek(f, 0, SEEK_END);
+  long fsize = ftell(f);
+  fseek(f, 0, SEEK_SET);  //same as rewind(f);
+  fread(rom, fsize, 1, f);
+  fclose(f);
+
+  Initialise();
+  SetData(Api_Rom, rom, fsize);
+  Call(Api_HardReset, 0);
+
+  for(int i=0;i < (60 * 10);i++)
+  {
+    Call(Api_CycleFn, 15 * 1000);
+  }
+
+  Shutdown();
+
 }
 
-int Clock(int ms)
-{
-  int count = 0;
-  if (ms < 0)
-  {
-    ClockOnce();
-    count = 1;
-  }
-  else
-  {
-    // Temp: Take milliseconds into account.
-    count = (CRT_SCAN_TOTAL_TIME / SLOWDOWN_RATE);
-    for (int ii = 0; ii < count; ii++)
-    {
-      ClockOnce();
-    }
-  }
-
-  return count;
-}
-
-void Mmu_TurnOn();
-void Mmu_TurnOn();
-void Gpu_TurnOn();
-
-void TurnOn()
-{
-  LOGF("******* TURN ON");
-  Mmu_TurnOn();
-  Cpu_TurnOn();
-  Gpu_TurnOn();
-}
-
-void Cpu_Reset();
-
-void Reset(bool soft)
-{
-  if (soft)
-  {
-    Cpu_Reset();
-  }
-  else
-  {
-    Mmu_TurnOn();
-    Cpu_TurnOn();
-    Gpu_TurnOn();
-
-    // "Called" by the MMU after setup.
-    Mmu_Set(0, 0xFE);
-    Cpu_Reset();
-  }
-}
-
+#endif

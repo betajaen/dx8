@@ -31,10 +31,10 @@
 
 #include "dx8.h"
 #include <string.h>
+#include <stdlib.h>
 #include "log_c/src/log.h"
 
 Cpu cpu;
-Cpu cpuPushed;
 
 #define REG_A     (cpu.a)
 #define REG_PC    (cpu.pc.w)
@@ -52,45 +52,6 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define LO_BYTE(WORD)  ((Byte)(WORD & 0xFF))
 #define HI_BYTE(WORD)  ((Byte)((WORD >> 8) & 0xFF))
 
-enum OpFormat
-{
-  Opf_Single  = 1,
-  Opf_Byte    = 2,
-  Opf_Address = 3,
-};
-
-#define OP(OP, OPERANDS, FORMAT, TIME, CODE) Op_##OP##_##OPERANDS,
-
-enum Instructions
-{
-  #include "dx8_Cpu_Opcodes.inc"
-  Op_COUNT
-};
-
-void Mmu_Reset();
-
-void Cpu_Print(const char* name, Cpu* c)
-{
-  LOGF("Cpu[%s] Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", name, c->pc.w, c->interrupt, c->a, c->I.x, c->I.y, c->J.z, c->J.w, c->lastOpcode, LO_BYTE(c->lastOperand), HI_BYTE(c->lastOperand));
-}
-
-void Cpu_Reset(bool soft)
-{
-  LOGF("Cpu Reset. Soft = %i", soft);
-  memset(&cpu, 0, sizeof(Cpu));
-  if (!soft)
-  {
-    Mmu_Reset();
-  }
-
-  Cpu_Print("CPU", &cpu);
-  Cpu_Print("INT", &cpuPushed);
-
-  cpu.pc.lo = Mmu_Get(0);
-  cpu.pc.hi = Mmu_Get(1);
-
-  LOGF("Entry point $%4X", cpu.pc.w);
-}
 
 
 // NOP      -- Noop
@@ -185,16 +146,128 @@ void Cpu_Reset(bool soft)
 #define DO_OP_ROLL_LEFT(R0)         /*  */                             REG_PC += Opf_Single;
 #define DO_OP_ROLL_RIGHT(R0)        /*  */                             REG_PC += Opf_Single;
 
+#define DO_OP_JMP()                 Pc_Set(data.w);
 #define DO_OP_JMP_ADD(LO, HI)       JumpAdd(data.w, LO, HI);
 #define DO_OP_JMP_ABS(LO, HI)       JumpAbs(LO, HI);
+#define DO_OP_JMP_REL()             JumpRel(REG_IMM);
 #define DO_OP_JMP_EQ()              JumpCond(FL_Z == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_NEQ()             JumpCond(FL_Z == 0, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_GT()              JumpCond(FL_N == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_LT()              JumpCond(FL_C == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_Z()               JumpCond(FL_Z == 1, data.w, REG_PC + Opf_Address);
 #define DO_OP_JMP_NOT_Z()           JumpCond(FL_Z == 0, data.w, REG_PC + Opf_Address);
+
+#define DO_OP_JMP_REL_EQ()          JumpCondRel(FL_Z == 1, REG_IMM, REG_PC + Opf_Address);
+#define DO_OP_JMP_REL_NEQ()         JumpCondRel(FL_Z == 0, REG_IMM, REG_PC + Opf_Address);
+#define DO_OP_JMP_REL_GT()          JumpCondRel(FL_N == 1, REG_IMM, REG_PC + Opf_Address);
+#define DO_OP_JMP_REL_LT()          JumpCondRel(FL_C == 1, REG_IMM, REG_PC + Opf_Address);
+#define DO_OP_JMP_REL_Z()           JumpCondRel(FL_Z == 1, REG_IMM, REG_PC + Opf_Address);
+#define DO_OP_JMP_REL_NOT_Z()       JumpCondRel(FL_Z == 0, REG_IMM, REG_PC + Opf_Address);
 #define DO_OP_INT()                 DoInterrupt(data.lo);              REG_PC += Opf_Byte;
 #define DO_OP_RESUME()              Cpu_ResumeInterrupt()                  
+
+#define DO_OP_SET_PC_OFFSET()       cpu.pcOffset.w = data.w; REG_PC += Opf_Address;
+
+enum OpFormat
+{
+  Opf_Single  = 1,
+  Opf_Byte    = 2,
+  Opf_Address = 3,
+};
+
+#define OP(OP, OPERANDS, FORMAT, TIME, CODE) Op_##OP##_##OPERANDS,
+
+enum Instructions
+{
+  #include "dx8_Cpu_Opcodes.inc"
+  Op_COUNT
+};
+
+// Power/Reset Routines
+
+void Cpu_TurnOn();
+
+void Cpu_Setup()
+{
+  memset(&cpu, 0, sizeof(Cpu));
+}
+
+void Cpu_Teardown()
+{
+  memset(&cpu, 0, sizeof(Cpu));
+}
+
+void Cpu_TurnOn()
+{
+  // 'Flip' on CPU.
+  // Registers are interminate.
+  REG_A = rand() & 0xFF;
+  REG_X = rand() & 0xFF;
+  REG_Y = rand() & 0xFF;
+  REG_Z = rand() & 0xFF;
+  REG_W = rand() & 0xFF;
+  cpu.pc.lo = rand() & 0xFF;
+  cpu.pc.hi = rand() & 0xFF;
+  cpu.pcOffset.lo = rand() & 0xFF;
+  cpu.pcOffset.hi = rand() & 0xFF;
+  cpu.flags._data = rand() & 0xFF;
+
+  // Cpu is halted.
+  cpu.halt = true;
+
+  LOGF("CPU Turn On");
+}
+
+void Cpu_Reset()
+{
+  REG_A = rand() & 0xFF;
+  REG_X = rand() & 0xFF;
+  REG_Y = rand() & 0xFF;
+  REG_Z = rand() & 0xFF;
+  REG_W = rand() & 0xFF;
+
+  cpu.flags._data = 0;
+  cpu.halt = false;
+  cpu.pcOffset.lo = 0;
+  cpu.pcOffset.hi = 0;
+  cpu.pc.lo = Mmu_Get(INTVEC_ADDR_RESET  ); // Get Reset from IVT
+  cpu.pc.hi = Mmu_Get(INTVEC_ADDR_RESET+1);
+
+  LOGF("CPU Reset ResetIVT=$%4X", cpu.pc.w);
+}
+
+// Debug Routines
+
+#if defined OP
+#undef OP
+#endif
+#define QUOTE(name) #name
+#define STR(macro) QUOTE(macro)
+#define OP(OP, A,B,C,D)  STR(OP),
+
+const char* kOpcodesStr[] = {
+#include "dx8_Cpu_Opcodes.inc"
+};
+
+void Cpu_Print(const char* name, Cpu* c)
+{
+  LOGF("Cpu[%s] Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", name, c->pc.w, c->interrupt, c->a, c->I.x, c->I.y, c->J.z, c->J.w, c->lastOpcode, LO_BYTE(c->lastOperand), HI_BYTE(c->lastOperand));
+}
+
+// Pc Routines
+inline void Pc_Set(Word address)
+{
+  cpu.pc.w = cpu.pcOffset.w + address;
+}
+
+inline void Pc_SetLoHi(Byte lo, Byte hi)
+{
+  Word w = lo;
+  w |= ((Word) hi) << 8;
+  Pc_Set(w);
+}
+
+// Stack Routines
 
 inline void Stack_Print()
 {
@@ -276,13 +349,16 @@ inline void PopPc()
   cpu.pc.lo = PopFromStack();
 }
 
+// Opcodes
+
 inline void Do_Call(Byte lo_offset, Word callAddress)
 {
   Word pc = cpu.pc.w + lo_offset;
 
   PushToStack(LO_BYTE(pc));
   PushToStack(HI_BYTE(pc));
-  REG_PC = (callAddress & ~PROGRAM_SIZE);
+  // REG_PC = callAddress;
+  Pc_Set(callAddress);
 }
 
 inline void Return()
@@ -374,25 +450,61 @@ inline void ADW(Byte* lo0, Byte* hi0, Byte lo1, Byte hi1)
 
 inline void JumpAdd(Word addr, Word lo, Word hi)
 {
-  cpu.pc.w = (addr + lo + hi * 256) & ~PROGRAM_SIZE;
+  //@@@cpu.pc.w = (addr + lo + hi * 256) & 0xFFFF;
+  Pc_Set((addr + lo + hi * 256) & 0xFFFF);
 }
 
 inline void JumpAbs(Word lo, Word hi)
 {
   //Word lastPc = cpu.pc.w;
-  cpu.pc.w = (lo + hi * 256) & ~PROGRAM_SIZE;
+  //@@@ cpu.pc.w = (lo + hi * 256) & 0xFFFF;
+  Pc_Set((lo + hi * 256) & 0xFFFF);
   //LOGF("JMP hi= %2X lo=%2X pc  from %4X  to %4X", hi, lo, lastPc, cpu.pc.w);
+}
+
+inline void JumpRel(Byte signedValue)
+{
+  int relAddr, newPc;
+  if ((signedValue & 0x80) == 0x80)
+  {
+    relAddr = (char) signedValue;
+    newPc = (cpu.pc.w + relAddr) & 0xFFFF;
+    LOGF("JumpRel NEGATIVE given=$%2X signed=%i newPC = $%4X", signedValue, relAddr, newPc);
+  }
+  else
+  {
+    relAddr = (signedValue);
+    newPc = (cpu.pc.w + relAddr) & 0xFFFF;
+    LOGF("JumpRel POSITIVE given=$%2X signed=%i newPC = $%4X", signedValue, relAddr, newPc);
+  }
+  //@@@ cpu.pc.w = (Word) newPc;
+  Pc_Set((Word) newPc);
 }
 
 inline void JumpCond(bool cond, Word ifTrue, Word ifFalse)
 {
   if (cond)
   {
-    cpu.pc.w = ifTrue & ~PROGRAM_SIZE;
+    //@@@ cpu.pc.w = ifTrue;
+    Pc_Set(ifTrue);
   }
   else
   {
-    cpu.pc.w = ifFalse & ~PROGRAM_SIZE;
+    //@@@ cpu.pc.w = ifFalse;
+    Pc_Set(ifFalse);
+  }
+}
+
+inline void JumpCondRel(bool cond, Byte relIfTrue, Word absIfFalse)
+{
+  if (cond)
+  {
+    JumpRel(relIfTrue);
+  }
+  else
+  {
+    //@@@ cpu.pc.w = absIfFalse;
+    Pc_Set(absIfFalse);
   }
 }
 
@@ -404,12 +516,12 @@ inline void BranchCond(bool cond, Word ifTrue, Word ifFalse)
   }
   else
   {
-    cpu.pc.w = ifFalse & PROGRAM_SIZE;
+    //@@@ cpu.pc.w = ifFalse;
+    Pc_Set(ifFalse);
   }
 }
 
-
-Word Mmu_GetWord(Word address);
+// Interrupts
 
 void Cpu_Interrupt(Byte name)
 {
@@ -429,7 +541,8 @@ void Cpu_Interrupt(Byte name)
  // interruptAddress |= ((Word) Mmu_Get((name * 2) + 1)) << 8;
 
   cpu.interrupt = name;
-  cpu.pc.w = interruptAddress;
+  //@@@ cpu.pc.w = interruptAddress;
+  Pc_Set(interruptAddress);
   REG_A = 0;
   REG_X = 0;
   REG_Y = 0;
@@ -454,9 +567,7 @@ void Cpu_ResumeInterrupt()
   PopPc();
   PopRegisters();
   
-  
-  
-  if (wasInterrupt == CPU_FLOPPY)
+  if (wasInterrupt == INTVEC_FLOPPY)
   {
     LOGF("Resume from interrupt %i to $%04X", wasInterrupt, cpu.pc.w);
   
@@ -470,14 +581,14 @@ bool IsInterrupt()
   return cpu.interrupt != 0;
 }
 
-void Mmu_Int_MemCpy();
-void Mmu_Int_MemSet();
-void Mmu_Int_PrgCpy();
+void Mmu_Interrupt(Byte name);
 void Gpu_Interrupt(Byte name);
+void Gpu_On();
 
 inline void DoInterrupt(Byte name)
 {
- // LOGF("Interrupt for %i", name);
+  LOGF("Interrupt $%2X", name);
+
   switch(name)
   {
     case INT_MEMCPY:
@@ -485,52 +596,20 @@ inline void DoInterrupt(Byte name)
     case INT_PRG2MEM:
       Mmu_Interrupt(name);
       return;
-    case INT_CPU_RESET:
+    case INT_RESET:
       Cpu_Reset(true);
       return;
     case INT_PRG2GPU:
     case INT_GPUSET:
       Gpu_Interrupt(name);
     break;
+    case INT_GPUON:
+      Gpu_On();
+    break;
   }
- // LOGF("** Unknown Interrupt %i", name);
 }
 
-#undef OP
-
-#define QUOTE(name) #name
-#define STR(macro) QUOTE(macro)
-
-#define OP(OP, A,B,C,D)  STR(OP),
-
-const char* OpcodeStr[] = {
-#include "dx8_Cpu_Opcodes.inc"
-};
-
-
-int Cpu_Step()
-{
-  Byte opcode  = Mmu_Get(REG_PC);
-  Data data;
-  data.lo = Mmu_Get(REG_PC + 1);
-  data.hi = Mmu_Get(REG_PC + 2);
-  
-  // LOGF("PC=$%4X OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, opcode, OpcodeStr[opcode], data.lo, data.hi);
-
-#undef OP
-#define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; return TIME;
-
-  cpu.lastOpcode = opcode;
-  cpu.lastOperand = data.w;
-
-  switch(opcode)
-  {
-    default:
-#include "dx8_Cpu_Opcodes.inc"
-  }
-
-  return 1;
-}
+// Monitor/Debugging
 
 Byte Cpu_GetLastOpcode()
 {
@@ -599,7 +678,7 @@ Word Cpu_GetPcRegister()
 
 void Cpu_SetPcRegister(Word value)
 {
-  REG_PC = value & ~PROGRAM_SIZE;
+  REG_PC = value;
 }
 
 Word Cpu_GetFlagsRegister()
@@ -620,4 +699,43 @@ Byte Cpu_GetStackRegister()
 void Cpu_SetStackRegister(Byte value)
 {
   cpu.stack;
+}
+
+// CPU Stepping
+
+
+#define QUOTE(name) #name
+#define STR(macro) QUOTE(macro)
+
+#define OP(OP, A,B,C,D)  STR(OP),
+
+const char* OpcodeStr[] = {
+#include "dx8_Cpu_Opcodes.inc"
+};
+
+int Cpu_Step()
+{
+  if (cpu.halt)
+    return 4;
+
+  Byte opcode = Mmu_Get(REG_PC);
+  Data data;
+  data.lo = Mmu_Get(REG_PC + 1);
+  data.hi = Mmu_Get(REG_PC + 2);
+
+  //LOGF("**CPU STEP >> PC=$%4X ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
+
+#undef OP
+#define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; return TIME;
+
+  cpu.lastOpcode = opcode;
+  cpu.lastOperand = data.w;
+
+  switch (opcode)
+  {
+  default:
+#include "dx8_Cpu_Opcodes.inc"
+  }
+
+  return 1;
 }

@@ -61,10 +61,18 @@ namespace DX8
       JmpLt,
       JmpZ,
       JmpNotZ,
+      RJmp,
+      RJmpEq,
+      RJmpNeq,
+      RJmpGt,
+      RJmpLt,
+      RJmpZ,
+      RJmpNotZ,
       Int,
       Resume,
       Clc,
       Sec,
+      Offset,
       COUNT
     }
 
@@ -109,10 +117,18 @@ namespace DX8
       "jmp.lt",
       "jmp.z",
       "jmp.nz",
+      "rjmp",
+      "rjmp.eq",
+      "rjmp.neq",
+      "rjmp.gt",
+      "rjmp.lt",
+      "rjmp.z",
+      "rjmp.nz",
       "int",
       "resume",
       "sec",
-      "clc"
+      "clc",
+      "offset"
     };
 
     public enum Operand
@@ -226,6 +242,35 @@ namespace DX8
           }
         }
       }
+
+      internal void ToCFormat(ref StringBuilder sb)
+      {
+        sb.Append(OpcodeCompiler.OpcodeAsm[(int) Opcode]);
+        sb.Append('_');
+        switch(Operand1)
+        {
+          case Operand.A: sb.Append('a'); break;
+          case Operand.X: sb.Append('x'); break;
+          case Operand.Y: sb.Append('y'); break;
+          case Operand.Z: sb.Append('z'); break;
+          case Operand.W: sb.Append('w'); break;
+          case Operand.Address: sb.Append('A'); break;
+          case Operand.Byte: sb.Append('B'); break;
+        }
+        
+        switch(Operand2)
+        {
+          case Operand.A: sb.Append('a'); break;
+          case Operand.X: sb.Append('x'); break;
+          case Operand.Y: sb.Append('y'); break;
+          case Operand.Z: sb.Append('z'); break;
+          case Operand.W: sb.Append('w'); break;
+          case Operand.Address: sb.Append('A'); break;
+          case Operand.Byte: sb.Append('B'); break;
+        }
+
+      }
+
     }
 
     public static String GetApi(String apiPath)
@@ -350,14 +395,58 @@ namespace DX8
       
       
     }
+    
+    public static String MakeAsmOpcodes(List<Op> ops)
+    {
+      StringBuilder sb = new StringBuilder();
+      sb.AppendLine("; Automatically generated file");
 
-    public static String MakeMacros(List<Op> opcodes, Dictionary<string, int> constants, Dictionary<string, KeyValuePair<int, string>> interrupts)
+      foreach(var op in ops)
+      {
+        sb.Append("OP_");
+        op.ToCFormat(ref sb);
+        sb.Append(" = $");
+        sb.AppendFormat("{0:X2}", op.Index);
+        sb.AppendLine();
+      }
+
+      return sb.ToString();
+    }
+
+
+    public static String MakeMacros(List<Op> opcodes, Dictionary<string, int> registers, Dictionary<string, int> constants, Dictionary<string, KeyValuePair<int, string>> interrupts)
     {
       System.Text.StringBuilder sb = new System.Text.StringBuilder(4096);
       
-      // Constants
+      sb.AppendLine("; DX8 FASM Instruction Set and Common Constants");
 
-      sb.AppendLine("; Common Addresses and Registers");
+      // Registers
+      sb.AppendLine("; Registers");
+
+      foreach(var register in registers)
+      {
+        sb.AppendFormat("REG_{0} = ${1:X4}", register.Key, register.Value);
+        sb.AppendLine();
+      }
+      
+      sb.AppendLine();
+      
+      // Constants
+      sb.AppendLine("; Macros");
+      
+      sb.AppendLine();
+      sb.AppendLine("macro DX8_HEADER_ROM {");
+      sb.AppendLine("  db 'DX8r'");
+      sb.AppendLine("  dw 0");
+      sb.AppendLine("}");
+      sb.AppendLine();
+      sb.AppendLine("macro DX8_HEADER_FDD {");
+      sb.AppendLine("  db 'DX8f'");
+      sb.AppendLine("  dw 0");
+      sb.AppendLine("}");
+      
+      // Constants
+      sb.AppendLine("; Constants");
 
       foreach(var constant in constants)
       {
@@ -368,57 +457,19 @@ namespace DX8
       sb.AppendLine();
       
       // Interrupts
-      
-      sb.AppendLine("; Interrupts commands (int $01)");
+      sb.AppendLine("; Interrupts");
 
       foreach(var interrupt in interrupts)
       {
-        sb.AppendFormat("{0} = ${1:X2}    ; {2}", interrupt.Key, interrupt.Value.Key, interrupt.Value.Value);
+        sb.AppendFormat("{0} = ${1:X4} ; {2} ", interrupt.Key, interrupt.Value.Key, interrupt.Value.Value);
         sb.AppendLine();
       }
       
       sb.AppendLine();
-      
-      // Op Constants
-      
-      sb.AppendLine("; Interrupts commands (int $01)");
-
-      foreach(var interrupt in interrupts)
-      {
-        sb.AppendFormat("{0} = ${1:X2}    ; {2}", interrupt.Key, interrupt.Value.Key, interrupt.Value.Value);
-        sb.AppendLine();
-      }
-      
-      sb.AppendLine();
-      
-      // Ops
-      #if PROBABLY_NOT
-      sb.AppendLine("; X8 Processor Instructions");
-      
-      for(int ii=0;ii < opcodes.Count;ii++)
-      {
-        Op op = opcodes[ii];
-        sb.AppendFormat("OP_{0}", op.Opcode.ToString().ToUpper());
-
-        if (op.Operand1 != Operand.None)
-        {
-          sb.AppendFormat("{0}", op.Operand1);
-        }
-        
-        if (op.Operand2 != Operand.None)
-        {
-          sb.AppendFormat("{0}", op.Operand2);
-        }
-
-        sb.AppendFormat(" = ${0:X2}", ii);
-        
-        sb.AppendLine();
-      }
-      #endif
 
       // Macros
       
-      sb.AppendLine("; X8 Processor Instructions");
+      sb.AppendLine("; Instructions");
       
       List<string> done = new List<string>(256);
 
@@ -502,6 +553,64 @@ namespace DX8
       return sb.ToString();
     }
 
+    
+    public static String MakeRegisters(Dictionary<string, int> registers)
+    {
+      System.Text.StringBuilder sb = new System.Text.StringBuilder(4096);
+      
+      // Constants
+
+      sb.AppendLine("// Registers");
+
+      foreach(var register in registers)
+      {
+        sb.AppendFormat("#define REG_{0} (0x{1:X4})", register.Key, register.Value);
+        sb.AppendLine();
+      }
+      
+      sb.AppendLine();
+      
+      return sb.ToString();
+    }
+    
+    public static String MakeConstants(Dictionary<string, int> constants)
+    {
+      System.Text.StringBuilder sb = new System.Text.StringBuilder(4096);
+      
+      // Constants
+
+      sb.AppendLine("// Constants");
+
+      foreach(var constant in constants)
+      {
+        sb.AppendFormat("#define {0} (0x{1:X4})", constant.Key, constant.Value);
+        sb.AppendLine();
+      }
+      
+      sb.AppendLine();
+      
+      return sb.ToString();
+    }
+    
+    public static String MakeInterrupts(Dictionary<string, KeyValuePair<int, string>> interrupts)
+    {
+      System.Text.StringBuilder sb = new System.Text.StringBuilder(4096);
+      
+      // Interrupts
+
+      sb.AppendLine("// Interrupts");
+
+      foreach(var interrupt in interrupts)
+      {
+        sb.AppendFormat("#define {0} (0x{1:X4}) // {2}", interrupt.Key, interrupt.Value.Key, interrupt.Value.Value);
+        sb.AppendLine();
+      }
+      
+      sb.AppendLine();
+      
+      return sb.ToString();
+    }
+
     public static String Decompile(List<Op> ops, Byte[] data)
     {
       int len = data.Length;
@@ -509,23 +618,26 @@ namespace DX8
       System.Text.StringBuilder sb = new System.Text.StringBuilder(len * 30);
       StringBuilder temp = new StringBuilder(100);
       
-      for(int ii=0;ii < 16;ii+=2)
-      {
-        byte   lo = 0, hi = 0;
-        
-        lo = data[ii+0];
-        hi = data[ii+1];
-        
-        sb.AppendFormat("Interrupt[${0:X2}] = ${1:X2}{2:X2}", ii / 2, hi, lo);
-        sb.AppendLine();
-      }
+      int org = 0; // 0xFFFF - 0x800 + 1;
+
       
+        byte   lo = 0, hi = 0;
+
+      //lo = data[4];
+      //hi = data[5];
+
+      //org = lo;
+      //org |= hi << 8;
+      
+      sb.AppendFormat("; DX8 {0} Image", data[3] == 'r' ? "Read-Only Memory" : "Floppy Disk" );
+      sb.AppendLine();
+      sb.AppendFormat("; Origin: {0:X4} ", org);
+      sb.AppendLine();
+      sb.AppendFormat("; Length: {0:X4} ", len);
       sb.AppendLine();
 
-      for(int ii=16;ii < len;)
+      for(int ii=0;ii < len;)
       {
-        byte   lo = 0, hi = 0;
-
         ushort address = (ushort) ii;
 
         Op op = ops[data[ii]];
@@ -542,7 +654,8 @@ namespace DX8
           hi = data[ii];
           ii++;
         }
-        sb.AppendFormat("{0:X4}: ", address);
+        
+        sb.AppendFormat("{0:X4}: ", org + address);
 
         temp.Length = 0;
         op.ToAssemblerFormat(ref temp, lo, hi);
@@ -663,6 +776,72 @@ namespace DX8
       return ops;
     }
 
+    
+    public static Dictionary<string, int> Generate_Registers(String path)
+    {
+      Dictionary<string, int> registers = new Dictionary<string, int>(100);
+
+      String[] lines = System.IO.File.ReadAllLines(path);
+      
+      int org = 0;
+
+      for(int ii=0;ii < lines.Length;ii++)
+      {
+        
+        Match match = Regex.Match(lines[ii], @"REGISTER\(\s*(\d+)\s*,\s*(\w+)\s*\s*\)", RegexOptions.IgnoreCase);
+
+        if (!match.Success)
+          continue;
+          
+        string valueStr  = match.Groups[1].Value;
+        string name      = match.Groups[2].Value;
+        
+        int value;
+        if (!Int32.TryParse(valueStr, out value))
+        {
+          Debug.LogWarningFormat("Bad Syntax (Value '{0}'): {1}", valueStr, lines[ii]);
+          continue;
+        }
+
+        // Debug.LogFormat("{0} => {1} => {2}", name, valueStr, value);
+        
+        registers.Add(name, org);
+        org += value;
+      }
+
+      return registers;
+    }
+    
+    public static Dictionary<string, int> Generate_Constants(String path)
+    {
+      Dictionary<string, int> constants = new Dictionary<string, int>(100);
+
+      String[] lines = System.IO.File.ReadAllLines(path);
+      
+      for(int ii=0;ii < lines.Length;ii++)
+      {
+        
+        Match match = Regex.Match(lines[ii], @"CONSTANT\(\s*(\w+)\s*,\s*0x(\d+)\s*\)", RegexOptions.IgnoreCase);
+
+        if (!match.Success)
+          continue;
+          
+        string name      = match.Groups[1].Value;
+        string valueStr  = match.Groups[2].Value;
+        
+        int value;
+        if (!Int32.TryParse(valueStr, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out value))
+        {
+          Debug.LogWarningFormat("Bad Syntax (Value '{0}'): {1}", valueStr, lines[ii]);
+          continue;
+        }
+        
+        constants.Add(name, value);
+      }
+
+      return constants;
+    }
+
     public static Dictionary<string, int> Generate_AddressConstants(String path)
     {
       Dictionary<string, int> constants = new Dictionary<string, int>(100);
@@ -701,6 +880,7 @@ namespace DX8
 
       return constants;
     }
+
     
     public static Dictionary<string, KeyValuePair<int, string>> Generate_Interrupts(String path)
     {
@@ -729,7 +909,6 @@ namespace DX8
         interrupts.Add(name, new KeyValuePair<int, string>(value, desc));
 
       }
-
       return interrupts;
     }
 

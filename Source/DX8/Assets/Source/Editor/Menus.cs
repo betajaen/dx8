@@ -8,10 +8,13 @@ namespace DX8
   public static class Menus
   {
     public static string ApiCsPath         = @"C:\dev\dx8\Source\DX8\Assets\Source\dx8_Api.cs";
+    public static string Config            = @"C:\dev\dx8\Source\libDX8\dx8_Config.inc";
     public static string ApiPath           = @"C:\dev\dx8\Source\libDX8\dx8_Api.inc";
     public static string OpcodesPath       = @"C:\dev\dx8\Source\libDX8\dx8_Cpu_Opcodes.inc";
-    public static string MemoryConstants   = @"C:\dev\dx8\Source\libDX8\dx8_Memory_Addresses.inc";
+    public static string Registers         = @"C:\dev\dx8\Source\libDX8\dx8_Registers.inc";
+    public static string Constants         = @"C:\dev\dx8\Source\libDX8\dx8_Constants.inc";
     public static string Interrupts        = @"C:\dev\dx8\Source\libDX8\dx8_Interrupts.inc";
+    public static string AsmInclude        = @"C:\dev\dx8\ROMS\include\";
     public static string OpcodesCsv        = @"C:\dev\dx8\Documentation\OpcodesAsm.csv";
     public static string OpcodesInc        = @"C:\dev\dx8\ROMS\dx8.inc";
 
@@ -25,17 +28,48 @@ namespace DX8
     }
 
     
-    [MenuItem("DX8/Generate Macros")]
+    [MenuItem("DX8/Write FASM dx8.inc")]
     public static void MakeMacros()
     {
       List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
-      Dictionary<string, int> constants = OpcodeCompiler.Generate_AddressConstants(MemoryConstants);
-      Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Interrupts);
+      Dictionary<string, int> registers = OpcodeCompiler.Generate_Registers(Config);
+      Dictionary<string, int> constants = OpcodeCompiler.Generate_Constants(Config);
+      Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Config);
 
-      System.IO.File.WriteAllText(OpcodesInc, OpcodeCompiler.MakeMacros(ops, constants, interrupts));
+      System.IO.File.WriteAllText(OpcodesInc, OpcodeCompiler.MakeMacros(ops, registers, constants, interrupts));
       Debug.LogFormat("Wrote {0} macros to {1}", ops.Count, OpcodesInc);
     }
     
+    [MenuItem("DX8/Write C dx__???.inc")]
+    public static void MakeRegisters()
+    {
+      Dictionary<string, int> registers = OpcodeCompiler.Generate_Registers(Config);
+      Dictionary<string, int> constants = OpcodeCompiler.Generate_Constants(Config);
+      Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Config);
+
+      System.IO.File.WriteAllText(Registers, OpcodeCompiler.MakeRegisters(registers));
+      System.IO.File.WriteAllText(Constants, OpcodeCompiler.MakeConstants(constants));
+      System.IO.File.WriteAllText(Interrupts, OpcodeCompiler.MakeInterrupts(interrupts));
+
+      Debug.Log("Wrote dx__??.inc");
+    }
+    
+    [MenuItem("DX8/Write C dx__???.inc (2)")]
+    public static void MakeRegisters2()
+    {
+      List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
+      Dictionary<string, int> registers = OpcodeCompiler.Generate_Registers(Config);
+      Dictionary<string, int> constants = OpcodeCompiler.Generate_Constants(Config);
+      Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Config);
+      
+      System.IO.File.WriteAllText(AsmInclude + "opcodes.inc",    OpcodeCompiler.MakeAsmOpcodes(ops));
+      //System.IO.File.WriteAllText(AsmInclude + "registers.inc",  OpcodeCompiler.MakeAsmRegisters(registers));
+      //System.IO.File.WriteAllText(AsmInclude + "constants.inc",  OpcodeCompiler.MakeAsmConstants(constants));
+      //System.IO.File.WriteAllText(AsmInclude + "interrupts.inc", OpcodeCompiler.MakeAsmInterrupts(interrupts));
+
+      Debug.Log("Wrote dx__??.inc (2)");
+    }
+
     [MenuItem("DX8/Decompile")]
     public static void Decompile()
     {

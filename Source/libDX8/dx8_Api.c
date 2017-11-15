@@ -45,10 +45,15 @@ enum ApiName
 #undef API_NAME
 };
 
+void Cpu_Setup();
+void Cpu_Teardown();
 void Mmu_Setup();
 void Mmu_Teardown();
 void Gpu_Setup();
 void Gpu_Teardown();
+
+void Rom_Setup();
+void Rom_Teardown();
 
 void Fpy_InsertDisk();
 void Fpy_RemoveDisk();
@@ -64,14 +69,22 @@ EXPORT int Initialise()
 {
   logFp = fopen("dx8.log", "w+");
   log_set_fp(logFp);
+  
+  LOGF("CPU_SETUP");
+  Cpu_Setup();
+  LOGF("ROM_SETUP");
+  Rom_Setup();
+  LOGF("MMU_SETUP");
   Mmu_Setup();
+  LOGF("GPU_SETUP");
   Gpu_Setup();
-  Cpu_Reset(true);
+  LOGF("SETUP DONE");
   return 0;
 }
 
 EXPORT int Shutdown()
 {
+  Rom_Teardown();
   Mmu_Teardown();
   Gpu_Teardown();
   fclose(logFp);
@@ -112,16 +125,7 @@ EXPORT int GetValue(int name)
 
 EXPORT int GetRam(int name, int addr)
 {
-  switch(name)
-  {
-    case Api_ChipAddr:
-      return ChipRam_Get(addr);
-    case Api_ProgramAddr:
-      return Program_Get(addr);
-    case Api_SharedAddr:
-      return Shared_Get(addr);
-  }
-  return 0xCD;
+  return Mmu_Get(addr);
 }
 
 EXPORT int SetValue(int name, int value)
@@ -144,7 +148,7 @@ EXPORT int SetValue(int name, int value)
     Cpu_SetWRegister(value & 0xFF);
     return 0;
   case Api_Pc:
-    Cpu_SetPcRegister(value & ~PROGRAM_SIZE);
+    Cpu_SetPcRegister(value & 0xFFFF);
     return 0;
   case Api_Flags:
     Cpu_SetFlagsRegister(value & 0xFF);
@@ -157,15 +161,15 @@ EXPORT int SetValue(int name, int value)
   return -1;
 }
 
-bool Mmu_CopyToProgramRam(void* data, int length);
+bool Rom_CopyToProgramRom(void* data, int length);
 bool Fpy_CopyToFloppyController(void* data, int length);
 
 EXPORT int SetData(int name, void* data, int length)
 {
   switch(name)
   {
-    case Api_ProgramRam:
-      return Mmu_CopyToProgramRam(data, length);
+    case Api_Rom:
+      return Rom_CopyToProgramRom(data, length);
     case Api_FloppyDisk:
       return Fpy_CopyToFloppyController(data, length);
   }
@@ -177,6 +181,8 @@ EXPORT int GetData(int name, void* data, int length)
   return -1;
 }
 
+void Reset(bool soft);
+
 EXPORT int Call(int name, int value)
 {
   switch(name)
@@ -184,10 +190,10 @@ EXPORT int Call(int name, int value)
     case Api_CycleFn:
       return Clock(value);
     case Api_SoftReset:
-      Cpu_Reset(true);
+      Reset(true);
       return 0;
     case Api_HardReset:
-      Cpu_Reset(false);
+      Reset(false);
       return 0;
     case Api_InsertDisk:
       Fpy_InsertDisk();

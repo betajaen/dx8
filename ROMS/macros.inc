@@ -16,7 +16,6 @@ macro APOKE_WORD [ADDR, VALUE] {
       store ADDR+1, a
 }
 
-
 macro APEEK [ADDR] {
       load a, ADDR
 }
@@ -24,7 +23,6 @@ macro APEEK [ADDR] {
 macro ZPEEK [ADDR] {
       load a, ADDR
 }
-
 
 macro interrupt [A] {
       db $EB
@@ -60,9 +58,9 @@ macro SLEEP [N] {
 
 macro MEMSET DST, VAL, LEN {
       push a
-      APOKE       MMU_B1, VAL
-      APOKE_WORD  MMU_W1, DST
-      APOKE_WORD  MMU_W2, LEN
+      APOKE       REG_MMU_B1, VAL
+      APOKE_WORD  REG_MMU_W1, DST
+      APOKE_WORD  REG_MMU_W2, LEN
       int         INT_MEMSET
 
       SLEEP 200
@@ -72,9 +70,9 @@ macro MEMSET DST, VAL, LEN {
 
 macro MEMCPY DST, SRC, LEN {
       push a
-      APOKE_WORD  MMU_W1, DST
-      APOKE_WORD  MMU_W2, SRC
-      APOKE_WORD  MMU_W3, LEN
+      APOKE_WORD  REG_MMU_W1, DST
+      APOKE_WORD  REG_MMU_W2, SRC
+      APOKE_WORD  REG_MMU_W3, LEN
       int         INT_MEMCPY
 
       SLEEP 200
@@ -84,9 +82,9 @@ macro MEMCPY DST, SRC, LEN {
 
 macro PRG2MEM    DST, SRC, LEN {
       push a
-      APOKE_WORD  MMU_W1, DST
-      APOKE_WORD  MMU_W2, SRC
-      APOKE_WORD  MMU_W3, LEN
+      APOKE_WORD  REG_MMU_W1, DST
+      APOKE_WORD  REG_MMU_W2, SRC
+      APOKE_WORD  REG_MMU_W3, LEN
       int         INT_PRG2MEM
 
       SLEEP 200
@@ -96,9 +94,9 @@ macro PRG2MEM    DST, SRC, LEN {
 
 macro PRG2GPU    DST, SRC, LEN {
       push a
-      APOKE_WORD  GFX_W1, DST
-      APOKE_WORD  GFX_W2, SRC
-      APOKE_WORD  GFX_W3, LEN
+      APOKE_WORD  REG_GFX_W1, DST
+      APOKE_WORD  REG_GFX_W2, SRC
+      APOKE_WORD  REG_GFX_W3, LEN
       int         INT_PRG2GPU
 
       SLEEP 200
@@ -106,11 +104,11 @@ macro PRG2GPU    DST, SRC, LEN {
 }
 
 macro CLS   PLANE, PATTERN {
-      MEMSET (GFX_PLANE0 + (GFX_PSIZE * PLANE)), PATTERN, GFX_PSIZE
+      MEMSET (REG_GFX_PLANE0_COLOUR + (MEM_GFX_PLANE_SIZE * PLANE)), PATTERN, MEM_GFX_PLANE_SIZE
 }
 
 macro SPLAT PLANE, IMAGE {
-      PRG2MEM (GFX_PLANE0 + (GFX_PSIZE * PLANE)), (IMAGE), GFX_PSIZE
+      PRG2MEM (REG_GFX_PLANE0_COLOUR + (MEM_GFX_PLANE_SIZE * PLANE)), (IMAGE), MEM_GFX_PLANE_SIZE
 }
 
 macro BEGIN NAME {
@@ -122,15 +120,15 @@ macro END {
 }
 
 macro APUTCHAR P, X, Y, C {
-      APOKE ((GFX_PLANE0 + (GFX_PSIZE * P)) + X + (Y * 40)), C
+      APOKE ((REG_GFX_PLANE0_COLOUR + (MEM_GFX_PLANE_SIZE * P)) + X + (Y * 40)), C
 }
 
 macro APUTCHAR1 P, X, Y, C {
-      APOKE ((GFX_PLANE1) + X + (Y * 40)), C
+      APOKE ((REG_GFX_PLANE1_COLOUR) + X + (Y * 40)), C
 }
 
 macro PRINT_AT [P, X, Y, x] {
-      store ((GFX_PLANE0 + (GFX_PSIZE * P)) + X + (Y * 40)), x
+      store ((REG_GFX_PLANE0_COLOUR + (MEM_GFX_PLANE_SIZE * P)) + X + (Y * 40)), x
 }
 
 macro PUSH_MMUBANK {
@@ -167,3 +165,34 @@ macro MMU.a V {
 macro MMU.z V {
       ZPOKE MMU_BANK, V
 }
+
+macro printl TXT, LL {
+            bits = 16
+            display TXT
+            repeat bits/4
+                  d = '0' + LL shr (bits-%*4) and 0Fh
+                  if d > '9'
+                        d = d + 'A'-'9'-1
+                  end if
+                  display d
+            end repeat
+            display 13,10
+}
+
+macro rpad AMOUNT {
+            len = 2048 - $ - AMOUNT
+            repeat len
+                  db $CD
+            end repeat
+}
+
+macro RJMP x {
+      .here:
+            addr = x - .here
+            if (addr < -128 | addr > 127)
+            'Address exceeds relative range'
+            end if
+            db $A4
+            db addr
+}
+

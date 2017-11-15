@@ -35,13 +35,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define PROGRAM_SIZE 0x4000
-#define CHIP_SIZE    0x400
-#define IO_SIZE      0x1000
-#define SHARED_SIZE  0xFFFF
-#define HALF_SHARED_SIZE 0x8000
-#define BANK_SIZE    0x1000
-
 #define CRT_W 320
 #define CRT_H 256
 #define CRT_DEPTH 3
@@ -68,6 +61,7 @@ typedef struct {
   CPU_REGISTER(I, x, y) I;
   CPU_REGISTER(J, z, w) J;
   CPU_REGISTER(w, lo, hi) pc;
+  CPU_REGISTER(w, lo, hi) pcOffset;
   Byte a;
   Byte stack;
   union
@@ -89,11 +83,12 @@ typedef struct {
   Byte lastOpcode;
   Word lastOperand;
   Byte interrupt;
+  Byte halt;
 } Cpu;
 
 int Clock(int ms);
 
-void Cpu_Reset(bool soft);
+void Cpu_Reset();
 
 int Cpu_Step();
 
@@ -139,63 +134,33 @@ void Mmu_Set(Word address, Byte value);
 
 Byte Mmu_Get(Word address);
 
+Word Mmu_GetWord(Word address);
+
+Byte Mmu_GetAbs(int address);
+
+Word Mmu_GetWordAbs(int address);
+
 void Stack_Set(Byte offset, Byte value);
 
 Byte Stack_Get(Byte offset);
-
-void Shared_Set(Word absoluteAddress, Byte value);
-
-Byte Shared_Get(Word absoluteAddress);
-
-Byte ChipRam_Get(Word address);
-
-Word ChipRam_GetWord(Word address);
-
-void GpuMmu_Set(Word address, Byte value);
-
-Byte GpuMmu_Get(Word address);
-
-void SfxMmu_Set(Word address, Byte value);
-
-Byte SfxMmu_Get(Word address);
-
-void IoMmu_Set(Word address, Byte value);
-
-Byte IoMmu_Get(Word address);
-
-bool Mmu_CopyToProgramRam(void* data, int length);
 
 void Mmu_Interrupt(Byte interrupt);
 
 void Mmu_Step(int steps);
 
-#define Program_Begin (0x0000)
-#define Chip_Begin    (0x4000)
-#define Shared_Begin  (0x8000)
-#define Gpu_Begin     (0x5000)
-#define Sfx_Begin     (0x6000)
-#define Io_Begin      (0x7000)
-#define Flags_Begin   (0x0000)
-#define Values_Begin  (0x0000)
+void Mmu_TurnOn();
 
-enum
-{
-#ifdef ADDRESS
-#undef ADDRESS
-#endif
-#define ADDRESS(RAM, NAME, VALUE) RAM##_##NAME = RAM##_Begin + VALUE, RAM##_##NAME##_Relative = VALUE,
-#include "dx8_Memory_Addresses.inc"
-#undef ADDRESS
-};
+void Cpu_TurnOn();
 
-enum
-{
-#ifdef INTERRUPT
-#undef INTERRUPT
-#endif
-#define INTERRUPT(N, V, D) N = V,
+void Gpu_TurnOn();
+
+Byte Rom_Get(Word address);
+
+#define RAM_SIZE      (0x400 + 0x7C00 + 0xFFFF)
+#define ROM_SIZE      (0x800)
+
+#include "dx8_Registers.inc"
+#include "dx8_Constants.inc"
 #include "dx8_Interrupts.inc"
-#undef INTERRUPT
-};
 
 #endif
