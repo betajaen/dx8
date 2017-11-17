@@ -175,7 +175,7 @@ namespace DX8
       {
         IsOpen = true;
         IsOff = true;
-        IsRunning = true;
+        IsRunning = false;
       }
       else
       {

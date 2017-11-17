@@ -152,6 +152,12 @@ OnFloppyInserted:
         _putchar 0,17+3, 16, ' '
         _putchar 0,17+4, 16, ' '
         _putchar 0,17+5, 16, ' '
+
+        _poke REG_FPY_OP_TRACK, $01
+        _poke REG_FPY_OP_ADDR, $00
+        _poke REG_FPY_OP_ADDR+1, $80
+        _poke REG_FPY_OP, $01
+        int INT_FLOPPY_OP
 return
 
 OnFloppyRemoved:
@@ -184,7 +190,7 @@ FloppyHandler:
         call.nz OnFloppyRemoved
 
         set a, $00
-        store FLOPPY_MSG, a
+        store PROGRAM_SPACE + FLOPPY_MSG, a
 return
 
 ; =============================================================
@@ -258,13 +264,8 @@ CopyAndLaunch:
 
         length = CopyAndLaunch
         printl "Code Length ", length
-        pages = (CopyAndLaunch / 0xFF)
-        lastPage = (CopyAndLaunch mod 0xFF)
+        pages = 2048 / 0xFF
         printl "Pages ", pages
-
-        if (lastPage > 0)
-                pages = pages + 1
-        end if
 
         count = 0
         repeat pages
@@ -275,14 +276,6 @@ CopyAndLaunch:
 
                 count = count + 0xFF
         end repeat
-
-        ;if (lastPage > 0)
-        ;printl "    + ", lastPage
-        ;        set MemCpySm_Len, lastPage + 10
-        ;        set MemCpySm_Dst, PROGRAM_SPACE + count
-        ;        set MemCpySm_Src, ROM_SPACE + count
-        ;        call MemCpySm
-        ;end if
 
         offset  PROGRAM_SPACE
         jmp     EntryPoint

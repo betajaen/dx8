@@ -612,6 +612,7 @@ bool IsInterrupt()
 
 void Gpu_Interrupt(Byte name);
 void Gpu_On();
+void Floppy_Interrupt();
 
 inline void DoInterrupt(Byte name)
 {
@@ -624,6 +625,9 @@ inline void DoInterrupt(Byte name)
       return;
     case INT_GPUON:
       Gpu_On();
+      return;
+    case INT_FLOPPY_OP:
+      Floppy_Interrupt();
       return;
   }
 }

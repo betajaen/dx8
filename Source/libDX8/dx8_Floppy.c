@@ -40,43 +40,24 @@
 #define FLOPPY_SECTOR_SIZE 1024
 #define FLOPPY_SIZE        (FLOPPY_TRACKS * FLOPPY_SECTORS * FLOPPY_SECTOR_SIZE)
 
-#define FLOPPY_HEADER_BYTE_PROGRAM 0x00  // Program
-#define FLOPPY_HEADER_BYTE_DATA    0x01  // Data
+Byte  sFloppyOp;
+int   sFloppyOp_Src;
+Word  sFloppyOp_Dst;
+Word  sFloppyOp_Len;
+Byte  sFloppyOp_Track;
 
-// First sector is reserved by the boot.rom
-// Disks can be program disks or data disks
-// Each disk reserves the first sector (track:0, sector: 0)
-// for the floppy header, and subsequent data.
-// 
-// Program Disk:
-//    Sector 0: ProgramDiskHeader
-//    Sector 0+nnn: Program + any program data for the rest of the disk
-// Data Disk:
-//    Sector: 0, DataDiskHeader
-//    Sector: nnn, Files (One file per sector)
-
-Byte* sFloppy[FLOPPY_SIZE];
-
-typedef struct {
-  Byte flags;
-  Word size;  // Size to initially copy into program ram.
-} ProgramDiskHeader;
-
-typedef struct {
-  Byte type;
-  Word length;  // 
-  Byte name[8]; // 
-} FileHeader;
-
-typedef struct {
-  Byte flags;
-  Byte count;
-  FileHeader files[80 * 2];
-} DataDiskHeader;
+Byte  sFloppy[FLOPPY_SIZE];
 
 bool Fpy_HasDisk()
 {
   return (Mmu_Get(REG_FPY_STATE) & IO_FPY_STATE_DISK) != 0;
+}
+
+int  Fpy_CalculateTrackAddress(Byte track)
+{
+  if (track > 160)
+    track = 160;
+  return track * FLOPPY_SECTOR_SIZE;
 }
 
 void Cpu_Interrupt(Byte name);
@@ -120,6 +101,37 @@ bool Fpy_CopyToFloppyController(void* data, int length)
   memcpy(sFloppy, data, length);
 
   return false;
+}
+
+void Floppy_Interrupt()
+{
+  sFloppyOp       = Mmu_Get(REG_FPY_OP);
+  sFloppyOp_Dst   = Mmu_GetWord(REG_FPY_OP_ADDR);
+  sFloppyOp_Len   = FLOPPY_SECTOR_SIZE;
+  sFloppyOp_Track = Mmu_Get(REG_FPY_OP_TRACK);
+  sFloppyOp_Src   = Fpy_CalculateTrackAddress(sFloppyOp_Track);
+
+  LOGF("Floppy Op!! %i", sFloppyOp);
+
+  Mmu_Set(REG_FPY_OP, 0x00);
+
+  switch(sFloppyOp)
+  {
+    case 1: // IO_FPY_OP_READ_TRACK:
+    {
+      while(sFloppyOp_Len)
+      {
+        Mmu_Set(sFloppyOp_Dst, sFloppy[sFloppyOp_Src]);
+        sFloppyOp_Dst++;
+        sFloppyOp_Src++;
+        sFloppyOp_Len--;
+      }
+      sFloppyOp = 0;
+      Fpy_Interrupt(IO_FPY_MSG_READ, false);
+    }
+    break;
+  }
+
 }
 
 void Floppy_Clock()

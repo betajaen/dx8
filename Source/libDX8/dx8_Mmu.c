@@ -172,7 +172,6 @@ void Mmu_Set(Word address, Byte value)
 
 Byte Mmu_Get(Word address)
 {
-
   switch(address & 0xF000)
   {
     // Chip or var
