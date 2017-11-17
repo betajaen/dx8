@@ -348,10 +348,12 @@ namespace DX8
       byte[] data = System.IO.File.ReadAllBytes(path);
 
       List<byte> fd = new List<byte>(163840);
-      fd.Add(0x00); // Program Data + flags
-      int dataLen = data.Length;
-      fd.Add((byte) (dataLen & 0xFF));
-      fd.Add((byte) (dataLen >> 8));
+
+      for(int i=0;i < 1024;i++)
+      {
+        fd.Add(0x00);
+      }
+
       fd.AddRange(data);
 
       // Padding.

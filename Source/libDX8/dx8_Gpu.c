@@ -153,7 +153,7 @@ void Gpu_FrameStart()
 
   tilesAddr = Mmu_GetWord(REG_GFX_TILES_ADDR);
 
-  LOGF("Tiles address = $%4X", tilesAddr);
+ //  LOGF("Tiles address = $%4X", tilesAddr);
 
   int  numFrames = Mmu_Get(REG_GFX_FRAME_NUM);
   int  seconds   = Mmu_Get(REG_GFX_SECOND_NUM);

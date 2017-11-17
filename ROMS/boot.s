@@ -17,6 +17,15 @@ TEST_DATA:
 CODE:
 
 ; =============================================================
+; GLOBAL VARIABLES
+; =============================================================
+
+FLOPPY_MSG:             db 0
+FLOPPY_DISK_INSERTED:   db $00
+
+printl "FLOPPY_DISK_INSERTED = ", (PROGRAM_SPACE + FLOPPY_DISK_INSERTED)
+
+; =============================================================
 ; EXPORTED FUNCTIONS
 ; =============================================================
 
@@ -51,7 +60,8 @@ VBLANK:
 resume
 
 FLOPPY:
-        _putchar 0, 0,0, 'F'
+        load  a, REG_FPY_MSG
+        store FLOPPY_MSG + PROGRAM_SPACE, a
 resume
 
 ; =============================================================
@@ -103,21 +113,6 @@ DisplayLogo:
         _putchar 0,17+4, 29, '/'
         _putchar 0,17+5, 29, '/'
         _putchar 0,17+6, 29, '/'
-
-        _putchar 0,17+0, 15, 'I'
-        _putchar 0,17+1, 15, 'N'
-        _putchar 0,17+2, 15, 'S'
-        _putchar 0,17+3, 15, 'E'
-        _putchar 0,17+4, 15, 'R'
-        _putchar 0,17+5, 15, 'T'
-
-
-        _putchar 0,17+0, 16, 'F'
-        _putchar 0,17+1, 16, 'L'
-        _putchar 0,17+2, 16, 'O'
-        _putchar 0,17+3, 16, 'P'
-        _putchar 0,17+4, 16, 'P'
-        _putchar 0,17+5, 16, 'Y'
 return
 
 DrawCursor:
@@ -139,6 +134,59 @@ DrawCursor:
         .EndDraw:
 return
 
+OnFloppyInserted:
+        set a, $01
+        store PROGRAM_SPACE + FLOPPY_DISK_INSERTED, a
+
+        _putchar 0,17+0, 15, ' '
+        _putchar 0,17+1, 15, ' '
+        _putchar 0,17+2, 15, ' '
+        _putchar 0,17+3, 15, ' '
+        _putchar 0,17+4, 15, ' '
+        _putchar 0,17+5, 15, ' '
+
+
+        _putchar 0,17+0, 16, ' '
+        _putchar 0,17+1, 16, ' '
+        _putchar 0,17+2, 16, ' '
+        _putchar 0,17+3, 16, ' '
+        _putchar 0,17+4, 16, ' '
+        _putchar 0,17+5, 16, ' '
+return
+
+OnFloppyRemoved:
+        set a, $00
+        store PROGRAM_SPACE + FLOPPY_DISK_INSERTED, a
+
+        _putchar 0,17+0, 15, 'I'
+        _putchar 0,17+1, 15, 'N'
+        _putchar 0,17+2, 15, 'S'
+        _putchar 0,17+3, 15, 'E'
+        _putchar 0,17+4, 15, 'R'
+        _putchar 0,17+5, 15, 'T'
+
+
+        _putchar 0,17+0, 16, 'F'
+        _putchar 0,17+1, 16, 'L'
+        _putchar 0,17+2, 16, 'O'
+        _putchar 0,17+3, 16, 'P'
+        _putchar 0,17+4, 16, 'P'
+        _putchar 0,17+5, 16, 'Y'
+return
+
+FloppyHandler:
+        load a, PROGRAM_SPACE + FLOPPY_MSG
+
+        cmpbit a, IO_FPY_MSG_INSERT
+        call.nz OnFloppyInserted
+
+        cmpbit a, IO_FPY_MSG_REMOVE
+        call.nz OnFloppyRemoved
+
+        set a, $00
+        store FLOPPY_MSG, a
+return
+
 ; =============================================================
 ; MAIN
 ; =============================================================
@@ -149,12 +197,6 @@ EntryPoint:
         _poke.w         INTVEC_ADDR_VBLANK,     VBLANK
         _poke.w         INTVEC_ADDR_FLOPPY,     FLOPPY
 
-printl "HBLANK Addr=", (PROGRAM_SPACE + HBLANK)
-printl "HBLANK RelAddr=", (HBLANK)
-
-printl "VBLANK Addr=", (PROGRAM_SPACE + VBLANK)
-printl "VBLANK RelAddr=", (VBLANK)
-
         ; Reset initial registers
         _poke           REG_MMU_BANK + 0,           $00
         _poke           REG_MMU_BANK + 1,           $00
@@ -164,9 +206,6 @@ printl "VBLANK RelAddr=", (VBLANK)
         _poke           REG_MMU_BANK + 5,           $00
         _poke           REG_MMU_BANK + 6,           $00
         _poke           REG_MMU_BANK + 7,           $00
-
-
-printl "Tiles Addr=", (PROGRAM_SPACE + FONT)
 
         ; Set font
         _poke.w         REG_GFX_TILES_ADDR,         (PROGRAM_SPACE + FONT)
@@ -190,10 +229,16 @@ Setup:
         set MemCpySm_Src, PROGRAM_SPACE + TEST_DATA
         set MemCpySm_Len, 12
         call MemCpySm
-
         call DisplayLogo
+        call OnFloppyRemoved
+
 IDLE:
         call DrawCursor
+
+        load a, FLOPPY_MSG + PROGRAM_SPACE
+        cmp a, $00
+        call.neq FloppyHandler
+
         jmp IDLE
 nop
 

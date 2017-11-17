@@ -50,7 +50,13 @@ OP(Store, Ai, Opf_Single,  8, { DO_OP_STOREW_ABSOLUTE(REG_WORD, REG_I); })
 OP(Store, Aj, Opf_Single,  8, { DO_OP_STOREW_ABSOLUTE(REG_WORD, REG_J); })
 
 // Call
-OP(Call,  A, Opf_Address, 4, { DO_OP_CALL();  })
+OP(Call,    A,  Opf_Address, 4, { DO_OP_CALL();  })
+OP(CallEq,  A,  Opf_Address, 4, { DO_OP_CALL_EQ(); })
+OP(CallNeq, A,  Opf_Address, 4, { DO_OP_CALL_NEQ(); })
+OP(CallGt,  A,  Opf_Address, 4, { DO_OP_CALL_GT(); })
+OP(CallLt,  A,  Opf_Address, 4, { DO_OP_CALL_LT(); })
+OP(CallZ,   A,  Opf_Address, 4, { DO_OP_CALL_Z(); })
+OP(CallNotZ,A,  Opf_Address, 4, { DO_OP_CALL_NOT_Z(); })
 
 // Return
 OP(Return, None, Opf_Single, 4,   { DO_OP_RETURN(); })

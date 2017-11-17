@@ -95,15 +95,21 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_POPF()                PopFlagsFromStack();               REG_PC += Opf_Single; 
 #define DO_OP_POPR()                PopRegisters();                    REG_PC += Opf_Single; 
 
-#define DO_OP_LOAD_INDIRECT(DST, SRC)   DST = LoadFromMemory(SRC);         REG_PC += Opf_Single;
-#define DO_OP_LOAD_ABSOLUTE(DST, SRC)   DST = LoadFromMemory(SRC);         REG_PC += Opf_Address;
-#define DO_OP_LOADW_ABSOLUTE(DST, SRC)  DST = LoadFromMemoryW(SRC);        REG_PC += Opf_Address;
+#define DO_OP_LOAD_INDIRECT(DST, SRC)   DST = FlagsOp(LoadFromMemory(SRC));         REG_PC += Opf_Single;
+#define DO_OP_LOAD_ABSOLUTE(DST, SRC)   DST = FlagsOp(LoadFromMemory(SRC));         REG_PC += Opf_Address;
+#define DO_OP_LOADW_ABSOLUTE(DST, SRC)  DST = FlagsOpW(LoadFromMemoryW(SRC));        REG_PC += Opf_Address;
 
 #define DO_OP_STORE_INDIRECT(DST, SRC)  StoreToMemory(DST, SRC);           REG_PC += Opf_Single;
 #define DO_OP_STORE_ABSOLUTE(DST, SRC)  StoreToMemory(DST, SRC);           REG_PC += Opf_Address;
 #define DO_OP_STOREW_ABSOLUTE(DST, SRC) StoreToMemoryW(DST, SRC);          REG_PC += Opf_Address;
 
 #define DO_OP_CALL()                Do_Call(Opf_Address, REG_WORD);
+#define DO_OP_CALL_EQ()             Do_CallCond(FL_Z == 1, Opf_Address, REG_WORD);
+#define DO_OP_CALL_NEQ()            Do_CallCond(FL_Z == 0, Opf_Address, REG_WORD);
+#define DO_OP_CALL_GT()             Do_CallCond(FL_N == 1, Opf_Address, REG_WORD);
+#define DO_OP_CALL_LT()             Do_CallCond(FL_C == 1, Opf_Address, REG_WORD);
+#define DO_OP_CALL_Z()              Do_CallCond(FL_Z == 1, Opf_Address, REG_WORD);
+#define DO_OP_CALL_NOT_Z()          Do_CallCond(FL_Z == 0, Opf_Address, REG_WORD);
 
 #define DO_OP_RETURN()              Return(cpu);
 
@@ -379,6 +385,20 @@ inline void Do_Call(Byte lo_offset, Word callAddress)
   Pc_Set(callAddress);
 }
 
+inline void Do_CallCond(bool cond, Byte lo_offset, Word callAddress)
+{
+  if (cond)
+  {
+    Do_Call(lo_offset, callAddress);
+  }
+  else
+  {
+    //@@@ cpu.pc.w = ifFalse;
+    Pc_Add(lo_offset);
+  }
+}
+
+
 inline void Return()
 {
   cpu.pc.hi = PopFromStack();
@@ -566,8 +586,6 @@ void Cpu_Interrupt(Byte name)
   REG_W = 0;
   cpu.flags._data = 0;
 
-  LOGF("Interrupt $%2X!!! >>  $%4X", name, cpu.pc.w);
-
 }
 
 void Cpu_ResumeInterrupt()
@@ -585,14 +603,6 @@ void Cpu_ResumeInterrupt()
 
   PopPc();
   PopRegisters();
-  
-  if (wasInterrupt == INTVEC_FLOPPY)
-  {
-    LOGF("Resume from interrupt %i to $%04X", wasInterrupt, cpu.pc.w);
-  
-    Cpu_Print("CPU", &cpu);
-    Stack_Print();
-  }
 }
 
 bool IsInterrupt()
