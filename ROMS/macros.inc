@@ -104,11 +104,11 @@ macro PRG2GPU    DST, SRC, LEN {
 }
 
 macro CLS   PLANE, PATTERN {
-      MEMSET (REG_GFX_PLANE0_COLOUR + (MEM_GFX_PLANE_SIZE * PLANE)), PATTERN, MEM_GFX_PLANE_SIZE
+      MEMSET (MEM_SHARED_ADDR + (MEM_GFX_PLANE_SIZE * PLANE)), PATTERN, MEM_GFX_PLANE_SIZE
 }
 
 macro SPLAT PLANE, IMAGE {
-      PRG2MEM (REG_GFX_PLANE0_COLOUR + (MEM_GFX_PLANE_SIZE * PLANE)), (IMAGE), MEM_GFX_PLANE_SIZE
+      PRG2MEM (MEM_SHARED_ADDR + (MEM_GFX_PLANE_SIZE * PLANE)), (IMAGE), MEM_GFX_PLANE_SIZE
 }
 
 macro BEGIN NAME {
@@ -120,15 +120,15 @@ macro END {
 }
 
 macro APUTCHAR P, X, Y, C {
-      APOKE ((REG_GFX_PLANE0_COLOUR + (MEM_GFX_PLANE_SIZE * P)) + X + (Y * 40)), C
+      APOKE ((MEM_SHARED_ADDR + (MEM_GFX_PLANE_SIZE * P)) + X + (Y * 40)), C
 }
 
 macro APUTCHAR1 P, X, Y, C {
-      APOKE ((REG_GFX_PLANE1_COLOUR) + X + (Y * 40)), C
+      APOKE ((MEM_SHARED_ADDR) + X + (Y * 40)), C
 }
 
 macro PRINT_AT [P, X, Y, x] {
-      store ((REG_GFX_PLANE0_COLOUR + (MEM_GFX_PLANE_SIZE * P)) + X + (Y * 40)), x
+      store ((MEM_SHARED_ADDR + (MEM_GFX_PLANE_SIZE * P)) + X + (Y * 40)), x
 }
 
 macro PUSH_MMUBANK {
@@ -192,7 +192,23 @@ macro RJMP x {
             if (addr < -128 | addr > 127)
             'Address exceeds relative range'
             end if
-            db $A4
-            db addr
+            rjmp addr
 }
 
+
+
+
+macro _poke addr, value {
+      set a, value
+      store addr, a
+}
+
+macro _poke.w addr, value {
+      set i, value
+      store addr, i
+}
+
+macro _putchar plane, x, y, char {
+      ADDR = x + (y * 40) + plane * MEM_GFX_PLANE_SIZE + MEM_SHARED_ADDR
+      _poke ADDR, char
+}

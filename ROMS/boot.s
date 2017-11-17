@@ -3,12 +3,30 @@ include "macros.inc"
 
 ;DX8_HEADER_ROM
 
+OFFSET = $FFFF - $800 + 1
+
+; =============================================================
+; DATA
+; =============================================================
+
+include "victoria.png.s"
+
+TEST_DATA:
+        db 'Hello World!'
+
+; =============================================================
+; EXPORTED FUNCTIONS
+; =============================================================
+
+dw MemCpySm
+dw MemSet
+
 ; =============================================================
 ; IVT
 ; =============================================================
 
 RESET:
-        jmp MAIN
+        jmp Setup
 HBLANK:
         load x, REG_GFX_SCANLINE_NUM
         not x
@@ -31,39 +49,78 @@ VBLANK:
 resume
 
 FLOPPY:
-        APUTCHAR 0, 0,0, 'F'
+        _putchar 0, 0,0, 'F'
 resume
+
+; =============================================================
+; Exported Functions
+; =============================================================
+
+;! MemCpySm
+;! Copy upto 256 bytes from a src address to a dst address
+MemCpySm_Dst equ i
+MemCpySm_Src equ j
+MemCpySm_Len equ a
+
+MemCpySm:
+                push a
+        .loop:
+                load a, j
+                store i, a
+                pop a
+                dec a
+                jmp.z .end
+                push a
+                inc i
+                inc j
+                jmp .loop
+        .end:
+return
+
+;! MemSet
+;! Copy a constant to dst, len times
+MemSet_Dst equ i
+MemSet_Len equ j
+MemSet_Val equ a
+
+MemSet:
+        .loop:
+                store i, a
+                inc i
+                dec j
+                jmp.nz .loop
+        .end:
+return
 
 ; =============================================================
 ; Functions
 ; =============================================================
 
-BEGIN DisplayLogo
+DisplayLogo:
+        _putchar 0,17+0, 29, 'D'
+        _putchar 0,17+1, 29, 'X'
+        _putchar 0,17+2, 29, '8'
+        _putchar 0,17+4, 29, '/'
+        _putchar 0,17+5, 29, '/'
+        _putchar 0,17+6, 29, '/'
 
-        APUTCHAR 0,17+0, 29, 'D'
-        APUTCHAR 0,17+1, 29, 'X'
-        APUTCHAR 0,17+2, 29, '8'
-        APUTCHAR 1,17+4, 29, '/'
-        APUTCHAR 2,17+5, 29, '/'
-        APUTCHAR 3,17+6, 29, '/'
-
-        APUTCHAR 0,17+0, 15, 'I'
-        APUTCHAR 0,17+1, 15, 'N'
-        APUTCHAR 0,17+2, 15, 'S'
-        APUTCHAR 0,17+3, 15, 'E'
-        APUTCHAR 0,17+4, 15, 'R'
-        APUTCHAR 0,17+5, 15, 'T'
+        _putchar 0,17+0, 15, 'I'
+        _putchar 0,17+1, 15, 'N'
+        _putchar 0,17+2, 15, 'S'
+        _putchar 0,17+3, 15, 'E'
+        _putchar 0,17+4, 15, 'R'
+        _putchar 0,17+5, 15, 'T'
 
 
-        APUTCHAR 0,17+0, 16, 'F'
-        APUTCHAR 0,17+1, 16, 'L'
-        APUTCHAR 0,17+2, 16, 'O'
-        APUTCHAR 0,17+3, 16, 'P'
-        APUTCHAR 0,17+4, 16, 'P'
-        APUTCHAR 0,17+5, 16, 'Y'
-END
+        _putchar 0,17+0, 16, 'F'
+        _putchar 0,17+1, 16, 'L'
+        _putchar 0,17+2, 16, 'O'
+        _putchar 0,17+3, 16, 'P'
+        _putchar 0,17+4, 16, 'P'
+        _putchar 0,17+5, 16, 'Y'
+return
 
-BEGIN DrawCursor
+DrawCursor:
         ;PUSH_MMUBANK
                 ;MMU.z $00
                         load x, REG_GFX_COUNTERS
@@ -72,84 +129,64 @@ BEGIN DrawCursor
                         jmp .DrawDot
                 .DrawBlank:
                         set x, ' '
-                        PRINT_AT(1,17+4, 29), x
-                        PRINT_AT(2,17+5, 29), x
-                        PRINT_AT(3,17+6, 29), x
+                        PRINT_AT(0,17+4, 29), x
+                        PRINT_AT(0,17+5, 29), x
+                        PRINT_AT(0,17+6, 29), x
                         jmp .EndDraw
                 .DrawDot:
                         set x, '/'
-                        PRINT_AT(1,17+4, 29), x
-                        PRINT_AT(2,17+5, 29), x
-                        PRINT_AT(3,17+6, 29), x
+                        PRINT_AT(0,17+4, 29), x
+                        PRINT_AT(0,17+5, 29), x
+                        PRINT_AT(0,17+6, 29), x
                 .EndDraw:
         ;POP_MMUBANK
-END
+return
 
 ; =============================================================
 ; MAIN
 ; =============================================================
-SETUP:
+EntryPoint:
         ; Setup basic IVT
-        APOKE_WORD      INTVEC_ADDR_RESET,      RESET
-        APOKE_WORD      INTVEC_ADDR_HBLANK,     HBLANK
-        APOKE_WORD      INTVEC_ADDR_VBLANK,     VBLANK
-        APOKE_WORD      INTVEC_ADDR_FLOPPY,     FLOPPY
+        _poke.w         INTVEC_ADDR_RESET,      OFFSET + RESET
+        _poke.w         INTVEC_ADDR_HBLANK,     OFFSET + HBLANK
+        _poke.w         INTVEC_ADDR_VBLANK,     OFFSET + VBLANK
+        _poke.w         INTVEC_ADDR_FLOPPY,     OFFSET + FLOPPY
 
         ; Reset initial registers
-        APOKE           REG_MMU_BANK + 0,           $00
-        APOKE           REG_MMU_BANK + 1,           $00
-        APOKE           REG_MMU_BANK + 2,           $00
-        APOKE           REG_MMU_BANK + 3,           $00
-        APOKE           REG_MMU_BANK + 4,           $00
-        APOKE           REG_MMU_BANK + 5,           $00
-        APOKE           REG_MMU_BANK + 6,           $00
-        APOKE           REG_MMU_BANK + 7,           $FF   ; Keep Rom
-        APOKE           REG_GFX_PLANES_COUNT,       $04
-OFFSET = $FFFF - $800 + 1
+        _poke           REG_MMU_BANK + 0,           $00
+        _poke           REG_MMU_BANK + 1,           $00
+        _poke           REG_MMU_BANK + 2,           $00
+        _poke           REG_MMU_BANK + 3,           $00
+        _poke           REG_MMU_BANK + 4,           $00
+        _poke           REG_MMU_BANK + 5,           $00
+        _poke           REG_MMU_BANK + 6,           $00
+        _poke           REG_MMU_BANK + 7,           $FF   ; Keep Rom
 
-        ; Copy font into shared memory..
-        APOKE_WORD      REG_GFX_TILES_ADDR,         (OFFSET + FNT_VICTORIA_DATA)
-
-
-        ; Init GPU
-        ; int ???  @TODO
-
-        APOKE           REG_GFX_PLANE0_TYPE,        $00
-        APOKE           REG_GFX_PLANE1_TYPE,        $00
-        APOKE           REG_GFX_PLANE2_TYPE,        $00
-        APOKE           REG_GFX_PLANE3_TYPE,        $00
-        APOKE           REG_GFX_PLANES_COUNT,       $04
+        ; Set font
+        _poke.w         REG_GFX_TILES_ADDR,         (OFFSET + FNT_VICTORIA_DATA)
+        _poke           REG_GFX_PLANE0_TYPE,        $00
+        _poke           REG_GFX_PLANE1_TYPE,        $00
+        _poke           REG_GFX_PLANE2_TYPE,        $00
+        _poke           REG_GFX_PLANE3_TYPE,        $00
+        _poke           REG_GFX_PLANES_COUNT,       $01
 
         int INT_GPUON
 
-MAIN:
-        ;PRG2GPU  GFX_TILES, FNT_VICTORIA_DATA, FNT_VICTORIA_SIZE
+Setup:
+        set MemSet_Dst, MEM_GFX_PLANE0
+        set MemSet_Len, MEM_GFX_PLANE_SIZE
+        set MemSet_Val, ' '
+        call MemSet
 
-        APOKE           REG_MMU_BANK + 0,           $00
-        APOKE           REG_MMU_BANK + 1,           $00
-        APOKE           REG_MMU_BANK + 2,           $00
-        APOKE           REG_MMU_BANK + 3,           $00
-        APOKE           REG_MMU_BANK + 4,           $00
-        APOKE           REG_MMU_BANK + 5,           $00
-        APOKE           REG_MMU_BANK + 6,           $00   ; Keep Rom
-        APOKE           REG_MMU_BANK + 7,           $FF
-
-        CLS 0, ' '
-        CLS 1, ' '
-        CLS 2, 'X'
-        CLS 3, ' '
+        set MemCpySm_Dst, MEM_GFX_PLANE0
+        set MemCpySm_Src, TEST_DATA + OFFSET
+        set MemCpySm_Len, 12
+        call MemCpySm
 
         call DisplayLogo
 IDLE:
         call DrawCursor
         jmp IDLE
-
-; =============================================================
-; DATA
-; =============================================================
-
-include "victoria.png.s"
-
 
 ; =============================================================
 ; Init sub-routine
@@ -162,11 +199,10 @@ include "victoria.png.s"
 ; and then jump back to the setup code to set up the IVT tables
 ; and initialise the hardware.
 ; =============================================================
-
 rpad (3 + 3 + 2)
 
-launch:
-        offset  ($FFFF - $800 + 1)
-        jmp     SETUP
+Launch:
+        offset  OFFSET
+        jmp     EntryPoint
 FEFF:
-        RJMP    launch
+        RJMP    Launch

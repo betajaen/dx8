@@ -31,6 +31,7 @@
 
 #include "dx8.h"
 #include <malloc.h>
+#include <string.h>
 
 #include "log_c/src/log.h"
 

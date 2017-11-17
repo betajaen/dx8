@@ -1,798 +1,792 @@
 ; DX8 Floppy Disk Image
 ; Origin: 0000 
-; Length: 0800 
-0000: nop                 ; 00
-0001: load w, $6C66       ; 18 66 6C
-0004: load w, $3846       ; 18 46 38
-0007: load w, $0C30       ; 18 30 0C
-000A: add a, a            ; 36
-000B: nop                 ; 00
-000C: nop                 ; 00
-000D: nop                 ; 00
-000E: nop                 ; 00
-000F: adc a, a            ; 40
-0010: adc a, x            ; 3C
-0011: load w, $3C3C       ; 18 3C 3C
-0014: add y, $7E          ; 38 7E(~)
-0016: adc a, x            ; 3C
-0017: and w, $3C          ; 7E 3C(<)
-0019: adc a, x            ; 3C
-001A: nop                 ; 00
-001B: nop                 ; 00
-001C: dec x               ; 60
-001D: nop                 ; 00
-001E: pop a               ; 0C
-001F: adc a, x            ; 3C
-0020: adc a, x            ; 3C
-0021: adc a, x            ; 3C
-0022: adc a, z            ; 3E
-0023: adc a, x            ; 3C
-0024: adc a, z            ; 3E
-0025: and w, $7E          ; 7E 7E(~)
-0027: adc a, x            ; 3C
-0028: dec j               ; 66
-0029: adc a, x            ; 3C
-002A: dec x               ; 60
-002B: dec j               ; 66
-002C: push.f              ; 06
-002D: dec w               ; 63
-002E: dec j               ; 66
-002F: adc a, x            ; 3C
-0030: adc a, z            ; 3E
-0031: adc a, x            ; 3C
-0032: adc a, z            ; 3E
-0033: adc a, x            ; 3C
-0034: and w, $66          ; 7E 66(f)
-0036: dec j               ; 66
-0037: dec w               ; 63
-0038: dec j               ; 66
-0039: dec j               ; 66
-003A: and w, $3C          ; 7E 3C(<)
-003C: push y              ; 02
-003D: adc a, x            ; 3C
-003E: load z, i           ; 10
-003F: nop                 ; 00
-0040: load w, $0600       ; 18 00 06
-0043: nop                 ; 00
-0044: dec x               ; 60
-0045: nop                 ; 00
-0046: cmp i, $0600        ; 70 00 06
-0049: load w, $0660       ; 18 60 06
-004C: add y, $00          ; 38 00
-004E: nop                 ; 00
-004F: nop                 ; 00
-0050: nop                 ; 00
-0051: nop                 ; 00
-0052: nop                 ; 00
-0053: nop                 ; 00
-0054: load w, $0000       ; 18 00 00
-0057: nop                 ; 00
-0058: nop                 ; 00
-0059: nop                 ; 00
-005A: nop                 ; 00
-005B: nop                 ; 00
-005C: nop                 ; 00
-005D: nop                 ; 00
-005E: nop                 ; 00
-005F: nop                 ; 00
-0060: nop                 ; 00
-0061: load w, $FE66       ; 18 66 FE
-0064: and y, $66          ; 7C 66(f)
-0066: cmp y, $18          ; 6C 18
-0068: load w, $1C18       ; 18 18 1C
-006B: load z, i           ; 10
-006C: nop                 ; 00
-006D: nop                 ; 00
-006E: nop                 ; 00
-006F: dec x               ; 60
-0070: dec j               ; 66
-0071: store i, a          ; 1C
-0072: dec j               ; 66
-0073: dec j               ; 66
-0074: adc a, x            ; 3C
-0075: push.f              ; 06
-0076: dec j               ; 66
-0077: dec x               ; 60
-0078: dec j               ; 66
-0079: dec j               ; 66
-007A: load w, $3018       ; 18 18 30
-007D: nop                 ; 00
-007E: load w, $4262       ; 18 62 42
-0081: dec j               ; 66
-0082: dec j               ; 66
-0083: dec j               ; 66
-0084: dec j               ; 66
-0085: push.f              ; 06
-0086: push.f              ; 06
-0087: dec j               ; 66
-0088: dec j               ; 66
-0089: load w, $3660       ; 18 60 36
-008C: push.f              ; 06
-008D: and a, x            ; 77
-008E: dec j               ; 66
-008F: dec j               ; 66
-0090: dec j               ; 66
-0091: dec j               ; 66
-0092: dec j               ; 66
-0093: dec j               ; 66
-0094: load w, $6666       ; 18 66 66
-0097: dec w               ; 63
-0098: dec j               ; 66
-0099: dec j               ; 66
-009A: dec x               ; 60
-009B: pop a               ; 0C
-009C: push.f              ; 06
-009D: set i, $0038        ; 30 38 00
-00A0: set i, $0600        ; 30 00 06
-00A3: nop                 ; 00
-00A4: dec x               ; 60
-00A5: nop                 ; 00
-00A6: load w, $0600       ; 18 00 06
-00A9: nop                 ; 00
+; Length: 0802 
+0000: nop                 ; F7
+0001: shr x, $FA          ; 9C FA
+0003: nop                 ; F8
+0004: load a, i           ; 0F
+0005: xor y, $02          ; 93 02
+0007: and a, w            ; 7A
+0008: cmp y, $E0          ; 6C E0
+000A: not a               ; 8D
+000B: push y              ; 02
+000C: store $283B, w      ; 25 3B 28
+000F: load j, $0286       ; 1B 86 02
+0012: store $283F, w      ; 25 3F 28
+0015: load j, $0287       ; 1B 87 02
+0018: store $2842, w      ; 25 42 28
+001B: load j, $0288       ; 1B 88 02
+001E: jmp $B200, a        ; B2 00 B2
+0021: store $1B46, w      ; 25 46 1B
+0024: not x               ; 89
+0025: push y              ; 02
+0026: jmp $4425, a        ; B2 25 44
+0029: load j, $0722       ; 1B 22 07
+002C: store $1B58, w      ; 25 58 1B
+002F: store $2507, y      ; 23 07 25
+0032: add y, $1B          ; 38 1B
+0034: store $2507, z      ; 24 07 25
+0037: set a, $1B          ; 2F 1B
+0039: store $252F, a      ; 26 2F 25
+003C: set a, $1B          ; 2F 1B
+003E: store $251B, i      ; 27
+003F: mul w, $25          ; 57 25(%)
+0041: set a, $1B          ; 2F 1B
+0043: store $251B, j      ; 28
+0044: and a, $25          ; 7F 25(%)
+0046: sub a, w            ; 49
+0047: load j, $04F2       ; 1B F2 04
+004A: store $1B4E, w      ; 25 4E 1B
+004D: nop                 ; F3
+004E: push w              ; 04
+004F: store $1B53, w      ; 25 53 1B
+0052: nop                 ; F4
+0053: push w              ; 04
+0054: store $1B45, w      ; 25 45 1B
+0057: nop                 ; F5
+0058: push w              ; 04
+0059: store $1B52, w      ; 25 52 1B
+005C: nop                 ; F6
+005D: push w              ; 04
+005E: store $1B54, w      ; 25 54 1B
+0061: nop                 ; F7
+0062: push w              ; 04
+0063: store $1B46, w      ; 25 46 1B
+0066: load i, $2505       ; 1A 05 25
+0069: sub z, $1B          ; 4C 1B
+006B: load j, $2505       ; 1B 05 25
+006E: mul a, x            ; 4F
+006F: load j, $051C       ; 1B 1C 05
+0072: store $1B50, w      ; 25 50 1B
+0075: store i, w          ; 1D
+0076: push a              ; 05
+0077: store $1B50, w      ; 25 50 1B
+007A: store i, z          ; 1E
+007B: push a              ; 05
+007C: store $1B59, w      ; 25 59 1B
+007F: store j, a          ; 1F
+0080: push a              ; 05
+0081: store j, x          ; 20
+0082: load a, i           ; 0F
+0083: xor a, $02          ; 96 02
+0085: dec w               ; 63
+0086: adc a, a            ; 40
+0087: jmp j               ; AD
+0088: not z               ; 8B
+0089: nop                 ; F8
+008A: shr x, $99          ; 9C 99
+008C: nop                 ; F8
+008D: store j, y          ; 21
+008E: store j, x          ; 20
+008F: load z, $2F26       ; 17 26 2F
+0092: load z, $5727       ; 17 27 57
+0095: load z, $7F28       ; 17 28 7F
+0098: shr x, $A4          ; 9C A4
+009A: nop                 ; F8
+009B: store j, y          ; 21
+009C: set a, $17          ; 2F 17
+009E: store $172F, a      ; 26 2F 17
+00A1: store $172F, i      ; 27
+00A2: mul w, $17          ; 57 17
+00A4: store $1717, j      ; 28
+00A5: and a, $20          ; 7F 20
+00A7: store $1BFF, w      ; 25 FF 1B
 00AA: nop                 ; 00
-00AB: push.f              ; 06
-00AC: set i, $0000        ; 30 00 00
-00AF: nop                 ; 00
+00AB: nop                 ; 00
+00AC: store $1BF7, w      ; 25 F7 1B
+00AF: push x              ; 01
 00B0: nop                 ; 00
-00B1: nop                 ; 00
-00B2: nop                 ; 00
-00B3: nop                 ; 00
-00B4: load w, $0000       ; 18 00 00
-00B7: nop                 ; 00
-00B8: nop                 ; 00
-00B9: nop                 ; 00
+00B1: store $1B02, w      ; 25 02 1B
+00B4: push y              ; 02
+00B5: nop                 ; 00
+00B6: store $1BF8, w      ; 25 F8 1B
+00B9: push z              ; 03
 00BA: nop                 ; 00
-00BB: nop                 ; 00
-00BC: nop                 ; 00
-00BD: nop                 ; 00
-00BE: nop                 ; 00
+00BB: store $1B1D, w      ; 25 1D 1B
+00BE: push w              ; 04
 00BF: nop                 ; 00
-00C0: nop                 ; 00
-00C1: load w, $6C66       ; 18 66 6C
-00C4: push.f              ; 06
-00C5: set i, $186C        ; 30 6C 18
-00C8: pop a               ; 0C
-00C9: set i, $107F        ; 30 7F 10
-00CC: nop                 ; 00
-00CD: nop                 ; 00
+00C0: store $1BF8, w      ; 25 F8 1B
+00C3: push a              ; 05
+00C4: nop                 ; 00
+00C5: store $1B1F, w      ; 25 1F 1B
+00C8: push.f              ; 06
+00C9: nop                 ; 00
+00CA: store $1BF8, w      ; 25 F8 1B
+00CD: push.r              ; 07
 00CE: nop                 ; 00
-00CF: set i, $1866        ; 30 66 18
-00D2: dec x               ; 60
-00D3: dec x               ; 60
-00D4: add a, a            ; 36
-00D5: adc a, z            ; 3E
-00D6: push.f              ; 06
-00D7: set i, $6666        ; 30 66 66
-00DA: load w, $1818       ; 18 18 18
-00DD: and w, $30          ; 7E 30(0)
-00DF: dec x               ; 60
-00E0: shl z, $66          ; 99 66(f)
-00E2: dec j               ; 66
-00E3: push.f              ; 06
-00E4: dec j               ; 66
-00E5: push.f              ; 06
-00E6: push.f              ; 06
-00E7: push.f              ; 06
-00E8: dec j               ; 66
-00E9: load w, $1E60       ; 18 60 1E
-00EC: push.f              ; 06
-00ED: and a, $6E          ; 7F 6E(n)
-00EF: dec j               ; 66
-00F0: dec j               ; 66
-00F1: dec j               ; 66
-00F2: dec j               ; 66
-00F3: push.f              ; 06
-00F4: load w, $6666       ; 18 66 66
-00F7: dec w               ; 63
-00F8: adc a, x            ; 3C
-00F9: dec j               ; 66
-00FA: set i, $0C0C        ; 30 0C 0C
-00FD: set i, $006C        ; 30 6C 00
-0100: nop                 ; 00
-0101: adc a, x            ; 3C
-0102: adc a, z            ; 3E
-0103: adc a, x            ; 3C
-0104: and y, $3C          ; 7C 3C(<)
-0106: adc a, x            ; 3C
-0107: and y, $3E          ; 7C 3E(>)
-0109: store i, a          ; 1C
-010A: cmp i, $3066        ; 70 66 30
-010D: add x, $3E          ; 37 3E(>)
-010F: adc a, x            ; 3C
-0110: adc a, z            ; 3E
-0111: and y, $76          ; 7C 76(v)
-0113: and y, $3C          ; 7C 3C(<)
-0115: dec j               ; 66
-0116: dec j               ; 66
-0117: cmp x, $66          ; 6B 66(f)
-0119: dec j               ; 66
-011A: and w, $00          ; 7E 00
-011C: nop                 ; 00
-011D: nop                 ; 00
-011E: nop                 ; 00
-011F: nop                 ; 00
-0120: nop                 ; 00
-0121: load w, $6C00       ; 18 00 6C
-0124: adc a, x            ; 3C
-0125: load w, $0038       ; 18 38 00
-0128: pop a               ; 0C
-0129: set i, $7C1C        ; 30 1C 7C
-012C: nop                 ; 00
-012D: and w, $00          ; 7E 00
-012F: load w, $1866       ; 18 66 18
-0132: add y, $38          ; 38 38(8)
-0134: add a, a            ; 36
-0135: dec x               ; 60
-0136: adc a, z            ; 3E
-0137: load w, $7C3C       ; 18 3C 7C
-013A: nop                 ; 00
-013B: nop                 ; 00
-013C: pop a               ; 0C
-013D: nop                 ; 00
-013E: dec x               ; 60
-013F: add y, $A5          ; 38 A5
-0141: and w, $3E          ; 7E 3E(>)
-0143: push.f              ; 06
-0144: dec j               ; 66
-0145: store i, z          ; 1E
-0146: store i, z          ; 1E
-0147: cmpbit a, $7E       ; 76 7E(~)
-0149: load w, $0E60       ; 18 60 0E
-014C: push.f              ; 06
-014D: cmp x, $7E          ; 6B 7E(~)
-014F: dec j               ; 66
-0150: adc a, z            ; 3E
-0151: dec j               ; 66
-0152: adc a, z            ; 3E
-0153: adc a, x            ; 3C
-0154: load w, $6666       ; 18 66 66
-0157: cmp x, $18          ; 6B 18
-0159: adc a, x            ; 3C
-015A: load w, $180C       ; 18 0C 18
-015D: set i, $0044        ; 30 44 00
-0160: nop                 ; 00
-0161: dec x               ; 60
-0162: dec j               ; 66
-0163: dec j               ; 66
-0164: dec j               ; 66
-0165: dec j               ; 66
-0166: load w, $6666       ; 18 66 66
-0169: load w, $3660       ; 18 60 36
-016C: set i, $667F        ; 30 7F 66
-016F: dec j               ; 66
-0170: dec j               ; 66
-0171: dec j               ; 66
-0172: pop.r               ; 0E
-0173: push.f              ; 06
-0174: load w, $6666       ; 18 66 66
-0177: cmp x, $3C          ; 6B 3C(<)
-0179: dec j               ; 66
-017A: set i, $0000        ; 30 00 00
-017D: nop                 ; 00
-017E: nop                 ; 00
-017F: nop                 ; 00
-0180: nop                 ; 00
-0181: load w, $6C00       ; 18 00 6C
-0184: dec x               ; 60
-0185: pop a               ; 0C
-0186: nop                 ; EC
-0187: nop                 ; 00
-0188: pop a               ; 0C
-0189: set i, $1036        ; 30 36 10
-018C: load w, $0000       ; 18 00 00
-018F: pop a               ; 0C
-0190: dec j               ; 66
-0191: load w, $600C       ; 18 0C 60
-0194: and w, $60          ; 7E 60(`)
-0196: dec j               ; 66
-0197: load w, $6066       ; 18 66 60
-019A: load w, $1818       ; 18 18 18
-019D: and w, $30          ; 7E 30(0)
-019F: load w, $66A5       ; 18 A5 66
-01A2: dec j               ; 66
-01A3: push.f              ; 06
-01A4: dec j               ; 66
-01A5: push.f              ; 06
-01A6: push.f              ; 06
-01A7: dec j               ; 66
-01A8: dec j               ; 66
-01A9: load w, $1E60       ; 18 60 1E
-01AC: push.f              ; 06
-01AD: dec w               ; 63
-01AE: cmpbit a, $66       ; 76 66(f)
-01B0: push.f              ; 06
-01B1: dec j               ; 66
-01B2: store i, z          ; 1E
-01B3: dec x               ; 60
-01B4: load w, $6666       ; 18 66 66
-01B7: and a, $3C          ; 7F 3C(<)
-01B9: load w, $0C0C       ; 18 0C 0C
-01BC: set i, $0030        ; 30 30 00
-01BF: nop                 ; 00
-01C0: nop                 ; 00
-01C1: and y, $66          ; 7C 66(f)
-01C3: push.f              ; 06
-01C4: dec j               ; 66
-01C5: adc a, z            ; 3E
-01C6: load w, $6666       ; 18 66 66
-01C9: load w, $1E60       ; 18 60 1E
-01CC: set i, $666B        ; 30 6B 66
-01CF: dec j               ; 66
-01D0: dec j               ; 66
-01D1: dec j               ; 66
-01D2: push.f              ; 06
-01D3: adc a, x            ; 3C
-01D4: load w, $6666       ; 18 66 66
-01D7: and a, $18          ; 7F 18
-01D9: dec j               ; 66
-01DA: load w, $0000       ; 18 00 00
-01DD: nop                 ; 00
-01DE: nop                 ; 00
-01DF: nop                 ; 00
-01E0: nop                 ; 00
-01E1: nop                 ; 00
-01E2: nop                 ; 00
-01E3: nop                 ; FE
-01E4: adc a, z            ; 3E
-01E5: dec j               ; 66
-01E6: dec j               ; 66
+00CF: store $1B00, w      ; 25 00 1B
+00D2: cmp w, $02          ; 6E 02
+00D4: store $1B00, w      ; 25 00 1B
+00D7: cmp a, $02          ; 6F 02
+00D9: store $1B00, w      ; 25 00 1B
+00DC: cmp i, $2502        ; 70 02 25
+00DF: nop                 ; 00
+00E0: load j, $0271       ; 1B 71 02
+00E3: store $1B00, w      ; 25 00 1B
+00E6: cmpbit x, $02       ; 72 02
+00E8: store $1B00, w      ; 25 00 1B
+00EB: cmpbit y, $02       ; 73 02
+00ED: store $1B00, w      ; 25 00 1B
+00F0: cmpbit z, $02       ; 74 02
+00F2: store $1BFF, w      ; 25 FF 1B
+00F5: cmpbit w, $02       ; 75 02
+00F7: store $1B04, w      ; 25 04 1B
+00FA: and a, $02          ; 7F 02
+00FC: store $1B00, w      ; 25 00 1B
+00FF: cmp w, $02          ; 6E 02
+0101: store $1B00, w      ; 25 00 1B
+0104: cmp a, $02          ; 6F 02
+0106: store $1B00, w      ; 25 00 1B
+0109: cmp i, $2502        ; 70 02 25
+010C: nop                 ; 00
+010D: load j, $0271       ; 1B 71 02
+0110: store $1B00, w      ; 25 00 1B
+0113: cmpbit x, $02       ; 72 02
+0115: store $1B00, w      ; 25 00 1B
+0118: cmpbit y, $02       ; 73 02
+011A: store $1B00, w      ; 25 00 1B
+011D: cmpbit z, $02       ; 74 02
+011F: store $1BFF, w      ; 25 FF 1B
+0122: cmpbit w, $02       ; 75 02
+0124: push a              ; 05
+0125: store $1B20, w      ; 25 20 1B
+0128: cmp a, $02          ; 6F 02
+012A: store $1B89, w      ; 25 89 1B
+012D: cmpbit x, $02       ; 72 02
+012F: store $1B02, w      ; 25 02 1B
+0132: cmpbit y, $02       ; 73 02
+0134: store $1B00, w      ; 25 00 1B
+0137: cmpbit z, $02       ; 74 02
+0139: store $1B28, w      ; 25 28 1B
+013C: cmpbit w, $02       ; 75 02
+013E: jmp $0501, w        ; B1 01 05
+0141: store $ADC8, w      ; 25 C8 AD
+0144: sub a, z            ; 48
+0145: nop                 ; F9
+0146: inc x               ; 59
+0147: shr x, $41          ; 9C 41(A)
+0149: nop                 ; F9
+014A: pop a               ; 0C
+014B: pop a               ; 0C
+014C: push a              ; 05
+014D: store $1B20, w      ; 25 20 1B
+0150: cmp a, $02          ; 6F 02
+0152: store $1B89, w      ; 25 89 1B
+0155: cmpbit x, $02       ; 72 02
+0157: store $1B2A, w      ; 25 2A 1B
+015A: cmpbit y, $02       ; 73 02
+015C: store $1B00, w      ; 25 00 1B
+015F: cmpbit z, $02       ; 74 02
+0161: store $1B28, w      ; 25 28 1B
+0164: cmpbit w, $02       ; 75 02
+0166: jmp $0501, w        ; B1 01 05
+0169: store $ADC8, w      ; 25 C8 AD
+016C: cmp i, $59F9        ; 70 F9 59
+016F: shr x, $69          ; 9C 69(i)
+0171: nop                 ; F9
+0172: pop a               ; 0C
+0173: pop a               ; 0C
+0174: push a              ; 05
+0175: store $1B20, w      ; 25 20 1B
+0178: cmp a, $02          ; 6F 02
+017A: store $1B89, w      ; 25 89 1B
+017D: cmpbit x, $02       ; 72 02
+017F: store $1B52, w      ; 25 52 1B
+0182: cmpbit y, $02       ; 73 02
+0184: store $1B00, w      ; 25 00 1B
+0187: cmpbit z, $02       ; 74 02
+0189: store $1B28, w      ; 25 28 1B
+018C: cmpbit w, $02       ; 75 02
+018E: jmp $0501, w        ; B1 01 05
+0191: store $ADC8, w      ; 25 C8 AD
+0194: shl y, $F9          ; 98 F9
+0196: inc x               ; 59
+0197: shr x, $91          ; 9C 91
+0199: nop                 ; F9
+019A: pop a               ; 0C
+019B: pop a               ; 0C
+019C: push a              ; 05
+019D: store $1B20, w      ; 25 20 1B
+01A0: cmp a, $02          ; 6F 02
+01A2: store $1B89, w      ; 25 89 1B
+01A5: cmpbit x, $02       ; 72 02
+01A7: store $1B7A, w      ; 25 7A 1B
+01AA: cmpbit y, $02       ; 73 02
+01AC: store $1B00, w      ; 25 00 1B
+01AF: cmpbit z, $02       ; 74 02
+01B1: store $1B28, w      ; 25 28 1B
+01B4: cmpbit w, $02       ; 75 02
+01B6: jmp $0501, w        ; B1 01 05
+01B9: store $ADC8, w      ; 25 C8 AD
+01BC: int $F9             ; C0 F9
+01BE: inc x               ; 59
+01BF: shr x, $B9          ; 9C B9
+01C1: nop                 ; F9
+01C2: pop a               ; 0C
+01C3: pop a               ; 0C
+01C4: store j, a          ; 1F
+01C5: store $1FF8, w      ; 25 F8 1F
+01C8: or a, x             ; 80
+01C9: nop                 ; F8
+01CA: shr x, $C5          ; 9C C5
+01CC: nop                 ; F9
+01CD: nop                 ; 00
+01CE: load w, $6C66       ; 18 66 6C
+01D1: load w, $3846       ; 18 46 38
+01D4: load w, $0C30       ; 18 30 0C
+01D7: add a, a            ; 36
+01D8: nop                 ; 00
+01D9: nop                 ; 00
+01DA: nop                 ; 00
+01DB: nop                 ; 00
+01DC: adc a, a            ; 40
+01DD: adc a, x            ; 3C
+01DE: load w, $3C3C       ; 18 3C 3C
+01E1: add y, $7E          ; 38 7E(~)
+01E3: adc a, x            ; 3C
+01E4: and w, $3C          ; 7E 3C(<)
+01E6: adc a, x            ; 3C
 01E7: nop                 ; 00
-01E8: load w, $0018       ; 18 18 00
-01EB: load z, i           ; 10
-01EC: load w, $1800       ; 18 00 18
-01EF: push.f              ; 06
-01F0: dec j               ; 66
-01F1: load w, $6606       ; 18 06 66
-01F4: set i, $6666        ; 30 66 66
-01F7: load w, $6666       ; 18 66 66
-01FA: load w, $3018       ; 18 18 30
-01FD: nop                 ; 00
-01FE: load w, $7900       ; 18 00 79
-0201: dec j               ; 66
-0202: dec j               ; 66
+01E8: nop                 ; 00
+01E9: dec x               ; 60
+01EA: nop                 ; 00
+01EB: pop a               ; 0C
+01EC: adc a, x            ; 3C
+01ED: adc a, x            ; 3C
+01EE: adc a, x            ; 3C
+01EF: adc a, z            ; 3E
+01F0: adc a, x            ; 3C
+01F1: adc a, z            ; 3E
+01F2: and w, $7E          ; 7E 7E(~)
+01F4: adc a, x            ; 3C
+01F5: dec j               ; 66
+01F6: adc a, x            ; 3C
+01F7: dec x               ; 60
+01F8: dec j               ; 66
+01F9: push.f              ; 06
+01FA: dec w               ; 63
+01FB: dec j               ; 66
+01FC: adc a, x            ; 3C
+01FD: adc a, z            ; 3E
+01FE: adc a, x            ; 3C
+01FF: adc a, z            ; 3E
+0200: adc a, x            ; 3C
+0201: and w, $66          ; 7E 66(f)
 0203: dec j               ; 66
-0204: dec j               ; 66
-0205: push.f              ; 06
-0206: push.f              ; 06
-0207: dec j               ; 66
-0208: dec j               ; 66
-0209: load w, $3666       ; 18 66 36
-020C: push.f              ; 06
-020D: dec w               ; 63
-020E: dec j               ; 66
-020F: dec j               ; 66
-0210: push.f              ; 06
-0211: dec j               ; 66
-0212: add a, a            ; 36
-0213: dec j               ; 66
-0214: load w, $3C66       ; 18 66 3C
-0217: and a, x            ; 77
-0218: dec j               ; 66
-0219: load w, $0C06       ; 18 06 0C
-021C: dec x               ; 60
-021D: set i, $0000        ; 30 00 00
+0204: dec w               ; 63
+0205: dec j               ; 66
+0206: dec j               ; 66
+0207: and w, $3C          ; 7E 3C(<)
+0209: push y              ; 02
+020A: adc a, x            ; 3C
+020B: load z, i           ; 10
+020C: nop                 ; 00
+020D: load w, $0600       ; 18 00 06
+0210: nop                 ; 00
+0211: dec x               ; 60
+0212: nop                 ; 00
+0213: cmp i, $0600        ; 70 00 06
+0216: load w, $0660       ; 18 60 06
+0219: add y, $00          ; 38 00
+021B: nop                 ; 00
+021C: nop                 ; 00
+021D: nop                 ; 00
+021E: nop                 ; 00
+021F: nop                 ; 00
 0220: nop                 ; 00
-0221: dec j               ; 66
-0222: dec j               ; 66
-0223: dec j               ; 66
-0224: dec j               ; 66
-0225: push.f              ; 06
-0226: load w, $667C       ; 18 7C 66
-0229: load w, $3660       ; 18 60 36
-022C: set i, $666B        ; 30 6B 66
-022F: dec j               ; 66
-0230: dec j               ; 66
-0231: dec j               ; 66
-0232: push.f              ; 06
-0233: dec x               ; 60
-0234: load w, $3C66       ; 18 66 3C
-0237: adc a, z            ; 3E
-0238: adc a, x            ; 3C
-0239: and y, $0C          ; 7C 0C
+0221: load w, $0000       ; 18 00 00
+0224: nop                 ; 00
+0225: nop                 ; 00
+0226: nop                 ; 00
+0227: nop                 ; 00
+0228: nop                 ; 00
+0229: nop                 ; 00
+022A: nop                 ; 00
+022B: nop                 ; 00
+022C: nop                 ; 00
+022D: nop                 ; 00
+022E: load w, $FE66       ; 18 66 FE
+0231: and y, $66          ; 7C 66(f)
+0233: cmp y, $18          ; 6C 18
+0235: load w, $1C18       ; 18 18 1C
+0238: load z, i           ; 10
+0239: nop                 ; 00
+023A: nop                 ; 00
 023B: nop                 ; 00
-023C: nop                 ; 00
-023D: nop                 ; 00
-023E: nop                 ; 00
-023F: nop                 ; 00
-0240: nop                 ; 00
-0241: load w, $6C00       ; 18 00 6C
-0244: load w, $FC62       ; 18 62 FC
-0247: nop                 ; 00
-0248: set i, $000C        ; 30 0C 00
-024B: nop                 ; 00
-024C: pop a               ; 0C
-024D: nop                 ; 00
-024E: load w, $3C02       ; 18 02 3C
-0251: and w, $7E          ; 7E 7E(~)
-0253: adc a, x            ; 3C
-0254: and a, y            ; 78
-0255: adc a, x            ; 3C
-0256: adc a, x            ; 3C
-0257: load w, $3C3C       ; 18 3C 3C
-025A: nop                 ; 00
-025B: pop x               ; 08
-025C: dec x               ; 60
-025D: nop                 ; 00
-025E: pop a               ; 0C
-025F: load w, $6602       ; 18 02 66
-0262: adc a, z            ; 3E
-0263: adc a, x            ; 3C
-0264: adc a, z            ; 3E
-0265: and w, $06          ; 7E 06
-0267: adc a, x            ; 3C
-0268: dec j               ; 66
-0269: adc a, x            ; 3C
-026A: adc a, x            ; 3C
-026B: dec j               ; 66
-026C: and w, $63          ; 7E 63(c)
-026E: dec j               ; 66
-026F: adc a, x            ; 3C
-0270: push.f              ; 06
-0271: adc a, x            ; 3C
-0272: dec j               ; 66
-0273: adc a, x            ; 3C
-0274: load w, $183C       ; 18 3C 18
-0277: dec w               ; 63
-0278: dec j               ; 66
-0279: load w, $3C7E       ; 18 7E 3C
-027C: adc a, a            ; 40
-027D: adc a, x            ; 3C
+023C: dec x               ; 60
+023D: dec j               ; 66
+023E: store i, a          ; 1C
+023F: dec j               ; 66
+0240: dec j               ; 66
+0241: adc a, x            ; 3C
+0242: push.f              ; 06
+0243: dec j               ; 66
+0244: dec x               ; 60
+0245: dec j               ; 66
+0246: dec j               ; 66
+0247: load w, $3018       ; 18 18 30
+024A: nop                 ; 00
+024B: load w, $4262       ; 18 62 42
+024E: dec j               ; 66
+024F: dec j               ; 66
+0250: dec j               ; 66
+0251: dec j               ; 66
+0252: push.f              ; 06
+0253: push.f              ; 06
+0254: dec j               ; 66
+0255: dec j               ; 66
+0256: load w, $3660       ; 18 60 36
+0259: push.f              ; 06
+025A: and a, x            ; 77
+025B: dec j               ; 66
+025C: dec j               ; 66
+025D: dec j               ; 66
+025E: dec j               ; 66
+025F: dec j               ; 66
+0260: dec j               ; 66
+0261: load w, $6666       ; 18 66 66
+0264: dec w               ; 63
+0265: dec j               ; 66
+0266: dec j               ; 66
+0267: dec x               ; 60
+0268: pop a               ; 0C
+0269: push.f              ; 06
+026A: set i, $0038        ; 30 38 00
+026D: set i, $0600        ; 30 00 06
+0270: nop                 ; 00
+0271: dec x               ; 60
+0272: nop                 ; 00
+0273: load w, $0600       ; 18 00 06
+0276: nop                 ; 00
+0277: nop                 ; 00
+0278: push.f              ; 06
+0279: set i, $0000        ; 30 00 00
+027C: nop                 ; 00
+027D: nop                 ; 00
 027E: nop                 ; 00
 027F: nop                 ; 00
 0280: nop                 ; 00
-0281: and y, $3E          ; 7C 3E(>)
-0283: adc a, x            ; 3C
-0284: and y, $7C          ; 7C 7C(|)
-0286: load w, $6660       ; 18 60 66
-0289: adc a, x            ; 3C
-028A: dec j               ; 66
-028B: dec j               ; 66
-028C: and a, y            ; 78
-028D: cmp x, $66          ; 6B 66(f)
-028F: adc a, x            ; 3C
-0290: adc a, z            ; 3E
-0291: and y, $06          ; 7C 06
-0293: adc a, z            ; 3E
-0294: set i, $187C        ; 30 7C 18
-0297: add a, a            ; 36
-0298: dec j               ; 66
-0299: dec x               ; 60
-029A: and w, $00          ; 7E 00
-029C: nop                 ; 00
-029D: nop                 ; 00
-029E: nop                 ; 00
-029F: nop                 ; 00
-02A0: nop                 ; 00
-02A1: nop                 ; 00
-02A2: nop                 ; 00
-02A3: nop                 ; 00
-02A4: nop                 ; 00
-02A5: nop                 ; 00
-02A6: nop                 ; 00
-02A7: nop                 ; 00
-02A8: nop                 ; 00
-02A9: nop                 ; 00
-02AA: nop                 ; 00
-02AB: nop                 ; 00
-02AC: nop                 ; 00
-02AD: nop                 ; 00
-02AE: nop                 ; 00
-02AF: nop                 ; 00
-02B0: nop                 ; 00
-02B1: nop                 ; 00
-02B2: nop                 ; 00
-02B3: nop                 ; 00
-02B4: nop                 ; 00
-02B5: nop                 ; 00
-02B6: nop                 ; 00
-02B7: nop                 ; 00
-02B8: nop                 ; 00
-02B9: nop                 ; 00
-02BA: nop                 ; 00
-02BB: nop                 ; 00
-02BC: nop                 ; 00
-02BD: nop                 ; 00
-02BE: nop                 ; 00
-02BF: nop                 ; 00
-02C0: adc a, x            ; 3C
-02C1: nop                 ; 00
-02C2: nop                 ; 00
-02C3: nop                 ; 00
-02C4: nop                 ; 00
-02C5: nop                 ; 00
-02C6: nop                 ; 00
-02C7: nop                 ; 00
-02C8: nop                 ; 00
-02C9: nop                 ; 00
-02CA: nop                 ; 00
-02CB: nop                 ; 00
-02CC: nop                 ; 00
+0281: load w, $0000       ; 18 00 00
+0284: nop                 ; 00
+0285: nop                 ; 00
+0286: nop                 ; 00
+0287: nop                 ; 00
+0288: nop                 ; 00
+0289: nop                 ; 00
+028A: nop                 ; 00
+028B: nop                 ; 00
+028C: nop                 ; 00
+028D: nop                 ; 00
+028E: load w, $6C66       ; 18 66 6C
+0291: push.f              ; 06
+0292: set i, $186C        ; 30 6C 18
+0295: pop a               ; 0C
+0296: set i, $107F        ; 30 7F 10
+0299: nop                 ; 00
+029A: nop                 ; 00
+029B: nop                 ; 00
+029C: set i, $1866        ; 30 66 18
+029F: dec x               ; 60
+02A0: dec x               ; 60
+02A1: add a, a            ; 36
+02A2: adc a, z            ; 3E
+02A3: push.f              ; 06
+02A4: set i, $6666        ; 30 66 66
+02A7: load w, $1818       ; 18 18 18
+02AA: and w, $30          ; 7E 30(0)
+02AC: dec x               ; 60
+02AD: shl z, $66          ; 99 66(f)
+02AF: dec j               ; 66
+02B0: push.f              ; 06
+02B1: dec j               ; 66
+02B2: push.f              ; 06
+02B3: push.f              ; 06
+02B4: push.f              ; 06
+02B5: dec j               ; 66
+02B6: load w, $1E60       ; 18 60 1E
+02B9: push.f              ; 06
+02BA: and a, $6E          ; 7F 6E(n)
+02BC: dec j               ; 66
+02BD: dec j               ; 66
+02BE: dec j               ; 66
+02BF: dec j               ; 66
+02C0: push.f              ; 06
+02C1: load w, $6666       ; 18 66 66
+02C4: dec w               ; 63
+02C5: adc a, x            ; 3C
+02C6: dec j               ; 66
+02C7: set i, $0C0C        ; 30 0C 0C
+02CA: set i, $006C        ; 30 6C 00
 02CD: nop                 ; 00
-02CE: nop                 ; 00
-02CF: nop                 ; 00
-02D0: nop                 ; 00
-02D1: dec x               ; 60
-02D2: nop                 ; 00
-02D3: nop                 ; 00
-02D4: nop                 ; 00
-02D5: nop                 ; 00
-02D6: nop                 ; 00
-02D7: nop                 ; 00
-02D8: nop                 ; 00
-02D9: nop                 ; 00
-02DA: nop                 ; 00
-02DB: nop                 ; 00
-02DC: nop                 ; 00
-02DD: nop                 ; 00
-02DE: nop                 ; 00
-02DF: nop                 ; FF
-02E0: nop                 ; 00
-02E1: nop                 ; 00
-02E2: nop                 ; 00
-02E3: nop                 ; 00
-02E4: nop                 ; 00
-02E5: nop                 ; 00
-02E6: nop                 ; 00
-02E7: adc a, x            ; 3C
-02E8: nop                 ; 00
+02CE: adc a, x            ; 3C
+02CF: adc a, z            ; 3E
+02D0: adc a, x            ; 3C
+02D1: and y, $3C          ; 7C 3C(<)
+02D3: adc a, x            ; 3C
+02D4: and y, $3E          ; 7C 3E(>)
+02D6: store i, a          ; 1C
+02D7: cmp i, $3066        ; 70 66 30
+02DA: add x, $3E          ; 37 3E(>)
+02DC: adc a, x            ; 3C
+02DD: adc a, z            ; 3E
+02DE: and y, $76          ; 7C 76(v)
+02E0: and y, $3C          ; 7C 3C(<)
+02E2: dec j               ; 66
+02E3: dec j               ; 66
+02E4: cmp x, $66          ; 6B 66(f)
+02E6: dec j               ; 66
+02E7: and w, $00          ; 7E 00
 02E9: nop                 ; 00
-02EA: adc a, x            ; 3C
+02EA: nop                 ; 00
 02EB: nop                 ; 00
 02EC: nop                 ; 00
 02ED: nop                 ; 00
-02EE: nop                 ; 00
-02EF: nop                 ; 00
-02F0: push.f              ; 06
-02F1: dec x               ; 60
-02F2: nop                 ; 00
-02F3: nop                 ; 00
-02F4: nop                 ; 00
-02F5: nop                 ; 00
-02F6: nop                 ; 00
-02F7: nop                 ; 00
-02F8: nop                 ; 00
-02F9: adc a, x            ; 3C
-02FA: nop                 ; 00
-02FB: nop                 ; 00
-02FC: nop                 ; 00
-02FD: nop                 ; 00
-02FE: nop                 ; 00
-02FF: nop                 ; 00
-0300: sub a, z            ; 48
-0301: dec i               ; 65
-0302: cmp y, $6C          ; 6C 6C(l)
-0304: cmp a, $20          ; 6F 20
-0306: mul w, $6F          ; 57 6F(o)
-0308: cmpbit x, $6C       ; 72 6C(l)
-030A: dec a               ; 64
-030B: store j, y          ; 21
-030C: add a, a            ; 36
-030D: push z              ; 03
-030E: adc a, $03          ; 45 03
-0310: jmp $0432           ; AB 32 04
-0313: load x, $002C       ; 15 2C 00
-0316: not x               ; 89
-0317: and x, $E0          ; 7B E0
-0319: shr x, $02          ; 9C 02
-031B: set a, $3B          ; 2F 3B(;)
-031D: add a, x            ; 32
-031E: store $001D, a      ; 26 1D 00
-0321: set a, $3F          ; 2F 3F(?)
-0323: add a, x            ; 32
-0324: store $001E, a      ; 26 1E 00
-0327: set a, $42          ; 2F 42(B)
-0329: add a, x            ; 32
-032A: store $001F, a      ; 26 1F 00
-032D: resume              ; C1
-032E: nop                 ; 00
-032F: resume              ; C1
-0330: set a, $46          ; 2F 46(F)
-0332: store $8000, a      ; 26 00 80
-0335: resume              ; C1
-0336: push a              ; 05
-0337: load a, j           ; 12
-0338: store i, a          ; 1C
-0339: pop a               ; 0C
-033A: dec a               ; 64
-033B: jmp.z $0344         ; BC 44 03
-033E: push a              ; 05
-033F: inc i               ; 5E
-0340: inc j               ; 5F
-0341: jmp $0337           ; AB 37 03
-0344: return              ; 2A
-0345: store i, a          ; 1C
-0346: inc i               ; 5E
-0347: dec j               ; 66
-0348: jmp.nz $0345        ; BE 45 03
-034B: return              ; 2A
-034C: set a, $44          ; 2F 44(D)
-034E: store $8499, a      ; 26 99 84
-0351: set a, $58          ; 2F 58(X)
-0353: store $849A, a      ; 26 9A 84
-0356: set a, $38          ; 2F 38(8)
-0358: store $849B, a      ; 26 9B 84
-035B: set a, $2F          ; 2F 2F(/)
-035D: store $AC9D, a      ; 26 9D AC
-0360: set a, $2F          ; 2F 2F(/)
-0362: store $D49E, a      ; 26 9E D4
-0365: set a, $2F          ; 2F 2F(/)
-0367: store $FC9F, a      ; 26 9F FC
-036A: set a, $49          ; 2F 49(I)
-036C: store $8269, a      ; 26 69 82
-036F: set a, $4E          ; 2F 4E(N)
-0371: store $826A, a      ; 26 6A 82
-0374: set a, $53          ; 2F 53(S)
-0376: store $826B, a      ; 26 6B 82
-0379: set a, $45          ; 2F 45(E)
-037B: store $826C, a      ; 26 6C 82
-037E: set a, $52          ; 2F 52(R)
-0380: store $826D, a      ; 26 6D 82
-0383: set a, $54          ; 2F 54(T)
-0385: store $826E, a      ; 26 6E 82
-0388: set a, $46          ; 2F 46(F)
-038A: store $8291, a      ; 26 91 82
-038D: set a, $4C          ; 2F 4C(L)
-038F: store $8292, a      ; 26 92 82
-0392: set a, $4F          ; 2F 4F(O)
-0394: store $8293, a      ; 26 93 82
-0397: set a, $50          ; 2F 50(P)
-0399: store $8294, a      ; 26 94 82
-039C: set a, $50          ; 2F 50(P)
-039E: store $8295, a      ; 26 95 82
-03A1: set a, $59          ; 2F 59(Y)
-03A3: store $8296, a      ; 26 96 82
-03A6: return              ; 2A
-03A7: load x, $002F       ; 15 2F 00
-03AA: cmpbit x, $40       ; 72 40(@)
-03AC: jmp.z $03B2         ; BC B2 03
-03AF: jmp $03C0           ; AB C0 03
-03B2: set x, $20          ; 2B 20
-03B4: store $AC9D, x      ; 22 9D AC
-03B7: store $D49E, x      ; 22 9E D4
-03BA: store $FC9F, x      ; 22 9F FC
-03BD: jmp $03CB           ; AB CB 03
-03C0: set x, $2F          ; 2B 2F(/)
-03C2: store $AC9D, x      ; 22 9D AC
-03C5: store $D49E, x      ; 22 9E D4
-03C8: store $FC9F, x      ; 22 9F FC
-03CB: return              ; 2A
-03CC: set i, $FB10        ; 30 10 FB
-03CF: store $FB10, i      ; 27
-03D0: nop                 ; 00
-03D1: nop                 ; 00
-03D2: set i, $FB13        ; 30 13 FB
-03D5: store $FB13, i      ; 27
-03D6: push y              ; 02
-03D7: nop                 ; 00
-03D8: set i, $FB2E        ; 30 2E FB
-03DB: store $FB2E, i      ; 27
-03DC: push w              ; 04
-03DD: nop                 ; 00
-03DE: set i, $FB30        ; 30 30 FB
-03E1: store $FB30, i      ; 27
-03E2: push.f              ; 06
-03E3: nop                 ; 00
-03E4: set a, $00          ; 2F 00
-03E6: store $0010, a      ; 26 10 00
-03E9: set a, $00          ; 2F 00
-03EB: store $0011, a      ; 26 11 00
-03EE: set a, $00          ; 2F 00
-03F0: store $0012, a      ; 26 12 00
-03F3: set a, $00          ; 2F 00
-03F5: store $0013, a      ; 26 13 00
-03F8: set a, $00          ; 2F 00
-03FA: store $0014, a      ; 26 14 00
-03FD: set a, $00          ; 2F 00
-03FF: store $0015, a      ; 26 15 00
-0402: set a, $00          ; 2F 00
-0404: store $0016, a      ; 26 16 00
-0407: set a, $FF          ; 2F FF
-0409: store $0017, a      ; 26 17 00
-040C: set a, $04          ; 2F 04
-040E: store $0018, a      ; 26 18 00
-0411: set i, $F800        ; 30 00 F8
-0414: store $F800, i      ; 27
-0415: set i, $2F00        ; 30 00 2F
+02EE: load w, $6C00       ; 18 00 6C
+02F1: adc a, x            ; 3C
+02F2: load w, $0038       ; 18 38 00
+02F5: pop a               ; 0C
+02F6: set i, $7C1C        ; 30 1C 7C
+02F9: nop                 ; 00
+02FA: and w, $00          ; 7E 00
+02FC: load w, $1866       ; 18 66 18
+02FF: add y, $38          ; 38 38(8)
+0301: add a, a            ; 36
+0302: dec x               ; 60
+0303: adc a, z            ; 3E
+0304: load w, $7C3C       ; 18 3C 7C
+0307: nop                 ; 00
+0308: nop                 ; 00
+0309: pop a               ; 0C
+030A: nop                 ; 00
+030B: dec x               ; 60
+030C: add y, $A5          ; 38 A5
+030E: and w, $3E          ; 7E 3E(>)
+0310: push.f              ; 06
+0311: dec j               ; 66
+0312: store i, z          ; 1E
+0313: store i, z          ; 1E
+0314: cmpbit a, $7E       ; 76 7E(~)
+0316: load w, $0E60       ; 18 60 0E
+0319: push.f              ; 06
+031A: cmp x, $7E          ; 6B 7E(~)
+031C: dec j               ; 66
+031D: adc a, z            ; 3E
+031E: dec j               ; 66
+031F: adc a, z            ; 3E
+0320: adc a, x            ; 3C
+0321: load w, $6666       ; 18 66 66
+0324: cmp x, $18          ; 6B 18
+0326: adc a, x            ; 3C
+0327: load w, $180C       ; 18 0C 18
+032A: set i, $0044        ; 30 44 00
+032D: nop                 ; 00
+032E: dec x               ; 60
+032F: dec j               ; 66
+0330: dec j               ; 66
+0331: dec j               ; 66
+0332: dec j               ; 66
+0333: load w, $6666       ; 18 66 66
+0336: load w, $3660       ; 18 60 36
+0339: set i, $667F        ; 30 7F 66
+033C: dec j               ; 66
+033D: dec j               ; 66
+033E: dec j               ; 66
+033F: pop.r               ; 0E
+0340: push.f              ; 06
+0341: load w, $6666       ; 18 66 66
+0344: cmp x, $3C          ; 6B 3C(<)
+0346: dec j               ; 66
+0347: set i, $0000        ; 30 00 00
+034A: nop                 ; 00
+034B: nop                 ; 00
+034C: nop                 ; 00
+034D: nop                 ; 00
+034E: load w, $6C00       ; 18 00 6C
+0351: dec x               ; 60
+0352: pop a               ; 0C
+0353: nop                 ; EC
+0354: nop                 ; 00
+0355: pop a               ; 0C
+0356: set i, $1036        ; 30 36 10
+0359: load w, $0000       ; 18 00 00
+035C: pop a               ; 0C
+035D: dec j               ; 66
+035E: load w, $600C       ; 18 0C 60
+0361: and w, $60          ; 7E 60(`)
+0363: dec j               ; 66
+0364: load w, $6066       ; 18 66 60
+0367: load w, $1818       ; 18 18 18
+036A: and w, $30          ; 7E 30(0)
+036C: load w, $66A5       ; 18 A5 66
+036F: dec j               ; 66
+0370: push.f              ; 06
+0371: dec j               ; 66
+0372: push.f              ; 06
+0373: push.f              ; 06
+0374: dec j               ; 66
+0375: dec j               ; 66
+0376: load w, $1E60       ; 18 60 1E
+0379: push.f              ; 06
+037A: dec w               ; 63
+037B: cmpbit a, $66       ; 76 66(f)
+037D: push.f              ; 06
+037E: dec j               ; 66
+037F: store i, z          ; 1E
+0380: dec x               ; 60
+0381: load w, $6666       ; 18 66 66
+0384: and a, $3C          ; 7F 3C(<)
+0386: load w, $0C0C       ; 18 0C 0C
+0389: set i, $0030        ; 30 30 00
+038C: nop                 ; 00
+038D: nop                 ; 00
+038E: and y, $66          ; 7C 66(f)
+0390: push.f              ; 06
+0391: dec j               ; 66
+0392: adc a, z            ; 3E
+0393: load w, $6666       ; 18 66 66
+0396: load w, $1E60       ; 18 60 1E
+0399: set i, $666B        ; 30 6B 66
+039C: dec j               ; 66
+039D: dec j               ; 66
+039E: dec j               ; 66
+039F: push.f              ; 06
+03A0: adc a, x            ; 3C
+03A1: load w, $6666       ; 18 66 66
+03A4: and a, $18          ; 7F 18
+03A6: dec j               ; 66
+03A7: load w, $0000       ; 18 00 00
+03AA: nop                 ; 00
+03AB: nop                 ; 00
+03AC: nop                 ; 00
+03AD: nop                 ; 00
+03AE: nop                 ; 00
+03AF: nop                 ; 00
+03B0: nop                 ; FE
+03B1: adc a, z            ; 3E
+03B2: dec j               ; 66
+03B3: dec j               ; 66
+03B4: nop                 ; 00
+03B5: load w, $0018       ; 18 18 00
+03B8: load z, i           ; 10
+03B9: load w, $1800       ; 18 00 18
+03BC: push.f              ; 06
+03BD: dec j               ; 66
+03BE: load w, $6606       ; 18 06 66
+03C1: set i, $6666        ; 30 66 66
+03C4: load w, $6666       ; 18 66 66
+03C7: load w, $3018       ; 18 18 30
+03CA: nop                 ; 00
+03CB: load w, $7900       ; 18 00 79
+03CE: dec j               ; 66
+03CF: dec j               ; 66
+03D0: dec j               ; 66
+03D1: dec j               ; 66
+03D2: push.f              ; 06
+03D3: push.f              ; 06
+03D4: dec j               ; 66
+03D5: dec j               ; 66
+03D6: load w, $3666       ; 18 66 36
+03D9: push.f              ; 06
+03DA: dec w               ; 63
+03DB: dec j               ; 66
+03DC: dec j               ; 66
+03DD: push.f              ; 06
+03DE: dec j               ; 66
+03DF: add a, a            ; 36
+03E0: dec j               ; 66
+03E1: load w, $3C66       ; 18 66 3C
+03E4: and a, x            ; 77
+03E5: dec j               ; 66
+03E6: load w, $0C06       ; 18 06 0C
+03E9: dec x               ; 60
+03EA: set i, $0000        ; 30 00 00
+03ED: nop                 ; 00
+03EE: dec j               ; 66
+03EF: dec j               ; 66
+03F0: dec j               ; 66
+03F1: dec j               ; 66
+03F2: push.f              ; 06
+03F3: load w, $667C       ; 18 7C 66
+03F6: load w, $3660       ; 18 60 36
+03F9: set i, $666B        ; 30 6B 66
+03FC: dec j               ; 66
+03FD: dec j               ; 66
+03FE: dec j               ; 66
+03FF: push.f              ; 06
+0400: dec x               ; 60
+0401: load w, $3C66       ; 18 66 3C
+0404: adc a, z            ; 3E
+0405: adc a, x            ; 3C
+0406: and y, $0C          ; 7C 0C
+0408: nop                 ; 00
+0409: nop                 ; 00
+040A: nop                 ; 00
+040B: nop                 ; 00
+040C: nop                 ; 00
+040D: nop                 ; 00
+040E: load w, $6C00       ; 18 00 6C
+0411: load w, $FC62       ; 18 62 FC
+0414: nop                 ; 00
+0415: set i, $000C        ; 30 0C 00
 0418: nop                 ; 00
-0419: store $0019, a      ; 26 19 00
-041C: set a, $00          ; 2F 00
-041E: store $001A, a      ; 26 1A 00
-0421: set a, $00          ; 2F 00
-0423: store $001B, a      ; 26 1B 00
-0426: set a, $00          ; 2F 00
-0428: store $001C, a      ; 26 1C 00
-042B: set a, $02          ; 2F 02
-042D: store $0018, a      ; 26 18 00
-0430: int $FE             ; C0 FE
-0432: set a, $00          ; 2F 00
-0434: store $0010, a      ; 26 10 00
-0437: set a, $00          ; 2F 00
-0439: store $0011, a      ; 26 11 00
-043C: set a, $00          ; 2F 00
-043E: store $0012, a      ; 26 12 00
-0441: set a, $00          ; 2F 00
-0443: store $0013, a      ; 26 13 00
-0446: set a, $00          ; 2F 00
-0448: store $0014, a      ; 26 14 00
-044B: set a, $00          ; 2F 00
-044D: store $0015, a      ; 26 15 00
-0450: set a, $00          ; 2F 00
-0452: store $0016, a      ; 26 16 00
-0455: set a, $FF          ; 2F FF
-0457: store $0017, a      ; 26 17 00
-045A: set i, $8000        ; 30 00 80
-045D: set j, $2800        ; 31 00 28
-0460: set a, $20          ; 2F 20
-0462: call $0345          ; 29 45 03
-0465: set i, $A800        ; 30 00 A8
-0468: set j, $2800        ; 31 00 28
-046B: set a, $20          ; 2F 20
-046D: call $0345          ; 29 45 03
-0470: set i, $0800        ; 30 00 08
-0473: set j, $0300        ; 31 00 03
-0476: set a, $0C          ; 2F 0C
-0478: call $0336          ; 29 36 03
-047B: call $034C          ; 29 4C 03
-047E: call $03A7          ; 29 A7 03
-0481: jmp $047E           ; AB 7E 04
-0484: set a, $00          ; 2F 00
-0486: store $0800, a      ; 26 00 08
-0489: set a, $AB          ; 2F AB
-048B: store $0801, a      ; 26 01 08
-048E: set i, $0800        ; 30 00 08
-0491: store $0800, i      ; 27
-0492: push y              ; 02
-0493: pop x               ; 08
-0494: offset $0000        ; C4 00 00
-0497: jmp $0800           ; AB 00 08
-049A: set a, $78          ; 2F 78(x)
-049C: store $8000, a      ; 26 00 80
-049F: nop                 ; CD
-04A0: nop                 ; CD
-04A1: nop                 ; CD
-04A2: nop                 ; CD
-04A3: nop                 ; CD
-04A4: nop                 ; CD
-04A5: nop                 ; CD
-04A6: nop                 ; CD
-04A7: nop                 ; CD
-04A8: nop                 ; CD
-04A9: nop                 ; CD
-04AA: nop                 ; CD
-04AB: nop                 ; CD
-04AC: nop                 ; CD
-04AD: nop                 ; CD
-04AE: nop                 ; CD
-04AF: nop                 ; CD
-04B0: nop                 ; CD
-04B1: nop                 ; CD
-04B2: nop                 ; CD
-04B3: nop                 ; CD
-04B4: nop                 ; CD
-04B5: nop                 ; CD
-04B6: nop                 ; CD
-04B7: nop                 ; CD
-04B8: nop                 ; CD
-04B9: nop                 ; CD
-04BA: nop                 ; CD
-04BB: nop                 ; CD
-04BC: nop                 ; CD
-04BD: nop                 ; CD
-04BE: nop                 ; CD
-04BF: nop                 ; CD
-04C0: nop                 ; CD
-04C1: nop                 ; CD
-04C2: nop                 ; CD
-04C3: nop                 ; CD
-04C4: nop                 ; CD
-04C5: nop                 ; CD
-04C6: nop                 ; CD
-04C7: nop                 ; CD
-04C8: nop                 ; CD
-04C9: nop                 ; CD
-04CA: nop                 ; CD
-04CB: nop                 ; CD
-04CC: nop                 ; CD
+0419: pop a               ; 0C
+041A: nop                 ; 00
+041B: load w, $3C02       ; 18 02 3C
+041E: and w, $7E          ; 7E 7E(~)
+0420: adc a, x            ; 3C
+0421: and a, y            ; 78
+0422: adc a, x            ; 3C
+0423: adc a, x            ; 3C
+0424: load w, $3C3C       ; 18 3C 3C
+0427: nop                 ; 00
+0428: pop x               ; 08
+0429: dec x               ; 60
+042A: nop                 ; 00
+042B: pop a               ; 0C
+042C: load w, $6602       ; 18 02 66
+042F: adc a, z            ; 3E
+0430: adc a, x            ; 3C
+0431: adc a, z            ; 3E
+0432: and w, $06          ; 7E 06
+0434: adc a, x            ; 3C
+0435: dec j               ; 66
+0436: adc a, x            ; 3C
+0437: adc a, x            ; 3C
+0438: dec j               ; 66
+0439: and w, $63          ; 7E 63(c)
+043B: dec j               ; 66
+043C: adc a, x            ; 3C
+043D: push.f              ; 06
+043E: adc a, x            ; 3C
+043F: dec j               ; 66
+0440: adc a, x            ; 3C
+0441: load w, $183C       ; 18 3C 18
+0444: dec w               ; 63
+0445: dec j               ; 66
+0446: load w, $3C7E       ; 18 7E 3C
+0449: adc a, a            ; 40
+044A: adc a, x            ; 3C
+044B: nop                 ; 00
+044C: nop                 ; 00
+044D: nop                 ; 00
+044E: and y, $3E          ; 7C 3E(>)
+0450: adc a, x            ; 3C
+0451: and y, $7C          ; 7C 7C(|)
+0453: load w, $6660       ; 18 60 66
+0456: adc a, x            ; 3C
+0457: dec j               ; 66
+0458: dec j               ; 66
+0459: and a, y            ; 78
+045A: cmp x, $66          ; 6B 66(f)
+045C: adc a, x            ; 3C
+045D: adc a, z            ; 3E
+045E: and y, $06          ; 7C 06
+0460: adc a, z            ; 3E
+0461: set i, $187C        ; 30 7C 18
+0464: add a, a            ; 36
+0465: dec j               ; 66
+0466: dec x               ; 60
+0467: and w, $00          ; 7E 00
+0469: nop                 ; 00
+046A: nop                 ; 00
+046B: nop                 ; 00
+046C: nop                 ; 00
+046D: nop                 ; 00
+046E: nop                 ; 00
+046F: nop                 ; 00
+0470: nop                 ; 00
+0471: nop                 ; 00
+0472: nop                 ; 00
+0473: nop                 ; 00
+0474: nop                 ; 00
+0475: nop                 ; 00
+0476: nop                 ; 00
+0477: nop                 ; 00
+0478: nop                 ; 00
+0479: nop                 ; 00
+047A: nop                 ; 00
+047B: nop                 ; 00
+047C: nop                 ; 00
+047D: nop                 ; 00
+047E: nop                 ; 00
+047F: nop                 ; 00
+0480: nop                 ; 00
+0481: nop                 ; 00
+0482: nop                 ; 00
+0483: nop                 ; 00
+0484: nop                 ; 00
+0485: nop                 ; 00
+0486: nop                 ; 00
+0487: nop                 ; 00
+0488: nop                 ; 00
+0489: nop                 ; 00
+048A: nop                 ; 00
+048B: nop                 ; 00
+048C: nop                 ; 00
+048D: adc a, x            ; 3C
+048E: nop                 ; 00
+048F: nop                 ; 00
+0490: nop                 ; 00
+0491: nop                 ; 00
+0492: nop                 ; 00
+0493: nop                 ; 00
+0494: nop                 ; 00
+0495: nop                 ; 00
+0496: nop                 ; 00
+0497: nop                 ; 00
+0498: nop                 ; 00
+0499: nop                 ; 00
+049A: nop                 ; 00
+049B: nop                 ; 00
+049C: nop                 ; 00
+049D: nop                 ; 00
+049E: dec x               ; 60
+049F: nop                 ; 00
+04A0: nop                 ; 00
+04A1: nop                 ; 00
+04A2: nop                 ; 00
+04A3: nop                 ; 00
+04A4: nop                 ; 00
+04A5: nop                 ; 00
+04A6: nop                 ; 00
+04A7: nop                 ; 00
+04A8: nop                 ; 00
+04A9: nop                 ; 00
+04AA: nop                 ; 00
+04AB: nop                 ; 00
+04AC: nop                 ; FF
+04AD: nop                 ; 00
+04AE: nop                 ; 00
+04AF: nop                 ; 00
+04B0: nop                 ; 00
+04B1: nop                 ; 00
+04B2: nop                 ; 00
+04B3: nop                 ; 00
+04B4: adc a, x            ; 3C
+04B5: nop                 ; 00
+04B6: nop                 ; 00
+04B7: adc a, x            ; 3C
+04B8: nop                 ; 00
+04B9: nop                 ; 00
+04BA: nop                 ; 00
+04BB: nop                 ; 00
+04BC: nop                 ; 00
+04BD: push.f              ; 06
+04BE: dec x               ; 60
+04BF: nop                 ; 00
+04C0: nop                 ; 00
+04C1: nop                 ; 00
+04C2: nop                 ; 00
+04C3: nop                 ; 00
+04C4: nop                 ; 00
+04C5: nop                 ; 00
+04C6: adc a, x            ; 3C
+04C7: nop                 ; 00
+04C8: nop                 ; 00
+04C9: nop                 ; 00
+04CA: nop                 ; 00
+04CB: nop                 ; 00
+04CC: nop                 ; 00
 04CD: nop                 ; CD
 04CE: nop                 ; CD
 04CF: nop                 ; CD
@@ -1604,6 +1598,12 @@
 07F5: nop                 ; CD
 07F6: nop                 ; CD
 07F7: nop                 ; CD
-07F8: offset $F800        ; C4 00 F8
-07FB: jmp $03CC           ; AB CC 03
-07FE: rjmp $FA            ; B3 FA
+07F8: nop                 ; CD
+07F9: nop                 ; CD
+07FA: nop                 ; CD
+07FB: nop                 ; CD
+07FC: nop                 ; CD
+07FD: shr x, $A5          ; 9C A5
+07FF: nop                 ; F8
+0800: rol w               ; A4
+0801: nop                 ; FD

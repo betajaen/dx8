@@ -43,17 +43,13 @@
 #error Platform not supported :(
 #endif
 
-#define GPU_MEM_SIZE 0x1000
-
-Byte* sCrt;
-bool  sCrtDirty;
-//Byte* sGpuMem;
-Byte* sScanLine;
-Byte*  sGpuMemLines;
-Byte* sBufferRam;
-Byte* Ram_Get();
-Byte  Gpu_Halt;
-Byte*    Tiles;
+Byte*    sCrt;
+bool     sCrtDirty;
+Byte*    sScanLineTarget;
+Byte*    sLineCache;
+Byte*    sBufferRam;
+Byte*    Ram_Get();
+Byte     Gpu_Halt;
 
 int      GpuFrame = 0;  //
 int      GpuTimer = 0;  //
@@ -62,40 +58,33 @@ Byte     lineR[16], lineG[16], lineB[16];
 Byte     planeModes[4];
 int      scanpos, scanline;
 int      numPlanes;
-int      tilesAddr;
+Word     tilesAddr;
+int  charRow;
+
 
 void Gpu_Setup()
 {
-  //sGpuMem = malloc(GPU_MEM_SIZE);
   sCrt = malloc(CRT_W * CRT_H * CRT_DEPTH);
-  sScanLine = malloc(CRT_W * 3);
-  sGpuMemLines = malloc((CRT_W * 4) / 8);
+  sScanLineTarget = malloc(CRT_W * 3);
+  sLineCache = malloc((CRT_W * 4) / 8);
   
   sBufferRam = Ram_Get(); 
-
-  //LOGF("GPU Crt = Ptr=%p Size=%ix%ix%i", sCrt, CRT_W, CRT_H, CRT_DEPTH);
-  //LOGF("GPU ScaneLine = Ptr=%p Size=%i", sScanLine, CRT_W * 3);
-
-  //memset(sGpuMem + Gpu_GFX_TILES_Relative, 0xFF, 0x800);
 
   sCrtDirty = true;
 }
 
 void Gpu_Teardown()
 {
-  free(sGpuMemLines);
-  free(sScanLine);
+  free(sLineCache);
+  free(sScanLineTarget);
   free(sCrt);
-  //free(sGpuMem);
 }
 
 void Gpu_TurnOn()
 {
   Gpu_Halt = true;
 
-  //memset(sGpuMem, 0, GPU_MEM_SIZE);
-  memset(sCrt, 0, GPU_MEM_SIZE);
-  memset(sScanLine, 0, CRT_W * 3);
+  memset(sScanLineTarget, 0, CRT_W * 3);
   memset(sCrt, 0x00, CRT_W * CRT_H * CRT_DEPTH);
 
   LOGF("GPU Pre-init");
@@ -139,7 +128,6 @@ EXPORT void* GetCrt()
   return sCrt;
 }
 
-
 void Gpu_FrameStart()
 {
   // Reset Colours
@@ -164,11 +152,6 @@ void Gpu_FrameStart()
   Mmu_Set(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
 
   tilesAddr = Mmu_GetWord(REG_GFX_TILES_ADDR);
-
-
-  Tiles = &sBufferRam[tilesAddr];
-
-  LOGF("tilesaddr = $%4X %p", tilesAddr);
 
   int  numFrames = Mmu_Get(REG_GFX_FRAME_NUM);
   int  seconds   = Mmu_Get(REG_GFX_SECOND_NUM);
@@ -235,8 +218,8 @@ void Gpu_FrameEnd()
 void SubmitLine(int line)
 {
   int offset = (CRT_W * 3 * line);
-  memcpy(sCrt + offset, sScanLine, CRT_W * 3);
-  memset(sScanLine, 0, CRT_W * 3);
+  memcpy(sCrt + offset, sScanLineTarget, CRT_W * 3);
+  memset(sScanLineTarget, 0, CRT_W * 3);
 }
 
 #define GPU_BUFFER_W (CRT_W / 8)
@@ -245,10 +228,6 @@ inline bool Gpu_Coroutine_Common()
 {
   if (GpuTimer == 0)
   {
-    // LOGF("! $%2X", sGpuMem[Gpu_GFX_TILES_Relative + '!']);
-    // LOGF("\" $%2X", sGpuMem[Gpu_GFX_TILES_Relative + '\"']);
-    // LOGF("# $%2X", sGpuMem[Gpu_GFX_TILES_Relative + '#']);
-    // LOGF("? $%2X", sGpuMem[Gpu_GFX_TILES_Relative + '#' + 1]);
     Gpu_FrameStart();
     return false;
   }
@@ -280,6 +259,11 @@ inline bool Gpu_Coroutine_Common()
 
     Mmu_Set(REG_GFX_SCANLINE_NUM, scanline);
     Cpu_Interrupt(INTVEC_HBLANK);
+    
+    charRow = (scanline % 8) * 96;
+
+    int y = scanline;
+    int rows = y / 8;
 
     // Fetch current Graphics mem, and cache it.
     // Graphics and Text mode stuff here, so we don't have to do it per coroutine.
@@ -287,26 +271,24 @@ inline bool Gpu_Coroutine_Common()
     {
       case 1:
       {
-        memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sLineCache + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
       }
       case 2:
       {
-        memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
-        memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 1) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sLineCache + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sLineCache + (1 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 1) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
       }
       case 4:
       {
-        int y = scanline;
-        int rows = y / 8;
 
         // LOGF("Y = %i  Row = %i", y, rows);
 
         #if defined(TEXT_TEST)
           // TEXT MODES.
-          memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
-          memcpy(sGpuMemLines + (1 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 1) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
-          memcpy(sGpuMemLines + (2 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 2) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
-          memcpy(sGpuMemLines + (3 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 3) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+          memcpy(sLineCache + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+          memcpy(sLineCache + (1 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 1) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+          memcpy(sLineCache + (2 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 2) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
+          memcpy(sLineCache + (3 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 3) + (rows * GPU_BUFFER_W), GPU_BUFFER_W);
         #else
           // ORIGINAL.
           memcpy(sGpuMemLines + (0 * GPU_BUFFER_W), sSharedRam + (GPU_PLANE_SIZE * 0) + (scanline * GPU_BUFFER_W), GPU_BUFFER_W);
@@ -348,15 +330,15 @@ void Gpu_ElectronBeam()
     int lineR1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 0);
     int lineG1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 1);
     int lineB1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 2);
-    int lineR2 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 0);
-    int lineG2 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 1);
-    int lineB2 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 2);
-    int lineR3 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 0);
-    int lineG3 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 1);
-    int lineB3 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 2);
-    int lineR4 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 0);
-    int lineG4 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 1);
-    int lineB4 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 2);
+    int lineR2 = Mmu_Get(REG_GFX_PLANE1_COLOUR + 0);
+    int lineG2 = Mmu_Get(REG_GFX_PLANE1_COLOUR + 1);
+    int lineB2 = Mmu_Get(REG_GFX_PLANE1_COLOUR + 2);
+    int lineR3 = Mmu_Get(REG_GFX_PLANE2_COLOUR + 0);
+    int lineG3 = Mmu_Get(REG_GFX_PLANE2_COLOUR + 1);
+    int lineB3 = Mmu_Get(REG_GFX_PLANE2_COLOUR + 2);
+    int lineR4 = Mmu_Get(REG_GFX_PLANE3_COLOUR + 0);
+    int lineG4 = Mmu_Get(REG_GFX_PLANE3_COLOUR + 1);
+    int lineB4 = Mmu_Get(REG_GFX_PLANE3_COLOUR + 2);
     int backR  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 0);
     int backG  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 1);
     int backB  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 2);
@@ -394,41 +376,47 @@ void Gpu_ElectronBeam()
   {
     case 1:
     {
-      col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 0) + offset] & bitShift)));
+      Byte character, glyphLine;
+
+      character = sLineCache[(GPU_BUFFER_W * 0) + offset] - ' ';
+      glyphLine = Mmu_Get(tilesAddr + character + charRow);
+      col |= !!(glyphLine & bitShift);
     }
     break;
     case 2:
     {
-      col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 0) + offset] & bitShift)));
-      col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 1) + offset] & bitShift))) << 1;
+      Byte character, glyphLine;
+
+      character = sLineCache[(GPU_BUFFER_W * 0) + offset] - ' ';
+      glyphLine = Mmu_Get(tilesAddr + character + charRow);
+      col |= !!(glyphLine & bitShift);
+
+      character = sLineCache[(GPU_BUFFER_W * 1) + offset] - ' ';
+      glyphLine = Mmu_Get(tilesAddr + character + charRow);
+      col |= !!(glyphLine & bitShift) << 1;
     }
     break;
     case 4:
     {
       #if defined(TEXT_TEST)
-        int  charRow = y % 8;
-        //LOGF("Y = %i, Row = %i, CharRow = %i", y, rows, charRow);
-        Byte b;
-        Byte invert = 0;
+        Byte character, glyphLine;
 
-        b = sGpuMemLines[(GPU_BUFFER_W * 0) + offset] - ' ';
-   //     col = 1;
-//        col |= (!!(sGpuMem[tilesAddr + b + (charRow * 96)] & bitShift));
+        character = sLineCache[(GPU_BUFFER_W * 0) + offset] - ' ';
+        glyphLine = Mmu_Get(tilesAddr + character + charRow);
+        col |= !!(glyphLine & bitShift);
 
-        col |= (!!(Tiles[b + (charRow * 96)] & bitShift));
+        character = sLineCache[(GPU_BUFFER_W * 1) + offset] - ' ';
+        glyphLine = Mmu_Get(tilesAddr + character + charRow);
+        col |= !!(glyphLine & bitShift) << 1;
 
-        b = sGpuMemLines[(GPU_BUFFER_W * 1) + offset] - ' ';
-        col |= (!!(Tiles[b + (charRow * 96)] & bitShift)) << 1;
-//        col |= (!!(sGpuMem[tilesAddr + b + (charRow * 96)] & bitShift)) << 1;
+        character = sLineCache[(GPU_BUFFER_W * 2) + offset] - ' ';
+        glyphLine = Mmu_Get(tilesAddr + character + charRow);
+        col |= !!(glyphLine & bitShift) << 2;
 
-
-        b = sGpuMemLines[(GPU_BUFFER_W * 2) + offset] - ' ';
-        col |= (!!(Tiles[b + (charRow * 96)] & bitShift)) << 2;
-//        col |= (!!(sGpuMem[tilesAddr + b + (charRow * 96)] & bitShift)) << 2;
-
-        b = sGpuMemLines[(GPU_BUFFER_W * 3) + offset] - ' ';
-        col |= (!!(Tiles[b + (charRow * 96)] & bitShift)) << 3;
-//        col |= (!!(sGpuMem[tilesAddr + b + (charRow * 96)] & bitShift)) << 3;
+        character = sLineCache[(GPU_BUFFER_W * 2) + offset] - ' ';
+        glyphLine = Mmu_Get(tilesAddr + character + charRow);
+        col |= !!(glyphLine & bitShift) << 3;
+        
       #else
         col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 0) + offset] & bitShift)));
         col |= (!!((sGpuMemLines[(GPU_BUFFER_W * 1) + offset] & bitShift))) << 1;
@@ -440,9 +428,9 @@ void Gpu_ElectronBeam()
     break;
   }
 
-  sScanLine[(x * 3) + 0] = lineR[col];
-  sScanLine[(x * 3) + 1] = lineG[col];
-  sScanLine[(x * 3) + 2] = lineB[col];
+  sScanLineTarget[(x * 3) + 0] = lineR[col];
+  sScanLineTarget[(x * 3) + 1] = lineG[col];
+  sScanLineTarget[(x * 3) + 2] = lineB[col];
 }
 
 

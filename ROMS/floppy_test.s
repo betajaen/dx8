@@ -30,8 +30,6 @@ HBLANK:
         set a, 0x27
         add a,x
         store GFX_BGCOLB, a
-
-
 VBLANK:
         nop
 FLOPPY:
@@ -62,10 +60,10 @@ END
 MAIN:
         APOKE    GFX_PLANES, 4
 
-        CLS 0, ' '
-        CLS 1, ' '
-        CLS 2, ' '
-        CLS 3, ' '
+        ;CLS 0, ' '
+        ;CLS 1, ' '
+        ;CLS 2, ' '
+        ;CLS 3, ' '
 
         call DisplayLogo
 IDLE:

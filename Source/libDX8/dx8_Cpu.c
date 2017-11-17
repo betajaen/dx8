@@ -42,17 +42,21 @@ Cpu cpu;
 #define REG_Y     (cpu.I.y)
 #define REG_Z     (cpu.J.z)
 #define REG_W     (cpu.J.w)
+#define REG_I     (cpu.I.I)
+#define REG_J     (cpu.J.J)
 #define FL_Z      (cpu.flags.bZero)
 #define FL_N      (cpu.flags.bNegative)
 #define FL_C      (cpu.flags.bCarry)
 #define REG_IMM   (data.lo)
+#define REG_WORD  (data.w)
 
 typedef CPU_REGISTER(w, lo, hi) Data;
 
 #define LO_BYTE(WORD)  ((Byte)(WORD & 0xFF))
 #define HI_BYTE(WORD)  ((Byte)((WORD >> 8) & 0xFF))
 
-
+#define MAKE_WORD(W, LO, HI) W |= LO; W |= ((Word) (HI)) << 8;
+#define MAKE_LOHI(W, LO, HI) LO = (W & 0xFF);  HI = (W >> 8) & 0xFF;
 
 // NOP      -- Noop
 // PUSH     -- Push R to stack
@@ -91,26 +95,26 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_POPF()                PopFlagsFromStack();               REG_PC += Opf_Single; 
 #define DO_OP_POPR()                PopRegisters();                    REG_PC += Opf_Single; 
 
-#define DO_OP_LOAD(R0)              R0 = LoadFromMemory(data.w);       REG_PC += Opf_Address;
-#define DO_OP_STORE(R0)             StoreToMemory(data.w, R0);         REG_PC += Opf_Address;
+#define DO_OP_LOAD_INDIRECT(DST, SRC)   DST = LoadFromMemory(SRC);         REG_PC += Opf_Single;
+#define DO_OP_LOAD_ABSOLUTE(DST, SRC)   DST = LoadFromMemory(SRC);         REG_PC += Opf_Address;
+#define DO_OP_LOADW_ABSOLUTE(DST, SRC)  DST = LoadFromMemoryW(SRC);        REG_PC += Opf_Address;
 
-#define DO_OP_LOADXY(R0)            R0 = LoadFromMemoryW(REG_X, REG_Y);REG_PC += Opf_Single;
-#define DO_OP_STOREXY(R0)           StoreToMemoryW(REG_X, REG_Y, R0);  REG_PC += Opf_Single;
+#define DO_OP_STORE_INDIRECT(DST, SRC)  StoreToMemory(DST, SRC);           REG_PC += Opf_Single;
+#define DO_OP_STORE_ABSOLUTE(DST, SRC)  StoreToMemory(DST, SRC);           REG_PC += Opf_Address;
+#define DO_OP_STOREW_ABSOLUTE(DST, SRC) StoreToMemoryW(DST, SRC);          REG_PC += Opf_Address;
 
-#define DO_OP_CALL()                Do_Call(Opf_Address, data.w);
+#define DO_OP_CALL()                Do_Call(Opf_Address, REG_WORD);
 
 #define DO_OP_RETURN()              Return(cpu);
 
-#define DO_OP_SET(R0)               R0 = REG_IMM;  REG_PC += Opf_Byte;
-#define DO_OP_SETW(R0, R1)          R0 = data.lo; R1 = data.hi;        REG_PC += Opf_Address;
+#define DO_OP_SET(DST, SRC)         DST = SRC;                         REG_PC += Opf_Byte;
+#define DO_OP_SETW(DST, SRC)        DST = SRC;                         REG_PC += Opf_Word;
 
 #define DO_OP_ADD(R0, R1)           R0 = FlagsOp(R0 + R1);             REG_PC += Opf_Single;
-#define DO_OP_ADC(R0, R1)          R0 = ADC(R0, R1);                  REG_PC += Opf_Single;
+#define DO_OP_ADC(R0, R1)           R0 = ADC(R0, R1);                  REG_PC += Opf_Single;
 
 #define DO_OP_ADD_IMM(R0)           R0 = FlagsOp(R0 + REG_IMM);        REG_PC += Opf_Byte;
 #define DO_OP_ADC_IMM(R0)           R0 = ADC(R0, REG_IMM);             REG_PC += Opf_Byte;
-
-#define DO_OP_ADDW()                ADW(&REG_X, &REG_Y, REG_Z, REG_W); REG_PC += Opf_Single;
 
 #define DO_OP_SUB(R0, R1)           R0 = FlagsOp(R0 - R1);             REG_PC += Opf_Single;
 #define DO_OP_SUB_IMM(R0)           R0 = FlagsOp(R0 - REG_IMM);        REG_PC += Opf_Byte;
@@ -120,9 +124,12 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 
 #define DO_OP_INC(R0)               R0 = FlagsOp(R0 + 1);              REG_PC += Opf_Single;
 #define DO_OP_DEC(R0)               R0 = FlagsOp(R0 - 1);              REG_PC += Opf_Single;
+#define DO_OP_INCW(R0)              R0 = FlagsOpW(R0 + 1);             REG_PC += Opf_Single;
+#define DO_OP_DECW(R0)              R0 = FlagsOpW(R0 - 1);             REG_PC += Opf_Single;
 
 #define DO_OP_CMP(R0, R1)           Compare(R0, R1);                   REG_PC += Opf_Single;
 #define DO_OP_CMP_IMM(R0)           Compare(R0, REG_IMM);              REG_PC += Opf_Byte;
+#define DO_OP_CMP_IMMW(R0, R1)           CompareW(R0, REG_WORD);            REG_PC += Opf_Word;
 
 #define DO_OP_CMP_BIT(R0)           CompareBit(R0, data.lo);           REG_PC += Opf_Byte;  
 
@@ -168,11 +175,16 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 
 #define DO_OP_SET_PC_OFFSET()       cpu.pcOffset.w = data.w; REG_PC += Opf_Address;
 
+#define DO_OP_READ(R0)              REG_A = Read(&REG_Z, &REG_W);  REG_PC += Opf_Address;
+#define DO_OP_WRITE(R0)             Write(R0, &REG_Z, &REG_W);       REG_PC += Opf_Address;
+
 enum OpFormat
 {
-  Opf_Single  = 1,
-  Opf_Byte    = 2,
-  Opf_Address = 3,
+  Opf_Single     = 1,
+  Opf_Byte       = 2,
+  Opf_Address    = 3,
+  Opf_Word       = 3,
+  Opf_DoubleWord = 5,
 };
 
 #define OP(OP, OPERANDS, FORMAT, TIME, CODE) Op_##OP##_##OPERANDS,
@@ -372,30 +384,51 @@ inline Byte LoadFromMemory(Word address)
   return Mmu_Get(address);
 }
 
-inline Byte LoadFromMemoryW(Byte lo, Byte hi)
+inline Word LoadFromMemoryW(Word address)
 {
-  Word address = lo;
-  address |= ((Word) (hi) << 8);
-  return Mmu_Get(address);
+  Word w;
+  Byte lo, hi;
+  lo = LoadFromMemory(address);
+  hi = LoadFromMemory(address+1);
+  MAKE_WORD(w, lo, hi);
+  return w;
 }
 
 inline void StoreToMemory(Word address, Byte value)
 {
-  if (address == 0x826E)
-  {
-    LOGF("$%4X >>> $%2X %c", address, value, value);
-    Cpu_Print("CPU", &cpu);
-  }
-
   Mmu_Set(address, value);
 }
 
-inline void StoreToMemoryW(Byte lo, Byte hi, Byte value)
+inline void StoreToMemoryW(Word address, Word value)
 {
-  Word address = lo;
-  address |= ((Word)(hi) << 8);
+  Byte lo, hi;
+  MAKE_LOHI(value, lo, hi);
+  Mmu_Set(address,   lo);
+  Mmu_Set(address+1, hi);
+}
 
-  Mmu_Set(address, value);
+inline Byte Read(Byte* lo, Byte* hi)
+{
+  Word address;
+  MAKE_WORD(address, *lo, *hi);
+
+  Byte value = LoadFromMemory(address);
+
+  address += 1;
+  MAKE_LOHI(address, *lo, *hi);
+
+  return value;
+}
+
+inline void Write(Byte value, Byte* lo, Byte* hi)
+{
+  Word address;
+  MAKE_WORD(address, *lo, *hi);
+
+  StoreToMemory(address, value);
+
+  address += 1;
+  MAKE_LOHI(address, *lo, *hi);
 }
 
 inline Byte FlagsOp(int value)
@@ -406,11 +439,27 @@ inline Byte FlagsOp(int value)
   return value & 0xFF;
 }
 
+inline Word FlagsOpW(int value)
+{
+  cpu.flags.bZero = (value == 0);
+  cpu.flags.bNegative = (value < 0);
+  cpu.flags.bCarry = (value > 0xFFFF);
+  return value & 0xFFFF;
+}
+
 inline void Compare(Byte lhs, Byte rhs)
 {
   cpu.flags.bCarry = (rhs >= lhs);
-  Sword val = rhs - lhs;
+  int val = rhs - lhs;
   cpu.flags.bZero     = (val == 0);
+  cpu.flags.bNegative = (val < 0);
+}
+
+inline void CompareW(Word lhs, Word rhs)
+{
+  cpu.flags.bCarry = (rhs >= lhs);
+  int val = rhs - lhs;
+  cpu.flags.bZero = (val == 0);
   cpu.flags.bNegative = (val < 0);
 }
 
@@ -591,21 +640,12 @@ inline void DoInterrupt(Byte name)
 
   switch(name)
   {
-    case INT_MEMCPY:
-    case INT_MEMSET:
-    case INT_PRG2MEM:
-      Mmu_Interrupt(name);
-      return;
     case INT_RESET:
       Cpu_Reset(true);
       return;
-    case INT_PRG2GPU:
-    case INT_GPUSET:
-      Gpu_Interrupt(name);
-    break;
     case INT_GPUON:
       Gpu_On();
-    break;
+      return;
   }
 }
 
@@ -723,7 +763,7 @@ int Cpu_Step()
   data.lo = Mmu_Get(REG_PC + 1);
   data.hi = Mmu_Get(REG_PC + 2);
 
-  //LOGF("**CPU STEP >> PC=$%4X ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
+  // LOGF("**CPU STEP >> PC=$%4X ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
 
 #undef OP
 #define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; return TIME;

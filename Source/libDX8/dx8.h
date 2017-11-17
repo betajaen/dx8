@@ -144,10 +144,6 @@ void Stack_Set(Byte offset, Byte value);
 
 Byte Stack_Get(Byte offset);
 
-void Mmu_Interrupt(Byte interrupt);
-
-void Mmu_Step(int steps);
-
 void Mmu_TurnOn();
 
 void Cpu_TurnOn();

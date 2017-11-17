@@ -46,7 +46,6 @@ inline void ClockOnce()
   //LOGF("**Clock");
   Cpu_Step();
   Cpu_Step();
-  Mmu_Step(1);
   Gpu_Clock();
 }
 

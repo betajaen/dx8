@@ -175,7 +175,7 @@ namespace DX8
       {
         IsOpen = true;
         IsOff = true;
-        IsRunning = false;
+        IsRunning = true;
       }
       else
       {
@@ -346,12 +346,12 @@ namespace DX8
         Library.Call(Api.RemoveDisk, 0);
       }
 
-      InspectShared = GUI.Toggle(new Rect(500, 50, 100, 25), InspectShared, "Inspect");
+      InspectShared = GUI.Toggle(new Rect(0, 100, 100, 25), InspectShared, string.Format("Inspect ${0:X4}", InspectAddress));
 
       if (InspectShared)
       {
         GUI.changed = false;
-        string strV = GUI.TextField(new Rect(600, 50, 200, 25), String.Format("{0:X4}", InspectAddress));
+        string strV = GUI.TextField(new Rect(0, 125, 100, 25), String.Format("{0:X4}", InspectAddress));
         if (GUI.changed)
         {
           int newAddress = 0;
@@ -360,7 +360,38 @@ namespace DX8
             InspectAddress = newAddress;
           }
         }
-        HigherBank = GUI.Toggle(new Rect(800, 50, 100, 25), HigherBank, "High");
+        if (GUI.Button(new Rect(100, 125, 25, 25), "<"))
+        {
+          InspectAddress -= 16;
+        }
+        if (GUI.Button(new Rect(125, 125, 25, 25), ">"))
+        {
+          InspectAddress += 16;
+        }
+        if (GUI.Button(new Rect(100, 150, 25, 25), "<<"))
+        {
+          InspectAddress -= 40;
+        }
+        if (GUI.Button(new Rect(125, 150, 25, 25), ">>"))
+        {
+          InspectAddress += 40;
+        }
+        if (GUI.Button(new Rect(150, 125, 50, 25), "0000"))
+        {
+          InspectAddress = 0x0000;
+        }
+        if (GUI.Button(new Rect(200, 125, 50, 25), "0800"))
+        {
+          InspectAddress = 0x0800;
+        }
+        if (GUI.Button(new Rect(150, 150, 50, 25), "8000"))
+        {
+          InspectAddress = 0x8000;
+        }
+        if (GUI.Button(new Rect(200, 150, 50, 25), "F800"))
+        {
+          InspectAddress = 0xF800;
+        }
       }
 
       GUI.Label(new Rect(0, 50, Screen.width, 90), String.Format(
@@ -381,10 +412,10 @@ namespace DX8
 
        if (InspectShared)
        {
-         for(int i=0;i < 8;i++)
+         for(int i=0;i < 16;i++)
          {
           //int val = Api.
-          int val = Library.GetRam(Api.SharedAddr, i + (HigherBank ? 0x8000 : 0x000));
+          int val = Library.GetRam(Api.SharedAddr, i + InspectAddress);
           GUI.Label(new Rect(i * 25, 75, 25, 25), String.Format("{0:X2}", val));
          }
        }

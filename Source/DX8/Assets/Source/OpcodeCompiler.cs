@@ -30,8 +30,8 @@ namespace DX8
       PopR,
       Load,
       Store,
-      LoadXY,
-      StoreXY,
+      Read,
+      Write,
       Call,
       Return,
       Set,
@@ -86,8 +86,8 @@ namespace DX8
       "pop.r",
       "load",
       "store",
-      "load.xy",
-      "store.xy",
+      "read",
+      "write",
       "call",
       "return",
       "set",
@@ -141,6 +141,8 @@ namespace DX8
       Z,
       W,
       A,
+      I,
+      J,
       COUNT
     }
 
@@ -152,7 +154,9 @@ namespace DX8
       "y",
       "z",
       "w",
-      "a"
+      "a",
+      "i",
+      "j"
     };
 
     public struct Op
@@ -245,17 +249,22 @@ namespace DX8
 
       internal void ToCFormat(ref StringBuilder sb)
       {
-        sb.Append(OpcodeCompiler.OpcodeAsm[(int) Opcode]);
-        sb.Append('_');
+        string n = OpcodeCompiler.OpcodeAsm[(int) Opcode].ToUpper();
+        n = n.Replace(".", "_");
+        sb.Append(n);
+        
+
         switch(Operand1)
         {
-          case Operand.A: sb.Append('a'); break;
-          case Operand.X: sb.Append('x'); break;
-          case Operand.Y: sb.Append('y'); break;
-          case Operand.Z: sb.Append('z'); break;
-          case Operand.W: sb.Append('w'); break;
-          case Operand.Address: sb.Append('A'); break;
-          case Operand.Byte: sb.Append('B'); break;
+          case Operand.A: sb.Append("_a"); break;
+          case Operand.X: sb.Append("_x"); break;
+          case Operand.Y: sb.Append("_y"); break;
+          case Operand.Z: sb.Append("_z"); break;
+          case Operand.W: sb.Append("_w"); break;
+          case Operand.I: sb.Append("_i"); break;
+          case Operand.J: sb.Append("_j"); break;
+          case Operand.Address: sb.Append("_A"); break;
+          case Operand.Byte: sb.Append("_B"); break;
         }
         
         switch(Operand2)
@@ -265,6 +274,8 @@ namespace DX8
           case Operand.Y: sb.Append('y'); break;
           case Operand.Z: sb.Append('z'); break;
           case Operand.W: sb.Append('w'); break;
+          case Operand.I: sb.Append('i'); break;
+          case Operand.J: sb.Append('j'); break;
           case Operand.Address: sb.Append('A'); break;
           case Operand.Byte: sb.Append('B'); break;
         }
@@ -382,6 +393,8 @@ namespace DX8
         case Operand.Z: sb.Append("A eq z"); op1 = true; break;
         case Operand.W: sb.Append("A eq w"); op1 = true; break;
         case Operand.A: sb.Append("A eq a"); op1 = true; break;
+        case Operand.I: sb.Append("A eq i"); op1 = true; break;
+        case Operand.J: sb.Append("A eq j"); op1 = true; break;
       }
       
       switch(op.Operand2)
@@ -391,6 +404,8 @@ namespace DX8
         case Operand.Z: if (op1) { sb.Append(" & "); } sb.Append("B eq z"); break;
         case Operand.W: if (op1) { sb.Append(" & "); } sb.Append("B eq w"); break;
         case Operand.A: if (op1) { sb.Append(" & "); } sb.Append("B eq a"); break;
+        case Operand.I: if (op1) { sb.Append(" & "); } sb.Append("B eq i"); break;
+        case Operand.J: if (op1) { sb.Append(" & "); } sb.Append("B eq j"); break;
       }
       
       
@@ -434,17 +449,6 @@ namespace DX8
       // Constants
       sb.AppendLine("; Macros");
       
-      sb.AppendLine();
-      sb.AppendLine("macro DX8_HEADER_ROM {");
-      sb.AppendLine("  db 'DX8r'");
-      sb.AppendLine("  dw 0");
-      sb.AppendLine("}");
-      sb.AppendLine();
-      sb.AppendLine("macro DX8_HEADER_FDD {");
-      sb.AppendLine("  db 'DX8f'");
-      sb.AppendLine("  dw 0");
-      sb.AppendLine("}");
-      
       // Constants
       sb.AppendLine("; Constants");
 
@@ -466,7 +470,7 @@ namespace DX8
       }
       
       sb.AppendLine();
-
+      
       // Macros
       
       sb.AppendLine("; Instructions");
@@ -548,7 +552,21 @@ namespace DX8
         sb.AppendLine("}");
         
       }
-
+      
+      // Opcodes
+      sb.AppendLine("; Opcodes");
+      
+      for(int ii=0;ii < opcodes.Count;ii++)
+      {
+        Op op = opcodes[ii];
+        if (op.Opcode == Opcode.Nop && ii != 0)
+          continue;
+        
+        sb.Append("OP_");
+        op.ToCFormat(ref sb);
+        sb.AppendFormat(" = ${0:X2}", op.Index);
+        sb.AppendLine();
+      }
       
       return sb.ToString();
     }
@@ -724,7 +742,10 @@ namespace DX8
                 case 'z': operand1 = Operand.Z; break;
                 case 'w': operand1 = Operand.W; break;
                 case 'a': operand1 = Operand.A; break;
+                case 'i': operand1 = Operand.I; break;
+                case 'j': operand1 = Operand.J; break;
                 case 'A': operand1 = Operand.Address; break;
+                case 'W': operand1 = Operand.Address; break;
                 case 'B': operand1 = Operand.Byte; break;
 
               }
@@ -738,6 +759,9 @@ namespace DX8
                 case 'z': operand1 = Operand.Z; break;
                 case 'w': operand1 = Operand.W; break;
                 case 'a': operand1 = Operand.A; break;
+                case 'i': operand1 = Operand.I; break;
+                case 'j': operand1 = Operand.J; break;
+                case 'W': operand1 = Operand.Address; break;
                 case 'A': operand1 = Operand.Address; break;
                 case 'B': operand1 = Operand.Byte; break;
               }
@@ -747,13 +771,16 @@ namespace DX8
                 case 'y': operand2 = Operand.Y; break;
                 case 'z': operand2 = Operand.Z; break;
                 case 'w': operand2 = Operand.W; break;
+                case 'i': operand2 = Operand.I; break;
+                case 'j': operand2 = Operand.J; break;
                 case 'a': operand2 = Operand.A; break;
+                case 'W': operand2 = Operand.Address; break;
                 case 'A': operand2 = Operand.Address; break;
                 case 'B': operand2 = Operand.Byte; break;
               }
             }
 
-            if (format == "Address")
+            if (format == "Address" || format == "Word")
             {
               length = 3;
             }
@@ -805,6 +832,12 @@ namespace DX8
 
         // Debug.LogFormat("{0} => {1} => {2}", name, valueStr, value);
         
+        if (name == "AT")
+        {
+          org = value;
+          continue;
+        }
+
         registers.Add(name, org);
         org += value;
       }
@@ -821,7 +854,7 @@ namespace DX8
       for(int ii=0;ii < lines.Length;ii++)
       {
         
-        Match match = Regex.Match(lines[ii], @"CONSTANT\(\s*(\w+)\s*,\s*0x(\d+)\s*\)", RegexOptions.IgnoreCase);
+        Match match = Regex.Match(lines[ii], @"CONSTANT\(\s*(\w+)\s*,\s*0x(\w+)\s*\)", RegexOptions.IgnoreCase);
 
         if (!match.Success)
           continue;
