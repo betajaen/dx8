@@ -568,8 +568,8 @@
 030B: store j, y          ; 21
 030C: add a, a            ; 36
 030D: push z              ; 03
-030E: adc a, $03          ; 45 03
-0310: jmp $0432           ; AB 32 04
+030E: adc z, $03          ; 43 03
+0310: jmp $042A           ; AB 2A 04
 0313: load x, $002C       ; 15 2C 00
 0316: not x               ; 89
 0317: and x, $E0          ; 7B E0
@@ -594,159 +594,172 @@
 0338: store i, a          ; 1C
 0339: pop a               ; 0C
 033A: dec a               ; 64
-033B: jmp.z $0344         ; BC 44 03
-033E: push a              ; 05
-033F: inc i               ; 5E
-0340: inc j               ; 5F
-0341: jmp $0337           ; AB 37 03
-0344: return              ; 2A
-0345: store i, a          ; 1C
-0346: inc i               ; 5E
-0347: dec j               ; 66
-0348: jmp.nz $0345        ; BE 45 03
-034B: return              ; 2A
-034C: set a, $44          ; 2F 44(D)
-034E: store $8499, a      ; 26 99 84
-0351: set a, $58          ; 2F 58(X)
-0353: store $849A, a      ; 26 9A 84
-0356: set a, $38          ; 2F 38(8)
-0358: store $849B, a      ; 26 9B 84
-035B: set a, $2F          ; 2F 2F(/)
-035D: store $AC9D, a      ; 26 9D AC
-0360: set a, $2F          ; 2F 2F(/)
-0362: store $D49E, a      ; 26 9E D4
-0365: set a, $2F          ; 2F 2F(/)
-0367: store $FC9F, a      ; 26 9F FC
-036A: set a, $49          ; 2F 49(I)
-036C: store $8269, a      ; 26 69 82
-036F: set a, $4E          ; 2F 4E(N)
-0371: store $826A, a      ; 26 6A 82
-0374: set a, $53          ; 2F 53(S)
-0376: store $826B, a      ; 26 6B 82
-0379: set a, $45          ; 2F 45(E)
-037B: store $826C, a      ; 26 6C 82
-037E: set a, $52          ; 2F 52(R)
-0380: store $826D, a      ; 26 6D 82
-0383: set a, $54          ; 2F 54(T)
-0385: store $826E, a      ; 26 6E 82
-0388: set a, $46          ; 2F 46(F)
-038A: store $8291, a      ; 26 91 82
-038D: set a, $4C          ; 2F 4C(L)
-038F: store $8292, a      ; 26 92 82
-0392: set a, $4F          ; 2F 4F(O)
-0394: store $8293, a      ; 26 93 82
-0397: set a, $50          ; 2F 50(P)
-0399: store $8294, a      ; 26 94 82
-039C: set a, $50          ; 2F 50(P)
-039E: store $8295, a      ; 26 95 82
-03A1: set a, $59          ; 2F 59(Y)
-03A3: store $8296, a      ; 26 96 82
-03A6: return              ; 2A
-03A7: load x, $002F       ; 15 2F 00
-03AA: cmpbit x, $40       ; 72 40(@)
-03AC: jmp.z $03B2         ; BC B2 03
-03AF: jmp $03C0           ; AB C0 03
-03B2: set x, $20          ; 2B 20
-03B4: store $AC9D, x      ; 22 9D AC
-03B7: store $D49E, x      ; 22 9E D4
-03BA: store $FC9F, x      ; 22 9F FC
-03BD: jmp $03CB           ; AB CB 03
-03C0: set x, $2F          ; 2B 2F(/)
-03C2: store $AC9D, x      ; 22 9D AC
-03C5: store $D49E, x      ; 22 9E D4
-03C8: store $FC9F, x      ; 22 9F FC
-03CB: return              ; 2A
-03CC: set i, $FB10        ; 30 10 FB
-03CF: store $FB10, i      ; 27
-03D0: nop                 ; 00
-03D1: nop                 ; 00
-03D2: set i, $FB13        ; 30 13 FB
-03D5: store $FB13, i      ; 27
-03D6: push y              ; 02
-03D7: nop                 ; 00
-03D8: set i, $FB2E        ; 30 2E FB
-03DB: store $FB2E, i      ; 27
-03DC: push w              ; 04
-03DD: nop                 ; 00
-03DE: set i, $FB30        ; 30 30 FB
-03E1: store $FB30, i      ; 27
-03E2: push.f              ; 06
-03E3: nop                 ; 00
-03E4: set a, $00          ; 2F 00
-03E6: store $0010, a      ; 26 10 00
-03E9: set a, $00          ; 2F 00
-03EB: store $0011, a      ; 26 11 00
-03EE: set a, $00          ; 2F 00
-03F0: store $0012, a      ; 26 12 00
-03F3: set a, $00          ; 2F 00
-03F5: store $0013, a      ; 26 13 00
-03F8: set a, $00          ; 2F 00
-03FA: store $0014, a      ; 26 14 00
-03FD: set a, $00          ; 2F 00
-03FF: store $0015, a      ; 26 15 00
-0402: set a, $00          ; 2F 00
-0404: store $0016, a      ; 26 16 00
-0407: set a, $FF          ; 2F FF
-0409: store $0017, a      ; 26 17 00
-040C: set a, $04          ; 2F 04
-040E: store $0018, a      ; 26 18 00
-0411: set i, $F800        ; 30 00 F8
-0414: store $F800, i      ; 27
-0415: set i, $2F00        ; 30 00 2F
-0418: nop                 ; 00
-0419: store $0019, a      ; 26 19 00
-041C: set a, $00          ; 2F 00
-041E: store $001A, a      ; 26 1A 00
-0421: set a, $00          ; 2F 00
-0423: store $001B, a      ; 26 1B 00
-0426: set a, $00          ; 2F 00
-0428: store $001C, a      ; 26 1C 00
-042B: set a, $02          ; 2F 02
-042D: store $0018, a      ; 26 18 00
-0430: int $FE             ; C0 FE
-0432: set a, $00          ; 2F 00
-0434: store $0010, a      ; 26 10 00
-0437: set a, $00          ; 2F 00
-0439: store $0011, a      ; 26 11 00
-043C: set a, $00          ; 2F 00
-043E: store $0012, a      ; 26 12 00
-0441: set a, $00          ; 2F 00
-0443: store $0013, a      ; 26 13 00
-0446: set a, $00          ; 2F 00
-0448: store $0014, a      ; 26 14 00
-044B: set a, $00          ; 2F 00
-044D: store $0015, a      ; 26 15 00
-0450: set a, $00          ; 2F 00
-0452: store $0016, a      ; 26 16 00
-0455: set a, $FF          ; 2F FF
-0457: store $0017, a      ; 26 17 00
-045A: set i, $8000        ; 30 00 80
-045D: set j, $2800        ; 31 00 28
-0460: set a, $20          ; 2F 20
-0462: call $0345          ; 29 45 03
-0465: set i, $A800        ; 30 00 A8
-0468: set j, $2800        ; 31 00 28
-046B: set a, $20          ; 2F 20
-046D: call $0345          ; 29 45 03
-0470: set i, $0800        ; 30 00 08
-0473: set j, $0300        ; 31 00 03
-0476: set a, $0C          ; 2F 0C
-0478: call $0336          ; 29 36 03
-047B: call $034C          ; 29 4C 03
-047E: call $03A7          ; 29 A7 03
-0481: jmp $047E           ; AB 7E 04
-0484: set a, $00          ; 2F 00
-0486: store $0800, a      ; 26 00 08
-0489: set a, $AB          ; 2F AB
-048B: store $0801, a      ; 26 01 08
-048E: set i, $0800        ; 30 00 08
-0491: store $0800, i      ; 27
-0492: push y              ; 02
-0493: pop x               ; 08
-0494: offset $0000        ; C4 00 00
-0497: jmp $0800           ; AB 00 08
-049A: set a, $78          ; 2F 78(x)
-049C: store $8000, a      ; 26 00 80
+033B: rjmp.z $07          ; BD 07
+033D: push a              ; 05
+033E: inc i               ; 5E
+033F: inc j               ; 5F
+0340: rjmp $F7            ; B3 F7
+0342: return              ; 2A
+0343: store i, a          ; 1C
+0344: inc i               ; 5E
+0345: dec j               ; 66
+0346: rjmp.nz $FD         ; BF FD
+0348: return              ; 2A
+0349: set a, $44          ; 2F 44(D)
+034B: store $8499, a      ; 26 99 84
+034E: set a, $58          ; 2F 58(X)
+0350: store $849A, a      ; 26 9A 84
+0353: set a, $38          ; 2F 38(8)
+0355: store $849B, a      ; 26 9B 84
+0358: set a, $2F          ; 2F 2F(/)
+035A: store $849D, a      ; 26 9D 84
+035D: set a, $2F          ; 2F 2F(/)
+035F: store $849E, a      ; 26 9E 84
+0362: set a, $2F          ; 2F 2F(/)
+0364: store $849F, a      ; 26 9F 84
+0367: set a, $49          ; 2F 49(I)
+0369: store $8269, a      ; 26 69 82
+036C: set a, $4E          ; 2F 4E(N)
+036E: store $826A, a      ; 26 6A 82
+0371: set a, $53          ; 2F 53(S)
+0373: store $826B, a      ; 26 6B 82
+0376: set a, $45          ; 2F 45(E)
+0378: store $826C, a      ; 26 6C 82
+037B: set a, $52          ; 2F 52(R)
+037D: store $826D, a      ; 26 6D 82
+0380: set a, $54          ; 2F 54(T)
+0382: store $826E, a      ; 26 6E 82
+0385: set a, $46          ; 2F 46(F)
+0387: store $8291, a      ; 26 91 82
+038A: set a, $4C          ; 2F 4C(L)
+038C: store $8292, a      ; 26 92 82
+038F: set a, $4F          ; 2F 4F(O)
+0391: store $8293, a      ; 26 93 82
+0394: set a, $50          ; 2F 50(P)
+0396: store $8294, a      ; 26 94 82
+0399: set a, $50          ; 2F 50(P)
+039B: store $8295, a      ; 26 95 82
+039E: set a, $59          ; 2F 59(Y)
+03A0: store $8296, a      ; 26 96 82
+03A3: return              ; 2A
+03A4: load x, $002F       ; 15 2F 00
+03A7: cmpbit x, $40       ; 72 40(@)
+03A9: jmp.z $03AF         ; BC AF 03
+03AC: jmp $03BD           ; AB BD 03
+03AF: set x, $20          ; 2B 20
+03B1: store $849D, x      ; 22 9D 84
+03B4: store $849E, x      ; 22 9E 84
+03B7: store $849F, x      ; 22 9F 84
+03BA: jmp $03C8           ; AB C8 03
+03BD: set x, $2F          ; 2B 2F(/)
+03BF: store $849D, x      ; 22 9D 84
+03C2: store $849E, x      ; 22 9E 84
+03C5: store $849F, x      ; 22 9F 84
+03C8: return              ; 2A
+03C9: set i, $0310        ; 30 10 03
+03CC: store $0310, i      ; 27
+03CD: nop                 ; 00
+03CE: nop                 ; 00
+03CF: set i, $0313        ; 30 13 03
+03D2: store $0313, i      ; 27
+03D3: push y              ; 02
+03D4: nop                 ; 00
+03D5: set i, $032E        ; 30 2E 03
+03D8: store $032E, i      ; 27
+03D9: push w              ; 04
+03DA: nop                 ; 00
+03DB: set i, $0330        ; 30 30 03
+03DE: store $0330, i      ; 27
+03DF: push.f              ; 06
+03E0: nop                 ; 00
+03E1: set a, $00          ; 2F 00
+03E3: store $0010, a      ; 26 10 00
+03E6: set a, $00          ; 2F 00
+03E8: store $0011, a      ; 26 11 00
+03EB: set a, $00          ; 2F 00
+03ED: store $0012, a      ; 26 12 00
+03F0: set a, $00          ; 2F 00
+03F2: store $0013, a      ; 26 13 00
+03F5: set a, $00          ; 2F 00
+03F7: store $0014, a      ; 26 14 00
+03FA: set a, $00          ; 2F 00
+03FC: store $0015, a      ; 26 15 00
+03FF: set a, $00          ; 2F 00
+0401: store $0016, a      ; 26 16 00
+0404: set a, $00          ; 2F 00
+0406: store $0017, a      ; 26 17 00
+0409: set i, $7800        ; 30 00 78
+040C: store $7800, i      ; 27
+040D: set i, $2F00        ; 30 00 2F
+0410: nop                 ; 00
+0411: store $0019, a      ; 26 19 00
+0414: set a, $00          ; 2F 00
+0416: store $001A, a      ; 26 1A 00
+0419: set a, $00          ; 2F 00
+041B: store $001B, a      ; 26 1B 00
+041E: set a, $00          ; 2F 00
+0420: store $001C, a      ; 26 1C 00
+0423: set a, $04          ; 2F 04
+0425: store $0018, a      ; 26 18 00
+0428: int $FE             ; C0 FE
+042A: set i, $8000        ; 30 00 80
+042D: set j, $7800        ; 31 00 78
+0430: set a, $20          ; 2F 20
+0432: call $0343          ; 29 43 03
+0435: set i, $8000        ; 30 00 80
+0438: set j, $7B00        ; 31 00 7B
+043B: set a, $0C          ; 2F 0C
+043D: call $0336          ; 29 36 03
+0440: call $0349          ; 29 49 03
+0443: call $03A4          ; 29 A4 03
+0446: jmp $0443           ; AB 43 04
+0449: set a, $FF          ; 2F FF
+044B: set i, $7800        ; 30 00 78
+044E: set j, $F800        ; 31 00 F8
+0451: call $0336          ; 29 36 03
+0454: set a, $FF          ; 2F FF
+0456: set i, $78FF        ; 30 FF 78
+0459: set j, $F8FF        ; 31 FF F8
+045C: call $0336          ; 29 36 03
+045F: set a, $FF          ; 2F FF
+0461: set i, $79FE        ; 30 FE 79
+0464: set j, $F9FE        ; 31 FE F9
+0467: call $0336          ; 29 36 03
+046A: set a, $FF          ; 2F FF
+046C: set i, $7AFD        ; 30 FD 7A
+046F: set j, $FAFD        ; 31 FD FA
+0472: call $0336          ; 29 36 03
+0475: set a, $4D          ; 2F 4D(M)
+0477: set i, $7BFC        ; 30 FC 7B
+047A: set j, $FBFC        ; 31 FC FB
+047D: call $0336          ; 29 36 03
+0480: offset $7800        ; C4 00 78
+0483: jmp $03C9           ; AB C9 03
+0486: nop                 ; CD
+0487: nop                 ; CD
+0488: nop                 ; CD
+0489: nop                 ; CD
+048A: nop                 ; CD
+048B: nop                 ; CD
+048C: nop                 ; CD
+048D: nop                 ; CD
+048E: nop                 ; CD
+048F: nop                 ; CD
+0490: nop                 ; CD
+0491: nop                 ; CD
+0492: nop                 ; CD
+0493: nop                 ; CD
+0494: nop                 ; CD
+0495: nop                 ; CD
+0496: nop                 ; CD
+0497: nop                 ; CD
+0498: nop                 ; CD
+0499: nop                 ; CD
+049A: nop                 ; CD
+049B: nop                 ; CD
+049C: nop                 ; CD
+049D: nop                 ; CD
+049E: nop                 ; CD
 049F: nop                 ; CD
 04A0: nop                 ; CD
 04A1: nop                 ; CD
@@ -1605,5 +1618,5 @@
 07F6: nop                 ; CD
 07F7: nop                 ; CD
 07F8: offset $F800        ; C4 00 F8
-07FB: jmp $03CC           ; AB CC 03
+07FB: jmp $0449           ; AB 49 04
 07FE: rjmp $FA            ; B3 FA

@@ -1,18 +1,20 @@
 include "dx8.inc"
 include "macros.inc"
 
-;DX8_HEADER_ROM
-
-OFFSET = $FFFF - $800 + 1
+PROGRAM_SPACE   = $7800
+ROM_SPACE       = $FFFF - $800 + 1
 
 ; =============================================================
 ; DATA
 ; =============================================================
 
+FONT:
 include "victoria.png.s"
 
 TEST_DATA:
         db 'Hello World!'
+
+CODE:
 
 ; =============================================================
 ; EXPORTED FUNCTIONS
@@ -69,11 +71,11 @@ MemCpySm:
                 store i, a
                 pop a
                 dec a
-                jmp.z .end
+                _rjmp.z .end
                 push a
                 inc i
                 inc j
-                jmp .loop
+                _rjmp .loop
         .end:
 return
 
@@ -84,12 +86,10 @@ MemSet_Len equ j
 MemSet_Val equ a
 
 MemSet:
-        .loop:
-                store i, a
+        .loop:  store i, a
                 inc i
                 dec j
-                jmp.nz .loop
-        .end:
+                _rjmp.nz .loop
 return
 
 ; =============================================================
@@ -121,25 +121,22 @@ DisplayLogo:
 return
 
 DrawCursor:
-        ;PUSH_MMUBANK
-                ;MMU.z $00
-                        load x, REG_GFX_COUNTERS
-                        cmpbit x, GFX_FLG_COUNTERS_ODDEVEN
-                        jmp.z .DrawBlank
-                        jmp .DrawDot
-                .DrawBlank:
-                        set x, ' '
-                        PRINT_AT(0,17+4, 29), x
-                        PRINT_AT(0,17+5, 29), x
-                        PRINT_AT(0,17+6, 29), x
-                        jmp .EndDraw
-                .DrawDot:
-                        set x, '/'
-                        PRINT_AT(0,17+4, 29), x
-                        PRINT_AT(0,17+5, 29), x
-                        PRINT_AT(0,17+6, 29), x
-                .EndDraw:
-        ;POP_MMUBANK
+                load x, REG_GFX_COUNTERS
+                cmpbit x, GFX_FLG_COUNTERS_ODDEVEN
+                jmp.z .DrawBlank
+                jmp .DrawDot
+        .DrawBlank:
+                set x, ' '
+                PRINT_AT(0,17+4, 29), x
+                PRINT_AT(0,17+5, 29), x
+                PRINT_AT(0,17+6, 29), x
+                jmp .EndDraw
+        .DrawDot:
+                set x, '/'
+                PRINT_AT(0,17+4, 29), x
+                PRINT_AT(0,17+5, 29), x
+                PRINT_AT(0,17+6, 29), x
+        .EndDraw:
 return
 
 ; =============================================================
@@ -147,10 +144,16 @@ return
 ; =============================================================
 EntryPoint:
         ; Setup basic IVT
-        _poke.w         INTVEC_ADDR_RESET,      OFFSET + RESET
-        _poke.w         INTVEC_ADDR_HBLANK,     OFFSET + HBLANK
-        _poke.w         INTVEC_ADDR_VBLANK,     OFFSET + VBLANK
-        _poke.w         INTVEC_ADDR_FLOPPY,     OFFSET + FLOPPY
+        _poke.w         INTVEC_ADDR_RESET,      RESET
+        _poke.w         INTVEC_ADDR_HBLANK,     HBLANK
+        _poke.w         INTVEC_ADDR_VBLANK,     VBLANK
+        _poke.w         INTVEC_ADDR_FLOPPY,     FLOPPY
+
+printl "HBLANK Addr=", (PROGRAM_SPACE + HBLANK)
+printl "HBLANK RelAddr=", (HBLANK)
+
+printl "VBLANK Addr=", (PROGRAM_SPACE + VBLANK)
+printl "VBLANK RelAddr=", (VBLANK)
 
         ; Reset initial registers
         _poke           REG_MMU_BANK + 0,           $00
@@ -160,26 +163,31 @@ EntryPoint:
         _poke           REG_MMU_BANK + 4,           $00
         _poke           REG_MMU_BANK + 5,           $00
         _poke           REG_MMU_BANK + 6,           $00
-        _poke           REG_MMU_BANK + 7,           $FF   ; Keep Rom
+        _poke           REG_MMU_BANK + 7,           $00
+
+
+printl "Tiles Addr=", (PROGRAM_SPACE + FONT)
 
         ; Set font
-        _poke.w         REG_GFX_TILES_ADDR,         (OFFSET + FNT_VICTORIA_DATA)
+        _poke.w         REG_GFX_TILES_ADDR,         (PROGRAM_SPACE + FONT)
         _poke           REG_GFX_PLANE0_TYPE,        $00
         _poke           REG_GFX_PLANE1_TYPE,        $00
         _poke           REG_GFX_PLANE2_TYPE,        $00
         _poke           REG_GFX_PLANE3_TYPE,        $00
-        _poke           REG_GFX_PLANES_COUNT,       $01
+        _poke           REG_GFX_PLANES_COUNT,       $04
 
         int INT_GPUON
 
 Setup:
+        ; Clear screen
         set MemSet_Dst, MEM_GFX_PLANE0
-        set MemSet_Len, MEM_GFX_PLANE_SIZE
+        set MemSet_Len, MEM_GFX_PLANE_SIZE * 3
         set MemSet_Val, ' '
         call MemSet
 
+        ; Copy test text over
         set MemCpySm_Dst, MEM_GFX_PLANE0
-        set MemCpySm_Src, TEST_DATA + OFFSET
+        set MemCpySm_Src, PROGRAM_SPACE + TEST_DATA
         set MemCpySm_Len, 12
         call MemCpySm
 
@@ -187,6 +195,7 @@ Setup:
 IDLE:
         call DrawCursor
         jmp IDLE
+nop
 
 ; =============================================================
 ; Init sub-routine
@@ -199,10 +208,45 @@ IDLE:
 ; and then jump back to the setup code to set up the IVT tables
 ; and initialise the hardware.
 ; =============================================================
+
+CopyAndLaunch:
+
+        length = CopyAndLaunch
+        printl "Code Length ", length
+        pages = (CopyAndLaunch / 0xFF)
+        lastPage = (CopyAndLaunch mod 0xFF)
+        printl "Pages ", pages
+
+        if (lastPage > 0)
+                pages = pages + 1
+        end if
+
+        count = 0
+        repeat pages
+                set MemCpySm_Len, 0xFF
+                set MemCpySm_Dst, PROGRAM_SPACE + count
+                set MemCpySm_Src, ROM_SPACE + count
+                call MemCpySm
+
+                count = count + 0xFF
+        end repeat
+
+        ;if (lastPage > 0)
+        ;printl "    + ", lastPage
+        ;        set MemCpySm_Len, lastPage + 10
+        ;        set MemCpySm_Dst, PROGRAM_SPACE + count
+        ;        set MemCpySm_Src, ROM_SPACE + count
+        ;        call MemCpySm
+        ;end if
+
+        offset  PROGRAM_SPACE
+        jmp     EntryPoint
+
+
 rpad (3 + 3 + 2)
 
 Launch:
-        offset  OFFSET
-        jmp     EntryPoint
+        offset  ROM_SPACE
+        jmp     CopyAndLaunch
 FEFF:
-        RJMP    Launch
+        _rjmp   Launch

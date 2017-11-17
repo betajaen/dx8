@@ -186,15 +186,31 @@ macro rpad AMOUNT {
             end repeat
 }
 
-macro RJMP x {
+macro _rjmp x {
       .here:
-            addr = x - .here
+            addr = x - $
             if (addr < -128 | addr > 127)
-            'Address exceeds relative range'
+                  Display 'Address exceeds relative range'
             end if
             rjmp addr
 }
 
+macro _rjmp.nz x {
+      .here:
+            addr = x - $
+            if (addr < -128 | addr > 127)
+                  Display 'Address exceeds relative range'
+            end if
+            rjmp.nz addr
+}
+
+macro _rjmp.z x {
+            addr = x - $
+            if (addr < -128 | addr > 127)
+                  Display 'Address exceeds relative range'
+            end if
+            rjmp.z addr
+}
 
 
 

@@ -55,7 +55,7 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define LO_BYTE(WORD)  ((Byte)(WORD & 0xFF))
 #define HI_BYTE(WORD)  ((Byte)((WORD >> 8) & 0xFF))
 
-#define MAKE_WORD(W, LO, HI) W |= LO; W |= ((Word) (HI)) << 8;
+#define MAKE_WORD(LO, HI) ((LO) + (HI) * 256)
 #define MAKE_LOHI(W, LO, HI) LO = (W & 0xFF);  HI = (W >> 8) & 0xFF;
 
 // NOP      -- Noop
@@ -129,7 +129,7 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 
 #define DO_OP_CMP(R0, R1)           Compare(R0, R1);                   REG_PC += Opf_Single;
 #define DO_OP_CMP_IMM(R0)           Compare(R0, REG_IMM);              REG_PC += Opf_Byte;
-#define DO_OP_CMP_IMMW(R0, R1)           CompareW(R0, REG_WORD);            REG_PC += Opf_Word;
+#define DO_OP_CMP_IMMW(R0, R1)           CompareW(R0, REG_WORD);       REG_PC += Opf_Word;
 
 #define DO_OP_CMP_BIT(R0)           CompareBit(R0, data.lo);           REG_PC += Opf_Byte;  
 
@@ -153,23 +153,23 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_ROLL_LEFT(R0)         /*  */                             REG_PC += Opf_Single;
 #define DO_OP_ROLL_RIGHT(R0)        /*  */                             REG_PC += Opf_Single;
 
-#define DO_OP_JMP()                 Pc_Set(data.w);
-#define DO_OP_JMP_ADD(LO, HI)       JumpAdd(data.w, LO, HI);
+#define DO_OP_JMP()                 Pc_Set(REG_WORD);
+#define DO_OP_JMP_ADD(LO, HI)       JumpAdd(REG_WORD, LO, HI);
 #define DO_OP_JMP_ABS(LO, HI)       JumpAbs(LO, HI);
 #define DO_OP_JMP_REL()             JumpRel(REG_IMM);
-#define DO_OP_JMP_EQ()              JumpCond(FL_Z == 1, data.w, REG_PC + Opf_Address);
-#define DO_OP_JMP_NEQ()             JumpCond(FL_Z == 0, data.w, REG_PC + Opf_Address);
-#define DO_OP_JMP_GT()              JumpCond(FL_N == 1, data.w, REG_PC + Opf_Address);
-#define DO_OP_JMP_LT()              JumpCond(FL_C == 1, data.w, REG_PC + Opf_Address);
-#define DO_OP_JMP_Z()               JumpCond(FL_Z == 1, data.w, REG_PC + Opf_Address);
-#define DO_OP_JMP_NOT_Z()           JumpCond(FL_Z == 0, data.w, REG_PC + Opf_Address);
+#define DO_OP_JMP_EQ()              JumpCond(FL_Z == 1, data.w, Opf_Address);
+#define DO_OP_JMP_NEQ()             JumpCond(FL_Z == 0, data.w, Opf_Address);
+#define DO_OP_JMP_GT()              JumpCond(FL_N == 1, data.w, Opf_Address);
+#define DO_OP_JMP_LT()              JumpCond(FL_C == 1, data.w, Opf_Address);
+#define DO_OP_JMP_Z()               JumpCond(FL_Z == 1, data.w, Opf_Address);
+#define DO_OP_JMP_NOT_Z()           JumpCond(FL_Z == 0, data.w, Opf_Address);
 
-#define DO_OP_JMP_REL_EQ()          JumpCondRel(FL_Z == 1, REG_IMM, REG_PC + Opf_Address);
-#define DO_OP_JMP_REL_NEQ()         JumpCondRel(FL_Z == 0, REG_IMM, REG_PC + Opf_Address);
-#define DO_OP_JMP_REL_GT()          JumpCondRel(FL_N == 1, REG_IMM, REG_PC + Opf_Address);
-#define DO_OP_JMP_REL_LT()          JumpCondRel(FL_C == 1, REG_IMM, REG_PC + Opf_Address);
-#define DO_OP_JMP_REL_Z()           JumpCondRel(FL_Z == 1, REG_IMM, REG_PC + Opf_Address);
-#define DO_OP_JMP_REL_NOT_Z()       JumpCondRel(FL_Z == 0, REG_IMM, REG_PC + Opf_Address);
+#define DO_OP_JMP_REL_EQ()          JumpCondRel(FL_Z == 1, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_NEQ()         JumpCondRel(FL_Z == 0, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_GT()          JumpCondRel(FL_N == 1, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_LT()          JumpCondRel(FL_C == 1, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_Z()           JumpCondRel(FL_Z == 1, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_NOT_Z()       JumpCondRel(FL_Z == 0, REG_IMM, Opf_Byte);
 #define DO_OP_INT()                 DoInterrupt(data.lo);              REG_PC += Opf_Byte;
 #define DO_OP_RESUME()              Cpu_ResumeInterrupt()                  
 
@@ -269,7 +269,13 @@ void Cpu_Print(const char* name, Cpu* c)
 // Pc Routines
 inline void Pc_Set(Word address)
 {
-  cpu.pc.w = cpu.pcOffset.w + address;
+  cpu.pc.w = address;
+}
+
+// Pc Routines
+inline void Pc_Add(int address)
+{
+  Pc_Set(cpu.pc.w + address);
 }
 
 inline void Pc_SetLoHi(Byte lo, Byte hi)
@@ -386,12 +392,11 @@ inline Byte LoadFromMemory(Word address)
 
 inline Word LoadFromMemoryW(Word address)
 {
-  Word w;
   Byte lo, hi;
   lo = LoadFromMemory(address);
   hi = LoadFromMemory(address+1);
-  MAKE_WORD(w, lo, hi);
-  return w;
+
+  return MAKE_WORD(lo, hi);
 }
 
 inline void StoreToMemory(Word address, Byte value)
@@ -405,30 +410,6 @@ inline void StoreToMemoryW(Word address, Word value)
   MAKE_LOHI(value, lo, hi);
   Mmu_Set(address,   lo);
   Mmu_Set(address+1, hi);
-}
-
-inline Byte Read(Byte* lo, Byte* hi)
-{
-  Word address;
-  MAKE_WORD(address, *lo, *hi);
-
-  Byte value = LoadFromMemory(address);
-
-  address += 1;
-  MAKE_LOHI(address, *lo, *hi);
-
-  return value;
-}
-
-inline void Write(Byte value, Byte* lo, Byte* hi)
-{
-  Word address;
-  MAKE_WORD(address, *lo, *hi);
-
-  StoreToMemory(address, value);
-
-  address += 1;
-  MAKE_LOHI(address, *lo, *hi);
 }
 
 inline Byte FlagsOp(int value)
@@ -513,38 +494,25 @@ inline void JumpAbs(Word lo, Word hi)
 
 inline void JumpRel(Byte signedValue)
 {
-  int relAddr, newPc;
-  if ((signedValue & 0x80) == 0x80)
-  {
-    relAddr = (char) signedValue;
-    newPc = (cpu.pc.w + relAddr) & 0xFFFF;
-    LOGF("JumpRel NEGATIVE given=$%2X signed=%i newPC = $%4X", signedValue, relAddr, newPc);
-  }
-  else
-  {
-    relAddr = (signedValue);
-    newPc = (cpu.pc.w + relAddr) & 0xFFFF;
-    LOGF("JumpRel POSITIVE given=$%2X signed=%i newPC = $%4X", signedValue, relAddr, newPc);
-  }
-  //@@@ cpu.pc.w = (Word) newPc;
-  Pc_Set((Word) newPc);
+  int relAddr = (char) signedValue;
+  Pc_Add(relAddr);
 }
 
-inline void JumpCond(bool cond, Word ifTrue, Word ifFalse)
+inline void JumpCond(bool cond, Word absIfTrue, Byte relIfFalse)
 {
   if (cond)
   {
     //@@@ cpu.pc.w = ifTrue;
-    Pc_Set(ifTrue);
+    Pc_Set(absIfTrue);
   }
   else
   {
     //@@@ cpu.pc.w = ifFalse;
-    Pc_Set(ifFalse);
+    Pc_Add(relIfFalse);
   }
 }
 
-inline void JumpCondRel(bool cond, Byte relIfTrue, Word absIfFalse)
+inline void JumpCondRel(bool cond, Byte relIfTrue, Byte relIfFalse)
 {
   if (cond)
   {
@@ -552,8 +520,7 @@ inline void JumpCondRel(bool cond, Byte relIfTrue, Word absIfFalse)
   }
   else
   {
-    //@@@ cpu.pc.w = absIfFalse;
-    Pc_Set(absIfFalse);
+    Pc_Add(relIfFalse);
   }
 }
 
@@ -598,6 +565,9 @@ void Cpu_Interrupt(Byte name)
   REG_Z = 0;
   REG_W = 0;
   cpu.flags._data = 0;
+
+  LOGF("Interrupt $%2X!!! >>  $%4X", name, cpu.pc.w);
+
 }
 
 void Cpu_ResumeInterrupt()
@@ -630,7 +600,6 @@ bool IsInterrupt()
   return cpu.interrupt != 0;
 }
 
-void Mmu_Interrupt(Byte name);
 void Gpu_Interrupt(Byte name);
 void Gpu_On();
 
@@ -713,7 +682,7 @@ void Cpu_SetWRegister(Byte value)
 
 Word Cpu_GetPcRegister()
 {
-  return REG_PC;
+  return REG_PC + cpu.pcOffset.w;
 }
 
 void Cpu_SetPcRegister(Word value)
@@ -758,10 +727,13 @@ int Cpu_Step()
   if (cpu.halt)
     return 4;
 
-  Byte opcode = Mmu_Get(REG_PC);
+  Word pc = REG_PC;
+  pc += cpu.pcOffset.w;
+
+  Byte opcode = Mmu_Get(pc);
   Data data;
-  data.lo = Mmu_Get(REG_PC + 1);
-  data.hi = Mmu_Get(REG_PC + 2);
+  data.lo = Mmu_Get(pc + 1);
+  data.hi = Mmu_Get(pc + 2);
 
   // LOGF("**CPU STEP >> PC=$%4X ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
 
