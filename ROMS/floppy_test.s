@@ -4,7 +4,7 @@ include "macros.inc"
 kProgramSpace   = $0800
 kRomSpace       = $7800
 
-Fn_MemSet       = kRomSpace + $0306 - kProgramSpace
+Fn_MemSet       = kRomSpace + $0311 - kProgramSpace
 MemSet_Dst equ i
 MemSet_Len equ j
 MemSet_Val equ a
