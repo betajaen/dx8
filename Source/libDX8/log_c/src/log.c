@@ -93,8 +93,8 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
   }
 
   /* Acquire lock */
-  lock();
-
+//  lock();
+#if 0
   /* Get current time */
   time_t t = time(NULL);
   struct tm *lt = localtime(&t);
@@ -116,13 +116,13 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
     va_end(args);
     fprintf(stderr, "\n");
   }
-
+#endif
   /* Log to file */
   if (L.fp) {
     va_list args;
-    char buf[32];
-    buf[strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", lt)] = '\0';
-    fprintf(L.fp, "%s %-5s %s:%d: ", buf, level_names[level], file, line);
+    //char buf[32];
+    //buf[strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", lt)] = '\0';
+    //fprintf(L.fp, "%s %-5s %s:%d: ", buf, level_names[level], file, line);
     va_start(args, fmt);
     vfprintf(L.fp, fmt, args);
     va_end(args);
@@ -131,5 +131,5 @@ void log_log(int level, const char *file, int line, const char *fmt, ...) {
   }
 
   /* Release lock */
-  unlock();
+//  unlock();
 }

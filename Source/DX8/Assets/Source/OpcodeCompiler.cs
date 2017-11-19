@@ -79,6 +79,10 @@ namespace DX8
       Clc,
       Sec,
       Offset,
+      dbr,
+      dba,
+      dbb,
+      dbn,
       COUNT
     }
 
@@ -140,7 +144,11 @@ namespace DX8
       "resume",
       "sec",
       "clc",
-      "offset"
+      "offset",
+      "dbr",
+      "dba",
+      "dbb",
+      "dbn"
     };
 
     public enum Operand
@@ -641,6 +649,52 @@ namespace DX8
       return sb.ToString();
     }
 
+    public class DecompiledLine
+    {
+      static int NextIndex = 0; 
+
+      public enum Type
+      {
+        Data,
+        Code,
+        Label,
+        Function,
+        Mixed
+      }
+      public int     address;
+      public string  text;
+      public string  comment;
+      public Type    type;
+      public Opcode  op;
+      public byte    lo;
+      public byte    hi;
+      public int     count;
+      public int     index;
+      public DecompiledLine target;
+      public bool    addressError;
+      public int     targetAddress;
+
+      public void Mark(Type type)
+      {
+        if (this.type == type)
+          return;
+
+        if (this.type != Type.Code)
+        {
+          Debug.LogWarningFormat("${0:X4} {1} is marked as a {2}, but is now referenced as a {3}", address, text, this.type, type);
+          return;
+        }
+        this.index  = address;
+        this.type   = type;
+      }
+      
+      public void MarkError(int targetAddress)
+      {
+        this.addressError = true;
+        this.targetAddress = targetAddress;
+      }
+    }
+
     public static String Decompile(List<Op> ops, Byte[] data)
     {
       int len = data.Length;
@@ -648,27 +702,33 @@ namespace DX8
       System.Text.StringBuilder sb = new System.Text.StringBuilder(len * 30);
       StringBuilder temp = new StringBuilder(100);
       
-      int org = 0; // 0xFFFF - 0x800 + 1;
-
+      int dataSection = 0x300;
+      byte lo = 0, hi = 0;
       
-        byte   lo = 0, hi = 0;
-
-      //lo = data[4];
-      //hi = data[5];
-
-      //org = lo;
-      //org |= hi << 8;
-      
-      sb.AppendFormat("; DX8 {0} Image", data[3] == 'r' ? "Read-Only Memory" : "Floppy Disk" );
-      sb.AppendLine();
-      sb.AppendFormat("; Origin: {0:X4} ", org);
-      sb.AppendLine();
-      sb.AppendFormat("; Length: {0:X4} ", len);
-      sb.AppendLine();
+      Dictionary<int, DecompiledLine> lines = new Dictionary<int, DecompiledLine>(2048);
 
       for(int ii=0;ii < len;)
       {
-        ushort address = (ushort) ii;
+        DecompiledLine line = new DecompiledLine();
+        
+        int address = ii;
+
+        if (ii < dataSection)
+        {
+          line.text = string.Format("${0:X2}", data[ii]);
+          line.comment = string.Empty;
+          line.type = DecompiledLine.Type.Data;
+          line.op   = Opcode.Nop;
+          line.lo   = data[ii];
+          line.hi   = 0;
+          line.count = 1;
+          line.address = address;
+          lines.Add(address, line);
+          ii++;
+          continue;
+        }
+
+        sb.Length = 0;
 
         Op op = ops[data[ii]];
         ii++;
@@ -685,16 +745,13 @@ namespace DX8
           ii++;
         }
         
-        sb.AppendFormat("{0:X4}: ", org + address);
-
         temp.Length = 0;
         op.ToAssemblerFormat(ref temp, lo, hi);
         
-        sb.Append(temp.ToString());
-
-        for(int i=0;i < 20 - temp.Length;i++)
-          sb.Append(' ');
-
+        string text = temp.ToString();
+        
+        sb.Length = 0;
+        
         if (op.Length == 1)
         {
           sb.AppendFormat("; {0:X2}", op.Index);
@@ -711,6 +768,145 @@ namespace DX8
           sb.AppendFormat("; {0:X2} {1:X2} {2:X2}", op.Index, lo, hi);
         }
 
+        string comment = sb.ToString();
+        
+        
+        line.text = text;
+        line.comment = comment;
+        line.type = DecompiledLine.Type.Code;
+        line.op   = op.Opcode;
+        line.lo   = lo;
+        line.hi   = hi;
+        line.count = op.Length;
+        line.address = address;
+        lines.Add(address, line);
+      }
+
+      sb.Length = 0;
+
+      int labelId = 0;
+      int tabSize = 0;
+      
+      foreach(var k in lines)
+      {
+        DecompiledLine line = k.Value;
+        
+        int checkAddr = 0;
+        DecompiledLine.Type checkType = DecompiledLine.Type.Code;
+
+        if (line.op == Opcode.Call)
+        {
+          checkAddr = line.lo + line.hi * 256;
+          checkType = DecompiledLine.Type.Function;
+        }
+        else if (line.op >= Opcode.Jmp && line.op <= Opcode.JmpNotZ)
+        {
+          checkAddr = line.lo + line.hi * 256;
+          checkType = DecompiledLine.Type.Label;
+        }
+        else if (line.op >= Opcode.RJmp && line.op <= Opcode.RJmpNotZ)
+        {
+          int rel = (int) ((sbyte) line.lo);
+          checkAddr = k.Key + rel;
+          checkType = DecompiledLine.Type.Label;
+        }
+        else
+        {
+          continue;
+        }
+
+        DecompiledLine target;
+        lines.TryGetValue(checkAddr, out target);
+        if (target == null)
+        {
+          Debug.LogErrorFormat("Jumping/Calling to mid-instruction: ${0:X4}: {1} to ${2:X4}", k.Key, line.text, checkAddr);
+          line.MarkError(checkAddr);
+          line.targetAddress = checkAddr;
+          continue;
+        }
+        else
+        {
+          target.Mark(checkType);
+          line.target = target;
+          line.targetAddress = checkAddr;
+        }
+        
+      }
+
+      foreach(var k in lines)
+      {
+        int address = k.Key;
+        DecompiledLine line = k.Value;
+
+        sb.AppendFormat("{0:X4}: ", address);
+
+        if (line.type == DecompiledLine.Type.Data)
+        {
+          sb.Append("  DATA   : ");
+        }
+        else if (line.type == DecompiledLine.Type.Function)
+        {
+          sb.AppendFormat("FUN_{0:0000} : ", line.index);
+        }
+        else if (line.type == DecompiledLine.Type.Label)
+        {
+          sb.AppendFormat("LBL_{0:0000} : ", line.index);
+        }
+        else if (line.type == DecompiledLine.Type.Code)
+        {
+          sb.Append("         : ");
+        }
+
+        sb.Append(line.text);
+        
+        if (line.type == DecompiledLine.Type.Data)
+        {
+          sb.AppendLine();
+          continue;
+        }
+
+        int padding = 25 - line.text.Length;
+        for(int i=0;i < padding;i++)
+          sb.Append(' ');
+        
+        sb.Append(line.comment);
+
+        int commentPadding = 12 - line.comment.Length;
+
+        if (line.target != null)
+        {
+          DecompiledLine target = line.target;
+
+          for(int i=0;i < commentPadding;i++)
+            sb.Append(' ');
+
+          if (target.type == DecompiledLine.Type.Data)
+          {
+            sb.Append("DATA");
+          }
+          else if (target.type == DecompiledLine.Type.Function)
+          {
+            sb.AppendFormat("FUN_{0:0000}", line.target.index);
+          }
+          else if (target.type == DecompiledLine.Type.Label)
+          {
+            sb.AppendFormat("LBL_{0:0000}", line.target.index);
+          }
+          else if (target.type == DecompiledLine.Type.Code)
+          {
+            sb.Append("CODE");
+          }
+
+          sb.AppendFormat(" ${0:X4}", line.targetAddress);
+
+        }
+        else if (line.addressError)
+        {
+          for(int i=0;i < commentPadding;i++)
+            sb.Append(' ');
+
+          sb.AppendFormat("ERROR ${0:X4}", line.targetAddress);
+        }
         sb.AppendLine();
       }
 

@@ -97,7 +97,7 @@ bool Fpy_CopyToFloppyController(void* data, int length)
   if (length > FLOPPY_SIZE)
     return false;
 
-  LOGF("Floppy Data %p %i", data, length);
+//  LOGF("Floppy Data %p %i", data, length);
   memcpy(sFloppy, data, length);
 
   return false;
@@ -111,7 +111,7 @@ void Floppy_Interrupt()
   sFloppyOp_Track = Mmu_Get(REG_FPY_OP_TRACK);
   sFloppyOp_Src   = Fpy_CalculateTrackAddress(sFloppyOp_Track);
 
-  LOGF("Floppy Op!! %i", sFloppyOp);
+ // LOGF("Floppy Op!! %i", sFloppyOp);
 
   Mmu_Set(REG_FPY_OP, 0x00);
 

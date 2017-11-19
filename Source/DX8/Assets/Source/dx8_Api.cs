@@ -15,6 +15,7 @@ namespace DX8 { class Api {
   public const int ChipAddr = 12;
   public const int ProgramAddr = 13;
   public const int SharedAddr = 14;
+  public const int CpuHalt = 15;
   public const int Rom = 100;
   public const int ChipRam = 101;
   public const int SharedRam = 102;

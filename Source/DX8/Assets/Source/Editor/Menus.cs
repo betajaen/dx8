@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using UnityEditor;
 using System.Collections.Generic;
-
+using System.IO;
+using System.Text;
 
 namespace DX8
 {
@@ -362,6 +363,62 @@ namespace DX8
         fd.Add(0x00);
 
       System.IO.File.WriteAllBytes(path + ".fd", fd.ToArray());
+    }
+    
+    
+    [MenuItem("DX8/Check PC")]
+    public static void CheckPc()
+    {
+      string path = EditorUtility.OpenFilePanel("Open Decompiled ROM file", @"C:\dev\dx8\ROMS", "bin.s");
+      const int BufferSize = 128;
+
+      System.Collections.Generic.HashSet<ushort> addresses = new HashSet<ushort>();
+
+      using (var fileStream = File.OpenRead(path))
+        using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize)) {
+          string line;
+          while ((line = streamReader.ReadLine()) != null)
+          {
+            string valueStr = line.Substring(0, 4);
+
+            ushort value;
+            if (!System.UInt16.TryParse(valueStr, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out value))
+            {
+              continue;
+            }
+
+            if ((value >= (ushort) 0x0300 && value <= (ushort) 0x0532) || value >= (ushort) 0xFFF8)
+            {
+              addresses.Add(value);
+            }
+          }
+        }
+        path = EditorUtility.OpenFilePanel("Open Log file", @"C:\dev\dx8\Source\DX8", "log");
+      
+        int count = 0;
+        using (var fileStream = File.OpenRead(path))
+        using (var streamReader = new StreamReader(fileStream, Encoding.UTF8, true, BufferSize)) {
+          string line;
+          while ((line = streamReader.ReadLine()) != null)
+          {
+            if (line[0] != '!')
+              continue;
+            string valueStr = line.Substring(3, 4);
+
+            ushort value;
+            if (!System.UInt16.TryParse(valueStr, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out value))
+            {
+              continue;
+            }
+            count++;
+
+            if (addresses.Contains(value) == false)
+            {
+              Debug.Log(line);
+            }
+          }
+        }
+        Debug.LogFormat("Checked {0}", count);
     }
 
   }

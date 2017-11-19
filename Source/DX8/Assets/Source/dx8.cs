@@ -175,7 +175,7 @@ namespace DX8
       {
         IsOpen = true;
         IsOff = true;
-        IsRunning = false;
+        IsRunning = true;
       }
       else
       {
@@ -346,12 +346,22 @@ namespace DX8
         Library.Call(Api.RemoveDisk, 0);
       }
 
-      InspectShared = GUI.Toggle(new Rect(0, 100, 100, 25), InspectShared, string.Format("Inspect ${0:X4}", InspectAddress));
+      if (Library.GetValue(Api.CpuHalt) == 1 && GUI.Button(new Rect(700, 0, 100, 25), "Resume"))
+      {
+        Library.SetValue(Api.CpuHalt, 0);
+      }
+      
+      if (Library.GetValue(Api.CpuHalt) == 0 && GUI.Button(new Rect(700, 0, 100, 25), "Halt"))
+      {
+        Library.SetValue(Api.CpuHalt, 1);
+      }
+
+      InspectShared = GUI.Toggle(new Rect(0, 125, 100, 25), InspectShared, string.Format("Inspect ${0:X4}", InspectAddress));
 
       if (InspectShared)
       {
         GUI.changed = false;
-        string strV = GUI.TextField(new Rect(0, 125, 100, 25), String.Format("{0:X4}", InspectAddress));
+        string strV = GUI.TextField(new Rect(0, 150, 100, 25), String.Format("{0:X4}", InspectAddress));
         if (GUI.changed)
         {
           int newAddress = 0;
@@ -360,42 +370,46 @@ namespace DX8
             InspectAddress = newAddress;
           }
         }
-        if (GUI.Button(new Rect(100, 125, 25, 25), "<"))
+        if (GUI.Button(new Rect(100, 150, 25, 25), "<"))
         {
           InspectAddress -= 16;
         }
-        if (GUI.Button(new Rect(125, 125, 25, 25), ">"))
+        if (GUI.Button(new Rect(125, 150, 25, 25), ">"))
         {
           InspectAddress += 16;
         }
-        if (GUI.Button(new Rect(100, 150, 25, 25), "<<"))
+        if (GUI.Button(new Rect(100, 175, 25, 25), "<<"))
         {
           InspectAddress -= 40;
         }
-        if (GUI.Button(new Rect(125, 150, 25, 25), ">>"))
+        if (GUI.Button(new Rect(125, 175, 25, 25), ">>"))
         {
           InspectAddress += 40;
         }
-        if (GUI.Button(new Rect(150, 125, 50, 25), "0000"))
+        if (GUI.Button(new Rect(150, 150, 50, 25), "0000"))
         {
           InspectAddress = 0x0000;
         }
-        if (GUI.Button(new Rect(200, 125, 50, 25), "0800"))
+        if (GUI.Button(new Rect(200, 150, 50, 25), "0800"))
         {
           InspectAddress = 0x0800;
         }
-        if (GUI.Button(new Rect(150, 150, 50, 25), "8000"))
+        if (GUI.Button(new Rect(150, 175, 50, 25), "8000"))
         {
           InspectAddress = 0x8000;
         }
-        if (GUI.Button(new Rect(200, 150, 50, 25), "F800"))
+        if (GUI.Button(new Rect(200, 175, 50, 25), "7800"))
         {
-          InspectAddress = 0xF800;
+          InspectAddress = 0x7800;
+        }
+        if (GUI.Button(new Rect(150, 200, 50, 25), "+"))
+        {
+          InspectAddress = 0x7800 + 0x300;
         }
       }
 
       GUI.Label(new Rect(0, 50, Screen.width, 90), String.Format(
-        "A={0:X2} X={1:X2} Y={2:X2} Z={3:X2} W={4:X2} Pc={5:X4}, St={6:X2}, Fl={7:X2}, Steps={8}, Opcode={9:X2}, Operand={10:X4} GpuTimer={11}",
+        "A={0:X2} X={1:X2} Y={2:X2} Z={3:X2} W={4:X2} Pc={5:X4}, St={6:X2}, Fl={7:X2}, Steps={8}, Opcode={9:X2}, Operand={10:X4} GpuTimer={11} Halt={12}",
           Library.GetValue(Api.A),
           Library.GetValue(Api.X),
           Library.GetValue(Api.Y),
@@ -407,7 +421,8 @@ namespace DX8
           LastSteps,
           Library.GetValue(Api.LastOpcode),
           Library.GetValue(Api.LastOperand),
-          Library.GetValue(Api.GpuTimer)
+          Library.GetValue(Api.GpuTimer),
+          Library.GetValue(Api.CpuHalt)
        ));
 
        if (InspectShared)
@@ -417,6 +432,8 @@ namespace DX8
           //int val = Api.
           int val = Library.GetRam(Api.SharedAddr, i + InspectAddress);
           GUI.Label(new Rect(i * 25, 75, 25, 25), String.Format("{0:X2}", val));
+          if (val > ' ' && val < 127)
+            GUI.Label(new Rect(i * 25, 100, 25, 25), String.Format("{0}", (char) val));
          }
        }
        int s = 2;

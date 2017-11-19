@@ -135,7 +135,8 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 
 #define DO_OP_CMP(R0, R1)           Compare(R0, R1);                   REG_PC += Opf_Single;
 #define DO_OP_CMP_IMM(R0)           Compare(R0, REG_IMM);              REG_PC += Opf_Byte;
-#define DO_OP_CMP_IMMW(R0, R1)           CompareW(R0, REG_WORD);       REG_PC += Opf_Word;
+#define DO_OP_CMP_IMMW(R0, R1)      CompareW(R0, REG_WORD);            REG_PC += Opf_Word;
+#define DO_OP_CMP_SELF(R0)          FlagsOp(R0);                       REG_PC += Opf_Single;
 
 #define DO_OP_CMP_BIT(R0)           CompareBit(R0, data.lo);           REG_PC += Opf_Byte;  
 
@@ -176,13 +177,15 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_JMP_REL_LT()          JumpCondRel(FL_C == 1, REG_IMM, Opf_Byte);
 #define DO_OP_JMP_REL_Z()           JumpCondRel(FL_Z == 1, REG_IMM, Opf_Byte);
 #define DO_OP_JMP_REL_NOT_Z()       JumpCondRel(FL_Z == 0, REG_IMM, Opf_Byte);
-#define DO_OP_INT()                 DoInterrupt(data.lo);              REG_PC += Opf_Byte;
+#define DO_OP_INT()                 DoInterrupt(REG_IMM);              REG_PC += Opf_Byte;
 #define DO_OP_RESUME()              Cpu_ResumeInterrupt()                  
 
 #define DO_OP_SET_PC_OFFSET()       cpu.pcOffset.w = data.w; REG_PC += Opf_Address;
 
-#define DO_OP_READ(R0)              REG_A = Read(&REG_Z, &REG_W);  REG_PC += Opf_Address;
-#define DO_OP_WRITE(R0)             Write(R0, &REG_Z, &REG_W);       REG_PC += Opf_Address;
+#define DO_OP_DEBUG_REGISTER()      DoDebugRegister(REG_IMM);   REG_PC += Opf_Byte;
+#define DO_OP_DEBUG_ADDRESS()       DoDebugAddress(REG_WORD);    REG_PC += Opf_Word;
+#define DO_OP_DEBUG_BREAKPOINT()    DoDebugBreakpoint(); REG_PC += Opf_Single;
+#define DO_OP_DEBUG_NOTE()          DoDebugNote(REG_WORD); REG_PC += Opf_Word;
 
 enum OpFormat
 {
@@ -272,13 +275,56 @@ void Cpu_Print(const char* name, Cpu* c)
   LOGF("Cpu[%s] Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", name, c->pc.w, c->interrupt, c->a, c->I.x, c->I.y, c->J.z, c->J.w, c->lastOpcode, LO_BYTE(c->lastOperand), HI_BYTE(c->lastOperand));
 }
 
+#define DBG_LOG(NAME, EXTRA_TEXT, ...)\
+  LOGF(NAME " [$%4X ($%4X)]" EXTRA_TEXT, cpu.pc.w, (cpu.pcOffset.w + cpu.pc.w), __VA_ARGS__)
+#define DBG_LOG_NT(NAME)\
+  LOGF("%s [$%4X ($%4X)]", NAME, cpu.pc.w, (cpu.pcOffset.w + cpu.pc.w))
+
+void DoDebugRegister(Byte byte)
+{
+  switch(byte)
+  {
+    case 'a': DBG_LOG("DBG-REG ", "a   = $%2X", cpu.a);   break;
+    case 'x': DBG_LOG("DBG-REG ", "x   = $%2X", cpu.I.x); break;
+    case 'y': DBG_LOG("DBG-REG ", "y   = $%2X", cpu.I.y); break;
+    case 'z': DBG_LOG("DBG-REG ", "z   = $%2X", cpu.J.z); break;
+    case 'w': DBG_LOG("DBG-REG ", "w   = $%2X", cpu.J.w); break;
+    case 'p': DBG_LOG("DBG-REG ", "pc  = $%4X", cpu.pc.w); break;
+    case 's': DBG_LOG("DBG-REG ", "st  = $%2X", cpu.stack); break;
+    case 'i': DBG_LOG("DBG-REG ", "i   = $%4X", cpu.I.I); break;
+    case 'j': DBG_LOG("DBG-REG ", "j   = $%4X", cpu.J.J); break;
+    case 'I': DBG_LOG("DBG-REG ", "int = $%2X", cpu.interrupt); break;
+    default: DBG_LOG_NT("?"); break;
+  }
+}
+
+void DoDebugAddress(Word address)
+{
+  Byte b = Mmu_Get(address);
+  DBG_LOG("DBG-ADDR", "$%4X = $%2X/%i", address, b, b);
+}
+
+void DoDebugNote(Word note)
+{
+  Byte* np = (Byte*) &note;
+  Byte m[3];
+  m[0] = np[0];
+  m[1] = np[1];
+  m[2] = 0;
+  DBG_LOG("DBG-NOTE", "%s", m);
+}
+void DoDebugBreakpoint()
+{
+  cpu.halt = true;
+  LOGF("DBG-BRK  Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", cpu.pc.w, cpu.interrupt, cpu.a, cpu.I.x, cpu.I.y, cpu.J.z, cpu.J.w, cpu.lastOpcode, LO_BYTE(cpu.lastOperand), HI_BYTE(cpu.lastOperand));
+}
+
 // Pc Routines
 inline void Pc_Set(Word address)
 {
   cpu.pc.w = address;
 }
 
-// Pc Routines
 inline void Pc_Add(int address)
 {
   Pc_Set(cpu.pc.w + address);
@@ -561,6 +607,9 @@ inline void BranchCond(bool cond, Word ifTrue, Word ifFalse)
 
 void Cpu_Interrupt(Byte name)
 {
+  if (cpu.halt)
+    return;
+  
   if (cpu.interrupt)
   {
     LOGF("Interupt already happening $%2X when I want $%2X!!!", cpu.interrupt, name);
@@ -590,10 +639,13 @@ void Cpu_Interrupt(Byte name)
 
 void Cpu_ResumeInterrupt()
 {
+  if (cpu.halt)
+    return;
+
   if (cpu.interrupt == 0)
   {
     LOGF("Interupt not happening. Already interrupted for $%2X!!!", cpu.interrupt);
-    Cpu_Print("CPU", &cpu);
+    //Cpu_Print("CPU", &cpu);
     return;
   }
 
@@ -616,8 +668,7 @@ void Floppy_Interrupt();
 
 inline void DoInterrupt(Byte name)
 {
-  LOGF("Interrupt $%2X", name);
-
+  //LOGF("Interrupt $%2X", name);
   switch(name)
   {
     case INT_RESET:
@@ -627,7 +678,8 @@ inline void DoInterrupt(Byte name)
       Gpu_On();
       return;
     case INT_FLOPPY_OP:
-      Floppy_Interrupt();
+      Cpu_Print("FLOPPY_OP_FORCED", &cpu);
+      //  Floppy_Interrupt();
       return;
   }
 }
@@ -721,11 +773,21 @@ Byte Cpu_GetStackRegister()
 
 void Cpu_SetStackRegister(Byte value)
 {
-  cpu.stack;
+  cpu.stack = value;
+}
+
+Byte Cpu_GetHalt()
+{
+  return cpu.halt;
+}
+
+void Cpu_SetHalt(Byte value)
+{
+  LOGF("Cpu_SetHalt = %i", value);
+  cpu.halt = value != 0 ? true : false;
 }
 
 // CPU Stepping
-
 
 #define QUOTE(name) #name
 #define STR(macro) QUOTE(macro)
@@ -749,7 +811,9 @@ int Cpu_Step()
   data.lo = Mmu_Get(pc + 1);
   data.hi = Mmu_Get(pc + 2);
 
-  // LOGF("**CPU STEP >> PC=$%4X ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
+ // LOGF("![$%4X] ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
+
+  //LOGF("**CPU STEP >> PC=$%4X ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
 
 #undef OP
 #define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; return TIME;
@@ -759,8 +823,11 @@ int Cpu_Step()
 
   switch (opcode)
   {
-  default:
 #include "dx8_Cpu_Opcodes.inc"
+  default:
+    cpu.halt = 1;
+    LOGF("**HALT - Unknown Opcode ** [$%4X] ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word)(cpu.pc.w - cpu.pcOffset.w), opcode, OpcodeStr[opcode], data.lo, data.hi);
+    break;
   }
 
   return 1;

@@ -46,8 +46,8 @@ OP(Store, Ay, Opf_Address, 4, { DO_OP_STORE_ABSOLUTE(REG_WORD, REG_Y);  })
 OP(Store, Az, Opf_Address, 4, { DO_OP_STORE_ABSOLUTE(REG_WORD, REG_Z);  })
 OP(Store, Aw, Opf_Address, 4, { DO_OP_STORE_ABSOLUTE(REG_WORD, REG_W);  })
 OP(Store, Aa, Opf_Address, 4, { DO_OP_STORE_ABSOLUTE(REG_WORD, REG_A);  })
-OP(Store, Ai, Opf_Single,  8, { DO_OP_STOREW_ABSOLUTE(REG_WORD, REG_I); })
-OP(Store, Aj, Opf_Single,  8, { DO_OP_STOREW_ABSOLUTE(REG_WORD, REG_J); })
+OP(Store, Ai, Opf_Address,  8, { DO_OP_STOREW_ABSOLUTE(REG_WORD, REG_I); })
+OP(Store, Aj, Opf_Address,  8, { DO_OP_STOREW_ABSOLUTE(REG_WORD, REG_J); })
 
 // Call
 OP(Call,    A,  Opf_Address, 4, { DO_OP_CALL();  })
@@ -144,6 +144,12 @@ OP(Cmp, ax, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_X); })
 OP(Cmp, ay, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_Y); })
 OP(Cmp, az, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_Z); })
 OP(Cmp, aw, Opf_Single, 3, { DO_OP_CMP(REG_A, REG_W); })
+
+OP(Cmp, a, Opf_Single, 2, { DO_OP_CMP_SELF(REG_A); })
+OP(Cmp, x, Opf_Single, 2, { DO_OP_CMP_SELF(REG_X); })
+OP(Cmp, y, Opf_Single, 2, { DO_OP_CMP_SELF(REG_Y); })
+OP(Cmp, z, Opf_Single, 2, { DO_OP_CMP_SELF(REG_Z); })
+OP(Cmp, w, Opf_Single, 2, { DO_OP_CMP_SELF(REG_W); })
 
 OP(Cmp, xB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_X); })
 OP(Cmp, yB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_Y); })
@@ -281,3 +287,9 @@ OP(Sec, None, Opf_Single, 1,   { DO_OP_SEC() })
 
 //
 OP(Offset, A, Opf_Address, 2, { DO_OP_SET_PC_OFFSET(); })
+
+// Debug
+OP(dbr, W, Opf_Byte,      1, { DO_OP_DEBUG_REGISTER(); })
+OP(dba, B, Opf_Address,   1, { DO_OP_DEBUG_ADDRESS();  })
+OP(dbb, None, Opf_Single, 1, { DO_OP_DEBUG_BREAKPOINT(); })
+OP(dbn, W, Opf_Address,   1, { DO_OP_DEBUG_NOTE();  })

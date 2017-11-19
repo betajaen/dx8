@@ -130,6 +130,10 @@ Byte Cpu_GetLastOpcode();
 
 Word Cpu_GetLastOperand();
 
+Byte Cpu_GetHalt();
+
+void Cpu_SetHalt(Byte value);
+
 void Mmu_Set(Word address, Byte value);
 
 Byte Mmu_Get(Word address);

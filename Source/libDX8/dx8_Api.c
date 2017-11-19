@@ -119,6 +119,8 @@ EXPORT int GetValue(int name)
       return Crt_IsDirty();
     case Api_GpuTimer:
       return Gpu_GetTimer();
+    case Api_CpuHalt:
+      return Cpu_GetHalt();
   }
   return 0;
 }
@@ -155,6 +157,9 @@ EXPORT int SetValue(int name, int value)
     return 0;
   case Api_Stack:
     Cpu_SetStackRegister(value & 0xFF);
+    return 0;
+  case Api_CpuHalt:
+    Cpu_SetHalt(value);
     return 0;
   }
   

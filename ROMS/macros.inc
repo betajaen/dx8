@@ -182,7 +182,7 @@ macro printl TXT, LL {
 macro rpad AMOUNT {
             len = 2048 - $ - AMOUNT
             repeat len
-                  db $CD
+                  db $42
             end repeat
 }
 
@@ -227,4 +227,41 @@ macro _poke.w addr, value {
 macro _putchar plane, x, y, char {
       ADDR = x + (y * 40) + plane * MEM_GFX_PLANE_SIZE + MEM_SHARED_ADDR
       _poke ADDR, char
+}
+
+macro BeginFunction Name {
+      Fn_#Name:
+}
+
+macro EndFunction {
+      return
+}
+
+macro _CallFunction Name {
+      call Fn_#Name
+}
+
+macro Breakpoint {
+      dbg $FFFF
+}
+
+macro Const_Include Name, File {
+      kLcl#Name:
+      include File
+      k#Name = kProgramSpace + kLcl#Name
+      k#Name#Length = $ - kLcl#Name
+}
+
+macro Const_Byte Name, Value {
+      kLcl#Name:
+      db Value
+      k#Name = kProgramSpace + kLcl#Name
+      printl "k", (k#Name)
+      k#Name#Length = $ - kLcl#Name
+}
+
+macro Var_Byte Name, InitialValue {
+      sLcl#Name:
+      db InitialValue
+      s#Name = kProgramSpace + sLcl#Name
 }
