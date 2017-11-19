@@ -229,6 +229,12 @@ macro _putchar plane, x, y, char {
       _poke ADDR, char
 }
 
+macro _load_indirect Reg, AddressContainingAddress {
+      load x, AddressContainingAddress
+      load y, AddressContainingAddress + 1
+      load Reg, i
+}
+
 macro BeginFunction Name {
       Fn_#Name:
 }
@@ -239,10 +245,6 @@ macro EndFunction {
 
 macro _CallFunction Name {
       call Fn_#Name
-}
-
-macro Breakpoint {
-      dbg $FFFF
 }
 
 macro Const_Include Name, File {
@@ -265,3 +267,21 @@ macro Var_Byte Name, InitialValue {
       db InitialValue
       s#Name = kProgramSpace + sLcl#Name
 }
+
+
+macro Var_Word Name, InitialValue {
+      sLcl#Name:
+      dw InitialValue
+      s#Name = kProgramSpace + sLcl#Name
+}
+
+macro BeginJumpTable Name {
+      tLcl#Name:
+      t#Name = kProgramSpace + tLcl#Name
+}
+
+macro JumpTable_Item Name {
+      dw Name
+}
+
+macro EndJumpTable { }

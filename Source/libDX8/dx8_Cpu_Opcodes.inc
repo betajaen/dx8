@@ -34,6 +34,8 @@ OP(Load, aA, Opf_Address, 4, { DO_OP_LOAD_ABSOLUTE(REG_A, REG_WORD);  })
 OP(Load, iA, Opf_Address, 8, { DO_OP_LOADW_ABSOLUTE(REG_I, REG_WORD); })
 OP(Load, jA, Opf_Address, 8, { DO_OP_LOADW_ABSOLUTE(REG_J, REG_WORD); })
 
+// Load indirect
+
 // Store
 OP(Store, ia, Opf_Single,  6, { DO_OP_STORE_INDIRECT(REG_I, REG_A);     })
 OP(Store, iw, Opf_Single,  6, { DO_OP_STORE_INDIRECT(REG_I, REG_W);     })
@@ -273,6 +275,19 @@ OP(RJmpZ, B, Opf_Byte, 2, { DO_OP_JMP_REL_Z(); })
 OP(JmpNotZ, A, Opf_Address, 2, { DO_OP_JMP_NOT_Z(); })
 OP(RJmpNotZ, B, Opf_Byte, 2, { DO_OP_JMP_REL_NOT_Z(); })
 
+// Branch
+OP(JmpBranch,  Aa, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_A); })
+OP(JmpBranch,  Ax, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_X); })
+OP(JmpBranch,  Ay, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_Y); })
+OP(JmpBranch,  Az, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_Z); })
+OP(JmpBranch,  Aw, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_W); })
+OP(CallBranch, Aa, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_A); })
+OP(CallBranch, Ax, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_X); })
+OP(CallBranch, Ay, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_Y); })
+OP(CallBranch, Az, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_Z); })
+OP(CallBranch, Aw, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_W); })
+
+
 // Interrupt
 OP(Int, B, Opf_Byte, 4, { DO_OP_INT(); })
 
@@ -287,9 +302,11 @@ OP(Sec, None, Opf_Single, 1,   { DO_OP_SEC() })
 
 //
 OP(Offset, A, Opf_Address, 2, { DO_OP_SET_PC_OFFSET(); })
+OP(ROffset, A, Opf_Address, 2, { DO_OP_SET_PC_ROFFSET(); })
 
 // Debug
 OP(dbr, W, Opf_Byte,      1, { DO_OP_DEBUG_REGISTER(); })
 OP(dba, B, Opf_Address,   1, { DO_OP_DEBUG_ADDRESS();  })
 OP(dbb, None, Opf_Single, 1, { DO_OP_DEBUG_BREAKPOINT(); })
 OP(dbn, W, Opf_Address,   1, { DO_OP_DEBUG_NOTE();  })
+OP(dbo, B, Opf_Byte,      1, { DO_OP_DEBUG_OPTION(); })

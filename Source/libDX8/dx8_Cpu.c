@@ -180,12 +180,19 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_INT()                 DoInterrupt(REG_IMM);              REG_PC += Opf_Byte;
 #define DO_OP_RESUME()              Cpu_ResumeInterrupt()                  
 
-#define DO_OP_SET_PC_OFFSET()       cpu.pcOffset.w = data.w; REG_PC += Opf_Address;
+#define DO_OP_SET_PC_OFFSET()       cpu.pcOffset.w = REG_WORD; REG_PC += Opf_Address;
+#define DO_OP_SET_PC_ROFFSET()      cpu.pcOffset.w = REG_WORD; cpu.pc.w = 0;
 
 #define DO_OP_DEBUG_REGISTER()      DoDebugRegister(REG_IMM);   REG_PC += Opf_Byte;
 #define DO_OP_DEBUG_ADDRESS()       DoDebugAddress(REG_WORD);    REG_PC += Opf_Word;
 #define DO_OP_DEBUG_BREAKPOINT()    DoDebugBreakpoint(); REG_PC += Opf_Single;
 #define DO_OP_DEBUG_NOTE()          DoDebugNote(REG_WORD); REG_PC += Opf_Word;
+#define DO_OP_DEBUG_OPTION()        DoDebugOption(REG_IMM); REG_PC += Opf_Byte;
+
+#define DO_OP_JMP_BRANCH(R0)        CallBranch(R0, REG_WORD, Opf_Address);
+#define DO_OP_CALL_BRANCH(R0)       JumpBranch(R0, REG_WORD);
+
+bool DebugLog = false;
 
 enum OpFormat
 {
@@ -247,6 +254,7 @@ void Cpu_Reset()
   REG_Z = rand() & 0xFF;
   REG_W = rand() & 0xFF;
 
+  cpu.stack = 0;
   cpu.flags._data = 0;
   cpu.halt = false;
   cpu.pcOffset.lo = 0;
@@ -313,10 +321,19 @@ void DoDebugNote(Word note)
   m[2] = 0;
   DBG_LOG("DBG-NOTE", "%s", m);
 }
+
 void DoDebugBreakpoint()
 {
   cpu.halt = true;
   LOGF("DBG-BRK  Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", cpu.pc.w, cpu.interrupt, cpu.a, cpu.I.x, cpu.I.y, cpu.J.z, cpu.J.w, cpu.lastOpcode, LO_BYTE(cpu.lastOperand), HI_BYTE(cpu.lastOperand));
+}
+
+void DoDebugOption(Byte option)
+{
+  if (option == 'L')
+    DebugLog = true;
+  else if (option == 'l')
+    DebugLog = false;
 }
 
 // Pc Routines
@@ -444,6 +461,14 @@ inline void Do_CallCond(bool cond, Byte lo_offset, Word callAddress)
   }
 }
 
+inline void CallBranch(Byte value, Word tableAddress, Byte lo_offset)
+{
+  Word address = Mmu_GetWord(tableAddress + ((Word)value) * 2);
+  LOGF("Address=$%4X, TableAddress=$%4X, Value=$%2X", address, tableAddress, value);
+  Do_Call(lo_offset, address);
+  
+}
+
 
 inline void Return()
 {
@@ -558,6 +583,12 @@ inline void JumpAbs(Word lo, Word hi)
   //LOGF("JMP hi= %2X lo=%2X pc  from %4X  to %4X", hi, lo, lastPc, cpu.pc.w);
 }
 
+inline void JumpBranch(Byte value, Word tableAddress)
+{
+  Word address = Mmu_GetWord(tableAddress + ((Word)value) * 2);
+  Pc_Set(address);
+}
+
 inline void JumpRel(Byte signedValue)
 {
   int relAddr = (char) signedValue;
@@ -609,7 +640,7 @@ void Cpu_Interrupt(Byte name)
 {
   if (cpu.halt)
     return;
-  
+
   if (cpu.interrupt)
   {
     LOGF("Interupt already happening $%2X when I want $%2X!!!", cpu.interrupt, name);
@@ -668,7 +699,7 @@ void Floppy_Interrupt();
 
 inline void DoInterrupt(Byte name)
 {
-  //LOGF("Interrupt $%2X", name);
+  LOGF("Interrupt $%2X", name);
   switch(name)
   {
     case INT_RESET:
@@ -678,8 +709,7 @@ inline void DoInterrupt(Byte name)
       Gpu_On();
       return;
     case INT_FLOPPY_OP:
-      Cpu_Print("FLOPPY_OP_FORCED", &cpu);
-      //  Floppy_Interrupt();
+      Floppy_Interrupt();
       return;
   }
 }
@@ -791,8 +821,8 @@ void Cpu_SetHalt(Byte value)
 
 #define QUOTE(name) #name
 #define STR(macro) QUOTE(macro)
-
-#define OP(OP, A,B,C,D)  STR(OP),
+#undef OP
+#define OP(OP, A,B,C,D)  #OP "_" #A,
 
 const char* OpcodeStr[] = {
 #include "dx8_Cpu_Opcodes.inc"
@@ -813,7 +843,10 @@ int Cpu_Step()
 
  // LOGF("![$%4X] ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
 
-  //LOGF("**CPU STEP >> PC=$%4X ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
+  if (DebugLog)
+  {
+    LOGF("[$%4X:$%4X] $%2X:%-12s LO=$%2X HI=$%2X", cpu.pc.w, pc, opcode, OpcodeStr[opcode], data.lo, data.hi);
+  }
 
 #undef OP
 #define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; return TIME;
@@ -826,7 +859,7 @@ int Cpu_Step()
 #include "dx8_Cpu_Opcodes.inc"
   default:
     cpu.halt = 1;
-    LOGF("**HALT - Unknown Opcode ** [$%4X] ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word)(cpu.pc.w - cpu.pcOffset.w), opcode, OpcodeStr[opcode], data.lo, data.hi);
+    LOGF("**HALT - Unknown Opcode ** [$%4X] ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word)(cpu.pc.w + cpu.pcOffset.w), opcode, OpcodeStr[opcode], data.lo, data.hi);
     break;
   }
 

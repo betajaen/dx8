@@ -48,9 +48,9 @@ GFX_FLG_COUNTERS_15 = $0010
 GFX_FLG_COUNTERS_30 = $0020
 IO_FPY_MSG_INSERT = $0001
 IO_FPY_MSG_REMOVE = $0002
-IO_FPY_MSG_SEEK = $0004
-IO_FPY_MSG_READ = $0008
-IO_FPY_MSG_WRITE = $0016
+IO_FPY_MSG_SEEK = $0003
+IO_FPY_MSG_READ = $0004
+IO_FPY_MSG_WRITE = $0005
 IO_FPY_MSG_ERROR = $0080
 IO_FPY_STATE_DISK = $0001
 MEM_CHIP_ADDR = $0000
@@ -926,46 +926,106 @@ macro rjmp.nz [A, B] {
   db $CA
   db A
 }
+macro bjmp [A, B] {
+  if B eq a
+    ; [$D0] bjmp $0000,a
+    db $D0
+    dw A
+  else if B eq x
+    ; [$D1] bjmp $0000,x
+    db $D1
+    dw A
+  else if B eq y
+    ; [$D2] bjmp $0000,y
+    db $D2
+    dw A
+  else if B eq z
+    ; [$D3] bjmp $0000,z
+    db $D3
+    dw A
+  else if B eq w
+    ; [$D4] bjmp $0000,w
+    db $D4
+    dw A
+  else
+    error SyntaxError
+  end if
+}
+macro bcall [A, B] {
+  if B eq a
+    ; [$CB] bcall $0000,a
+    db $CB
+    dw A
+  else if B eq x
+    ; [$CC] bcall $0000,x
+    db $CC
+    dw A
+  else if B eq y
+    ; [$CD] bcall $0000,y
+    db $CD
+    dw A
+  else if B eq z
+    ; [$CE] bcall $0000,z
+    db $CE
+    dw A
+  else if B eq w
+    ; [$CF] bcall $0000,w
+    db $CF
+    dw A
+  else
+    error SyntaxError
+  end if
+}
 macro int [A, B] {
-  ; [$CB] int $00
-  db $CB
+  ; [$D5] int $00
+  db $D5
   db A
 }
 macro resume [A, B] {
-  ; [$CC] resume
-  db $CC
+  ; [$D6] resume
+  db $D6
 }
 macro sec [A, B] {
-  ; [$CD] sec
-  db $CD
+  ; [$D7] sec
+  db $D7
 }
 macro clc [A, B] {
-  ; [$CE] clc
-  db $CE
+  ; [$D8] clc
+  db $D8
 }
 macro offset [A, B] {
-  ; [$CF] offset $0000
-  db $CF
+  ; [$D9] offset $0000
+  db $D9
+  dw A
+}
+macro roffset [A, B] {
+  ; [$DA] roffset $0000
+  db $DA
   dw A
 }
 macro dbr [A, B] {
-  ; [$D0] dbr $0000
-  db $D0
+  ; [$DB] dbr $0000
+  db $DB
   db A
 }
 macro dba [A, B] {
-  ; [$D1] dba $00
-  db $D1
+  ; [$DC] dba $00
+  db $DC
   dw A
 }
 macro dbb [A, B] {
-  ; [$D2] dbb
-  db $D2
+  ; [$DD] dbb
+  db $DD
 }
 macro dbn [A, B] {
-  ; [$D3] dbn $0000
-  db $D3
+  ; [$DE] dbn $0000
+  db $DE
   dw A
+}
+macro dbo [A, B] {
+  ; [$DF] dbo $00
+  db $DF
+  db A
 }
 ; Opcodes
 OP_NOP = $00
@@ -1171,12 +1231,24 @@ OP_JMP_Z_A = $C7
 OP_RJMP_Z_B = $C8
 OP_JMP_NZ_A = $C9
 OP_RJMP_NZ_B = $CA
-OP_INT_B = $CB
-OP_RESUME = $CC
-OP_SEC = $CD
-OP_CLC = $CE
-OP_OFFSET_A = $CF
-OP_DBR_A = $D0
-OP_DBA_B = $D1
-OP_DBB = $D2
-OP_DBN_A = $D3
+OP_BCALL_Aa = $CB
+OP_BCALL_Ax = $CC
+OP_BCALL_Ay = $CD
+OP_BCALL_Az = $CE
+OP_BCALL_Aw = $CF
+OP_BJMP_Aa = $D0
+OP_BJMP_Ax = $D1
+OP_BJMP_Ay = $D2
+OP_BJMP_Az = $D3
+OP_BJMP_Aw = $D4
+OP_INT_B = $D5
+OP_RESUME = $D6
+OP_SEC = $D7
+OP_CLC = $D8
+OP_OFFSET_A = $D9
+OP_ROFFSET_A = $DA
+OP_DBR_A = $DB
+OP_DBA_B = $DC
+OP_DBB = $DD
+OP_DBN_A = $DE
+OP_DBO_B = $DF

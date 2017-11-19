@@ -770,452 +770,348 @@
 0302:          : dec j                    ; 6C
 0303:          : dec j                    ; 6C
 0304:          : cmp a, z                 ; 6F
-0305:          : store j, x               ; 20
-0306:          : adc a, a                 ; 46
-0307:          : cmp x                    ; 72
-0308:          : inc j                    ; 65
-0309:          : inc z                    ; 61
-030A:          : dec i                    ; 6B
-030B:          : cmp w, $20               ; 79 20
-030D:          : adc a, a                 ; 46
-030E:          : cmp x                    ; 72
-030F:          : dec w                    ; 69
-0310:          : inc i                    ; 64
-0311:          : inc z                    ; 61
-0312:          : cmp w, $21               ; 79 21(!)
-0314:          : adc a, x                 ; 42
-0315:          : adc a, w                 ; 45
-0316:          : adc x, $49               ; 47 49(I)
-0318:          : sub a, z                 ; 4E
-0319: LBL_0793 : dec a                    ; 6A
-031A:          : push a                   ; 05
-031B:          : load a, j                ; 12
-031C:          : store i, a               ; 1C
-031D:          : pop a                    ; 0C
-031E:          : inc i                    ; 64
-031F:          : inc j                    ; 65
-0320:          : cmp a                    ; 71
-0321:          : rjmp.nz $F8              ; CA F8     LBL_0793 $0319
-0323:          : return                   ; 30
-0324: LBL_0804 : store i, a               ; 1C
-0325:          : inc i                    ; 64
-0326:          : dec j                    ; 6C
-0327:          : rjmp.nz $FD              ; CA FD     LBL_0804 $0324
-0329:          : return                   ; 30
-032A:          : nop                      ; 00
-032B:          : nop                      ; 00
-032C: FUN_0812 : set i, $0345             ; 36 45 03
-032F:          : store $0000, i           ; 27 00 00
-0332:          : set i, $0348             ; 36 48 03
-0335:          : store $0002, i           ; 27 02 00
-0338:          : set i, $0363             ; 36 63 03
-033B:          : store $0004, i           ; 27 04 00
-033E:          : set i, $0365             ; 36 65 03
-0341:          : store $0006, i           ; 27 06 00
-0344:          : return                   ; 30
-0345:          : jmp $04BF                ; B6 BF 04  LBL_1215 $04BF
-0348:          : load x, $002C            ; 15 2C 00
-034B:          : not x                    ; 94
-034C:          : and x, $E0               ; 86 E0
-034E:          : shr x, $02               ; A7 02
-0350:          : set a, $3B               ; 35 3B(;)
-0352:          : add a, x                 ; 38
-0353:          : store $001D, a           ; 26 1D 00
-0356:          : set a, $3F               ; 35 3F(?)
-0358:          : add a, x                 ; 38
-0359:          : store $001E, a           ; 26 1E 00
-035C:          : set a, $42               ; 35 42(B)
-035E:          : add a, x                 ; 38
-035F:          : store $001F, a           ; 26 1F 00
-0362:          : resume                   ; CC
-0363:          : nop                      ; 00
-0364:          : resume                   ; CC
-0365:          : dbn $4649                ; D3 49 46
-0368:          : load a, $0034            ; 19 34 00
-036B:          : dbr $0061                ; D0 61(a)
-036D:          : store $7E54, a           ; 26 54 7E
-0370:          : set a, $00               ; 35 00
-0372:          : store $0034, a           ; 26 34 00
-0375:          : resume                   ; CC
-0376: FUN_0886 : set a, $44               ; 35 44(D)
-0378:          : store $8499, a           ; 26 99 84
-037B:          : set a, $58               ; 35 58(X)
-037D:          : store $849A, a           ; 26 9A 84
-0380:          : set a, $38               ; 35 38(8)
-0382:          : store $849B, a           ; 26 9B 84
-0385:          : set a, $2F               ; 35 2F(/)
-0387:          : store $849D, a           ; 26 9D 84
-038A:          : set a, $2F               ; 35 2F(/)
-038C:          : store $849E, a           ; 26 9E 84
-038F:          : set a, $2F               ; 35 2F(/)
-0391:          : store $849F, a           ; 26 9F 84
-0394:          : return                   ; 30
-0395: FUN_0917 : load x, $002F            ; 15 2F 00
-0398:          : cmpbit x, $40            ; 7D 40(@)
-039A:          : jmp.z $03A0              ; C7 A0 03  LBL_0928 $03A0
-039D:          : jmp $03AE                ; B6 AE 03  LBL_0942 $03AE
-03A0: LBL_0928 : set x, $20               ; 31 20
-03A2:          : store $849D, x           ; 22 9D 84
-03A5:          : store $849E, x           ; 22 9E 84
-03A8:          : store $849F, x           ; 22 9F 84
-03AB:          : jmp $03B9                ; B6 B9 03  LBL_0953 $03B9
-03AE: LBL_0942 : set x, $2F               ; 31 2F(/)
-03B0:          : store $849D, x           ; 22 9D 84
-03B3:          : store $849E, x           ; 22 9E 84
-03B6:          : store $849F, x           ; 22 9F 84
-03B9: LBL_0953 : return                   ; 30
-03BA:          : dbn $6966                ; D3 66 69
-03BD:          : set a, $01               ; 35 01
-03BF:          : store $7E55, a           ; 26 55 7E
-03C2:          : set a, $20               ; 35 20
-03C4:          : store $8269, a           ; 26 69 82
-03C7:          : set a, $20               ; 35 20
-03C9:          : store $826A, a           ; 26 6A 82
-03CC:          : set a, $20               ; 35 20
-03CE:          : store $826B, a           ; 26 6B 82
-03D1:          : set a, $20               ; 35 20
-03D3:          : store $826C, a           ; 26 6C 82
-03D6:          : set a, $20               ; 35 20
-03D8:          : store $826D, a           ; 26 6D 82
-03DB:          : set a, $20               ; 35 20
-03DD:          : store $826E, a           ; 26 6E 82
-03E0:          : set a, $20               ; 35 20
-03E2:          : store $8291, a           ; 26 91 82
-03E5:          : set a, $20               ; 35 20
-03E7:          : store $8292, a           ; 26 92 82
-03EA:          : set a, $20               ; 35 20
-03EC:          : store $8293, a           ; 26 93 82
-03EF:          : set a, $20               ; 35 20
-03F1:          : store $8294, a           ; 26 94 82
-03F4:          : set a, $20               ; 35 20
-03F6:          : store $8295, a           ; 26 95 82
-03F9:          : set a, $20               ; 35 20
-03FB:          : store $8296, a           ; 26 96 82
-03FE:          : set a, $00               ; 35 00
-0400:          : store $0037, a           ; 26 37 00
-0403:          : set a, $00               ; 35 00
-0405:          : store $0038, a           ; 26 38 00
-0408:          : set a, $80               ; 35 80
-040A:          : store $0039, a           ; 26 39 00
-040D:          : set a, $01               ; 35 01
-040F:          : store $003A, a           ; 26 3A 00
-0412:          : int $D0                  ; CB D0
-0414:          : return                   ; 30
-0415: FUN_1045 : dbn $7266                ; D3 66 72
-0418:          : dbb                      ; D2
-0419:          : set a, $00               ; 35 00
-041B:          : store $7E55, a           ; 26 55 7E
-041E:          : set a, $49               ; 35 49(I)
-0420:          : store $8269, a           ; 26 69 82
-0423:          : set a, $4E               ; 35 4E(N)
-0425:          : store $826A, a           ; 26 6A 82
-0428:          : set a, $53               ; 35 53(S)
-042A:          : store $826B, a           ; 26 6B 82
-042D:          : set a, $45               ; 35 45(E)
-042F:          : store $826C, a           ; 26 6C 82
-0432:          : set a, $52               ; 35 52(R)
-0434:          : store $826D, a           ; 26 6D 82
-0437:          : set a, $54               ; 35 54(T)
-0439:          : store $826E, a           ; 26 6E 82
-043C:          : set a, $46               ; 35 46(F)
-043E:          : store $8291, a           ; 26 91 82
-0441:          : set a, $4C               ; 35 4C(L)
-0443:          : store $8292, a           ; 26 92 82
-0446:          : set a, $4F               ; 35 4F(O)
-0448:          : store $8293, a           ; 26 93 82
-044B:          : set a, $50               ; 35 50(P)
-044D:          : store $8294, a           ; 26 94 82
-0450:          : set a, $50               ; 35 50(P)
-0452:          : store $8295, a           ; 26 95 82
-0455:          : set a, $59               ; 35 59(Y)
-0457:          : store $8296, a           ; 26 96 82
-045A:          : return                   ; 30
-045B:          : dbn $6866                ; D3 66 68
-045E:          : load a, $7E54            ; 19 54 7E
-0461:          : dbr $7E61                ; D0 61(a)
-0463:          : cmpbit a, $01            ; 81 01
-0465:          : call.nz $03BA            ; 2F BA 03
-0468:          : cmpbit a, $02            ; 81 02
-046A:          : call.nz $0415            ; 2F 15 04
-046D:          : set a, $00               ; 35 00
-046F:          : store $7E54, a           ; 26 54 7E
-0472:          : return                   ; 30
-0473: LBL_1139 : call $032C               ; 29 2C 03  FUN_0812 $032C
-0476:          : set a, $00               ; 35 00
-0478:          : store $0010, a           ; 26 10 00
-047B:          : set a, $00               ; 35 00
-047D:          : store $0011, a           ; 26 11 00
-0480:          : set a, $00               ; 35 00
-0482:          : store $0012, a           ; 26 12 00
-0485:          : set a, $00               ; 35 00
-0487:          : store $0013, a           ; 26 13 00
-048A:          : set a, $00               ; 35 00
-048C:          : store $0014, a           ; 26 14 00
-048F:          : set a, $00               ; 35 00
-0491:          : store $0015, a           ; 26 15 00
-0494:          : set a, $00               ; 35 00
-0496:          : store $0016, a           ; 26 16 00
-0499:          : set a, $00               ; 35 00
-049B:          : store $0017, a           ; 26 17 00
-049E:          : set i, $7800             ; 36 00 78
-04A1:          : store $0030, i           ; 27 30 00
-04A4:          : set a, $00               ; 35 00
-04A6:          : store $0019, a           ; 26 19 00
-04A9:          : set a, $00               ; 35 00
-04AB:          : store $001A, a           ; 26 1A 00
-04AE:          : set a, $00               ; 35 00
-04B0:          : store $001B, a           ; 26 1B 00
-04B3:          : set a, $00               ; 35 00
-04B5:          : store $001C, a           ; 26 1C 00
-04B8:          : set a, $04               ; 35 04
-04BA:          : store $0018, a           ; 26 18 00
-04BD:          : int $FE                  ; CB FE
-04BF: LBL_1215 : set i, $8000             ; 36 00 80
-04C2:          : set j, $7800             ; 37 00 78
-04C5:          : set a, $20               ; 35 20
-04C7:          : call $0324               ; 29 24 03  LBL_0804 $0324
-04CA:          : set i, $8000             ; 36 00 80
-04CD:          : set j, $7B00             ; 37 00 7B
-04D0:          : set a, $14               ; 35 14
-04D2:          : call $0319               ; 29 19 03  LBL_0793 $0319
-04D5:          : call $0376               ; 29 76 03  FUN_0886 $0376
-04D8:          : dba $54                  ; D1 54 7E
-04DB:          : call $0415               ; 29 15 04  FUN_1045 $0415
-04DE: LBL_1246 : call $0395               ; 29 95 03  FUN_0917 $0395
-04E1:          : load a, $7E54            ; 19 54 7E
-04E4:          : cmp a                    ; 71
-04E5:          : call.neq $045B           ; 2B 5B 04
-04E8:          : jmp $04DE                ; B6 DE 04  LBL_1246 $04DE
-04EB:          : nop                      ; 00
-04EC: LBL_1260 : set a, $FF               ; 35 FF
-04EE:          : set i, $7800             ; 36 00 78
-04F1:          : set j, $F800             ; 37 00 F8
-04F4:          : call $0319               ; 29 19 03  LBL_0793 $0319
-04F7:          : set a, $FF               ; 35 FF
-04F9:          : set i, $78FF             ; 36 FF 78
-04FC:          : set j, $F8FF             ; 37 FF F8
-04FF:          : call $0319               ; 29 19 03  LBL_0793 $0319
-0502:          : set a, $FF               ; 35 FF
-0504:          : set i, $79FE             ; 36 FE 79
-0507:          : set j, $F9FE             ; 37 FE F9
-050A:          : call $0319               ; 29 19 03  LBL_0793 $0319
-050D:          : set a, $FF               ; 35 FF
-050F:          : set i, $7AFD             ; 36 FD 7A
-0512:          : set j, $FAFD             ; 37 FD FA
-0515:          : call $0319               ; 29 19 03  LBL_0793 $0319
-0518:          : set a, $FF               ; 35 FF
-051A:          : set i, $7BFC             ; 36 FC 7B
-051D:          : set j, $FBFC             ; 37 FC FB
-0520:          : call $0319               ; 29 19 03  LBL_0793 $0319
-0523:          : set a, $FF               ; 35 FF
-0525:          : set i, $7CFB             ; 36 FB 7C
-0528:          : set j, $FCFB             ; 37 FB FC
-052B:          : call $0319               ; 29 19 03  LBL_0793 $0319
-052E:          : set a, $FF               ; 35 FF
-0530:          : set i, $7DFA             ; 36 FA 7D
-0533:          : set j, $FDFA             ; 37 FA FD
-0536:          : call $0319               ; 29 19 03  LBL_0793 $0319
-0539:          : set a, $FF               ; 35 FF
-053B:          : set i, $7EF9             ; 36 F9 7E
-053E:          : set j, $FEF9             ; 37 F9 FE
-0541:          : call $0319               ; 29 19 03  LBL_0793 $0319
-0544:          : set a, $08               ; 35 08
-0546:          : set i, $7FF8             ; 36 F8 7F
-0549:          : set j, $FFF8             ; 37 F8 FF
-054C:          : call $0319               ; 29 19 03  LBL_0793 $0319
-054F:          : offset $7800             ; CF 00 78
-0552:          : jmp $0473                ; B6 73 04  LBL_1139 $0473
-0555:          : adc a, x                 ; 42
-0556:          : adc a, x                 ; 42
-0557:          : adc a, x                 ; 42
-0558:          : adc a, x                 ; 42
-0559:          : adc a, x                 ; 42
-055A:          : adc a, x                 ; 42
-055B:          : adc a, x                 ; 42
-055C:          : adc a, x                 ; 42
-055D:          : adc a, x                 ; 42
-055E:          : adc a, x                 ; 42
-055F:          : adc a, x                 ; 42
-0560:          : adc a, x                 ; 42
-0561:          : adc a, x                 ; 42
-0562:          : adc a, x                 ; 42
-0563:          : adc a, x                 ; 42
-0564:          : adc a, x                 ; 42
-0565:          : adc a, x                 ; 42
-0566:          : adc a, x                 ; 42
-0567:          : adc a, x                 ; 42
-0568:          : adc a, x                 ; 42
-0569:          : adc a, x                 ; 42
-056A:          : adc a, x                 ; 42
-056B:          : adc a, x                 ; 42
-056C:          : adc a, x                 ; 42
-056D:          : adc a, x                 ; 42
-056E:          : adc a, x                 ; 42
-056F:          : adc a, x                 ; 42
-0570:          : adc a, x                 ; 42
-0571:          : adc a, x                 ; 42
-0572:          : adc a, x                 ; 42
-0573:          : adc a, x                 ; 42
-0574:          : adc a, x                 ; 42
-0575:          : adc a, x                 ; 42
-0576:          : adc a, x                 ; 42
-0577:          : adc a, x                 ; 42
-0578:          : adc a, x                 ; 42
-0579:          : adc a, x                 ; 42
-057A:          : adc a, x                 ; 42
-057B:          : adc a, x                 ; 42
-057C:          : adc a, x                 ; 42
-057D:          : adc a, x                 ; 42
-057E:          : adc a, x                 ; 42
-057F:          : adc a, x                 ; 42
-0580:          : adc a, x                 ; 42
-0581:          : adc a, x                 ; 42
-0582:          : adc a, x                 ; 42
-0583:          : adc a, x                 ; 42
-0584:          : adc a, x                 ; 42
-0585:          : adc a, x                 ; 42
-0586:          : adc a, x                 ; 42
-0587:          : adc a, x                 ; 42
-0588:          : adc a, x                 ; 42
-0589:          : adc a, x                 ; 42
-058A:          : adc a, x                 ; 42
-058B:          : adc a, x                 ; 42
-058C:          : adc a, x                 ; 42
-058D:          : adc a, x                 ; 42
-058E:          : adc a, x                 ; 42
-058F:          : adc a, x                 ; 42
-0590:          : adc a, x                 ; 42
-0591:          : adc a, x                 ; 42
-0592:          : adc a, x                 ; 42
-0593:          : adc a, x                 ; 42
-0594:          : adc a, x                 ; 42
-0595:          : adc a, x                 ; 42
-0596:          : adc a, x                 ; 42
-0597:          : adc a, x                 ; 42
-0598:          : adc a, x                 ; 42
-0599:          : adc a, x                 ; 42
-059A:          : adc a, x                 ; 42
-059B:          : adc a, x                 ; 42
-059C:          : adc a, x                 ; 42
-059D:          : adc a, x                 ; 42
-059E:          : adc a, x                 ; 42
-059F:          : adc a, x                 ; 42
-05A0:          : adc a, x                 ; 42
-05A1:          : adc a, x                 ; 42
-05A2:          : adc a, x                 ; 42
-05A3:          : adc a, x                 ; 42
-05A4:          : adc a, x                 ; 42
-05A5:          : adc a, x                 ; 42
-05A6:          : adc a, x                 ; 42
-05A7:          : adc a, x                 ; 42
-05A8:          : adc a, x                 ; 42
-05A9:          : adc a, x                 ; 42
-05AA:          : adc a, x                 ; 42
-05AB:          : adc a, x                 ; 42
-05AC:          : adc a, x                 ; 42
-05AD:          : adc a, x                 ; 42
-05AE:          : adc a, x                 ; 42
-05AF:          : adc a, x                 ; 42
-05B0:          : adc a, x                 ; 42
-05B1:          : adc a, x                 ; 42
-05B2:          : adc a, x                 ; 42
-05B3:          : adc a, x                 ; 42
-05B4:          : adc a, x                 ; 42
-05B5:          : adc a, x                 ; 42
-05B6:          : adc a, x                 ; 42
-05B7:          : adc a, x                 ; 42
-05B8:          : adc a, x                 ; 42
-05B9:          : adc a, x                 ; 42
-05BA:          : adc a, x                 ; 42
-05BB:          : adc a, x                 ; 42
-05BC:          : adc a, x                 ; 42
-05BD:          : adc a, x                 ; 42
-05BE:          : adc a, x                 ; 42
-05BF:          : adc a, x                 ; 42
-05C0:          : adc a, x                 ; 42
-05C1:          : adc a, x                 ; 42
-05C2:          : adc a, x                 ; 42
-05C3:          : adc a, x                 ; 42
-05C4:          : adc a, x                 ; 42
-05C5:          : adc a, x                 ; 42
-05C6:          : adc a, x                 ; 42
-05C7:          : adc a, x                 ; 42
-05C8:          : adc a, x                 ; 42
-05C9:          : adc a, x                 ; 42
-05CA:          : adc a, x                 ; 42
-05CB:          : adc a, x                 ; 42
-05CC:          : adc a, x                 ; 42
-05CD:          : adc a, x                 ; 42
-05CE:          : adc a, x                 ; 42
-05CF:          : adc a, x                 ; 42
-05D0:          : adc a, x                 ; 42
-05D1:          : adc a, x                 ; 42
-05D2:          : adc a, x                 ; 42
-05D3:          : adc a, x                 ; 42
-05D4:          : adc a, x                 ; 42
-05D5:          : adc a, x                 ; 42
-05D6:          : adc a, x                 ; 42
-05D7:          : adc a, x                 ; 42
-05D8:          : adc a, x                 ; 42
-05D9:          : adc a, x                 ; 42
-05DA:          : adc a, x                 ; 42
-05DB:          : adc a, x                 ; 42
-05DC:          : adc a, x                 ; 42
-05DD:          : adc a, x                 ; 42
-05DE:          : adc a, x                 ; 42
-05DF:          : adc a, x                 ; 42
-05E0:          : adc a, x                 ; 42
-05E1:          : adc a, x                 ; 42
-05E2:          : adc a, x                 ; 42
-05E3:          : adc a, x                 ; 42
-05E4:          : adc a, x                 ; 42
-05E5:          : adc a, x                 ; 42
-05E6:          : adc a, x                 ; 42
-05E7:          : adc a, x                 ; 42
-05E8:          : adc a, x                 ; 42
-05E9:          : adc a, x                 ; 42
-05EA:          : adc a, x                 ; 42
-05EB:          : adc a, x                 ; 42
-05EC:          : adc a, x                 ; 42
-05ED:          : adc a, x                 ; 42
-05EE:          : adc a, x                 ; 42
-05EF:          : adc a, x                 ; 42
-05F0:          : adc a, x                 ; 42
-05F1:          : adc a, x                 ; 42
-05F2:          : adc a, x                 ; 42
-05F3:          : adc a, x                 ; 42
-05F4:          : adc a, x                 ; 42
-05F5:          : adc a, x                 ; 42
-05F6:          : adc a, x                 ; 42
-05F7:          : adc a, x                 ; 42
-05F8:          : adc a, x                 ; 42
-05F9:          : adc a, x                 ; 42
-05FA:          : adc a, x                 ; 42
-05FB:          : adc a, x                 ; 42
-05FC:          : adc a, x                 ; 42
-05FD:          : adc a, x                 ; 42
-05FE:          : adc a, x                 ; 42
-05FF:          : adc a, x                 ; 42
-0600:          : adc a, x                 ; 42
-0601:          : adc a, x                 ; 42
-0602:          : adc a, x                 ; 42
-0603:          : adc a, x                 ; 42
-0604:          : adc a, x                 ; 42
-0605:          : adc a, x                 ; 42
-0606:          : adc a, x                 ; 42
-0607:          : adc a, x                 ; 42
-0608:          : adc a, x                 ; 42
-0609:          : adc a, x                 ; 42
-060A:          : adc a, x                 ; 42
-060B:          : adc a, x                 ; 42
-060C:          : adc a, x                 ; 42
-060D:          : adc a, x                 ; 42
-060E:          : adc a, x                 ; 42
-060F:          : adc a, x                 ; 42
-0610:          : adc a, x                 ; 42
-0611:          : adc a, x                 ; 42
-0612:          : adc a, x                 ; 42
-0613:          : adc a, x                 ; 42
+0305:          : store j, y               ; 21
+0306: LBL_0774 : dec a                    ; 6A
+0307:          : push a                   ; 05
+0308:          : load a, j                ; 12
+0309:          : store i, a               ; 1C
+030A:          : pop a                    ; 0C
+030B:          : inc i                    ; 64
+030C:          : inc j                    ; 65
+030D:          : cmp a                    ; 71
+030E:          : rjmp.nz $F8              ; CA F8     LBL_0774 $0306
+0310:          : return                   ; 30
+0311: LBL_0785 : store i, a               ; 1C
+0312:          : inc i                    ; 64
+0313:          : dec j                    ; 6C
+0314:          : rjmp.nz $FD              ; CA FD     LBL_0785 $0311
+0316:          : return                   ; 30
+0317:          : nop                      ; 00
+0318:          : nop                      ; 00
+0319:          : nop                      ; 00
+031A:          : nop                      ; 00
+031B:          : nop                      ; 00
+031C:          : nop                      ; 00
+031D: FUN_0797 : set i, $0336             ; 36 36 03
+0320:          : store $0000, i           ; 27 00 00
+0323:          : set i, $0339             ; 36 39 03
+0326:          : store $0002, i           ; 27 02 00
+0329:          : set i, $0354             ; 36 54 03
+032C:          : store $0004, i           ; 27 04 00
+032F:          : set i, $0356             ; 36 56 03
+0332:          : store $0006, i           ; 27 06 00
+0335:          : return                   ; 30
+0336:          : jmp $057E                ; B6 7E 05  LBL_1406 $057E
+0339:          : load x, $002C            ; 15 2C 00
+033C:          : not x                    ; 94
+033D:          : and x, $E0               ; 86 E0
+033F:          : shr x, $02               ; A7 02
+0341:          : set a, $3B               ; 35 3B(;)
+0343:          : add a, x                 ; 38
+0344:          : store $001D, a           ; 26 1D 00
+0347:          : set a, $3F               ; 35 3F(?)
+0349:          : add a, x                 ; 38
+034A:          : store $001E, a           ; 26 1E 00
+034D:          : set a, $42               ; 35 42(B)
+034F:          : add a, x                 ; 38
+0350:          : store $001F, a           ; 26 1F 00
+0353:          : resume                   ; D6
+0354:          : nop                      ; 00
+0355:          : resume                   ; D6
+0356:          : dbn $4649                ; DD 49 46
+0359:          : load a, $0034            ; 19 34 00
+035C:          : dbr $0061                ; DA 61(a)
+035E:          : store $7B17, a           ; 26 17 7B
+0361:          : set a, $00               ; 35 00
+0363:          : store $0034, a           ; 26 34 00
+0366:          : resume                   ; D6
+0367: FUN_0871 : set a, $44               ; 35 44(D)
+0369:          : store $8499, a           ; 26 99 84
+036C:          : set a, $58               ; 35 58(X)
+036E:          : store $849A, a           ; 26 9A 84
+0371:          : set a, $38               ; 35 38(8)
+0373:          : store $849B, a           ; 26 9B 84
+0376:          : set a, $2F               ; 35 2F(/)
+0378:          : store $849D, a           ; 26 9D 84
+037B:          : set a, $2F               ; 35 2F(/)
+037D:          : store $849E, a           ; 26 9E 84
+0380:          : set a, $2F               ; 35 2F(/)
+0382:          : store $849F, a           ; 26 9F 84
+0385:          : return                   ; 30
+0386: FUN_0902 : load x, $002F            ; 15 2F 00
+0389:          : cmpbit x, $40            ; 7D 40(@)
+038B:          : jmp.z $0391              ; C7 91 03  LBL_0913 $0391
+038E:          : jmp $039F                ; B6 9F 03  LBL_0927 $039F
+0391: LBL_0913 : set x, $20               ; 31 20
+0393:          : store $849D, x           ; 22 9D 84
+0396:          : store $849E, x           ; 22 9E 84
+0399:          : store $849F, x           ; 22 9F 84
+039C:          : jmp $03AA                ; B6 AA 03  LBL_0938 $03AA
+039F: LBL_0927 : set x, $2F               ; 31 2F(/)
+03A1:          : store $849D, x           ; 22 9D 84
+03A4:          : store $849E, x           ; 22 9E 84
+03A7:          : store $849F, x           ; 22 9F 84
+03AA: LBL_0938 : return                   ; 30
+03AB:          : jmp.gt $CD03             ; C3 03 CD  ERROR $CD03
+03AE:          : push z                   ; 03
+03AF:          : add a, y                 ; 39
+03B0:          : push w                   ; 04
+03B1:          : and a, y                 ; 83
+03B2:          : push w                   ; 04
+03B3:          : or a, z                  ; 8D
+03B4:          : push w                   ; 04
+03B5:          : xor a, w                 ; 9C
+03B6:          : push w                   ; 04
+03B7:          : shl a, $04               ; A6 04
+03B9:          : ror y                    ; B2
+03BA:          : push w                   ; 04
+03BB:          : rjmp.neq $04             ; C2 04     ERROR $03BF
+03BD:          : bcall $F904, x           ; CC 04 F9
+03C0:          : push w                   ; 04
+03C1:          : pop x                    ; 08
+03C2:          : push a                   ; 05
+03C3:          : dbn $6E46                ; DD 46 6E
+03C6:          : set a, $00               ; 35 00
+03C8:          : store $7B17, a           ; 26 17 7B
+03CB:          : nop                      ; 00
+03CC:          : return                   ; 30
+03CD:          : dbn $6946                ; DD 46 69
+03D0:          : set a, $00               ; 35 00
+03D2:          : store $7B17, a           ; 26 17 7B
+03D5:          : set a, $01               ; 35 01
+03D7:          : store $7B18, a           ; 26 18 7B
+03DA:          : set a, $20               ; 35 20
+03DC:          : store $8269, a           ; 26 69 82
+03DF:          : set a, $20               ; 35 20
+03E1:          : store $826A, a           ; 26 6A 82
+03E4:          : set a, $20               ; 35 20
+03E6:          : store $826B, a           ; 26 6B 82
+03E9:          : set a, $20               ; 35 20
+03EB:          : store $826C, a           ; 26 6C 82
+03EE:          : set a, $20               ; 35 20
+03F0:          : store $826D, a           ; 26 6D 82
+03F3:          : set a, $20               ; 35 20
+03F5:          : store $826E, a           ; 26 6E 82
+03F8:          : set a, $20               ; 35 20
+03FA:          : store $8291, a           ; 26 91 82
+03FD:          : set a, $20               ; 35 20
+03FF:          : store $8292, a           ; 26 92 82
+0402:          : set a, $20               ; 35 20
+0404:          : store $8293, a           ; 26 93 82
+0407:          : set a, $20               ; 35 20
+0409:          : store $8294, a           ; 26 94 82
+040C:          : set a, $20               ; 35 20
+040E:          : store $8295, a           ; 26 95 82
+0411:          : set a, $20               ; 35 20
+0413:          : store $8296, a           ; 26 96 82
+0416:          : set a, $00               ; 35 00
+0418:          : store $7B19, a           ; 26 19 7B
+041B:          : set i, $FC00             ; 36 00 FC
+041E:          : store $7B1A, i           ; 27 1A 7B
+0421:          : set a, $00               ; 35 00
+0423:          : store $7B1C, a           ; 26 1C 7B
+0426:          : set a, $00               ; 35 00
+0428:          : store $0037, a           ; 26 37 00
+042B:          : set i, $FC00             ; 36 00 FC
+042E:          : store $0038, i           ; 27 38 00
+0431:          : set a, $01               ; 35 01
+0433:          : store $003A, a           ; 26 3A 00
+0436:          : int $D0                  ; D5 D0
+0438:          : return                   ; 30
+0439: FUN_1081 : dbn $7846                ; DD 46 78
+043C:          : set a, $00               ; 35 00
+043E:          : store $7B17, a           ; 26 17 7B
+0441:          : set a, $00               ; 35 00
+0443:          : store $7B18, a           ; 26 18 7B
+0446:          : set a, $49               ; 35 49(I)
+0448:          : store $8269, a           ; 26 69 82
+044B:          : set a, $4E               ; 35 4E(N)
+044D:          : store $826A, a           ; 26 6A 82
+0450:          : set a, $53               ; 35 53(S)
+0452:          : store $826B, a           ; 26 6B 82
+0455:          : set a, $45               ; 35 45(E)
+0457:          : store $826C, a           ; 26 6C 82
+045A:          : set a, $52               ; 35 52(R)
+045C:          : store $826D, a           ; 26 6D 82
+045F:          : set a, $54               ; 35 54(T)
+0461:          : store $826E, a           ; 26 6E 82
+0464:          : set a, $46               ; 35 46(F)
+0466:          : store $8291, a           ; 26 91 82
+0469:          : set a, $4C               ; 35 4C(L)
+046B:          : store $8292, a           ; 26 92 82
+046E:          : set a, $4F               ; 35 4F(O)
+0470:          : store $8293, a           ; 26 93 82
+0473:          : set a, $50               ; 35 50(P)
+0475:          : store $8294, a           ; 26 94 82
+0478:          : set a, $50               ; 35 50(P)
+047A:          : store $8295, a           ; 26 95 82
+047D:          : set a, $59               ; 35 59(Y)
+047F:          : store $8296, a           ; 26 96 82
+0482:          : return                   ; 30
+0483:          : dbn $7346                ; DD 46 73
+0486:          : set a, $00               ; 35 00
+0488:          : store $7B17, a           ; 26 17 7B
+048B:          : nop                      ; 00
+048C:          : return                   ; 30
+048D:          : dbn $7246                ; DD 46 72
+0490:          : set a, $00               ; 35 00
+0492:          : store $7B17, a           ; 26 17 7B
+0495:          : load a, $7B19            ; 19 19 7B
+0498:          : bcall $7BB7, a           ; CB B7 7B
+049B:          : return                   ; 30
+049C:          : dbn $7746                ; DD 46 77
+049F:          : set a, $00               ; 35 00
+04A1:          : store $7B17, a           ; 26 17 7B
+04A4:          : nop                      ; 00
+04A5:          : return                   ; 30
+04A6:          : dbn $4872                ; DD 72 48
+04A9:          : set a, $01               ; 35 01
+04AB:          : store $7B19, a           ; 26 19 7B
+04AE:          : call $04B6               ; 29 B6 04  FUN_1206 $04B6
+04B1:          : return                   ; 30
+04B2:          : call $04B6               ; 29 B6 04  FUN_1206 $04B6
+04B5:          : return                   ; 30
+04B6: FUN_1206 : load i, $7B1A            ; 1A 1A 7B
+04B9:          : load a, i                ; 0F
+04BA:          : inc i                    ; 64
+04BB:          : store $7B1A, i           ; 27 1A 7B
+04BE:          : bcall $7BBB, a           ; CB BB 7B
+04C1:          : return                   ; 30
+04C2:          : dbn $4E69                ; DD 69 4E
+04C5:          : nop                      ; 00
+04C6:          : set a, $03               ; 35 03
+04C8:          : store $7B19, a           ; 26 19 7B
+04CB:          : return                   ; 30
+04CC:          : dbn $4C69                ; DD 69 4C
+04CF:          : load i, $7B1A            ; 1A 1A 7B
+04D2:          : load z, i                ; 10
+04D3:          : inc i                    ; 64
+04D4:          : store $0038, z           ; 24 38 00
+04D7:          : dbr $007A                ; DA 7A(z)
+04D9:          : load z, i                ; 10
+04DA:          : store $0039, z           ; 24 39 00
+04DD:          : dbr $007A                ; DA 7A(z)
+04DF:          : load i, $7B1A            ; 1A 1A 7B
+04E2:          : inc i                    ; 64
+04E3:          : inc i                    ; 64
+04E4:          : store $7B1A, i           ; 27 1A 7B
+04E7:          : load a, $7B1C            ; 19 1C 7B
+04EA:          : inc a                    ; 63
+04EB:          : store $7B1C, a           ; 26 1C 7B
+04EE:          : store $0037, a           ; 26 37 00
+04F1:          : set a, $01               ; 35 01
+04F3:          : store $003A, a           ; 26 3A 00
+04F6:          : int $D0                  ; D5 D0
+04F8:          : return                   ; 30
+04F9:          : dbn $5569                ; DD 69 55
+04FC:          : return                   ; 30
+04FD:          : nop                      ; 00
+04FE:          : nop                      ; 00
+04FF:          : dbn $6948                ; DD 48 69
+0502:          : offset $0800             ; D9 00 08
+0505:          : jmp $0000                ; B6 00 00  DATA $0000
+0508:          : dbn $4569                ; DD 69 45
+050B:          : set a, $03               ; 35 03
+050D:          : store $7B19, a           ; 26 19 7B
+0510:          : dbo $4C                  ; DE 4C(L)
+0512:          : set i, $FF00             ; 36 00 FF
+0515:          : store $0000, i           ; 27 00 00
+0518:          : set i, $FF00             ; 36 00 FF
+051B:          : set j, $7CFD             ; 37 FD 7C
+051E:          : set a, $0B               ; 35 0B
+0520:          : call $0306               ; 29 06 03  LBL_0774 $0306
+0523:          : int $FF                  ; D5 FF
+0525:          : return                   ; 30
+0526:          : dbn $6866                ; DD 66 68
+0529:          : load a, $7B17            ; 19 17 7B
+052C:          : dbr $7B61                ; DA 61(a)
+052E:          : bcall $7BAB, a           ; CB AB 7B
+0531:          : return                   ; 30
+0532: LBL_1330 : call $031D               ; 29 1D 03  FUN_0797 $031D
+0535:          : set a, $00               ; 35 00
+0537:          : store $0010, a           ; 26 10 00
+053A:          : set a, $00               ; 35 00
+053C:          : store $0011, a           ; 26 11 00
+053F:          : set a, $00               ; 35 00
+0541:          : store $0012, a           ; 26 12 00
+0544:          : set a, $00               ; 35 00
+0546:          : store $0013, a           ; 26 13 00
+0549:          : set a, $00               ; 35 00
+054B:          : store $0014, a           ; 26 14 00
+054E:          : set a, $00               ; 35 00
+0550:          : store $0015, a           ; 26 15 00
+0553:          : set a, $00               ; 35 00
+0555:          : store $0016, a           ; 26 16 00
+0558:          : set a, $00               ; 35 00
+055A:          : store $0017, a           ; 26 17 00
+055D:          : set i, $7800             ; 36 00 78
+0560:          : store $0030, i           ; 27 30 00
+0563:          : set a, $00               ; 35 00
+0565:          : store $0019, a           ; 26 19 00
+0568:          : set a, $00               ; 35 00
+056A:          : store $001A, a           ; 26 1A 00
+056D:          : set a, $00               ; 35 00
+056F:          : store $001B, a           ; 26 1B 00
+0572:          : set a, $00               ; 35 00
+0574:          : store $001C, a           ; 26 1C 00
+0577:          : set a, $04               ; 35 04
+0579:          : store $0018, a           ; 26 18 00
+057C:          : int $FE                  ; D5 FE
+057E: LBL_1406 : set i, $8000             ; 36 00 80
+0581:          : set j, $7800             ; 37 00 78
+0584:          : set a, $20               ; 35 20
+0586:          : call $0311               ; 29 11 03  LBL_0785 $0311
+0589:          : set i, $8000             ; 36 00 80
+058C:          : set j, $7B00             ; 37 00 7B
+058F:          : set a, $06               ; 35 06
+0591:          : call $0306               ; 29 06 03  LBL_0774 $0306
+0594:          : call $0367               ; 29 67 03  FUN_0871 $0367
+0597:          : dba $17                  ; DB 17 7B
+059A:          : call $0439               ; 29 39 04  FUN_1081 $0439
+059D: LBL_1437 : call $0386               ; 29 86 03  FUN_0902 $0386
+05A0:          : load a, $7B17            ; 19 17 7B
+05A3:          : cmp a                    ; 71
+05A4:          : call.neq $0526           ; 2B 26 05
+05A7:          : jmp $059D                ; B6 9D 05  LBL_1437 $059D
+05AA:          : nop                      ; 00
+05AB: LBL_1451 : set a, $FF               ; 35 FF
+05AD:          : set i, $7800             ; 36 00 78
+05B0:          : set j, $F800             ; 37 00 F8
+05B3:          : call $0306               ; 29 06 03  LBL_0774 $0306
+05B6:          : set a, $FF               ; 35 FF
+05B8:          : set i, $78FF             ; 36 FF 78
+05BB:          : set j, $F8FF             ; 37 FF F8
+05BE:          : call $0306               ; 29 06 03  LBL_0774 $0306
+05C1:          : set a, $FF               ; 35 FF
+05C3:          : set i, $79FE             ; 36 FE 79
+05C6:          : set j, $F9FE             ; 37 FE F9
+05C9:          : call $0306               ; 29 06 03  LBL_0774 $0306
+05CC:          : set a, $FF               ; 35 FF
+05CE:          : set i, $7AFD             ; 36 FD 7A
+05D1:          : set j, $FAFD             ; 37 FD FA
+05D4:          : call $0306               ; 29 06 03  LBL_0774 $0306
+05D7:          : set a, $FF               ; 35 FF
+05D9:          : set i, $7BFC             ; 36 FC 7B
+05DC:          : set j, $FBFC             ; 37 FC FB
+05DF:          : call $0306               ; 29 06 03  LBL_0774 $0306
+05E2:          : set a, $FF               ; 35 FF
+05E4:          : set i, $7CFB             ; 36 FB 7C
+05E7:          : set j, $FCFB             ; 37 FB FC
+05EA:          : call $0306               ; 29 06 03  LBL_0774 $0306
+05ED:          : set a, $FF               ; 35 FF
+05EF:          : set i, $7DFA             ; 36 FA 7D
+05F2:          : set j, $FDFA             ; 37 FA FD
+05F5:          : call $0306               ; 29 06 03  LBL_0774 $0306
+05F8:          : set a, $FF               ; 35 FF
+05FA:          : set i, $7EF9             ; 36 F9 7E
+05FD:          : set j, $FEF9             ; 37 F9 FE
+0600:          : call $0306               ; 29 06 03  LBL_0774 $0306
+0603:          : set a, $08               ; 35 08
+0605:          : set i, $7FF8             ; 36 F8 7F
+0608:          : set j, $FFF8             ; 37 F8 FF
+060B:          : call $0306               ; 29 06 03  LBL_0774 $0306
+060E:          : offset $7800             ; D9 00 78
+0611:          : jmp $0532                ; B6 32 05  LBL_1330 $0532
 0614:          : adc a, x                 ; 42
 0615:          : adc a, x                 ; 42
 0616:          : adc a, x                 ; 42
@@ -1700,6 +1596,6 @@
 07F5:          : adc a, x                 ; 42
 07F6:          : adc a, x                 ; 42
 07F7:          : adc a, x                 ; 42
-07F8: LBL_2040 : offset $F800             ; CF 00 F8
-07FB:          : jmp $04EC                ; B6 EC 04  LBL_1260 $04EC
+07F8: LBL_2040 : offset $F800             ; D9 00 F8
+07FB:          : jmp $05AB                ; B6 AB 05  LBL_1451 $05AB
 07FE:          : rjmp $FA                 ; BE FA     LBL_2040 $07F8

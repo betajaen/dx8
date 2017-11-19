@@ -42,6 +42,9 @@ kExports:
                         _rjmp.nz .loop
         EndFunction
 
+        printl "MemCpySm=", Fn_MemCpySm
+
+
         ;! MemSet
         ;! Copy a constant to dst, len times
         MemSet_Dst equ i
@@ -55,6 +58,8 @@ kExports:
                         _rjmp.nz .loop
         EndFunction
 
+        printl "MemSet=", Fn_MemSet
+
 ; =============================================================
 ; VARIABLES
 ; =============================================================
@@ -63,6 +68,9 @@ kVariables:
 
         Var_Byte        Floppy_Msg,     $00
         Var_Byte        Floppy_HasDisk, $00
+        Var_Byte        Floppy_Mode,    $00
+        Var_Word        Floppy_Addr,    $00
+        Var_Byte        Floppy_Track,   $00
 
         printl 'sLclFloppy_Msg=', sLclFloppy_Msg
         printl 'sFloppy_Msg=', sFloppy_Msg
@@ -111,6 +119,11 @@ OnIvtFloppy:
         set a, 0
         store REG_FPY_MSG, a
 resume
+
+DefaultIvt:
+        nop
+resume
+
 ;nop
 ; =============================================================
 ; Functions
@@ -146,60 +159,7 @@ BeginFunction DrawCursor
         .EndDraw:
 EndFunction
 
-BeginFunction OnFloppyInserted
-
-        dbn 'fi'
-
-        set a, $01
-        store sFloppy_HasDisk, a
-
-        _putchar 0,17+0, 15, ' '
-        _putchar 0,17+1, 15, ' '
-        _putchar 0,17+2, 15, ' '
-        _putchar 0,17+3, 15, ' '
-        _putchar 0,17+4, 15, ' '
-        _putchar 0,17+5, 15, ' '
-
-
-        _putchar 0,17+0, 16, ' '
-        _putchar 0,17+1, 16, ' '
-        _putchar 0,17+2, 16, ' '
-        _putchar 0,17+3, 16, ' '
-        _putchar 0,17+4, 16, ' '
-        _putchar 0,17+5, 16, ' '
-
-        ; Copy sector#1 to $FC00
-        _poke REG_FPY_OP_TRACK,         $00
-        _poke REG_FPY_OP_ADDR,          $00
-        _poke REG_FPY_OP_ADDR+1,        $80
-        _poke REG_FPY_OP,               $01
-        int INT_FLOPPY_OP
-EndFunction
-
-BeginFunction OnFloppyRemoved
-
-        dbn 'fr'
-    ;    dbb
-        dba sFloppy_HasDisk
-
-        set a, $00
-        store sFloppy_HasDisk, a
-
-        _putchar 0,17+0, 15, 'I'
-        _putchar 0,17+1, 15, 'N'
-        _putchar 0,17+2, 15, 'S'
-        _putchar 0,17+3, 15, 'E'
-        _putchar 0,17+4, 15, 'R'
-        _putchar 0,17+5, 15, 'T'
-
-
-        _putchar 0,17+0, 16, 'F'
-        _putchar 0,17+1, 16, 'L'
-        _putchar 0,17+2, 16, 'O'
-        _putchar 0,17+3, 16, 'P'
-        _putchar 0,17+4, 16, 'P'
-        _putchar 0,17+5, 16, 'Y'
-EndFunction
+include "boot_floppy.s"
 
 BeginFunction FloppyHandler
 
@@ -208,14 +168,8 @@ BeginFunction FloppyHandler
         load a, sFloppy_Msg
         dbr 'a'
 
-        cmpbit a, IO_FPY_MSG_INSERT
-        call.nz Fn_OnFloppyInserted
-
-        cmpbit a, IO_FPY_MSG_REMOVE
-        call.nz Fn_OnFloppyRemoved
-
-        set a, $00
-        store sFloppy_Msg, a
+        ; @TODO Check for error bit
+        bcall tFloppyEventDispatcher, a
 EndFunction
 
 ; =============================================================

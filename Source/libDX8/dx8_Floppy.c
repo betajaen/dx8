@@ -111,7 +111,7 @@ void Floppy_Interrupt()
   sFloppyOp_Track = Mmu_Get(REG_FPY_OP_TRACK);
   sFloppyOp_Src   = Fpy_CalculateTrackAddress(sFloppyOp_Track);
 
- // LOGF("Floppy Op!! %i", sFloppyOp);
+  LOGF("Floppy Op!! %i", sFloppyOp);
 
   Mmu_Set(REG_FPY_OP, 0x00);
 
@@ -119,6 +119,7 @@ void Floppy_Interrupt()
   {
     case 1: // IO_FPY_OP_READ_TRACK:
     {
+      int dst = sFloppyOp_Dst, src = sFloppyOp_Src, len = sFloppyOp_Len;
       while(sFloppyOp_Len)
       {
         Mmu_Set(sFloppyOp_Dst, sFloppy[sFloppyOp_Src]);
@@ -127,6 +128,9 @@ void Floppy_Interrupt()
         sFloppyOp_Len--;
       }
       sFloppyOp = 0;
+
+      LOGF("[Floppy] Read track $%8X to $%4X, Length = $%4X", src, dst, len);
+
       Fpy_Interrupt(IO_FPY_MSG_READ, false);
     }
     break;

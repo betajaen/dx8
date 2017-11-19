@@ -74,15 +74,19 @@ namespace DX8
       RJmpLt,
       RJmpZ,
       RJmpNotZ,
+      CallBranch,
+      JmpBranch,
       Int,
       Resume,
       Clc,
       Sec,
       Offset,
+      ROffset,
       dbr,
       dba,
       dbb,
       dbn,
+      dbo,
       COUNT
     }
 
@@ -140,15 +144,19 @@ namespace DX8
       "rjmp.lt",
       "rjmp.z",
       "rjmp.nz",
+      "bjmp",
+      "bcall",
       "int",
       "resume",
       "sec",
       "clc",
       "offset",
+      "roffset",
       "dbr",
       "dba",
       "dbb",
-      "dbn"
+      "dbn",
+      "dbo"
     };
 
     public enum Operand

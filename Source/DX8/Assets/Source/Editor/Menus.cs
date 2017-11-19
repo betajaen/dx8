@@ -350,7 +350,27 @@ namespace DX8
 
       List<byte> fd = new List<byte>(163840);
 
-      for(int i=0;i < 1024;i++)
+      int nbTracks = data.Length / 1024;
+
+      if (data.Length % 1024 > 0)
+      {
+        nbTracks++;
+      }
+
+      ushort address = 0x800;
+
+      for(int i=0;i < nbTracks;i++)
+      {
+        fd.Add(0x01);                           // Copy to Lower address
+        fd.Add((byte) (address & 0xFF));        // lo
+        fd.Add((byte) ((address >> 8) & 0xFF)); // hi
+      }
+
+      fd.Add(0x03); // Reset
+
+      int diff = 1024 - fd.Count;
+
+      for(int i=0;i < diff;i++)
       {
         fd.Add(0x00);
       }
