@@ -63,6 +63,8 @@ CONSTANT(IO_FPY_STATE_DISK         , 0x01)
 CONSTANT(IO_FPY_OP_READ_TRACK,     , 0x01)
 CONSTANT(IO_FPY_OP_WRITE_TRACK,    , 0x02)
 
+CONSTANT(IO_OP_KEY                 , 0x01)
+
 CONSTANT(MEM_CHIP_ADDR             , 0x0000)
 CONSTANT(MEM_CHIP_SIZE             , 0x0100)
 CONSTANT(MEM_PROGRAM_ADDR          , 0x0800)
@@ -79,129 +81,128 @@ CONSTANT(INTVEC_RESET              , 0x00)
 CONSTANT(INTVEC_HBLANK             , 0x01)
 CONSTANT(INTVEC_VBLANK             , 0x02)
 CONSTANT(INTVEC_FLOPPY             , 0x03)
+CONSTANT(INTVEC_IO                 , 0x04)
 
 CONSTANT(INTVEC_ADDR_RESET         , 0x0000 )
 CONSTANT(INTVEC_ADDR_HBLANK        , 0x0002 )
 CONSTANT(INTVEC_ADDR_VBLANK        , 0x0004 )
 CONSTANT(INTVEC_ADDR_FLOPPY        , 0x0006 )
+CONSTANT(INTVEC_ADDR_IO            , 0x0008 )
 
 INTERRUPT(INT_FLOPPY_OP, 0xD0, "Run a floppy operation");
 INTERRUPT(INT_GPUON, 0xFE, "Turn on the GPU")
 INTERRUPT(INT_RESET, 0xFF, "Soft Reset")
 
-KEY(0)
-KEY(1)
-KEY(2)
-KEY(3)
-KEY(4)
-KEY(5)
-KEY(6)
-KEY(7)
-KEY(8)
-KEY(9)
-KEY(Exclaim)
-KEY(DoubleQuote)
-KEY(Hash)
-KEY(PoundSign)
-KEY(Percentage)
-KEY(Ampersand)
-KEY(SingleQuote)
-KEY(LeftParentheses)
-KEY(RightParentheses)
-KEY(At)
-KEY(LowercaseA)
-KEY(LowercaseB)
-KEY(LowercaseC)
-KEY(LowercaseD)
-KEY(LowercaseE)
-KEY(LowercaseF)
-KEY(LowercaseG)
-KEY(LowercaseH)
-KEY(LowercaseI)
-KEY(LowercaseJ)
-KEY(LowercaseK)
-KEY(LowercaseL)
-KEY(LowercaseM)
-KEY(LowercaseN)
-KEY(LowercaseO)
-KEY(LowercaseP)
-KEY(LowercaseQ)
-KEY(LowercaseR)
-KEY(LowercaseS)
-KEY(LowercaseT)
-KEY(LowercaseU)
-KEY(LowercaseV)
-KEY(LowercaseW)
-KEY(LowercaseX)
-KEY(LowercaseY)
-KEY(LowercaseZ)
-KEY(UppercaseA)
-KEY(UppercaseB)
-KEY(UppercaseC)
-KEY(UppercaseD)
-KEY(UppercaseE)
-KEY(UppercaseF)
-KEY(UppercaseG)
-KEY(UppercaseH)
-KEY(UppercaseI)
-KEY(UppercaseJ)
-KEY(UppercaseK)
-KEY(UppercaseL)
-KEY(UppercaseM)
-KEY(UppercaseN)
-KEY(UppercaseO)
-KEY(UppercaseP)
-KEY(UppercaseQ)
-KEY(UppercaseR)
-KEY(UppercaseS)
-KEY(UppercaseT)
-KEY(UppercaseU)
-KEY(UppercaseV)
-KEY(UppercaseW)
-KEY(UppercaseX)
-KEY(UppercaseY)
-KEY(UppercaseZ)
-KEY(Plus)
-KEY(Minus)
-KEY(Multiply)
-KEY(Equals)
-KEY(Divide)
-KEY(Comma)
-KEY(Period)
-KEY(SemiColon)
-KEY(Space)
+KEY(0)                  // 0
+KEY(1)                  // 1
+KEY(2)                  // 2 
+KEY(3)                  // 3
+KEY(4)                  // 4
+KEY(5)                  // 5
+KEY(6)                  // 6
+KEY(7)                  // 7
+KEY(8)                  // 8
+KEY(9)                  // 9
+KEY(LowercaseA)         // a
+KEY(LowercaseB)         // b
+KEY(LowercaseC)         // c
+KEY(LowercaseD)         // d
+KEY(LowercaseE)         // e
+KEY(LowercaseF)         // f
+KEY(LowercaseG)         // g
+KEY(LowercaseH)         // h
+KEY(LowercaseI)         // i
+KEY(LowercaseJ)         // j
+KEY(LowercaseK)         // k
+KEY(LowercaseL)         // l
+KEY(LowercaseM)         // m
+KEY(LowercaseN)         // n
+KEY(LowercaseO)         // o
+KEY(LowercaseP)         // p
+KEY(LowercaseQ)         // q
+KEY(LowercaseR)         // r
+KEY(LowercaseS)         // s
+KEY(LowercaseT)         // t
+KEY(LowercaseU)         // u
+KEY(LowercaseV)         // v
+KEY(LowercaseW)         // w
+KEY(LowercaseX)         // x
+KEY(LowercaseY)         // y
+KEY(LowercaseZ)         // z
+KEY(UppercaseA)         // A
+KEY(UppercaseB)         // B
+KEY(UppercaseC)         // C
+KEY(UppercaseD)         // D
+KEY(UppercaseE)         // E
+KEY(UppercaseF)         // F
+KEY(UppercaseG)         // G
+KEY(UppercaseH)         // H
+KEY(UppercaseI)         // I
+KEY(UppercaseJ)         // J
+KEY(UppercaseK)         // K
+KEY(UppercaseL)         // L
+KEY(UppercaseM)         // M
+KEY(UppercaseN)         // N
+KEY(UppercaseO)         // O
+KEY(UppercaseP)         // P
+KEY(UppercaseQ)         // Q
+KEY(UppercaseR)         // R
+KEY(UppercaseS)         // S
+KEY(UppercaseT)         // T
+KEY(UppercaseU)         // U
+KEY(UppercaseV)         // V
+KEY(UppercaseW)         // W
+KEY(UppercaseX)         // X
+KEY(UppercaseY)         // Y
+KEY(UppercaseZ)         // Z
+KEY(Space)              //  
+KEY(Exclaim)            // !
+KEY(DoubleQuote)        // "
+KEY(Hash)               // #
+KEY(PoundSign)          // $
+KEY(Percentage)         // %
+KEY(Ampersand)          // &
+KEY(SingleQuote)        // '
+KEY(LeftParentheses)    // (
+KEY(RightParentheses)   // )
+KEY(At)                 // @
+KEY(Plus)               // +
+KEY(Minus)              // -
+KEY(Multiply)           // *
+KEY(Equals)             // =
+KEY(Divide)             // /
+KEY(Comma)              // ,
+KEY(Period)             // .
+KEY(SemiColon)          // ;
+KEY(LeftSquareBracket)  // [
+KEY(RightSquareBracket) // ]
+KEY(LeftBrace)          // {
+KEY(RightBrace)         // }
+KEY(QuestionMark)       // ?
+KEY(LeftAngleBracket)   // <
+KEY(RightAngleBracket)  // >
+KEY(Colon)              // :
 
-KEY(LeftSquareBracket)
-KEY(RightSquareBracket)
-KEY(LeftBrace)
-KEY(RightBrace)
-KEY(QuestionMark)
-KEY(LeftAngleBracket)
-KEY(RightAngleBracket)
-KEY(Colon)
-
-KEY(Break)
-KEY(Delete)
-KEY(Control)
-KEY(LeftArrow)
-KEY(RightArrow)
-KEY(UpArrow)
-KEY(DownArrow)
-KEY(CapsLock)
-KEY(LeftShift)
-KEY(RightShift)
-
-KEY(Reset)
-
-KEY(Function1)
-KEY(Function2)
-KEY(Function3)
-KEY(Function4)
-
-KEY(Program1)
-KEY(Program2)
-KEY(Program3)
-KEY(Program4)
+KEY(Return)             // ^
+KEY(Break)              // ^
+KEY(Reset)              // ^
+KEY(Delete)             // ^
+KEY(Function1)          // ^
+KEY(Function2)          // ^
+KEY(Function3)          // ^
+KEY(Function4)          // ^
+KEY(Program1)           // ^
+KEY(Program2)           // ^
+KEY(Program3)           // ^
+KEY(Program4)           // ^
+KEY(LeftArrow)          // ^
+KEY(RightArrow)         // ^
+KEY(UpArrow)            // ^
+KEY(DownArrow)          // ^
+KEY(CapsLock)           // ^
+KEY(Control)            // ^
+KEY(LeftShift)          // ^
+KEY(RightShift)         // ^
 
 KEYMOD(Shift)
 KEYMOD(Control)

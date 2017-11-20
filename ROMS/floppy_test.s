@@ -16,7 +16,7 @@ MAIN:
 
         set MemSet_Dst, MEM_GFX_PLANE0
         set MemSet_Len, MEM_GFX_PLANE_SIZE * 1
-        set MemSet_Val, ' '
+        set MemSet_Val, 'x'
         call Fn_MemSet
 
         dbo 'l'

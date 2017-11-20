@@ -32,6 +32,121 @@
 #include "dx8.h"
 #include "dx8_Scancodes.inc"
 
+#include "log_c/src/log.h"
+
+const char* kKeyStr[] = {
+  "0",
+  "1",
+  "2",
+  "3",
+  "4",
+  "5",
+  "6",
+  "7",
+  "8",
+  "9",
+  "a",
+  "b",
+  "c",
+  "d",
+  "e",
+  "f",
+  "g",
+  "h",
+  "i",
+  "j",
+  "k",
+  "l",
+  "m",
+  "n",
+  "o",
+  "p",
+  "q",
+  "r",
+  "s",
+  "t",
+  "u",
+  "v",
+  "w",
+  "x",
+  "y",
+  "z",
+  "A",
+  "B",
+  "C",
+  "D",
+  "E",
+  "F",
+  "G",
+  "H",
+  "I",
+  "J",
+  "K",
+  "L",
+  "M",
+  "N",
+  "O",
+  "P",
+  "Q",
+  "R",
+  "S",
+  "T",
+  "U",
+  "V",
+  "W",
+  "X",
+  "Y",
+  "Z",
+  " ",
+  "!",
+  "\"",
+  "#",
+  "$",
+  "%",
+  "&",
+  "\'",
+  "(",
+  ")",
+  "@",
+  "+",
+  "-",
+  "*",
+  "=",
+  "/",
+  ",",
+  ".",
+  ";",
+  "[",
+  "]",
+  "{",
+  "}",
+  "?",
+  "<",
+  ">",
+  ":",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+  "^",
+};
+
+
 #define MAX_KEY_EVENTS 4
 
 Byte sState[KEY_COUNT + 1];
@@ -39,6 +154,14 @@ Byte sEvents[MAX_KEY_EVENTS];
 
 void Keyboard_Setup()
 {
+  for(int i=0;i < KEY_COUNT+1;i++)
+  {
+    sState[i] = 0;
+  }
+  for (int i = 0; i < MAX_KEY_EVENTS + 1; i++)
+  {
+    sEvents[i] = 0;
+  }
 }
 
 void Keyboard_Teardown()
@@ -59,7 +182,10 @@ void Keyboard_PushEvent(Byte key)
 
 void Keyboard_ClearEvents(Byte key)
 {
-  
+  for (int i = 0; i < MAX_KEY_EVENTS; i++)
+  {
+    sEvents[i] = 0;
+  }
 }
 
 void Keyboard_ReceiveKeyUp(int key)
@@ -67,7 +193,10 @@ void Keyboard_ReceiveKeyUp(int key)
   if (key >= 1 && key < (KEY_COUNT + 1))
   {
     sState[key] = 0;
+    Keyboard_PushEvent(key);
   }
+
+  LOGF("KeyUp = $%2X: %s", key, kKeyStr[key]);
 }
 
 void Keyboard_ReceiveKeyDown(int key)
@@ -75,11 +204,22 @@ void Keyboard_ReceiveKeyDown(int key)
   if (key >= 1 && key < (KEY_COUNT + 1))
   {
     sState[key] = 1;
+    Keyboard_PushEvent(key);
   }
+
+  LOGF("KeyDown = $%2X: %s", key, kKeyStr[key]);
 }
 
 void Keyboard_Tick()
 {
-  
+  for (int i = 0; i < MAX_KEY_EVENTS; i++)
+  {
+    Byte key = sEvents[i];
+    if (key == 0)
+      continue;
+
+    Io_Interrupt(IO_OP_KEY, key, sState[key]);
+    sEvents[i] = 0;
+  }
 }
 

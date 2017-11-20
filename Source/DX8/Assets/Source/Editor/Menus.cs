@@ -3,6 +3,7 @@ using UnityEditor;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DX8
 {
@@ -36,7 +37,7 @@ namespace DX8
       List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
       Dictionary<string, int> registers = OpcodeCompiler.Generate_Registers(Config);
       Dictionary<string, int> constants = OpcodeCompiler.Generate_Constants(Config);
-      Dictionary<string, int> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
+      Dictionary<string, KeyValuePair<int, string>> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
       Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Config);
 
       System.IO.File.WriteAllText(OpcodesInc, OpcodeCompiler.MakeMacros(ops, registers, constants, interrupts, scancodes));
@@ -48,7 +49,7 @@ namespace DX8
     {
       Dictionary<string, int> registers = OpcodeCompiler.Generate_Registers(Config);
       Dictionary<string, int> constants = OpcodeCompiler.Generate_Constants(Config);
-      Dictionary<string, int> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
+      Dictionary<string, KeyValuePair<int, string>> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
       Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Config);
 
       System.IO.File.WriteAllText(Registers, OpcodeCompiler.MakeRegisters(registers));
@@ -58,7 +59,70 @@ namespace DX8
 
       Debug.Log("Wrote dx__??.inc");
     }
+        static string ToLiteral(string input) {
+        StringBuilder literal = new StringBuilder(input.Length + 2);
+        foreach (var c in input) {
+            switch (c) {
+                case '\'': literal.Append(@"\'"); break;
+                case '\"': literal.Append("\\\""); break;
+                case '\\': literal.Append(@"\\"); break;
+                case '\0': literal.Append(@"\0"); break;
+                case '\a': literal.Append(@"\a"); break;
+                case '\b': literal.Append(@"\b"); break;
+                case '\f': literal.Append(@"\f"); break;
+                case '\n': literal.Append(@"\n"); break;
+                case '\r': literal.Append(@"\r"); break;
+                case '\t': literal.Append(@"\t"); break;
+                case '\v': literal.Append(@"\v"); break;
+                default:
+                    // ASCII printable character
+                    if (c >= 0x20 && c <= 0x7e) {
+                        literal.Append(c);
+                    // As UTF16 escaped character
+                    } else {
+                        literal.Append(@"\u");
+                        literal.Append(((int)c).ToString("x4"));
+                    }
+                    break;
+            }
+        }
+        return literal.ToString();
+    }
+
+    [MenuItem("DX8/Scancodes to C string array")]
+    public static void ScanCodesToCStringArray()
+    {
+      Dictionary<string, KeyValuePair<int, string>> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
+      StringBuilder sb = new StringBuilder();
+
+      foreach(var sc in scancodes)
+      {
+        sb.AppendFormat("\"{0}\",", ToLiteral(sc.Value.Value));
+        sb.AppendLine();
+      }
+      Debug.Log(sb.ToString());
+    }
     
+    [MenuItem("DX8/Scancodes to Assembly db array")]
+    public static void ScanCodesToAssemblyDbArray()
+    {
+      Dictionary<string, KeyValuePair<int, string>> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
+      StringBuilder sb = new StringBuilder();
+
+      foreach(var sc in scancodes)
+      {
+        char m = sc.Value.Value[0];
+        int n = 0x7F;
+        
+        if (m != '^')
+          n = (int) m;
+
+        sb.AppendFormat("db ${0:X2} ; ${1:X2} {2}", n, sc.Value.Key, sc.Key);
+        sb.AppendLine();
+      }
+      Debug.Log(sb.ToString());
+    }
+
     [MenuItem("DX8/Decompile")]
     public static void Decompile()
     {
@@ -73,7 +137,7 @@ namespace DX8
     [MenuItem("DX8/Generate Cs Api")]
     public static void GenerateApi()
     {
-      Dictionary<string, int> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
+      Dictionary<string, KeyValuePair<int, string>> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
       System.IO.File.WriteAllText(ApiCsPath, OpcodeCompiler.GenerateCsApi(ApiPath, scancodes));
     }
 

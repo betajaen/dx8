@@ -121,9 +121,16 @@ namespace DX8
     public  bool HigherBank = false;
     public  int  InspectAddress = 0;
     
+    public enum KeyMod
+    {
+      None,
+      Shift,
+      Control
+    }
+
     public class KeyState
     {
-      public KeyState(KeyCode main, KeyCode modifier)
+      public KeyState(KeyCode main, KeyMod modifier)
       {
         mainKey = main;
         modifierKey = modifier;
@@ -137,27 +144,28 @@ namespace DX8
 
         bool mainState = Input.GetKey(mainKey);
 
-        if (modifierKey == KeyCode.None)
+        bool shiftDown = Input.GetKey(KeyCode.LeftShift) | Input.GetKey(KeyCode.RightShift);
+        bool controlDown = Input.GetKey(KeyCode.LeftControl) | Input.GetKey(KeyCode.RightControl);
+
+        if (modifierKey == KeyMod.None && !shiftDown && !controlDown)
         {
           down = mainState;
         }
-        else if (modifierKey == KeyCode.LeftShift || modifierKey == KeyCode.RightShift)
+        else if (modifierKey == KeyMod.Shift && shiftDown && !controlDown)
         {
-          bool modDown = Input.GetKey(KeyCode.LeftShift) | Input.GetKey(KeyCode.RightShift);
-
-          down = (mainState && modDown);
+          down = mainState;
         }
-        else if (modifierKey == KeyCode.LeftControl || modifierKey == KeyCode.RightControl)
+        else if (modifierKey == KeyMod.Control && !shiftDown && controlDown)
         {
-          bool modDown = Input.GetKey(KeyCode.LeftControl) | Input.GetKey(KeyCode.RightControl);
 
-          down = (mainState && modDown);
+          down = mainState;
         }
 
         return wasDown != down;
       }
 
-      public KeyCode mainKey, modifierKey;
+      public KeyCode mainKey;
+      public KeyMod modifierKey;
       public bool wasDown, down;
 
       public bool Released {
@@ -180,7 +188,7 @@ namespace DX8
 
     }
 
-    public KeyState[] KeyStates = new KeyState[Api.Key_COUNT];
+    public KeyState[] KeyStates = new KeyState[Api.Key_COUNT + 1];
 
 #if UNITY_EDITOR
     static System.IO.FileSystemWatcher DllWatcher;
@@ -307,7 +315,6 @@ namespace DX8
       {
         if (IsRunning)
         {
-          Debug.Log(Time.fixedDeltaTime);
           RunOnce(Time.fixedDeltaTime);
         }
       }
@@ -320,8 +327,14 @@ namespace DX8
         ReloadNeeded = false;
         Reload();
         
-        SendKeys();
+      }
 
+      if (IsOpen)
+      {
+        if (IsRunning)
+        {
+          SendKeys();
+        }
       }
     }
 
@@ -565,130 +578,146 @@ namespace DX8
     
     void SetupKeys()
     {
-      KeyStates[Api.Key_0]    = new KeyState(KeyCode.Alpha0, KeyCode.None);
-      KeyStates[Api.Key_1]    = new KeyState(KeyCode.Alpha1, KeyCode.None);
-      KeyStates[Api.Key_2]    = new KeyState(KeyCode.Alpha2, KeyCode.None);
-      KeyStates[Api.Key_3]    = new KeyState(KeyCode.Alpha3, KeyCode.None);
-      KeyStates[Api.Key_4]    = new KeyState(KeyCode.Alpha4, KeyCode.None);
-      KeyStates[Api.Key_5]    = new KeyState(KeyCode.Alpha5, KeyCode.None);
-      KeyStates[Api.Key_6]    = new KeyState(KeyCode.Alpha6, KeyCode.None);
-      KeyStates[Api.Key_7]    = new KeyState(KeyCode.Alpha7, KeyCode.None);
-      KeyStates[Api.Key_8]    = new KeyState(KeyCode.Alpha8, KeyCode.None);
-      KeyStates[Api.Key_9]    = new KeyState(KeyCode.Alpha9, KeyCode.None);
+      KeyStates[Api.Key_1]    = new KeyState(KeyCode.Alpha1, KeyMod.None);
+      KeyStates[Api.Key_2]    = new KeyState(KeyCode.Alpha2, KeyMod.None);
+      KeyStates[Api.Key_3]    = new KeyState(KeyCode.Alpha3, KeyMod.None);
+      KeyStates[Api.Key_4]    = new KeyState(KeyCode.Alpha4, KeyMod.None);
+      KeyStates[Api.Key_5]    = new KeyState(KeyCode.Alpha5, KeyMod.None);
+      KeyStates[Api.Key_6]    = new KeyState(KeyCode.Alpha6, KeyMod.None);
+      KeyStates[Api.Key_7]    = new KeyState(KeyCode.Alpha7, KeyMod.None);
+      KeyStates[Api.Key_8]    = new KeyState(KeyCode.Alpha8, KeyMod.None);
+      KeyStates[Api.Key_9]    = new KeyState(KeyCode.Alpha9, KeyMod.None);
+      KeyStates[Api.Key_0]    = new KeyState(KeyCode.Alpha0, KeyMod.None);
       
-      KeyStates[Api.Key_Exclaim]            = new KeyState(KeyCode.Exclaim, KeyCode.None);
-      KeyStates[Api.Key_DoubleQuote]        = new KeyState(KeyCode.DoubleQuote, KeyCode.None);
-      KeyStates[Api.Key_Hash]               = new KeyState(KeyCode.Hash, KeyCode.None);
-      KeyStates[Api.Key_PoundSign]          = new KeyState(KeyCode.Dollar, KeyCode.None);
-      KeyStates[Api.Key_Percentage]         = new KeyState(KeyCode.Alpha5, KeyCode.LeftShift);
-      KeyStates[Api.Key_Ampersand]          = new KeyState(KeyCode.Ampersand, KeyCode.None);
-      KeyStates[Api.Key_SingleQuote]        = new KeyState(KeyCode.Quote, KeyCode.None);
-      KeyStates[Api.Key_LeftParentheses]    = new KeyState(KeyCode.LeftParen, KeyCode.None);
-      KeyStates[Api.Key_RightParentheses]   = new KeyState(KeyCode.RightParen, KeyCode.None);
-      KeyStates[Api.Key_At]                 = new KeyState(KeyCode.At, KeyCode.None);
+      KeyStates[Api.Key_Exclaim]            = new KeyState(KeyCode.Alpha1, KeyMod.Shift);
+      KeyStates[Api.Key_DoubleQuote]        = new KeyState(KeyCode.Alpha2, KeyMod.Shift);
+      KeyStates[Api.Key_Hash]               = new KeyState(KeyCode.Alpha3, KeyMod.Shift);
+      KeyStates[Api.Key_PoundSign]          = new KeyState(KeyCode.Alpha4, KeyMod.Shift);
+      KeyStates[Api.Key_Percentage]         = new KeyState(KeyCode.Alpha5, KeyMod.Shift);
+      KeyStates[Api.Key_Ampersand]          = new KeyState(KeyCode.Alpha6, KeyMod.Shift);
+      KeyStates[Api.Key_SingleQuote]        = new KeyState(KeyCode.Alpha7, KeyMod.Shift);
+      KeyStates[Api.Key_LeftParentheses]    = new KeyState(KeyCode.Alpha8, KeyMod.Shift);
+      KeyStates[Api.Key_RightParentheses]   = new KeyState(KeyCode.Alpha9, KeyMod.Shift);
+      KeyStates[Api.Key_At]                 = new KeyState(KeyCode.Alpha0, KeyMod.Shift);
 
-      KeyStates[Api.Key_LowercaseA]    = new KeyState(KeyCode.A, KeyCode.None);
-      KeyStates[Api.Key_LowercaseB]    = new KeyState(KeyCode.B, KeyCode.None);
-      KeyStates[Api.Key_LowercaseC]    = new KeyState(KeyCode.C, KeyCode.None);
-      KeyStates[Api.Key_LowercaseD]    = new KeyState(KeyCode.D, KeyCode.None);
-      KeyStates[Api.Key_LowercaseE]    = new KeyState(KeyCode.E, KeyCode.None);
-      KeyStates[Api.Key_LowercaseF]    = new KeyState(KeyCode.F, KeyCode.None);
-      KeyStates[Api.Key_LowercaseG]    = new KeyState(KeyCode.G, KeyCode.None);
-      KeyStates[Api.Key_LowercaseH]    = new KeyState(KeyCode.H, KeyCode.None);
-      KeyStates[Api.Key_LowercaseI]    = new KeyState(KeyCode.I, KeyCode.None);
-      KeyStates[Api.Key_LowercaseJ]    = new KeyState(KeyCode.J, KeyCode.None);
-      KeyStates[Api.Key_LowercaseK]    = new KeyState(KeyCode.K, KeyCode.None);
-      KeyStates[Api.Key_LowercaseL]    = new KeyState(KeyCode.L, KeyCode.None);
-      KeyStates[Api.Key_LowercaseM]    = new KeyState(KeyCode.M, KeyCode.None);
-      KeyStates[Api.Key_LowercaseN]    = new KeyState(KeyCode.N, KeyCode.None);
-      KeyStates[Api.Key_LowercaseO]    = new KeyState(KeyCode.O, KeyCode.None);
-      KeyStates[Api.Key_LowercaseP]    = new KeyState(KeyCode.P, KeyCode.None);
-      KeyStates[Api.Key_LowercaseQ]    = new KeyState(KeyCode.Q, KeyCode.None);
-      KeyStates[Api.Key_LowercaseR]    = new KeyState(KeyCode.R, KeyCode.None);
-      KeyStates[Api.Key_LowercaseS]    = new KeyState(KeyCode.S, KeyCode.None);
-      KeyStates[Api.Key_LowercaseT]    = new KeyState(KeyCode.T, KeyCode.None);
-      KeyStates[Api.Key_LowercaseU]    = new KeyState(KeyCode.U, KeyCode.None);
-      KeyStates[Api.Key_LowercaseV]    = new KeyState(KeyCode.V, KeyCode.None);
-      KeyStates[Api.Key_LowercaseW]    = new KeyState(KeyCode.W, KeyCode.None);
-      KeyStates[Api.Key_LowercaseX]    = new KeyState(KeyCode.X, KeyCode.None);
-      KeyStates[Api.Key_LowercaseY]    = new KeyState(KeyCode.Y, KeyCode.None);
-      KeyStates[Api.Key_LowercaseZ]    = new KeyState(KeyCode.Z, KeyCode.None);
+      KeyStates[Api.Key_LowercaseA]    = new KeyState(KeyCode.A, KeyMod.None);
+      KeyStates[Api.Key_LowercaseB]    = new KeyState(KeyCode.B, KeyMod.None);
+      KeyStates[Api.Key_LowercaseC]    = new KeyState(KeyCode.C, KeyMod.None);
+      KeyStates[Api.Key_LowercaseD]    = new KeyState(KeyCode.D, KeyMod.None);
+      KeyStates[Api.Key_LowercaseE]    = new KeyState(KeyCode.E, KeyMod.None);
+      KeyStates[Api.Key_LowercaseF]    = new KeyState(KeyCode.F, KeyMod.None);
+      KeyStates[Api.Key_LowercaseG]    = new KeyState(KeyCode.G, KeyMod.None);
+      KeyStates[Api.Key_LowercaseH]    = new KeyState(KeyCode.H, KeyMod.None);
+      KeyStates[Api.Key_LowercaseI]    = new KeyState(KeyCode.I, KeyMod.None);
+      KeyStates[Api.Key_LowercaseJ]    = new KeyState(KeyCode.J, KeyMod.None);
+      KeyStates[Api.Key_LowercaseK]    = new KeyState(KeyCode.K, KeyMod.None);
+      KeyStates[Api.Key_LowercaseL]    = new KeyState(KeyCode.L, KeyMod.None);
+      KeyStates[Api.Key_LowercaseM]    = new KeyState(KeyCode.M, KeyMod.None);
+      KeyStates[Api.Key_LowercaseN]    = new KeyState(KeyCode.N, KeyMod.None);
+      KeyStates[Api.Key_LowercaseO]    = new KeyState(KeyCode.O, KeyMod.None);
+      KeyStates[Api.Key_LowercaseP]    = new KeyState(KeyCode.P, KeyMod.None);
+      KeyStates[Api.Key_LowercaseQ]    = new KeyState(KeyCode.Q, KeyMod.None);
+      KeyStates[Api.Key_LowercaseR]    = new KeyState(KeyCode.R, KeyMod.None);
+      KeyStates[Api.Key_LowercaseS]    = new KeyState(KeyCode.S, KeyMod.None);
+      KeyStates[Api.Key_LowercaseT]    = new KeyState(KeyCode.T, KeyMod.None);
+      KeyStates[Api.Key_LowercaseU]    = new KeyState(KeyCode.U, KeyMod.None);
+      KeyStates[Api.Key_LowercaseV]    = new KeyState(KeyCode.V, KeyMod.None);
+      KeyStates[Api.Key_LowercaseW]    = new KeyState(KeyCode.W, KeyMod.None);
+      KeyStates[Api.Key_LowercaseX]    = new KeyState(KeyCode.X, KeyMod.None);
+      KeyStates[Api.Key_LowercaseY]    = new KeyState(KeyCode.Y, KeyMod.None);
+      KeyStates[Api.Key_LowercaseZ]    = new KeyState(KeyCode.Z, KeyMod.None);
       
-      KeyStates[Api.Key_UppercaseA]    = new KeyState(KeyCode.A, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseB]    = new KeyState(KeyCode.B, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseC]    = new KeyState(KeyCode.C, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseD]    = new KeyState(KeyCode.D, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseE]    = new KeyState(KeyCode.E, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseF]    = new KeyState(KeyCode.F, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseG]    = new KeyState(KeyCode.G, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseH]    = new KeyState(KeyCode.H, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseI]    = new KeyState(KeyCode.I, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseJ]    = new KeyState(KeyCode.J, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseK]    = new KeyState(KeyCode.K, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseL]    = new KeyState(KeyCode.L, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseM]    = new KeyState(KeyCode.M, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseN]    = new KeyState(KeyCode.N, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseO]    = new KeyState(KeyCode.O, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseP]    = new KeyState(KeyCode.P, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseQ]    = new KeyState(KeyCode.Q, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseR]    = new KeyState(KeyCode.R, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseS]    = new KeyState(KeyCode.S, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseT]    = new KeyState(KeyCode.T, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseU]    = new KeyState(KeyCode.U, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseV]    = new KeyState(KeyCode.V, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseW]    = new KeyState(KeyCode.W, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseX]    = new KeyState(KeyCode.X, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseY]    = new KeyState(KeyCode.Y, KeyCode.LeftShift);
-      KeyStates[Api.Key_UppercaseZ]    = new KeyState(KeyCode.Z, KeyCode.LeftShift);
+      KeyStates[Api.Key_UppercaseA]    = new KeyState(KeyCode.A, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseB]    = new KeyState(KeyCode.B, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseC]    = new KeyState(KeyCode.C, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseD]    = new KeyState(KeyCode.D, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseE]    = new KeyState(KeyCode.E, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseF]    = new KeyState(KeyCode.F, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseG]    = new KeyState(KeyCode.G, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseH]    = new KeyState(KeyCode.H, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseI]    = new KeyState(KeyCode.I, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseJ]    = new KeyState(KeyCode.J, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseK]    = new KeyState(KeyCode.K, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseL]    = new KeyState(KeyCode.L, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseM]    = new KeyState(KeyCode.M, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseN]    = new KeyState(KeyCode.N, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseO]    = new KeyState(KeyCode.O, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseP]    = new KeyState(KeyCode.P, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseQ]    = new KeyState(KeyCode.Q, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseR]    = new KeyState(KeyCode.R, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseS]    = new KeyState(KeyCode.S, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseT]    = new KeyState(KeyCode.T, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseU]    = new KeyState(KeyCode.U, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseV]    = new KeyState(KeyCode.V, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseW]    = new KeyState(KeyCode.W, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseX]    = new KeyState(KeyCode.X, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseY]    = new KeyState(KeyCode.Y, KeyMod.Shift);
+      KeyStates[Api.Key_UppercaseZ]    = new KeyState(KeyCode.Z, KeyMod.Shift);
 
       
-      KeyStates[Api.Key_Plus]          = new KeyState(KeyCode.Plus, KeyCode.None);
-      KeyStates[Api.Key_Minus]         = new KeyState(KeyCode.Minus, KeyCode.None);
-      KeyStates[Api.Key_Multiply]      = new KeyState(KeyCode.Asterisk, KeyCode.None);
-      KeyStates[Api.Key_Equals]        = new KeyState(KeyCode.Equals, KeyCode.None);
-      KeyStates[Api.Key_Comma]         = new KeyState(KeyCode.Comma, KeyCode.None);
-      KeyStates[Api.Key_Period]        = new KeyState(KeyCode.Period, KeyCode.None);
-      KeyStates[Api.Key_SemiColon]     = new KeyState(KeyCode.Semicolon, KeyCode.None);
+      KeyStates[Api.Key_Plus]          = new KeyState(KeyCode.Plus, KeyMod.None);
+      KeyStates[Api.Key_Minus]         = new KeyState(KeyCode.Minus, KeyMod.None);
+      KeyStates[Api.Key_Multiply]      = new KeyState(KeyCode.Asterisk, KeyMod.None);
+      KeyStates[Api.Key_Equals]        = new KeyState(KeyCode.Equals, KeyMod.None);
+      KeyStates[Api.Key_Comma]         = new KeyState(KeyCode.Comma, KeyMod.None);
+      KeyStates[Api.Key_Period]        = new KeyState(KeyCode.Period, KeyMod.None);
+      KeyStates[Api.Key_SemiColon]     = new KeyState(KeyCode.Semicolon, KeyMod.None);
 
-      KeyStates[Api.Key_Space]         = new KeyState(KeyCode.Space, KeyCode.None);
+      KeyStates[Api.Key_Space]         = new KeyState(KeyCode.Space, KeyMod.None);
       
-      KeyStates[Api.Key_LeftSquareBracket]     = new KeyState(KeyCode.LeftBracket, KeyCode.None);
-      KeyStates[Api.Key_RightSquareBracket]    = new KeyState(KeyCode.RightBracket, KeyCode.None);
-      KeyStates[Api.Key_LeftBrace]             = new KeyState(KeyCode.LeftBracket, KeyCode.LeftShift);
-      KeyStates[Api.Key_RightBrace]            = new KeyState(KeyCode.RightBracket, KeyCode.LeftShift);
-      KeyStates[Api.Key_QuestionMark]          = new KeyState(KeyCode.Question, KeyCode.None);
-      KeyStates[Api.Key_LeftAngleBracket]      = new KeyState(KeyCode.Less, KeyCode.None);
-      KeyStates[Api.Key_RightAngleBracket]     = new KeyState(KeyCode.Greater, KeyCode.None);
-      KeyStates[Api.Key_Colon]                 = new KeyState(KeyCode.Colon, KeyCode.None);
+      KeyStates[Api.Key_LeftSquareBracket]     = new KeyState(KeyCode.LeftBracket, KeyMod.None);
+      KeyStates[Api.Key_RightSquareBracket]    = new KeyState(KeyCode.RightBracket, KeyMod.None);
+      KeyStates[Api.Key_LeftBrace]             = new KeyState(KeyCode.LeftBracket, KeyMod.Shift);
+      KeyStates[Api.Key_RightBrace]            = new KeyState(KeyCode.RightBracket, KeyMod.Shift);
+      KeyStates[Api.Key_QuestionMark]          = new KeyState(KeyCode.Question, KeyMod.None);
+      KeyStates[Api.Key_LeftAngleBracket]      = new KeyState(KeyCode.Less, KeyMod.None);
+      KeyStates[Api.Key_RightAngleBracket]     = new KeyState(KeyCode.Greater, KeyMod.None);
+      KeyStates[Api.Key_Colon]                 = new KeyState(KeyCode.Colon, KeyMod.None);
+      
+      KeyStates[Api.Key_Return]                = new KeyState(KeyCode.Return, KeyMod.None);
+      KeyStates[Api.Key_Break]                 = new KeyState(KeyCode.Escape, KeyMod.None);
+      KeyStates[Api.Key_Reset]                 = new KeyState(KeyCode.Escape, KeyMod.Control);
 
-      KeyStates[Api.Key_Break]                 = new KeyState(KeyCode.Escape, KeyCode.None);
-      KeyStates[Api.Key_Delete]                = new KeyState(KeyCode.Backspace, KeyCode.None);
-      KeyStates[Api.Key_Control]               = new KeyState(KeyCode.LeftControl, KeyCode.None);
-      KeyStates[Api.Key_LeftArrow]             = new KeyState(KeyCode.LeftArrow, KeyCode.None);
-      KeyStates[Api.Key_RightArrow]            = new KeyState(KeyCode.RightArrow, KeyCode.None);
-      KeyStates[Api.Key_UpArrow]               = new KeyState(KeyCode.UpArrow, KeyCode.None);
-      KeyStates[Api.Key_DownArrow]             = new KeyState(KeyCode.DownArrow, KeyCode.None);
-      KeyStates[Api.Key_CapsLock]              = new KeyState(KeyCode.Semicolon, KeyCode.None);
-      KeyStates[Api.Key_LeftShift]             = new KeyState(KeyCode.LeftShift, KeyCode.None);
-      KeyStates[Api.Key_RightShift]            = new KeyState(KeyCode.RightShift, KeyCode.None);
-      KeyStates[Api.Key_Reset]                 = new KeyState(KeyCode.Escape, KeyCode.LeftControl);
-      KeyStates[Api.Key_Function1]             = new KeyState(KeyCode.F1, KeyCode.None);
-      KeyStates[Api.Key_Function2]             = new KeyState(KeyCode.F2, KeyCode.None);
-      KeyStates[Api.Key_Function3]             = new KeyState(KeyCode.F3, KeyCode.None);
-      KeyStates[Api.Key_Function4]             = new KeyState(KeyCode.F4, KeyCode.None);
-      KeyStates[Api.Key_Program1]              = new KeyState(KeyCode.F1, KeyCode.LeftControl);
-      KeyStates[Api.Key_Program2]              = new KeyState(KeyCode.F2, KeyCode.LeftControl);
-      KeyStates[Api.Key_Program3]              = new KeyState(KeyCode.F3, KeyCode.LeftControl);
-      KeyStates[Api.Key_Program4]              = new KeyState(KeyCode.F4, KeyCode.LeftControl);
-
-
+      KeyStates[Api.Key_Delete]                = new KeyState(KeyCode.Backspace, KeyMod.None);
+      KeyStates[Api.Key_Control]               = new KeyState(KeyCode.LeftControl, KeyMod.None);
+      KeyStates[Api.Key_LeftArrow]             = new KeyState(KeyCode.LeftArrow, KeyMod.None);
+      KeyStates[Api.Key_RightArrow]            = new KeyState(KeyCode.RightArrow, KeyMod.None);
+      KeyStates[Api.Key_UpArrow]               = new KeyState(KeyCode.UpArrow, KeyMod.None);
+      KeyStates[Api.Key_DownArrow]             = new KeyState(KeyCode.DownArrow, KeyMod.None);
+      KeyStates[Api.Key_CapsLock]              = new KeyState(KeyCode.Semicolon, KeyMod.None);
+      KeyStates[Api.Key_LeftShift]             = new KeyState(KeyCode.LeftShift, KeyMod.None);
+      KeyStates[Api.Key_RightShift]            = new KeyState(KeyCode.RightShift, KeyMod.None);
+      KeyStates[Api.Key_Function1]             = new KeyState(KeyCode.F1, KeyMod.None);
+      KeyStates[Api.Key_Function2]             = new KeyState(KeyCode.F2, KeyMod.None);
+      KeyStates[Api.Key_Function3]             = new KeyState(KeyCode.F3, KeyMod.None);
+      KeyStates[Api.Key_Function4]             = new KeyState(KeyCode.F4, KeyMod.None);
+      KeyStates[Api.Key_Program1]              = new KeyState(KeyCode.F1, KeyMod.Control);
+      KeyStates[Api.Key_Program2]              = new KeyState(KeyCode.F2, KeyMod.Control);
+      KeyStates[Api.Key_Program3]              = new KeyState(KeyCode.F3, KeyMod.Control);
+      KeyStates[Api.Key_Program4]              = new KeyState(KeyCode.F4, KeyMod.Control);
+      
     }
 
     void SendKeys()
     {
-      for(int i=0;i < KeyStates.Length;i++)
+      for(int ii=0;ii < KeyStates.Length;ii++)
       {
-        
+        KeyState state = KeyStates[ii];
+        if (state== null)
+        {
+          
+           continue;
+        }
+
+        if (state.Update())
+        {
+          Debug.LogFormat("{0}", ii);
+
+          if (state.Released)
+            Library.Call(Api.KeyUp, ii);
+          else if (state.Pressed)
+            Library.Call(Api.KeyDown, ii);
+        }
       }
     }
 

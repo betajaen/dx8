@@ -63,6 +63,9 @@ int  Gpu_GetTimer();
 
 Byte Program_Get(Word address);
 
+void Keyboard_ReceiveKeyUp(int key);
+void Keyboard_ReceiveKeyDown(int key);
+
 FILE* logFp;
 
 EXPORT int Initialise()
@@ -205,6 +208,12 @@ EXPORT int Call(int name, int value)
       return 0;
     case Api_RemoveDisk:
       Fpy_RemoveDisk();
+      return 0;
+    case Api_KeyUp:
+      Keyboard_ReceiveKeyUp(value);
+      return 0;
+    case Api_KeyDown:
+      Keyboard_ReceiveKeyDown(value);
       return 0;
   }
 

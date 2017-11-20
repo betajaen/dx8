@@ -35,6 +35,7 @@
 #define SLOWDOWN_RATE 1
 
 void Gpu_Clock();
+void Keyboard_Tick();
 
 inline void ClockOnce()
 {
@@ -58,6 +59,11 @@ int Clock(int ms)
     for (int ii = 0; ii < count; ii++)
     {
       ClockOnce();
+
+      if ((ii % 256) == 0)
+      {
+        Keyboard_Tick();
+      }
     }
   }
 

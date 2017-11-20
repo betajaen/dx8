@@ -118,6 +118,7 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 
 #define DO_OP_ADD(R0, R1)           R0 = FlagsOp(R0 + R1);             REG_PC += Opf_Single;
 #define DO_OP_ADC(R0, R1)           R0 = ADC(R0, R1);                  REG_PC += Opf_Single;
+#define DO_OP_ADDW(R0, R1)          R0 = FlagsOpW(R0 + R1);            REG_PC += Opf_Single;
 
 #define DO_OP_ADD_IMM(R0)           R0 = FlagsOp(R0 + REG_IMM);        REG_PC += Opf_Byte;
 #define DO_OP_ADC_IMM(R0)           R0 = ADC(R0, REG_IMM);             REG_PC += Opf_Byte;

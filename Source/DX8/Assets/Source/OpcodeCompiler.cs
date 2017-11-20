@@ -312,7 +312,7 @@ namespace DX8
 
     }
 
-    public static String GenerateCsApi(String apiPath, Dictionary<string, int> scancodes)
+    public static String GenerateCsApi(String apiPath, Dictionary<string, KeyValuePair<int, string>> scancodes)
     {
       String[] lines = System.IO.File.ReadAllLines(apiPath);
       int lineLength = lines.Length;
@@ -334,7 +334,7 @@ namespace DX8
 
       foreach(var sc in scancodes)
       {
-          sb.AppendFormat("  public const int Key_{0} = {1};", sc.Key, sc.Value);
+          sb.AppendFormat("  public const int Key_{0} = {1};", sc.Key, sc.Value.Key);
           sb.AppendLine();
       }
 
@@ -464,7 +464,7 @@ namespace DX8
     }
 
 
-    public static String MakeMacros(List<Op> opcodes, Dictionary<string, int> registers, Dictionary<string, int> constants, Dictionary<string, KeyValuePair<int, string>> interrupts, Dictionary<string, int> scancodes)
+    public static String MakeMacros(List<Op> opcodes, Dictionary<string, int> registers, Dictionary<string, int> constants, Dictionary<string, KeyValuePair<int, string>> interrupts, Dictionary<string, KeyValuePair<int, string>> scancodes)
     {
       System.Text.StringBuilder sb = new System.Text.StringBuilder(4096);
       
@@ -511,7 +511,7 @@ namespace DX8
 
       foreach(var scancode in scancodes)
       {
-        sb.AppendFormat("KEY_{0} = ${1:X2}", scancode.Key, scancode.Value);
+        sb.AppendFormat("KEY_{0} = ${1:X2}", scancode.Key, scancode.Value.Key);
         sb.AppendLine();
       }
       
@@ -674,7 +674,7 @@ namespace DX8
       return sb.ToString();
     }
     
-    public static String MakeScancodes(Dictionary<string, int> scancodes)
+    public static String MakeScancodes(Dictionary<string, KeyValuePair<int, string>> scancodes)
     {
       System.Text.StringBuilder sb = new System.Text.StringBuilder(4096);
       
@@ -684,7 +684,7 @@ namespace DX8
 
       foreach(var scancode in scancodes)
       {
-        sb.AppendFormat("#define KEY_{0} (0x{1:X2})", scancode.Key, scancode.Value);
+        sb.AppendFormat("#define KEY_{0} (0x{1:X2})", scancode.Key, scancode.Value.Key);
         sb.AppendLine();
       }
       
@@ -1127,9 +1127,9 @@ namespace DX8
       return constants;
     }
     
-    public static Dictionary<string, int> Generate_Scancodes(String path)
+    public static Dictionary<string, KeyValuePair<int, string>> Generate_Scancodes(String path)
     {
-      Dictionary<string, int> constants = new Dictionary<string, int>(100);
+      Dictionary<string, KeyValuePair<int, string>> constants = new Dictionary<string, KeyValuePair<int, string>>(100);
 
       String[] lines = System.IO.File.ReadAllLines(path);
       
@@ -1139,14 +1139,15 @@ namespace DX8
       for(int ii=0;ii < lines.Length;ii++)
       {
         
-        Match match = Regex.Match(lines[ii], @"KEY\(\s*(\w+)\s*\)", RegexOptions.IgnoreCase);
+        Match match = Regex.Match(lines[ii], @"KEY\(\s*(\w+)\s*\)\s*//\s(.)", RegexOptions.IgnoreCase);
 
         if (match.Success)
         {
           string name      = match.Groups[1].Value;
+          string character = match.Groups[2].Value;
           int value        = scancode++;
         
-          constants.Add(name, value);
+          constants.Add(name, new KeyValuePair<int, string>(value, character));
           continue;
         }
 
@@ -1157,13 +1158,13 @@ namespace DX8
           string name      = match.Groups[1].Value;
           int value        = modifier++;
         
-          constants.Add("MOD_" + name, value);
+          constants.Add("MOD_" + name, new KeyValuePair<int, string>(value, "$"));
           continue;
         }
 
       }
 
-      constants.Add("COUNT", scancode - 1);
+      constants.Add("COUNT", new KeyValuePair<int, string>(scancode, "$"));
 
       return constants;
     }

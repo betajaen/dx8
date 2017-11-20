@@ -85,6 +85,9 @@ OP(Add, zB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_Z); })
 OP(Add, wB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_W); })
 OP(Add, aB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_A); })
 
+OP(Add, iz, Opf_Single, 4, { DO_OP_ADDW(REG_I, REG_Z) })
+OP(Add, iw, Opf_Single, 4, { DO_OP_ADDW(REG_J, REG_Z) })
+
 // Adc
 OP(Adc, ax, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_X); })
 OP(Adc, ay, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_Y); })

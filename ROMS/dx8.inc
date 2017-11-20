@@ -56,6 +56,7 @@ IO_FPY_MSG_READ = $0004
 IO_FPY_MSG_WRITE = $0005
 IO_FPY_MSG_ERROR = $0080
 IO_FPY_STATE_DISK = $0001
+IO_OP_KEY = $0001
 MEM_CHIP_ADDR = $0000
 MEM_CHIP_SIZE = $0100
 MEM_PROGRAM_ADDR = $0800
@@ -71,10 +72,12 @@ INTVEC_RESET = $0000
 INTVEC_HBLANK = $0001
 INTVEC_VBLANK = $0002
 INTVEC_FLOPPY = $0003
+INTVEC_IO = $0004
 INTVEC_ADDR_RESET = $0000
 INTVEC_ADDR_HBLANK = $0002
 INTVEC_ADDR_VBLANK = $0004
 INTVEC_ADDR_FLOPPY = $0006
+INTVEC_ADDR_IO = $0008
 
 ; Interrupts
 INT_FLOPPY_OP = $00D0 ; Run a floppy operation 
@@ -92,77 +95,77 @@ KEY_6 = $07
 KEY_7 = $08
 KEY_8 = $09
 KEY_9 = $0A
-KEY_Exclaim = $0B
-KEY_DoubleQuote = $0C
-KEY_Hash = $0D
-KEY_PoundSign = $0E
-KEY_Percentage = $0F
-KEY_Ampersand = $10
-KEY_SingleQuote = $11
-KEY_LeftParentheses = $12
-KEY_RightParentheses = $13
-KEY_At = $14
-KEY_LowercaseA = $15
-KEY_LowercaseB = $16
-KEY_LowercaseC = $17
-KEY_LowercaseD = $18
-KEY_LowercaseE = $19
-KEY_LowercaseF = $1A
-KEY_LowercaseG = $1B
-KEY_LowercaseH = $1C
-KEY_LowercaseI = $1D
-KEY_LowercaseJ = $1E
-KEY_LowercaseK = $1F
-KEY_LowercaseL = $20
-KEY_LowercaseM = $21
-KEY_LowercaseN = $22
-KEY_LowercaseO = $23
-KEY_LowercaseP = $24
-KEY_LowercaseQ = $25
-KEY_LowercaseR = $26
-KEY_LowercaseS = $27
-KEY_LowercaseT = $28
-KEY_LowercaseU = $29
-KEY_LowercaseV = $2A
-KEY_LowercaseW = $2B
-KEY_LowercaseX = $2C
-KEY_LowercaseY = $2D
-KEY_LowercaseZ = $2E
-KEY_UppercaseA = $2F
-KEY_UppercaseB = $30
-KEY_UppercaseC = $31
-KEY_UppercaseD = $32
-KEY_UppercaseE = $33
-KEY_UppercaseF = $34
-KEY_UppercaseG = $35
-KEY_UppercaseH = $36
-KEY_UppercaseI = $37
-KEY_UppercaseJ = $38
-KEY_UppercaseK = $39
-KEY_UppercaseL = $3A
-KEY_UppercaseM = $3B
-KEY_UppercaseN = $3C
-KEY_UppercaseO = $3D
-KEY_UppercaseP = $3E
-KEY_UppercaseQ = $3F
-KEY_UppercaseR = $40
-KEY_UppercaseS = $41
-KEY_UppercaseT = $42
-KEY_UppercaseU = $43
-KEY_UppercaseV = $44
-KEY_UppercaseW = $45
-KEY_UppercaseX = $46
-KEY_UppercaseY = $47
-KEY_UppercaseZ = $48
-KEY_Plus = $49
-KEY_Minus = $4A
-KEY_Multiply = $4B
-KEY_Equals = $4C
-KEY_Divide = $4D
-KEY_Comma = $4E
-KEY_Period = $4F
-KEY_SemiColon = $50
-KEY_Space = $51
+KEY_LowercaseA = $0B
+KEY_LowercaseB = $0C
+KEY_LowercaseC = $0D
+KEY_LowercaseD = $0E
+KEY_LowercaseE = $0F
+KEY_LowercaseF = $10
+KEY_LowercaseG = $11
+KEY_LowercaseH = $12
+KEY_LowercaseI = $13
+KEY_LowercaseJ = $14
+KEY_LowercaseK = $15
+KEY_LowercaseL = $16
+KEY_LowercaseM = $17
+KEY_LowercaseN = $18
+KEY_LowercaseO = $19
+KEY_LowercaseP = $1A
+KEY_LowercaseQ = $1B
+KEY_LowercaseR = $1C
+KEY_LowercaseS = $1D
+KEY_LowercaseT = $1E
+KEY_LowercaseU = $1F
+KEY_LowercaseV = $20
+KEY_LowercaseW = $21
+KEY_LowercaseX = $22
+KEY_LowercaseY = $23
+KEY_LowercaseZ = $24
+KEY_UppercaseA = $25
+KEY_UppercaseB = $26
+KEY_UppercaseC = $27
+KEY_UppercaseD = $28
+KEY_UppercaseE = $29
+KEY_UppercaseF = $2A
+KEY_UppercaseG = $2B
+KEY_UppercaseH = $2C
+KEY_UppercaseI = $2D
+KEY_UppercaseJ = $2E
+KEY_UppercaseK = $2F
+KEY_UppercaseL = $30
+KEY_UppercaseM = $31
+KEY_UppercaseN = $32
+KEY_UppercaseO = $33
+KEY_UppercaseP = $34
+KEY_UppercaseQ = $35
+KEY_UppercaseR = $36
+KEY_UppercaseS = $37
+KEY_UppercaseT = $38
+KEY_UppercaseU = $39
+KEY_UppercaseV = $3A
+KEY_UppercaseW = $3B
+KEY_UppercaseX = $3C
+KEY_UppercaseY = $3D
+KEY_UppercaseZ = $3E
+KEY_Space = $3F
+KEY_Exclaim = $40
+KEY_DoubleQuote = $41
+KEY_Hash = $42
+KEY_PoundSign = $43
+KEY_Percentage = $44
+KEY_Ampersand = $45
+KEY_SingleQuote = $46
+KEY_LeftParentheses = $47
+KEY_RightParentheses = $48
+KEY_At = $49
+KEY_Plus = $4A
+KEY_Minus = $4B
+KEY_Multiply = $4C
+KEY_Equals = $4D
+KEY_Divide = $4E
+KEY_Comma = $4F
+KEY_Period = $50
+KEY_SemiColon = $51
 KEY_LeftSquareBracket = $52
 KEY_RightSquareBracket = $53
 KEY_LeftBrace = $54
@@ -171,28 +174,29 @@ KEY_QuestionMark = $56
 KEY_LeftAngleBracket = $57
 KEY_RightAngleBracket = $58
 KEY_Colon = $59
-KEY_Break = $5A
-KEY_Delete = $5B
-KEY_Control = $5C
-KEY_LeftArrow = $5D
-KEY_RightArrow = $5E
-KEY_UpArrow = $5F
-KEY_DownArrow = $60
-KEY_CapsLock = $61
-KEY_LeftShift = $62
-KEY_RightShift = $63
-KEY_Reset = $64
-KEY_Function1 = $65
-KEY_Function2 = $66
-KEY_Function3 = $67
-KEY_Function4 = $68
-KEY_Program1 = $69
-KEY_Program2 = $6A
-KEY_Program3 = $6B
-KEY_Program4 = $6C
+KEY_Return = $5A
+KEY_Break = $5B
+KEY_Reset = $5C
+KEY_Delete = $5D
+KEY_Function1 = $5E
+KEY_Function2 = $5F
+KEY_Function3 = $60
+KEY_Function4 = $61
+KEY_Program1 = $62
+KEY_Program2 = $63
+KEY_Program3 = $64
+KEY_Program4 = $65
+KEY_LeftArrow = $66
+KEY_RightArrow = $67
+KEY_UpArrow = $68
+KEY_DownArrow = $69
+KEY_CapsLock = $6A
+KEY_Control = $6B
+KEY_LeftShift = $6C
+KEY_RightShift = $6D
 KEY_MOD_Shift = $01
 KEY_MOD_Control = $02
-KEY_COUNT = $6C
+KEY_COUNT = $6E
 
 ; Instructions
 macro nop [A, B] {
@@ -465,45 +469,51 @@ macro add [A, B] {
     ; [$41] add a,$00
     db $41
     db B
+  else if A eq i & B eq z
+    ; [$42] add i,z
+    db $42
+  else if A eq i & B eq w
+    ; [$43] add i,w
+    db $43
   else
     error SyntaxError
   end if
 }
 macro adc [A, B] {
   if A eq a & B eq x
-    ; [$42] adc a,x
-    db $42
-  else if A eq a & B eq y
-    ; [$43] adc a,y
-    db $43
-  else if A eq a & B eq z
-    ; [$44] adc a,z
+    ; [$44] adc a,x
     db $44
-  else if A eq a & B eq w
-    ; [$45] adc a,w
+  else if A eq a & B eq y
+    ; [$45] adc a,y
     db $45
-  else if A eq a & B eq a
-    ; [$46] adc a,a
+  else if A eq a & B eq z
+    ; [$46] adc a,z
     db $46
-  else if A eq x
-    ; [$47] adc x,$00
+  else if A eq a & B eq w
+    ; [$47] adc a,w
     db $47
-    db B
-  else if A eq y
-    ; [$48] adc y,$00
+  else if A eq a & B eq a
+    ; [$48] adc a,a
     db $48
-    db B
-  else if A eq z
-    ; [$49] adc z,$00
+  else if A eq x
+    ; [$49] adc x,$00
     db $49
     db B
-  else if A eq w
-    ; [$4A] adc w,$00
+  else if A eq y
+    ; [$4A] adc y,$00
     db $4A
     db B
-  else if A eq a
-    ; [$4B] adc a,$00
+  else if A eq z
+    ; [$4B] adc z,$00
     db $4B
+    db B
+  else if A eq w
+    ; [$4C] adc w,$00
+    db $4C
+    db B
+  else if A eq a
+    ; [$4D] adc a,$00
+    db $4D
     db B
   else
     error SyntaxError
@@ -511,36 +521,36 @@ macro adc [A, B] {
 }
 macro sub [A, B] {
   if A eq a & B eq x
-    ; [$4C] sub a,x
-    db $4C
-  else if A eq a & B eq y
-    ; [$4D] sub a,y
-    db $4D
-  else if A eq a & B eq z
-    ; [$4E] sub a,z
+    ; [$4E] sub a,x
     db $4E
-  else if A eq a & B eq w
-    ; [$4F] sub a,w
+  else if A eq a & B eq y
+    ; [$4F] sub a,y
     db $4F
-  else if A eq x
-    ; [$50] sub x,$00
+  else if A eq a & B eq z
+    ; [$50] sub a,z
     db $50
-    db B
-  else if A eq y
-    ; [$51] sub y,$00
+  else if A eq a & B eq w
+    ; [$51] sub a,w
     db $51
-    db B
-  else if A eq z
-    ; [$52] sub z,$00
+  else if A eq x
+    ; [$52] sub x,$00
     db $52
     db B
-  else if A eq w
-    ; [$53] sub w,$00
+  else if A eq y
+    ; [$53] sub y,$00
     db $53
     db B
-  else if A eq a
-    ; [$54] sub a,$00
+  else if A eq z
+    ; [$54] sub z,$00
     db $54
+    db B
+  else if A eq w
+    ; [$55] sub w,$00
+    db $55
+    db B
+  else if A eq a
+    ; [$56] sub a,$00
+    db $56
     db B
   else
     error SyntaxError
@@ -548,39 +558,39 @@ macro sub [A, B] {
 }
 macro mul [A, B] {
   if A eq a & B eq x
-    ; [$55] mul a,x
-    db $55
-  else if A eq a & B eq y
-    ; [$56] mul a,y
-    db $56
-  else if A eq a & B eq z
-    ; [$57] mul a,z
+    ; [$57] mul a,x
     db $57
-  else if A eq a & B eq w
-    ; [$58] mul a,w
+  else if A eq a & B eq y
+    ; [$58] mul a,y
     db $58
-  else if A eq a & B eq a
-    ; [$59] mul a,a
+  else if A eq a & B eq z
+    ; [$59] mul a,z
     db $59
-  else if A eq x
-    ; [$5A] mul x,$00
+  else if A eq a & B eq w
+    ; [$5A] mul a,w
     db $5A
-    db B
-  else if A eq y
-    ; [$5B] mul y,$00
+  else if A eq a & B eq a
+    ; [$5B] mul a,a
     db $5B
-    db B
-  else if A eq z
-    ; [$5C] mul z,$00
+  else if A eq x
+    ; [$5C] mul x,$00
     db $5C
     db B
-  else if A eq w
-    ; [$5D] mul w,$00
+  else if A eq y
+    ; [$5D] mul y,$00
     db $5D
     db B
-  else if A eq a
-    ; [$5E] mul a,$00
+  else if A eq z
+    ; [$5E] mul z,$00
     db $5E
+    db B
+  else if A eq w
+    ; [$5F] mul w,$00
+    db $5F
+    db B
+  else if A eq a
+    ; [$60] mul a,$00
+    db $60
     db B
   else
     error SyntaxError
@@ -588,88 +598,88 @@ macro mul [A, B] {
 }
 macro inc [A, B] {
   if A eq x
-    ; [$5F] inc x
-    db $5F
-  else if A eq y
-    ; [$60] inc y
-    db $60
-  else if A eq z
-    ; [$61] inc z
+    ; [$61] inc x
     db $61
-  else if A eq w
-    ; [$62] inc w
+  else if A eq y
+    ; [$62] inc y
     db $62
-  else if A eq a
-    ; [$63] inc a
+  else if A eq z
+    ; [$63] inc z
     db $63
-  else if A eq i
-    ; [$64] inc i
+  else if A eq w
+    ; [$64] inc w
     db $64
-  else if A eq j
-    ; [$65] inc j
+  else if A eq a
+    ; [$65] inc a
     db $65
+  else if A eq i
+    ; [$66] inc i
+    db $66
+  else if A eq j
+    ; [$67] inc j
+    db $67
   else
     error SyntaxError
   end if
 }
 macro dec [A, B] {
   if A eq x
-    ; [$66] dec x
-    db $66
-  else if A eq y
-    ; [$67] dec y
-    db $67
-  else if A eq z
-    ; [$68] dec z
+    ; [$68] dec x
     db $68
-  else if A eq w
-    ; [$69] dec w
+  else if A eq y
+    ; [$69] dec y
     db $69
-  else if A eq a
-    ; [$6A] dec a
+  else if A eq z
+    ; [$6A] dec z
     db $6A
-  else if A eq i
-    ; [$6B] dec i
+  else if A eq w
+    ; [$6B] dec w
     db $6B
-  else if A eq j
-    ; [$6C] dec j
+  else if A eq a
+    ; [$6C] dec a
     db $6C
+  else if A eq i
+    ; [$6D] dec i
+    db $6D
+  else if A eq j
+    ; [$6E] dec j
+    db $6E
   else
     error SyntaxError
   end if
 }
 macro and [A, B] {
   if A eq a & B eq x
-    ; [$82] and a,x
-    db $82
-  else if A eq a & B eq y
-    ; [$83] and a,y
-    db $83
-  else if A eq a & B eq z
-    ; [$84] and a,z
+    ; [$84] and a,x
     db $84
-  else if A eq a & B eq w
-    ; [$85] and a,w
+  else if A eq a & B eq y
+    ; [$85] and a,y
     db $85
-  else if A eq x
-    ; [$86] and x,$00
+  else if A eq a & B eq z
+    ; [$86] and a,z
     db $86
-    db B
-  else if A eq y
-    ; [$87] and y,$00
+  else if A eq a & B eq w
+    ; [$87] and a,w
     db $87
-    db B
-  else if A eq z
-    ; [$88] and z,$00
+  else if A eq x
+    ; [$88] and x,$00
     db $88
     db B
-  else if A eq w
-    ; [$89] and w,$00
+  else if A eq y
+    ; [$89] and y,$00
     db $89
     db B
-  else if A eq a
-    ; [$8A] and a,$00
+  else if A eq z
+    ; [$8A] and z,$00
     db $8A
+    db B
+  else if A eq w
+    ; [$8B] and w,$00
+    db $8B
+    db B
+  else if A eq a
+    ; [$8C] and a,$00
+    db $8C
     db B
   else
     error SyntaxError
@@ -677,36 +687,36 @@ macro and [A, B] {
 }
 macro or [A, B] {
   if A eq a & B eq x
-    ; [$8B] or a,x
-    db $8B
-  else if A eq a & B eq y
-    ; [$8C] or a,y
-    db $8C
-  else if A eq a & B eq z
-    ; [$8D] or a,z
+    ; [$8D] or a,x
     db $8D
-  else if A eq a & B eq w
-    ; [$8E] or a,w
+  else if A eq a & B eq y
+    ; [$8E] or a,y
     db $8E
-  else if A eq x
-    ; [$8F] or x,$00
+  else if A eq a & B eq z
+    ; [$8F] or a,z
     db $8F
-    db B
-  else if A eq y
-    ; [$90] or y,$00
+  else if A eq a & B eq w
+    ; [$90] or a,w
     db $90
-    db B
-  else if A eq z
-    ; [$91] or z,$00
+  else if A eq x
+    ; [$91] or x,$00
     db $91
     db B
-  else if A eq w
-    ; [$92] or w,$00
+  else if A eq y
+    ; [$92] or y,$00
     db $92
     db B
-  else if A eq a
-    ; [$93] or a,$00
+  else if A eq z
+    ; [$93] or z,$00
     db $93
+    db B
+  else if A eq w
+    ; [$94] or w,$00
+    db $94
+    db B
+  else if A eq a
+    ; [$95] or a,$00
+    db $95
     db B
   else
     error SyntaxError
@@ -714,36 +724,36 @@ macro or [A, B] {
 }
 macro xor [A, B] {
   if A eq a & B eq x
-    ; [$99] xor a,x
-    db $99
-  else if A eq a & B eq y
-    ; [$9A] xor a,y
-    db $9A
-  else if A eq a & B eq z
-    ; [$9B] xor a,z
+    ; [$9B] xor a,x
     db $9B
-  else if A eq a & B eq w
-    ; [$9C] xor a,w
+  else if A eq a & B eq y
+    ; [$9C] xor a,y
     db $9C
-  else if A eq x
-    ; [$9D] xor x,$00
+  else if A eq a & B eq z
+    ; [$9D] xor a,z
     db $9D
-    db B
-  else if A eq y
-    ; [$9E] xor y,$00
+  else if A eq a & B eq w
+    ; [$9E] xor a,w
     db $9E
-    db B
-  else if A eq z
-    ; [$9F] xor z,$00
+  else if A eq x
+    ; [$9F] xor x,$00
     db $9F
     db B
-  else if A eq w
-    ; [$A0] xor w,$00
+  else if A eq y
+    ; [$A0] xor y,$00
     db $A0
     db B
-  else if A eq a
-    ; [$A1] xor a,$00
+  else if A eq z
+    ; [$A1] xor z,$00
     db $A1
+    db B
+  else if A eq w
+    ; [$A2] xor w,$00
+    db $A2
+    db B
+  else if A eq a
+    ; [$A3] xor a,$00
+    db $A3
     db B
   else
     error SyntaxError
@@ -751,44 +761,44 @@ macro xor [A, B] {
 }
 macro not [A, B] {
   if A eq x
-    ; [$94] not x
-    db $94
-  else if A eq y
-    ; [$95] not y
-    db $95
-  else if A eq z
-    ; [$96] not z
+    ; [$96] not x
     db $96
-  else if A eq w
-    ; [$97] not w
+  else if A eq y
+    ; [$97] not y
     db $97
-  else if A eq a
-    ; [$98] not a
+  else if A eq z
+    ; [$98] not z
     db $98
+  else if A eq w
+    ; [$99] not w
+    db $99
+  else if A eq a
+    ; [$9A] not a
+    db $9A
   else
     error SyntaxError
   end if
 }
 macro shl [A, B] {
   if A eq x
-    ; [$A2] shl x,$00
-    db $A2
-    db B
-  else if A eq y
-    ; [$A3] shl y,$00
-    db $A3
-    db B
-  else if A eq z
-    ; [$A4] shl z,$00
+    ; [$A4] shl x,$00
     db $A4
     db B
-  else if A eq w
-    ; [$A5] shl w,$00
+  else if A eq y
+    ; [$A5] shl y,$00
     db $A5
     db B
-  else if A eq a
-    ; [$A6] shl a,$00
+  else if A eq z
+    ; [$A6] shl z,$00
     db $A6
+    db B
+  else if A eq w
+    ; [$A7] shl w,$00
+    db $A7
+    db B
+  else if A eq a
+    ; [$A8] shl a,$00
+    db $A8
     db B
   else
     error SyntaxError
@@ -796,24 +806,24 @@ macro shl [A, B] {
 }
 macro shr [A, B] {
   if A eq x
-    ; [$A7] shr x,$00
-    db $A7
-    db B
-  else if A eq y
-    ; [$A8] shr y,$00
-    db $A8
-    db B
-  else if A eq z
-    ; [$A9] shr z,$00
+    ; [$A9] shr x,$00
     db $A9
     db B
-  else if A eq w
-    ; [$AA] shr w,$00
+  else if A eq y
+    ; [$AA] shr y,$00
     db $AA
     db B
-  else if A eq a
-    ; [$AB] shr a,$00
+  else if A eq z
+    ; [$AB] shr z,$00
     db $AB
+    db B
+  else if A eq w
+    ; [$AC] shr w,$00
+    db $AC
+    db B
+  else if A eq a
+    ; [$AD] shr a,$00
+    db $AD
     db B
   else
     error SyntaxError
@@ -821,99 +831,99 @@ macro shr [A, B] {
 }
 macro rol [A, B] {
   if A eq x
-    ; [$AC] rol x
-    db $AC
-  else if A eq y
-    ; [$AD] rol y
-    db $AD
-  else if A eq z
-    ; [$AE] rol z
+    ; [$AE] rol x
     db $AE
-  else if A eq w
-    ; [$AF] rol w
+  else if A eq y
+    ; [$AF] rol y
     db $AF
-  else if A eq a
-    ; [$B0] rol a
+  else if A eq z
+    ; [$B0] rol z
     db $B0
+  else if A eq w
+    ; [$B1] rol w
+    db $B1
+  else if A eq a
+    ; [$B2] rol a
+    db $B2
   else
     error SyntaxError
   end if
 }
 macro ror [A, B] {
   if A eq x
-    ; [$B1] ror x
-    db $B1
-  else if A eq y
-    ; [$B2] ror y
-    db $B2
-  else if A eq z
-    ; [$B3] ror z
+    ; [$B3] ror x
     db $B3
-  else if A eq w
-    ; [$B4] ror w
+  else if A eq y
+    ; [$B4] ror y
     db $B4
-  else if A eq a
-    ; [$B5] ror a
+  else if A eq z
+    ; [$B5] ror z
     db $B5
+  else if A eq w
+    ; [$B6] ror w
+    db $B6
+  else if A eq a
+    ; [$B7] ror a
+    db $B7
   else
     error SyntaxError
   end if
 }
 macro cmp [A, B] {
   if A eq a & B eq x
-    ; [$6D] cmp a,x
-    db $6D
-  else if A eq a & B eq y
-    ; [$6E] cmp a,y
-    db $6E
-  else if A eq a & B eq z
-    ; [$6F] cmp a,z
+    ; [$6F] cmp a,x
     db $6F
-  else if A eq a & B eq w
-    ; [$70] cmp a,w
+  else if A eq a & B eq y
+    ; [$70] cmp a,y
     db $70
-  else if A eq a
-    ; [$71] cmp a
+  else if A eq a & B eq z
+    ; [$71] cmp a,z
     db $71
-  else if A eq x
-    ; [$72] cmp x
+  else if A eq a & B eq w
+    ; [$72] cmp a,w
     db $72
-  else if A eq y
-    ; [$73] cmp y
+  else if A eq a
+    ; [$73] cmp a
     db $73
-  else if A eq z
-    ; [$74] cmp z
-    db $74
-  else if A eq w
-    ; [$75] cmp w
-    db $75
   else if A eq x
-    ; [$76] cmp x,$00
-    db $76
-    db B
+    ; [$74] cmp x
+    db $74
   else if A eq y
-    ; [$77] cmp y,$00
-    db $77
-    db B
+    ; [$75] cmp y
+    db $75
   else if A eq z
-    ; [$78] cmp z,$00
+    ; [$76] cmp z
+    db $76
+  else if A eq w
+    ; [$77] cmp w
+    db $77
+  else if A eq x
+    ; [$78] cmp x,$00
     db $78
     db B
-  else if A eq w
-    ; [$79] cmp w,$00
+  else if A eq y
+    ; [$79] cmp y,$00
     db $79
     db B
-  else if A eq a
-    ; [$7A] cmp a,$00
+  else if A eq z
+    ; [$7A] cmp z,$00
     db $7A
     db B
-  else if A eq i
-    ; [$7B] cmp i,$0000
+  else if A eq w
+    ; [$7B] cmp w,$00
     db $7B
+    db B
+  else if A eq a
+    ; [$7C] cmp a,$00
+    db $7C
+    db B
+  else if A eq i
+    ; [$7D] cmp i,$0000
+    db $7D
     dw B
   else if A eq j
-    ; [$7C] cmp j,$0000
-    db $7C
+    ; [$7E] cmp j,$0000
+    db $7E
     dw B
   else
     error SyntaxError
@@ -921,24 +931,24 @@ macro cmp [A, B] {
 }
 macro cmpbit [A, B] {
   if A eq x
-    ; [$7D] cmpbit x,$00
-    db $7D
-    db B
-  else if A eq y
-    ; [$7E] cmpbit y,$00
-    db $7E
-    db B
-  else if A eq z
-    ; [$7F] cmpbit z,$00
+    ; [$7F] cmpbit x,$00
     db $7F
     db B
-  else if A eq w
-    ; [$80] cmpbit w,$00
+  else if A eq y
+    ; [$80] cmpbit y,$00
     db $80
     db B
-  else if A eq a
-    ; [$81] cmpbit a,$00
+  else if A eq z
+    ; [$81] cmpbit z,$00
     db $81
+    db B
+  else if A eq w
+    ; [$82] cmpbit w,$00
+    db $82
+    db B
+  else if A eq a
+    ; [$83] cmpbit a,$00
+    db $83
     db B
   else
     error SyntaxError
@@ -946,122 +956,122 @@ macro cmpbit [A, B] {
 }
 macro jmp [A, B] {
   if A eq i
-    ; [$B7] jmp i
-    db $B7
-  else if A eq j
-    ; [$B8] jmp j
-    db $B8
-  else if B eq x
-    ; [$B9] jmp $0000,x
+    ; [$B9] jmp i
     db $B9
-    dw A
-  else if B eq y
-    ; [$BA] jmp $0000,y
+  else if A eq j
+    ; [$BA] jmp j
     db $BA
-    dw A
-  else if B eq z
-    ; [$BB] jmp $0000,z
+  else if B eq x
+    ; [$BB] jmp $0000,x
     db $BB
     dw A
-  else if B eq w
-    ; [$BC] jmp $0000,w
+  else if B eq y
+    ; [$BC] jmp $0000,y
     db $BC
     dw A
-  else if B eq a
-    ; [$BD] jmp $0000,a
+  else if B eq z
+    ; [$BD] jmp $0000,z
     db $BD
     dw A
+  else if B eq w
+    ; [$BE] jmp $0000,w
+    db $BE
+    dw A
+  else if B eq a
+    ; [$BF] jmp $0000,a
+    db $BF
+    dw A
   else
-    ; [$B6] jmp $0000
-    db $B6
+    ; [$B8] jmp $0000
+    db $B8
     dw A
   end if
 }
 macro jmp.eq [A, B] {
-  ; [$BF] jmp.eq $0000
-  db $BF
-  dw A
-}
-macro jmp.neq [A, B] {
-  ; [$C1] jmp.neq $0000
+  ; [$C1] jmp.eq $0000
   db $C1
   dw A
 }
-macro jmp.gt [A, B] {
-  ; [$C3] jmp.gt $0000
+macro jmp.neq [A, B] {
+  ; [$C3] jmp.neq $0000
   db $C3
   dw A
 }
-macro jmp.lt [A, B] {
-  ; [$C5] jmp.lt $0000
+macro jmp.gt [A, B] {
+  ; [$C5] jmp.gt $0000
   db $C5
   dw A
 }
-macro jmp.z [A, B] {
-  ; [$C7] jmp.z $0000
+macro jmp.lt [A, B] {
+  ; [$C7] jmp.lt $0000
   db $C7
   dw A
 }
-macro jmp.nz [A, B] {
-  ; [$C9] jmp.nz $0000
+macro jmp.z [A, B] {
+  ; [$C9] jmp.z $0000
   db $C9
   dw A
 }
-macro rjmp [A, B] {
-  ; [$BE] rjmp $00
-  db $BE
-  db A
+macro jmp.nz [A, B] {
+  ; [$CB] jmp.nz $0000
+  db $CB
+  dw A
 }
-macro rjmp.eq [A, B] {
-  ; [$C0] rjmp.eq $00
+macro rjmp [A, B] {
+  ; [$C0] rjmp $00
   db $C0
   db A
 }
-macro rjmp.neq [A, B] {
-  ; [$C2] rjmp.neq $00
+macro rjmp.eq [A, B] {
+  ; [$C2] rjmp.eq $00
   db $C2
   db A
 }
-macro rjmp.gt [A, B] {
-  ; [$C4] rjmp.gt $00
+macro rjmp.neq [A, B] {
+  ; [$C4] rjmp.neq $00
   db $C4
   db A
 }
-macro rjmp.lt [A, B] {
-  ; [$C6] rjmp.lt $00
+macro rjmp.gt [A, B] {
+  ; [$C6] rjmp.gt $00
   db $C6
   db A
 }
-macro rjmp.z [A, B] {
-  ; [$C8] rjmp.z $00
+macro rjmp.lt [A, B] {
+  ; [$C8] rjmp.lt $00
   db $C8
   db A
 }
-macro rjmp.nz [A, B] {
-  ; [$CA] rjmp.nz $00
+macro rjmp.z [A, B] {
+  ; [$CA] rjmp.z $00
   db $CA
+  db A
+}
+macro rjmp.nz [A, B] {
+  ; [$CC] rjmp.nz $00
+  db $CC
   db A
 }
 macro bjmp [A, B] {
   if B eq a
-    ; [$D0] bjmp $0000,a
-    db $D0
-    dw A
-  else if B eq x
-    ; [$D1] bjmp $0000,x
-    db $D1
-    dw A
-  else if B eq y
-    ; [$D2] bjmp $0000,y
+    ; [$D2] bjmp $0000,a
     db $D2
     dw A
-  else if B eq z
-    ; [$D3] bjmp $0000,z
+  else if B eq x
+    ; [$D3] bjmp $0000,x
     db $D3
     dw A
-  else if B eq w
-    ; [$D4] bjmp $0000,w
+  else if B eq y
+    ; [$D4] bjmp $0000,y
     db $D4
+    dw A
+  else if B eq z
+    ; [$D5] bjmp $0000,z
+    db $D5
+    dw A
+  else if B eq w
+    ; [$D6] bjmp $0000,w
+    db $D6
     dw A
   else
     error SyntaxError
@@ -1069,78 +1079,78 @@ macro bjmp [A, B] {
 }
 macro bcall [A, B] {
   if B eq a
-    ; [$CB] bcall $0000,a
-    db $CB
-    dw A
-  else if B eq x
-    ; [$CC] bcall $0000,x
-    db $CC
-    dw A
-  else if B eq y
-    ; [$CD] bcall $0000,y
+    ; [$CD] bcall $0000,a
     db $CD
     dw A
-  else if B eq z
-    ; [$CE] bcall $0000,z
+  else if B eq x
+    ; [$CE] bcall $0000,x
     db $CE
     dw A
-  else if B eq w
-    ; [$CF] bcall $0000,w
+  else if B eq y
+    ; [$CF] bcall $0000,y
     db $CF
+    dw A
+  else if B eq z
+    ; [$D0] bcall $0000,z
+    db $D0
+    dw A
+  else if B eq w
+    ; [$D1] bcall $0000,w
+    db $D1
     dw A
   else
     error SyntaxError
   end if
 }
 macro int [A, B] {
-  ; [$D5] int $00
-  db $D5
+  ; [$D7] int $00
+  db $D7
   db A
 }
 macro resume [A, B] {
-  ; [$D6] resume
-  db $D6
-}
-macro sec [A, B] {
-  ; [$D7] sec
-  db $D7
-}
-macro clc [A, B] {
-  ; [$D8] clc
+  ; [$D8] resume
   db $D8
 }
-macro offset [A, B] {
-  ; [$D9] offset $0000
+macro sec [A, B] {
+  ; [$D9] sec
   db $D9
+}
+macro clc [A, B] {
+  ; [$DA] clc
+  db $DA
+}
+macro offset [A, B] {
+  ; [$DB] offset $0000
+  db $DB
   dw A
 }
 macro roffset [A, B] {
-  ; [$DA] roffset $0000
-  db $DA
-  dw A
-}
-macro dbr [A, B] {
-  ; [$DB] dbr $0000
-  db $DB
-  db A
-}
-macro dba [A, B] {
-  ; [$DC] dba $00
+  ; [$DC] roffset $0000
   db $DC
   dw A
 }
-macro dbb [A, B] {
-  ; [$DD] dbb
+macro dbr [A, B] {
+  ; [$DD] dbr $0000
   db $DD
+  db A
 }
-macro dbn [A, B] {
-  ; [$DE] dbn $0000
+macro dba [A, B] {
+  ; [$DE] dba $00
   db $DE
   dw A
 }
-macro dbo [A, B] {
-  ; [$DF] dbo $00
+macro dbb [A, B] {
+  ; [$DF] dbb
   db $DF
+}
+macro dbn [A, B] {
+  ; [$E0] dbn $0000
+  db $E0
+  dw A
+}
+macro dbo [A, B] {
+  ; [$E1] dbo $00
+  db $E1
   db A
 }
 ; Opcodes
@@ -1210,161 +1220,163 @@ OP_ADD_yB = $3E
 OP_ADD_zB = $3F
 OP_ADD_wB = $40
 OP_ADD_aB = $41
-OP_ADC_ax = $42
-OP_ADC_ay = $43
-OP_ADC_az = $44
-OP_ADC_aw = $45
-OP_ADC_aa = $46
-OP_ADC_xB = $47
-OP_ADC_yB = $48
-OP_ADC_zB = $49
-OP_ADC_wB = $4A
-OP_ADC_aB = $4B
-OP_SUB_ax = $4C
-OP_SUB_ay = $4D
-OP_SUB_az = $4E
-OP_SUB_aw = $4F
-OP_SUB_xB = $50
-OP_SUB_yB = $51
-OP_SUB_zB = $52
-OP_SUB_wB = $53
-OP_SUB_aB = $54
-OP_MUL_ax = $55
-OP_MUL_ay = $56
-OP_MUL_az = $57
-OP_MUL_aw = $58
-OP_MUL_aa = $59
-OP_MUL_xB = $5A
-OP_MUL_yB = $5B
-OP_MUL_zB = $5C
-OP_MUL_wB = $5D
-OP_MUL_aB = $5E
-OP_INC_x = $5F
-OP_INC_y = $60
-OP_INC_z = $61
-OP_INC_w = $62
-OP_INC_a = $63
-OP_INC_i = $64
-OP_INC_j = $65
-OP_DEC_x = $66
-OP_DEC_y = $67
-OP_DEC_z = $68
-OP_DEC_w = $69
-OP_DEC_a = $6A
-OP_DEC_i = $6B
-OP_DEC_j = $6C
-OP_CMP_ax = $6D
-OP_CMP_ay = $6E
-OP_CMP_az = $6F
-OP_CMP_aw = $70
-OP_CMP_a = $71
-OP_CMP_x = $72
-OP_CMP_y = $73
-OP_CMP_z = $74
-OP_CMP_w = $75
-OP_CMP_xB = $76
-OP_CMP_yB = $77
-OP_CMP_zB = $78
-OP_CMP_wB = $79
-OP_CMP_aB = $7A
-OP_CMP_iA = $7B
-OP_CMP_jA = $7C
-OP_CMPBIT_xB = $7D
-OP_CMPBIT_yB = $7E
-OP_CMPBIT_zB = $7F
-OP_CMPBIT_wB = $80
-OP_CMPBIT_aB = $81
-OP_AND_ax = $82
-OP_AND_ay = $83
-OP_AND_az = $84
-OP_AND_aw = $85
-OP_AND_xB = $86
-OP_AND_yB = $87
-OP_AND_zB = $88
-OP_AND_wB = $89
-OP_AND_aB = $8A
-OP_OR_ax = $8B
-OP_OR_ay = $8C
-OP_OR_az = $8D
-OP_OR_aw = $8E
-OP_OR_xB = $8F
-OP_OR_yB = $90
-OP_OR_zB = $91
-OP_OR_wB = $92
-OP_OR_aB = $93
-OP_NOT_x = $94
-OP_NOT_y = $95
-OP_NOT_z = $96
-OP_NOT_w = $97
-OP_NOT_a = $98
-OP_XOR_ax = $99
-OP_XOR_ay = $9A
-OP_XOR_az = $9B
-OP_XOR_aw = $9C
-OP_XOR_xB = $9D
-OP_XOR_yB = $9E
-OP_XOR_zB = $9F
-OP_XOR_wB = $A0
-OP_XOR_aB = $A1
-OP_SHL_xB = $A2
-OP_SHL_yB = $A3
-OP_SHL_zB = $A4
-OP_SHL_wB = $A5
-OP_SHL_aB = $A6
-OP_SHR_xB = $A7
-OP_SHR_yB = $A8
-OP_SHR_zB = $A9
-OP_SHR_wB = $AA
-OP_SHR_aB = $AB
-OP_ROL_x = $AC
-OP_ROL_y = $AD
-OP_ROL_z = $AE
-OP_ROL_w = $AF
-OP_ROL_a = $B0
-OP_ROR_x = $B1
-OP_ROR_y = $B2
-OP_ROR_z = $B3
-OP_ROR_w = $B4
-OP_ROR_a = $B5
-OP_JMP_A = $B6
-OP_JMP_i = $B7
-OP_JMP_j = $B8
-OP_JMP_Ax = $B9
-OP_JMP_Ay = $BA
-OP_JMP_Az = $BB
-OP_JMP_Aw = $BC
-OP_JMP_Aa = $BD
-OP_RJMP_B = $BE
-OP_JMP_EQ_A = $BF
-OP_RJMP_EQ_B = $C0
-OP_JMP_NEQ_A = $C1
-OP_RJMP_NEQ_B = $C2
-OP_JMP_GT_A = $C3
-OP_RJMP_GT_B = $C4
-OP_JMP_LT_A = $C5
-OP_RJMP_LT_B = $C6
-OP_JMP_Z_A = $C7
-OP_RJMP_Z_B = $C8
-OP_JMP_NZ_A = $C9
-OP_RJMP_NZ_B = $CA
-OP_BCALL_Aa = $CB
-OP_BCALL_Ax = $CC
-OP_BCALL_Ay = $CD
-OP_BCALL_Az = $CE
-OP_BCALL_Aw = $CF
-OP_BJMP_Aa = $D0
-OP_BJMP_Ax = $D1
-OP_BJMP_Ay = $D2
-OP_BJMP_Az = $D3
-OP_BJMP_Aw = $D4
-OP_INT_B = $D5
-OP_RESUME = $D6
-OP_SEC = $D7
-OP_CLC = $D8
-OP_OFFSET_A = $D9
-OP_ROFFSET_A = $DA
-OP_DBR_A = $DB
-OP_DBA_B = $DC
-OP_DBB = $DD
-OP_DBN_A = $DE
-OP_DBO_B = $DF
+OP_ADD_iz = $42
+OP_ADD_iw = $43
+OP_ADC_ax = $44
+OP_ADC_ay = $45
+OP_ADC_az = $46
+OP_ADC_aw = $47
+OP_ADC_aa = $48
+OP_ADC_xB = $49
+OP_ADC_yB = $4A
+OP_ADC_zB = $4B
+OP_ADC_wB = $4C
+OP_ADC_aB = $4D
+OP_SUB_ax = $4E
+OP_SUB_ay = $4F
+OP_SUB_az = $50
+OP_SUB_aw = $51
+OP_SUB_xB = $52
+OP_SUB_yB = $53
+OP_SUB_zB = $54
+OP_SUB_wB = $55
+OP_SUB_aB = $56
+OP_MUL_ax = $57
+OP_MUL_ay = $58
+OP_MUL_az = $59
+OP_MUL_aw = $5A
+OP_MUL_aa = $5B
+OP_MUL_xB = $5C
+OP_MUL_yB = $5D
+OP_MUL_zB = $5E
+OP_MUL_wB = $5F
+OP_MUL_aB = $60
+OP_INC_x = $61
+OP_INC_y = $62
+OP_INC_z = $63
+OP_INC_w = $64
+OP_INC_a = $65
+OP_INC_i = $66
+OP_INC_j = $67
+OP_DEC_x = $68
+OP_DEC_y = $69
+OP_DEC_z = $6A
+OP_DEC_w = $6B
+OP_DEC_a = $6C
+OP_DEC_i = $6D
+OP_DEC_j = $6E
+OP_CMP_ax = $6F
+OP_CMP_ay = $70
+OP_CMP_az = $71
+OP_CMP_aw = $72
+OP_CMP_a = $73
+OP_CMP_x = $74
+OP_CMP_y = $75
+OP_CMP_z = $76
+OP_CMP_w = $77
+OP_CMP_xB = $78
+OP_CMP_yB = $79
+OP_CMP_zB = $7A
+OP_CMP_wB = $7B
+OP_CMP_aB = $7C
+OP_CMP_iA = $7D
+OP_CMP_jA = $7E
+OP_CMPBIT_xB = $7F
+OP_CMPBIT_yB = $80
+OP_CMPBIT_zB = $81
+OP_CMPBIT_wB = $82
+OP_CMPBIT_aB = $83
+OP_AND_ax = $84
+OP_AND_ay = $85
+OP_AND_az = $86
+OP_AND_aw = $87
+OP_AND_xB = $88
+OP_AND_yB = $89
+OP_AND_zB = $8A
+OP_AND_wB = $8B
+OP_AND_aB = $8C
+OP_OR_ax = $8D
+OP_OR_ay = $8E
+OP_OR_az = $8F
+OP_OR_aw = $90
+OP_OR_xB = $91
+OP_OR_yB = $92
+OP_OR_zB = $93
+OP_OR_wB = $94
+OP_OR_aB = $95
+OP_NOT_x = $96
+OP_NOT_y = $97
+OP_NOT_z = $98
+OP_NOT_w = $99
+OP_NOT_a = $9A
+OP_XOR_ax = $9B
+OP_XOR_ay = $9C
+OP_XOR_az = $9D
+OP_XOR_aw = $9E
+OP_XOR_xB = $9F
+OP_XOR_yB = $A0
+OP_XOR_zB = $A1
+OP_XOR_wB = $A2
+OP_XOR_aB = $A3
+OP_SHL_xB = $A4
+OP_SHL_yB = $A5
+OP_SHL_zB = $A6
+OP_SHL_wB = $A7
+OP_SHL_aB = $A8
+OP_SHR_xB = $A9
+OP_SHR_yB = $AA
+OP_SHR_zB = $AB
+OP_SHR_wB = $AC
+OP_SHR_aB = $AD
+OP_ROL_x = $AE
+OP_ROL_y = $AF
+OP_ROL_z = $B0
+OP_ROL_w = $B1
+OP_ROL_a = $B2
+OP_ROR_x = $B3
+OP_ROR_y = $B4
+OP_ROR_z = $B5
+OP_ROR_w = $B6
+OP_ROR_a = $B7
+OP_JMP_A = $B8
+OP_JMP_i = $B9
+OP_JMP_j = $BA
+OP_JMP_Ax = $BB
+OP_JMP_Ay = $BC
+OP_JMP_Az = $BD
+OP_JMP_Aw = $BE
+OP_JMP_Aa = $BF
+OP_RJMP_B = $C0
+OP_JMP_EQ_A = $C1
+OP_RJMP_EQ_B = $C2
+OP_JMP_NEQ_A = $C3
+OP_RJMP_NEQ_B = $C4
+OP_JMP_GT_A = $C5
+OP_RJMP_GT_B = $C6
+OP_JMP_LT_A = $C7
+OP_RJMP_LT_B = $C8
+OP_JMP_Z_A = $C9
+OP_RJMP_Z_B = $CA
+OP_JMP_NZ_A = $CB
+OP_RJMP_NZ_B = $CC
+OP_BCALL_Aa = $CD
+OP_BCALL_Ax = $CE
+OP_BCALL_Ay = $CF
+OP_BCALL_Az = $D0
+OP_BCALL_Aw = $D1
+OP_BJMP_Aa = $D2
+OP_BJMP_Ax = $D3
+OP_BJMP_Ay = $D4
+OP_BJMP_Az = $D5
+OP_BJMP_Aw = $D6
+OP_INT_B = $D7
+OP_RESUME = $D8
+OP_SEC = $D9
+OP_CLC = $DA
+OP_OFFSET_A = $DB
+OP_ROFFSET_A = $DC
+OP_DBR_A = $DD
+OP_DBA_B = $DE
+OP_DBB = $DF
+OP_DBN_A = $E0
+OP_DBO_B = $E1

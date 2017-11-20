@@ -12,6 +12,13 @@ kConstants:
 
         Const_Include   FontData, "victoria.png.s"
         Const_Byte      TestData, 'Hello!'
+        Const_Include   KeyboardFont, 'boot_keyboard_ascii.s'
+
+        printl 'KeyboardFont = ', kKeyboardFont
+
+
+;ASCII:
+;include 'boot_keyboard_ascii.s'
 
 ; =============================================================
 ; Exported Functions
@@ -71,6 +78,8 @@ kVariables:
         Var_Byte        Floppy_Mode,    $00
         Var_Word        Floppy_Addr,    $00
         Var_Byte        Floppy_Track,   $00
+        Var_Byte        Keyboard,       $00
+        Var_Word        Cursor,         $8000
 
         printl 'sLclFloppy_Msg=', sLclFloppy_Msg
         printl 'sFloppy_Msg=', sFloppy_Msg
@@ -86,6 +95,7 @@ ConfigureIVT:
         _poke.w         INTVEC_ADDR_HBLANK,     OnIvtHorzBlank
         _poke.w         INTVEC_ADDR_VBLANK,     OnIvtVertBlank
         _poke.w         INTVEC_ADDR_FLOPPY,     OnIvtFloppy
+        _poke.w         INTVEC_ADDR_IO,         OnIvtIo
 return
 
 OnIvtReset:
@@ -118,6 +128,42 @@ OnIvtFloppy:
         store sFloppy_Msg, a
         set a, 0
         store REG_FPY_MSG, a
+resume
+
+OnIvtIo:
+        dbn 'IO'
+        load  a, REG_IO_OP
+
+        cmp a, $01
+        jmp.nz .Keyboard
+        jmp .End
+
+        .Keyboard:
+                dbn 'KB'
+
+                ; Only on up events.
+                load z, REG_IO_DATA_B
+                jmp.nz .End
+
+                ; Get scancode
+                load  z, REG_IO_DATA_A
+                dbr 'z'
+
+                ; character = kKeyboardFont[z]
+                set i, kKeyboardFont
+                add i, z
+                load z, i
+
+                ; display[cursor] = character
+                ; cursor++
+                load i, sCursor
+                store i, z
+                inc i
+                store sCursor, i
+
+                jmp .End
+
+        .End:
 resume
 
 DefaultIvt:
@@ -266,7 +312,6 @@ CopyAndLaunch:
 
         offset  kProgramSpace
         jmp     EntryPoint
-
 
 rpad (3 + 3 + 2)
 
