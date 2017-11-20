@@ -131,25 +131,25 @@ EXPORT void* GetCrt()
 void Gpu_FrameStart()
 {
   // Reset Colours
-  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 0, 0x3B);
-  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 1, 0x3F);
-  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 2, 0x42);
-
-  Mmu_Set(REG_GFX_PLANE0_COLOUR + 0, 0xFE);
-  Mmu_Set(REG_GFX_PLANE0_COLOUR + 1, 0xFE);
-  Mmu_Set(REG_GFX_PLANE0_COLOUR + 2, 0xFE);
-
-  Mmu_Set(REG_GFX_PLANE1_COLOUR + 0, 0xF2);
-  Mmu_Set(REG_GFX_PLANE1_COLOUR + 1, 0x4C);
-  Mmu_Set(REG_GFX_PLANE1_COLOUR + 2, 0x27);
-
-  Mmu_Set(REG_GFX_PLANE2_COLOUR + 0, 0xFB);
-  Mmu_Set(REG_GFX_PLANE2_COLOUR + 1, 0xBA);
-  Mmu_Set(REG_GFX_PLANE2_COLOUR + 2, 0x42);
-
-  Mmu_Set(REG_GFX_PLANE3_COLOUR + 0, 0x56);
-  Mmu_Set(REG_GFX_PLANE3_COLOUR + 1, 0xB9);
-  Mmu_Set(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
+  // Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 0, 0x3B);
+  // Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 1, 0x3F);
+  // Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 2, 0x42);
+  // 
+  // Mmu_Set(REG_GFX_PLANE0_COLOUR + 0, 0xFE);
+  // Mmu_Set(REG_GFX_PLANE0_COLOUR + 1, 0xFE);
+  // Mmu_Set(REG_GFX_PLANE0_COLOUR + 2, 0xFE);
+  // 
+  // Mmu_Set(REG_GFX_PLANE1_COLOUR + 0, 0xF2);
+  // Mmu_Set(REG_GFX_PLANE1_COLOUR + 1, 0x4C);
+  // Mmu_Set(REG_GFX_PLANE1_COLOUR + 2, 0x27);
+  // 
+  // Mmu_Set(REG_GFX_PLANE2_COLOUR + 0, 0xFB);
+  // Mmu_Set(REG_GFX_PLANE2_COLOUR + 1, 0xBA);
+  // Mmu_Set(REG_GFX_PLANE2_COLOUR + 2, 0x42);
+  // 
+  // Mmu_Set(REG_GFX_PLANE3_COLOUR + 0, 0x56);
+  // Mmu_Set(REG_GFX_PLANE3_COLOUR + 1, 0xB9);
+  // Mmu_Set(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
 
   tilesAddr = Mmu_GetWord(REG_GFX_TILES_ADDR);
 

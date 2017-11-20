@@ -112,8 +112,8 @@ namespace DX8
     public  bool                   ReloadNeeded;
     public  bool                   IsOpen;
     public  bool                   IsRunning;
-    public  string                 RomPath = @"C:\dev\dx8\ROMS\boot.bin";
-    public  string                 FloppyPath = @"C:\dev\dx8\ROMS\floppy_test.bin.fd";
+    public  string                 RomPath = @"C:\dev\dx8\ROMS\rom\rom.bin";
+    public  string                 FloppyPath = @"C:\dev\dx8\ROMS\keytest\keytest.bin.fd";
     public  int                    LastSteps = 0;
     public  Texture2D              Crt;
     public  bool IsOff = false;
