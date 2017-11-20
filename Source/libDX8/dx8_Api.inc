@@ -15,6 +15,8 @@ API_NAME(ChipAddr, 12)
 API_NAME(ProgramAddr, 13)
 API_NAME(SharedAddr, 14)
 API_NAME(CpuHalt, 15)
+API_NAME(KeyDown, 16)
+API_NAME(KeyUp,   17)
 
 // Data
 API_NAME(Rom,        100)

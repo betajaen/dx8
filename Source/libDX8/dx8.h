@@ -39,8 +39,8 @@
 #define CRT_H 256
 #define CRT_DEPTH 3
 
-#define CRT_H_BLANK 40  // 'Pixels/Cycles'
-#define CRT_V_BLANK 10  // 'Lines'
+#define CRT_H_BLANK 20  // 'Pixels/Cycles'
+#define CRT_V_BLANK 5  // 'Lines'
 #define CRT_V_BLANK_TIME (CRT_V_BLANK * CRT_W)
 
 #define CRT_SCAN_W (CRT_H_BLANK + CRT_W)

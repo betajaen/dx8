@@ -15,6 +15,7 @@ namespace DX8
     public static string Registers         = @"C:\dev\dx8\Source\libDX8\dx8_Registers.inc";
     public static string Constants         = @"C:\dev\dx8\Source\libDX8\dx8_Constants.inc";
     public static string Interrupts        = @"C:\dev\dx8\Source\libDX8\dx8_Interrupts.inc";
+    public static string Scancodes         = @"C:\dev\dx8\Source\libDX8\dx8_Scancodes.inc";
     public static string AsmInclude        = @"C:\dev\dx8\ROMS\include\";
     public static string OpcodesCsv        = @"C:\dev\dx8\Documentation\OpcodesAsm.csv";
     public static string OpcodesInc        = @"C:\dev\dx8\ROMS\dx8.inc";
@@ -35,9 +36,10 @@ namespace DX8
       List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
       Dictionary<string, int> registers = OpcodeCompiler.Generate_Registers(Config);
       Dictionary<string, int> constants = OpcodeCompiler.Generate_Constants(Config);
+      Dictionary<string, int> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
       Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Config);
 
-      System.IO.File.WriteAllText(OpcodesInc, OpcodeCompiler.MakeMacros(ops, registers, constants, interrupts));
+      System.IO.File.WriteAllText(OpcodesInc, OpcodeCompiler.MakeMacros(ops, registers, constants, interrupts, scancodes));
       Debug.LogFormat("Wrote {0} macros to {1}", ops.Count, OpcodesInc);
     }
     
@@ -46,31 +48,17 @@ namespace DX8
     {
       Dictionary<string, int> registers = OpcodeCompiler.Generate_Registers(Config);
       Dictionary<string, int> constants = OpcodeCompiler.Generate_Constants(Config);
+      Dictionary<string, int> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
       Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Config);
 
       System.IO.File.WriteAllText(Registers, OpcodeCompiler.MakeRegisters(registers));
       System.IO.File.WriteAllText(Constants, OpcodeCompiler.MakeConstants(constants));
       System.IO.File.WriteAllText(Interrupts, OpcodeCompiler.MakeInterrupts(interrupts));
+      System.IO.File.WriteAllText(Scancodes, OpcodeCompiler.MakeScancodes(scancodes));
 
       Debug.Log("Wrote dx__??.inc");
     }
     
-    [MenuItem("DX8/Write C dx__???.inc (2)")]
-    public static void MakeRegisters2()
-    {
-      List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
-      Dictionary<string, int> registers = OpcodeCompiler.Generate_Registers(Config);
-      Dictionary<string, int> constants = OpcodeCompiler.Generate_Constants(Config);
-      Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Config);
-      
-      System.IO.File.WriteAllText(AsmInclude + "opcodes.inc",    OpcodeCompiler.MakeAsmOpcodes(ops));
-      //System.IO.File.WriteAllText(AsmInclude + "registers.inc",  OpcodeCompiler.MakeAsmRegisters(registers));
-      //System.IO.File.WriteAllText(AsmInclude + "constants.inc",  OpcodeCompiler.MakeAsmConstants(constants));
-      //System.IO.File.WriteAllText(AsmInclude + "interrupts.inc", OpcodeCompiler.MakeAsmInterrupts(interrupts));
-
-      Debug.Log("Wrote dx__??.inc (2)");
-    }
-
     [MenuItem("DX8/Decompile")]
     public static void Decompile()
     {
@@ -82,10 +70,11 @@ namespace DX8
       System.IO.File.WriteAllText(path + ".s", OpcodeCompiler.Decompile(ops, data));
     }
     
-    [MenuItem("DX8/Generate Api")]
+    [MenuItem("DX8/Generate Cs Api")]
     public static void GenerateApi()
     {
-      System.IO.File.WriteAllText(ApiCsPath, OpcodeCompiler.GetApi(ApiPath));
+      Dictionary<string, int> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
+      System.IO.File.WriteAllText(ApiCsPath, OpcodeCompiler.GenerateCsApi(ApiPath, scancodes));
     }
 
     [MenuItem("DX8/Convert PNG Image to 1-bit ROM")]

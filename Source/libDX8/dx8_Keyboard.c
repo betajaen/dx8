@@ -30,4 +30,56 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
+#include "dx8_Scancodes.inc"
+
+#define MAX_KEY_EVENTS 4
+
+Byte sState[KEY_COUNT + 1];
+Byte sEvents[MAX_KEY_EVENTS];
+
+void Keyboard_Setup()
+{
+}
+
+void Keyboard_Teardown()
+{
+}
+
+void Keyboard_PushEvent(Byte key)
+{
+  for(int i=0;i < MAX_KEY_EVENTS;i++)
+  {
+    if (sEvents[i] == 0)
+    {
+      sEvents[i] = key;
+      return;
+    }
+  }
+}
+
+void Keyboard_ClearEvents(Byte key)
+{
+  
+}
+
+void Keyboard_ReceiveKeyUp(int key)
+{
+  if (key >= 1 && key < (KEY_COUNT + 1))
+  {
+    sState[key] = 0;
+  }
+}
+
+void Keyboard_ReceiveKeyDown(int key)
+{
+  if (key >= 1 && key < (KEY_COUNT + 1))
+  {
+    sState[key] = 1;
+  }
+}
+
+void Keyboard_Tick()
+{
+  
+}
 

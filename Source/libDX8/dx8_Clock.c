@@ -36,17 +36,11 @@
 
 void Gpu_Clock();
 
-// Step
-//  CPU: 2x
-//  MMU: 1x
-//  GPU: 1x
-
 inline void ClockOnce()
 {
-  //LOGF("**Clock");
-  Cpu_Step();
   Cpu_Step();
   Gpu_Clock();
+  Cpu_Step();
 }
 
 int Clock(int ms)
