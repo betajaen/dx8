@@ -17,6 +17,7 @@ kConstants:
 ; =============================================================
 ; Exported Functions
 ; =============================================================
+Begin_Exports
 
 kExports:
 
@@ -43,6 +44,11 @@ kExports:
                         _rjmp.nz .loop
         EndFunction
 
+        Export_Function      Rom, MemCpySm, 'Copy up to 256 bytes to another part of memory'
+        Export_Function_Arg  MemCpySm, Dst, i
+        Export_Function_Arg  MemCpySm, Src, j
+        Export_Function_Arg  MemCpySm, Len, a
+
         ;! MemSet
         ;! Copy a constant to dst, len times
         MemSet_Dst equ i
@@ -55,6 +61,14 @@ kExports:
                         dec j
                         _rjmp.nz .loop
         EndFunction
+
+        Export_Function      Rom, MemSet, 'Set range of memory to constant'
+        Export_Function_Arg  MemSet, Dst, i
+        Export_Function_Arg  MemSet, Len, j
+        Export_Function_Arg  MemSet, Val, a
+
+
+        Export_Const    Rom, Keycode2Ascii, 'Table of Keycodes to ASCII equilvents'
 
 ; =============================================================
 ; VARIABLES
@@ -280,11 +294,3 @@ FEFF:
 ; =============================================================
 ; Exports
 ; =============================================================
-display '; Exports. Copy these to rom.exports.inc', 13,10
-display 'kRomSpace = $7800', 13, 10
-
-Export_Function Rom, MemCpySm
-Export_Function Rom, MemSet
-Export_Const    Rom, Keycode2Ascii
-
-display '; End', 13,10

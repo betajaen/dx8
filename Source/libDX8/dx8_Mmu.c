@@ -39,6 +39,14 @@
 
 Byte* sRam;
 
+#define DBO_V_ALLOWED 1
+bool  sDboV;
+
+void Mmu_SetDboV(bool v)
+{
+  sDboV = v;
+}
+
 Byte Bank_Get(Byte bank, int address)
 {
   Byte mask = sRam[REG_MMU_BANK + bank];
@@ -103,6 +111,7 @@ Byte* Ram_Get()
 
 void Mmu_Setup()
 {
+  sDboV = false;
   sRam = malloc(RAM_SIZE);
   LOGF("Mmu Ram Ptr=%p Size=%i", sRam, RAM_SIZE);
 }
@@ -115,10 +124,39 @@ void Mmu_Teardown()
 void Mmu_TurnOn()
 {
   LOGF("MMU Turn on");
+  sDboV = false;
   memset(sRam, 0xFF, RAM_SIZE); // Memory is initialised with 0xFF's
 }
 
-void Mmu_Set(Word address, Byte value)
+#define PAGE_SIZE 512
+#define MAX_PAGE_DEFS 8
+
+inline int Page_VirtualToReal(Word virtual)
+{
+  int virtualI = virtual, dst, srcLower, srcUpper;
+  for(int i=0;i < MAX_PAGE_DEFS;i++)
+  {
+    dst      = sRam[(REG_MMU_MAP0_DST + 3 * i) + 0] * PAGE_SIZE;
+
+    if (dst == 0)
+      continue;
+
+    srcLower = sRam[(REG_MMU_MAP0_DST + 3 * i) + 1] * PAGE_SIZE;
+    srcUpper = sRam[(REG_MMU_MAP0_DST + 3 * i) + 2] * PAGE_SIZE;
+
+    if (virtualI >= srcLower && virtualI > srcUpper)
+    {
+      int realAddress = dst + (virtualI - srcLower);
+
+      LOGF("Id=%i Virtual=%8x Virtual.lo=%8x Virtual.hi=%8x  Dest=%8x", i, virtualI, srcLower, srcUpper, realAddress);
+
+      return realAddress;
+    }
+  }
+  return -1;
+}
+
+void Mmu_Set_Real(Word address, Byte value)
 {
   int m = address & 0xF000;
 
@@ -128,7 +166,7 @@ void Mmu_Set(Word address, Byte value)
     case 0x0000:
       if (address < 512)  // Chip
         Chip_Set(address, value);
-      else                // Var
+      else                // Stack/Var
         sRam[address] = value;
       break;
     // Program
@@ -170,8 +208,59 @@ void Mmu_Set(Word address, Byte value)
 
 }
 
-Byte Mmu_Get(Word address)
+void Mmu_Set(Word address, Byte value)
 {
+  
+  // Virtual mode
+  if (sRam[REG_MMU_PAGE_REAL_MODE] == 0)
+  {
+    // First page is as is. Registers, etc.
+    if (address < PAGE_SIZE)
+    {
+    #if DBO_V_ALLOWED == 1
+      if (sDboV)
+      {
+        LOGF("[Mmu_Set] Virtual Mode;  Virtual=$%4X, Real=$%8X, Value=$%2X", address, address, value);
+      }
+    #endif
+      sRam[address] = value;
+    }
+    else
+    {
+      int realAddress = Page_VirtualToReal(address);
+    
+      if (realAddress >= 0 && realAddress < RAM_SIZE)
+      {
+
+#if DBO_V_ALLOWED == 1
+        if (sDboV)
+        {
+          LOGF("[Mmu_Set] Virtual Mode;  Virtual=$%4X, Real=$%8X, Value=$%2X", address, realAddress, value);
+        }
+#endif
+
+        sRam[realAddress] = value;
+      }
+    }
+
+#if DBO_V_ALLOWED == 1
+    if (sDboV)
+    {
+      LOGF("[Mmu_Set] Virtual Mode;  Virtual=$%4X, Real=Unmapped, Value=$%2X", address, value);
+    }
+#endif
+    return;
+  }
+  // Real mode
+  else
+  {
+    Mmu_Set_Real(address, value);
+  }
+}
+
+Byte Mmu_Get_Real(Word address)
+{
+
   switch(address & 0xF000)
   {
     // Chip or var
@@ -208,6 +297,53 @@ Byte Mmu_Get(Word address)
       return Bank_Get(7, address - 0xF000);
   }
   return 0xFF;
+}
+
+Byte Mmu_Get(Word address)
+{
+  // Virtual mode
+  if (sRam[REG_MMU_PAGE_REAL_MODE] == 0)
+  {
+    // First page is as is. Registers, etc.
+    if (address < PAGE_SIZE)
+    {
+#if DBO_V_ALLOWED == 1
+      if (sDboV)
+      {
+        LOGF("[Mmu_Get] Virtual Mode;  Virtual=$%4X, Real=$%8X, Value=$%2X", address, address, sRam[address]);
+      }
+#endif
+      return sRam[address];
+    }
+    else
+    {
+      int realAddress = Page_VirtualToReal(address);
+
+      if (realAddress >= 0 && realAddress < RAM_SIZE)
+      {
+#if DBO_V_ALLOWED == 1
+        if (sDboV)
+        {
+          LOGF("[Mmu_Get] Virtual Mode;  Virtual=$%4X, Real=$%8X, Value=$%2X", address, realAddress, sRam[realAddress]);
+        }
+#endif
+        return sRam[realAddress];
+      }
+    }
+
+#if DBO_V_ALLOWED == 1
+    if (sDboV)
+    {
+      LOGF("[Mmu_Get] Virtual Mode;  Virtual=$%4X, Real=Unmapped, Value=$%2X", address, 0x00);
+    }
+#endif
+    return 0x00;
+  }
+  // Real mode
+  else
+  {
+    return Mmu_Get_Real(address);
+  }
 }
 
 Word Mmu_GetWord(Word address)

@@ -30,9 +30,14 @@ MAIN:
   _poke.rgb REG_GFX_BACKGROUND_COLOUR, $00, $00, $FF
   _poke.rgb REG_GFX_PLANE0_COLOUR, $FF, $FF, $00
 
-  _poke     $8000, 'H'
-  _poke     $8001, 'i'
-  _poke     $8002, '!'
+  _poke     $8000, 'K'
+  _poke     $8001, 'e'
+  _poke     $8002, 'y'
+  _poke     $8003, ' '
+  _poke     $8004, 'T'
+  _poke     $8005, 'e'
+  _poke     $8006, 's'
+  _poke     $8007, 't'
 
 INF:
   inc j

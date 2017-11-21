@@ -117,7 +117,11 @@ macro JumpTable_Item Name {
 
 macro EndJumpTable { }
 
-macro Export_Function TT, NN {
+macro Export_Function TT, NN, DOC {
+      display 13, 10
+      display ';! Function: '
+      display `DOC
+      display 13, 10
       display 'Import_Function '
       display `TT
       display ', '
@@ -133,11 +137,24 @@ macro Export_Function TT, NN {
             end if
             display d
       end repeat
-
       display 13,10
+      display 13, 10
 }
 
-macro Export_Const TT, NN {
+macro Export_Function_Arg FN, ARG, REG {
+      display `FN
+      display '_'
+      display `ARG
+      display ' equ '
+      display `REG
+      display 13, 10
+}
+
+macro Export_Const TT, NN, DOC {
+      display 13, 10
+      display ';! Constant: '
+      display `DOC
+      display 13, 10
       display 'Import_Const '
       display `TT
       display ', '
@@ -157,6 +174,14 @@ macro Export_Const TT, NN {
       display 13,10
 }
 
+macro Begin_Exports {
+      display '; Exports. Copy these to rom.exports.inc', 13,10
+      display 'kRomSpace = $7800', 13, 10
+}
+
+macro End_Exports {
+      display '; End', 13,10
+}
 
 macro Import_Function TT, NN, AA {
       Fn_#NN = kRomSpace + AA - kProgramSpace
@@ -181,4 +206,29 @@ macro _PrintValue TXT, LL {
                   display d
             end repeat
             display 13,10
+}
+
+; =============================================================
+; MMU Helper Macros
+; =============================================================
+
+macro _mmu_map index, real, virtualBegin, virtualEnd {
+      DST   = real / 512
+      SRCl  = virtualBegin   / 512
+      SRCu  = virtualEnd     / 512
+
+      A0 = (REG_MMU_MAP0_DST + (index * 3) + 0)
+      A1 = (REG_MMU_MAP0_DST + (index * 3) + 1)
+      A2 = (REG_MMU_MAP0_DST + (index * 3) + 2)
+
+      _poke    A0, DST
+      _poke    A1, SRCl
+      _poke    A2, SRCu
+
+      ;_PrintValue "A0==", A0
+      ;_PrintValue "A1==", A1
+      ;_PrintValue "A2==", A2
+      _PrintValue "DST=", DST
+      _PrintValue "SRCl=", SRCl
+      _PrintValue "SRCu=", SRCu
 }

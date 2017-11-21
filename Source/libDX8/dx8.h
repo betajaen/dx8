@@ -158,8 +158,8 @@ Byte Rom_Get(Word address);
 
 void Io_Interrupt(Byte name, Byte dataA, Byte dataB);
 
-#define RAM_SIZE      (0x400 + 0x7C00 + 0xFFFF)
-#define ROM_SIZE      (0x800)
+#define RAM_SIZE      (96 * 1024) // Chip + Shared >> 0x400 + 0x7C00 + 0xFFFF)
+#define ROM_SIZE      (2  * 1024) // Chip + Shared >> (0x800)
 
 #include "dx8_Registers.inc"
 #include "dx8_Constants.inc"

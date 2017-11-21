@@ -113,7 +113,7 @@ namespace DX8
     public  bool                   IsOpen;
     public  bool                   IsRunning;
     public  string                 RomPath = @"C:\dev\dx8\ROMS\rom\rom.bin";
-    public  string                 FloppyPath = @"C:\dev\dx8\ROMS\keytest\keytest.bin.fd";
+    public  string                 FloppyPath = @"C:\dev\dx8\ROMS\virtualtest\virtualtest.bin.fd";
     public  int                    LastSteps = 0;
     public  Texture2D              Crt;
     public  bool IsOff = false;
@@ -285,6 +285,10 @@ namespace DX8
     {
       Crt = new Texture2D(320, 256, TextureFormat.RGB24, false);
       Crt.filterMode = FilterMode.Point;
+
+      GameObject crtGo = GameObject.Find("Crt");
+      crtGo.GetComponent<Crt>().SetTexture(Crt);
+
     }
 
     void Start()

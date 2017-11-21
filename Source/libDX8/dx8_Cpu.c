@@ -329,12 +329,18 @@ void DoDebugBreakpoint()
   LOGF("DBG-BRK  Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", cpu.pc.w, cpu.interrupt, cpu.a, cpu.I.x, cpu.I.y, cpu.J.z, cpu.J.w, cpu.lastOpcode, LO_BYTE(cpu.lastOperand), HI_BYTE(cpu.lastOperand));
 }
 
+void Mmu_SetDboV(bool v);
+
 void DoDebugOption(Byte option)
 {
   if (option == 'L')
     DebugLog = true;
   else if (option == 'l')
     DebugLog = false;
+  else if (option == 'V')
+    Mmu_SetDboV(true);
+  else if (option == 'v')
+    Mmu_SetDboV(false);
 }
 
 // Pc Routines
@@ -650,6 +656,12 @@ void Cpu_Interrupt(Byte name)
 
   // Grab interrupt address
   Word interruptAddress = Mmu_GetWord(0x02 * name);
+
+  if (interruptAddress == 0)
+  {
+    LOGF("Cannot do interrupt. No address for $%2X", name);
+    return;
+  }
 
   PushRegisters();
   PushPc();

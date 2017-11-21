@@ -61,6 +61,8 @@ int      numPlanes;
 Word     tilesAddr;
 int  charRow;
 
+void Mmu_Set_Real(Word address, Byte value);
+Byte Mmu_Get_Real(Word address);
 
 void Gpu_Setup()
 {
@@ -89,26 +91,26 @@ void Gpu_TurnOn()
 
   LOGF("GPU Pre-init");
 
-  Mmu_Set(REG_GFX_PLANES_COUNT, 0x01);
-  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 0, 0x3B);
-  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 1, 0x3F);
-  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 2, 0x42);
+  Mmu_Set_Real(REG_GFX_PLANES_COUNT, 0x01);
+  Mmu_Set_Real(REG_GFX_BACKGROUND_COLOUR + 0, 0x3B);
+  Mmu_Set_Real(REG_GFX_BACKGROUND_COLOUR + 1, 0x3F);
+  Mmu_Set_Real(REG_GFX_BACKGROUND_COLOUR + 2, 0x42);
 
-  Mmu_Set(REG_GFX_PLANE0_COLOUR + 0, 0xFE);
-  Mmu_Set(REG_GFX_PLANE0_COLOUR + 1, 0xFE);
-  Mmu_Set(REG_GFX_PLANE0_COLOUR + 2, 0xFE);
+  Mmu_Set_Real(REG_GFX_PLANE0_COLOUR + 0, 0xFE);
+  Mmu_Set_Real(REG_GFX_PLANE0_COLOUR + 1, 0xFE);
+  Mmu_Set_Real(REG_GFX_PLANE0_COLOUR + 2, 0xFE);
 
-  Mmu_Set(REG_GFX_PLANE1_COLOUR + 0, 0xF2);
-  Mmu_Set(REG_GFX_PLANE1_COLOUR + 1, 0x4C);
-  Mmu_Set(REG_GFX_PLANE1_COLOUR + 2, 0x27);
+  Mmu_Set_Real(REG_GFX_PLANE1_COLOUR + 0, 0xF2);
+  Mmu_Set_Real(REG_GFX_PLANE1_COLOUR + 1, 0x4C);
+  Mmu_Set_Real(REG_GFX_PLANE1_COLOUR + 2, 0x27);
 
-  Mmu_Set(REG_GFX_PLANE2_COLOUR + 0, 0xFB);
-  Mmu_Set(REG_GFX_PLANE2_COLOUR + 1, 0xBA);
-  Mmu_Set(REG_GFX_PLANE2_COLOUR + 2, 0x42);
+  Mmu_Set_Real(REG_GFX_PLANE2_COLOUR + 0, 0xFB);
+  Mmu_Set_Real(REG_GFX_PLANE2_COLOUR + 1, 0xBA);
+  Mmu_Set_Real(REG_GFX_PLANE2_COLOUR + 2, 0x42);
 
-  Mmu_Set(REG_GFX_PLANE3_COLOUR + 0, 0x56);
-  Mmu_Set(REG_GFX_PLANE3_COLOUR + 1, 0xB9);
-  Mmu_Set(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
+  Mmu_Set_Real(REG_GFX_PLANE3_COLOUR + 0, 0x56);
+  Mmu_Set_Real(REG_GFX_PLANE3_COLOUR + 1, 0xB9);
+  Mmu_Set_Real(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
 
   // @TODO - Reset GPU state here.
 
@@ -131,32 +133,32 @@ EXPORT void* GetCrt()
 void Gpu_FrameStart()
 {
   // Reset Colours
-  // Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 0, 0x3B);
-  // Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 1, 0x3F);
-  // Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 2, 0x42);
+  // Mmu_Set_Real(REG_GFX_BACKGROUND_COLOUR + 0, 0x3B);
+  // Mmu_Set_Real(REG_GFX_BACKGROUND_COLOUR + 1, 0x3F);
+  // Mmu_Set_Real(REG_GFX_BACKGROUND_COLOUR + 2, 0x42);
   // 
-  // Mmu_Set(REG_GFX_PLANE0_COLOUR + 0, 0xFE);
-  // Mmu_Set(REG_GFX_PLANE0_COLOUR + 1, 0xFE);
-  // Mmu_Set(REG_GFX_PLANE0_COLOUR + 2, 0xFE);
+  // Mmu_Set_Real(REG_GFX_PLANE0_COLOUR + 0, 0xFE);
+  // Mmu_Set_Real(REG_GFX_PLANE0_COLOUR + 1, 0xFE);
+  // Mmu_Set_Real(REG_GFX_PLANE0_COLOUR + 2, 0xFE);
   // 
-  // Mmu_Set(REG_GFX_PLANE1_COLOUR + 0, 0xF2);
-  // Mmu_Set(REG_GFX_PLANE1_COLOUR + 1, 0x4C);
-  // Mmu_Set(REG_GFX_PLANE1_COLOUR + 2, 0x27);
+  // Mmu_Set_Real(REG_GFX_PLANE1_COLOUR + 0, 0xF2);
+  // Mmu_Set_Real(REG_GFX_PLANE1_COLOUR + 1, 0x4C);
+  // Mmu_Set_Real(REG_GFX_PLANE1_COLOUR + 2, 0x27);
   // 
-  // Mmu_Set(REG_GFX_PLANE2_COLOUR + 0, 0xFB);
-  // Mmu_Set(REG_GFX_PLANE2_COLOUR + 1, 0xBA);
-  // Mmu_Set(REG_GFX_PLANE2_COLOUR + 2, 0x42);
+  // Mmu_Set_Real(REG_GFX_PLANE2_COLOUR + 0, 0xFB);
+  // Mmu_Set_Real(REG_GFX_PLANE2_COLOUR + 1, 0xBA);
+  // Mmu_Set_Real(REG_GFX_PLANE2_COLOUR + 2, 0x42);
   // 
-  // Mmu_Set(REG_GFX_PLANE3_COLOUR + 0, 0x56);
-  // Mmu_Set(REG_GFX_PLANE3_COLOUR + 1, 0xB9);
-  // Mmu_Set(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
+  // Mmu_Set_Real(REG_GFX_PLANE3_COLOUR + 0, 0x56);
+  // Mmu_Set_Real(REG_GFX_PLANE3_COLOUR + 1, 0xB9);
+  // Mmu_Set_Real(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
 
   tilesAddr = Mmu_GetWord(REG_GFX_TILES_ADDR);
 
  //  LOGF("Tiles address = $%4X", tilesAddr);
 
-  int  numFrames = Mmu_Get(REG_GFX_FRAME_NUM);
-  int  seconds   = Mmu_Get(REG_GFX_SECOND_NUM);
+  int  numFrames = Mmu_Get_Real(REG_GFX_FRAME_NUM);
+  int  seconds   = Mmu_Get_Real(REG_GFX_SECOND_NUM);
   Byte counters = 0;
   numFrames++;
 
@@ -189,11 +191,11 @@ void Gpu_FrameStart()
 
   // LOGF("Counters= $%2X Seconds = $%2X Frames = $%2X", counters, seconds, numFrames);
 
-  Mmu_Set(REG_GFX_COUNTERS, counters);
-  Mmu_Set(REG_GFX_SECOND_NUM, seconds & 0xFF);
-  Mmu_Set(REG_GFX_FRAME_NUM, numFrames);
+  Mmu_Set_Real(REG_GFX_COUNTERS, counters);
+  Mmu_Set_Real(REG_GFX_SECOND_NUM, seconds & 0xFF);
+  Mmu_Set_Real(REG_GFX_FRAME_NUM, numFrames);
 
-  numPlanes = Mmu_Get(REG_GFX_PLANES_COUNT);
+  numPlanes = Mmu_Get_Real(REG_GFX_PLANES_COUNT);
 
   switch(numPlanes)
   {
@@ -259,7 +261,7 @@ inline bool Gpu_Coroutine_Common()
       SubmitLine(scanline - 1);
     }
 
-    Mmu_Set(REG_GFX_SCANLINE_NUM, scanline);
+    Mmu_Set_Real(REG_GFX_SCANLINE_NUM, scanline);
     Cpu_Interrupt(INTVEC_HBLANK);
     
     charRow = (scanline % 8) * 96;
@@ -329,21 +331,21 @@ void Gpu_ElectronBeam()
 
   if (x == 0)
   {
-    int lineR1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 0);
-    int lineG1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 1);
-    int lineB1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 2);
-    int lineR2 = Mmu_Get(REG_GFX_PLANE1_COLOUR + 0);
-    int lineG2 = Mmu_Get(REG_GFX_PLANE1_COLOUR + 1);
-    int lineB2 = Mmu_Get(REG_GFX_PLANE1_COLOUR + 2);
-    int lineR3 = Mmu_Get(REG_GFX_PLANE2_COLOUR + 0);
-    int lineG3 = Mmu_Get(REG_GFX_PLANE2_COLOUR + 1);
-    int lineB3 = Mmu_Get(REG_GFX_PLANE2_COLOUR + 2);
-    int lineR4 = Mmu_Get(REG_GFX_PLANE3_COLOUR + 0);
-    int lineG4 = Mmu_Get(REG_GFX_PLANE3_COLOUR + 1);
-    int lineB4 = Mmu_Get(REG_GFX_PLANE3_COLOUR + 2);
-    int backR  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 0);
-    int backG  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 1);
-    int backB  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 2);
+    int lineR1 = Mmu_Get_Real(REG_GFX_PLANE0_COLOUR + 0);
+    int lineG1 = Mmu_Get_Real(REG_GFX_PLANE0_COLOUR + 1);
+    int lineB1 = Mmu_Get_Real(REG_GFX_PLANE0_COLOUR + 2);
+    int lineR2 = Mmu_Get_Real(REG_GFX_PLANE1_COLOUR + 0);
+    int lineG2 = Mmu_Get_Real(REG_GFX_PLANE1_COLOUR + 1);
+    int lineB2 = Mmu_Get_Real(REG_GFX_PLANE1_COLOUR + 2);
+    int lineR3 = Mmu_Get_Real(REG_GFX_PLANE2_COLOUR + 0);
+    int lineG3 = Mmu_Get_Real(REG_GFX_PLANE2_COLOUR + 1);
+    int lineB3 = Mmu_Get_Real(REG_GFX_PLANE2_COLOUR + 2);
+    int lineR4 = Mmu_Get_Real(REG_GFX_PLANE3_COLOUR + 0);
+    int lineG4 = Mmu_Get_Real(REG_GFX_PLANE3_COLOUR + 1);
+    int lineB4 = Mmu_Get_Real(REG_GFX_PLANE3_COLOUR + 2);
+    int backR  = Mmu_Get_Real(REG_GFX_BACKGROUND_COLOUR + 0);
+    int backG  = Mmu_Get_Real(REG_GFX_BACKGROUND_COLOUR + 1);
+    int backB  = Mmu_Get_Real(REG_GFX_BACKGROUND_COLOUR + 2);
 
     #define COLOUR_MASK(IDX, R, G, B) \
       lineR[IDX] = R; \
@@ -381,7 +383,7 @@ void Gpu_ElectronBeam()
       Byte character, glyphLine;
 
       character = sLineCache[(GPU_BUFFER_W * 0) + offset] - ' ';
-      glyphLine = Mmu_Get(tilesAddr + character + charRow);
+      glyphLine = Mmu_Get_Real(tilesAddr + character + charRow);
       col |= !!(glyphLine & bitShift);
     }
     break;
@@ -390,11 +392,11 @@ void Gpu_ElectronBeam()
       Byte character, glyphLine;
 
       character = sLineCache[(GPU_BUFFER_W * 0) + offset] - ' ';
-      glyphLine = Mmu_Get(tilesAddr + character + charRow);
+      glyphLine = Mmu_Get_Real(tilesAddr + character + charRow);
       col |= !!(glyphLine & bitShift);
 
       character = sLineCache[(GPU_BUFFER_W * 1) + offset] - ' ';
-      glyphLine = Mmu_Get(tilesAddr + character + charRow);
+      glyphLine = Mmu_Get_Real(tilesAddr + character + charRow);
       col |= !!(glyphLine & bitShift) << 1;
     }
     break;
@@ -404,19 +406,19 @@ void Gpu_ElectronBeam()
         Byte character, glyphLine;
 
         character = sLineCache[(GPU_BUFFER_W * 0) + offset] - ' ';
-        glyphLine = Mmu_Get(tilesAddr + character + charRow);
+        glyphLine = Mmu_Get_Real(tilesAddr + character + charRow);
         col |= !!(glyphLine & bitShift);
 
         character = sLineCache[(GPU_BUFFER_W * 1) + offset] - ' ';
-        glyphLine = Mmu_Get(tilesAddr + character + charRow);
+        glyphLine = Mmu_Get_Real(tilesAddr + character + charRow);
         col |= !!(glyphLine & bitShift) << 1;
 
         character = sLineCache[(GPU_BUFFER_W * 2) + offset] - ' ';
-        glyphLine = Mmu_Get(tilesAddr + character + charRow);
+        glyphLine = Mmu_Get_Real(tilesAddr + character + charRow);
         col |= !!(glyphLine & bitShift) << 2;
 
         character = sLineCache[(GPU_BUFFER_W * 2) + offset] - ' ';
-        glyphLine = Mmu_Get(tilesAddr + character + charRow);
+        glyphLine = Mmu_Get_Real(tilesAddr + character + charRow);
         col |= !!(glyphLine & bitShift) << 3;
         
       #else
