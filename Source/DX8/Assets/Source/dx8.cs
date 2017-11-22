@@ -107,7 +107,7 @@ namespace DX8
 
   }
 
-  public class CRuntime : MonoBehaviour
+  public class dx8 : MonoBehaviour
   {
     public  bool                   ReloadNeeded;
     public  bool                   IsOpen;
@@ -120,6 +120,8 @@ namespace DX8
     public  bool InspectShared = false;
     public  bool HigherBank = false;
     public  int  InspectAddress = 0;
+
+    public  bool GotFocus = false;
     
     public enum KeyMod
     {
@@ -193,15 +195,15 @@ namespace DX8
 #if UNITY_EDITOR
     static System.IO.FileSystemWatcher DllWatcher;
 #endif
-
+/*
     [UnityEngine.RuntimeInitializeOnLoadMethod]
     static void Init()
     {
       GameObject Go = new GameObject("__DX8Runtime");
-      Go.AddComponent<CRuntime>();
+      Go.AddComponent<dx8>();
       Go.isStatic = true;
     }
-
+  */
     void OnApplicationQuit()
     {
       if (IsOpen)
@@ -335,13 +337,14 @@ namespace DX8
 
       if (IsOpen)
       {
-        if (IsRunning)
+        if (IsRunning && GotFocus)
         {
           SendKeys();
         }
       }
     }
 
+#if SHOW_GUI
     private void OnGUI()
     {
       if (GUI.Button(new Rect(0,0,100, 25), "Reload"))
@@ -525,6 +528,7 @@ namespace DX8
        int sh = 256 * s;
         GUI.DrawTexture(new Rect(Screen.width / 2 - sw / 2, Screen.height / 2 + sh / 2, sw, -sh), Crt);
     }
+#endif
 
     void RunOnce(float timeSec)
     {
@@ -715,8 +719,6 @@ namespace DX8
 
         if (state.Update())
         {
-          Debug.LogFormat("{0}", ii);
-
           if (state.Released)
             Library.Call(Api.KeyUp, ii);
           else if (state.Pressed)
