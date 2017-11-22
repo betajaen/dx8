@@ -1,46 +1,16 @@
 fileFormatVersion: 2
-guid: 74a8f564778bcdc45a68207b04838dad
-timeCreated: 1511286285
+guid: b5f288a867fe74a4797674c9fa1f11b6
+timeCreated: 1511348320
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
     100000: //RootNode
-    100002: CapsLed
-    100004: Case
-    100006: FloppyLed
-    100008: PowerButton
-    100010: PowerLed
-    100012: Screen
     400000: //RootNode
-    400002: CapsLed
-    400004: Case
-    400006: FloppyLed
-    400008: PowerButton
-    400010: PowerLed
-    400012: Screen
     2100000: No Name
     2300000: //RootNode
-    2300002: CapsLed
-    2300004: Case
-    2300006: FloppyLed
-    2300008: PowerButton
-    2300010: PowerLed
-    2300012: Screen
     3300000: //RootNode
-    3300002: CapsLed
-    3300004: Case
-    3300006: FloppyLed
-    3300008: PowerButton
-    3300010: PowerLed
-    3300012: Screen
-    4300000: Case
-    4300002: CapsLed
-    4300004: FloppyLed
-    4300006: PowerLed
-    4300008: PowerButton
-    4300010: Screen
-    6400000: //RootNode
+    4300000: PowerLed
   externalObjects: {}
   materials:
     importMaterials: 1
@@ -68,32 +38,32 @@ ModelImporter:
     extraExposedTransformPaths: []
     extraUserProperties: []
     clipAnimations: []
-    isReadable: 0
+    isReadable: 1
   meshes:
     lODScreenPercentages: []
     globalScale: 1
     meshCompression: 0
-    addColliders: 1
-    importVisibility: 0
+    addColliders: 0
+    importVisibility: 1
     importBlendShapes: 1
-    importCameras: 0
-    importLights: 0
+    importCameras: 1
+    importLights: 1
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMeshForGPU: 0
+    optimizeMeshForGPU: 1
     keepQuads: 0
-    weldVertices: 0
+    weldVertices: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
     secondaryUVPackMargin: 4
     useFileScale: 1
   tangentSpace:
-    normalSmoothAngle: 0
-    normalImportMode: 1
-    tangentImportMode: 1
-    normalCalculationMode: 1
+    normalSmoothAngle: 60
+    normalImportMode: 0
+    tangentImportMode: 3
+    normalCalculationMode: 4
   importAnimation: 1
   copyAvatar: 0
   humanDescription:
