@@ -1,43 +1,16 @@
 fileFormatVersion: 2
-guid: 966d6d9b70284f9459dc9cc2e874408d
-timeCreated: 1511353964
+guid: a03035dd6801540408a9170c3e13dcab
+timeCreated: 1511360619
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: CapsLed
-    100002: Case
-    100004: //RootNode
-    100006: FloppyLed
-    100008: PowerButton
-    100010: PowerLed
-    100012: Screen
-    400000: CapsLed
-    400002: Case
-    400004: //RootNode
-    400006: FloppyLed
-    400008: PowerButton
-    400010: PowerLed
-    400012: Screen
+    100000: //RootNode
+    400000: //RootNode
     2100000: No Name
-    2300000: CapsLed
-    2300002: Case
-    2300004: FloppyLed
-    2300006: PowerButton
-    2300008: PowerLed
-    2300010: Screen
-    3300000: CapsLed
-    3300002: Case
-    3300004: FloppyLed
-    3300006: PowerButton
-    3300008: PowerLed
-    3300010: Screen
-    4300000: Case
-    4300002: CapsLed
-    4300004: FloppyLed
-    4300006: PowerLed
-    4300008: PowerButton
-    4300010: Screen
+    2300000: //RootNode
+    3300000: //RootNode
+    4300000: ScreenBezel
   externalObjects: {}
   materials:
     importMaterials: 1
