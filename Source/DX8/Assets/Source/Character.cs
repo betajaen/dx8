@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class Character : MonoBehaviour
 {
-  public CharacterController CharacterController;
+  public CharacterController CC;
   public Camera     Camera;
   public DX8.dx8    Dx8;
   
-  public float      yaw, pitch;
+  public float      Yaw, Pitch;
+
+  public HeldItem   HeldItem;
 
   void Start()
   {
     Cursor.lockState = CursorLockMode.Locked;
     Cursor.visible = false;
+    CC = GetComponent<CharacterController>();
   }
 
   void Update ()
@@ -26,10 +29,35 @@ public class Character : MonoBehaviour
       Application.Quit();
 #endif
     }
+    
+    RaycastHit hit;
 
-    if (Input.GetMouseButtonUp(0))
+    if (HeldItem.IsHolding())
     {
-      RaycastHit hit;
+      if (Input.GetMouseButtonUp(0))
+      {
+        HeldItem.Deattach();
+      }
+      else
+      {
+        Vector3 moveTarget = Vector3.zero;
+
+        Ray ray = Camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
+      
+        if (Physics.Raycast(ray, out hit, 100.0f, 1 << 8))
+        {
+          //moveTarget = hit.point;
+          HeldItem.TargetPoint = hit.point;
+          // Almost right - need to take into held objects radius into account.
+        }
+        else
+        {
+          HeldItem.TargetPoint = ray.origin + ray.direction * 5.0f;
+        }
+      }
+    }
+    else if (Input.GetMouseButtonUp(0))
+    {
       // Boolean Raycast(Vector3 origin, Vector3 direction, Single maxDistance, Int32 layerMask);
       // Physics.Raycast(
       Ray ray = Camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
@@ -37,6 +65,11 @@ public class Character : MonoBehaviour
       if (Physics.Raycast(ray, out hit, 100.0f, 1 << 8))
       {
         Debug.LogFormat("Hit {0}", hit.collider.name);
+        Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
+        if (rb)
+        {
+          HeldItem.Attach(rb);
+        }
       }
       else
       {
@@ -46,16 +79,16 @@ public class Character : MonoBehaviour
     }
 
 
-    yaw += Input.GetAxis("Mouse X") * 2.5f;
-    pitch -= Input.GetAxis("Mouse Y") * 2.5f;
+    Yaw += Input.GetAxis("Mouse X") * 2.5f;
+    Pitch -= Input.GetAxis("Mouse Y") * 2.5f;
 
-    pitch = Mathf.Clamp(pitch, -89.0f, 89.0f);
+    Pitch = Mathf.Clamp(Pitch, -89.0f, 89.0f);
     
-    Quaternion yawq = Quaternion.Euler(0, yaw, 0);
+    Quaternion yawq = Quaternion.Euler(0, Yaw, 0);
 
 
     transform.localRotation = yawq;
-    Camera.transform.localRotation = Quaternion.Euler(pitch, 0, 0);
+    Camera.transform.localRotation = Quaternion.Euler(Pitch, 0, 0);
 
 
     Vector3 velocity = Vector3.zero;
@@ -90,7 +123,7 @@ public class Character : MonoBehaviour
       Vector3 delta = velocity * kSpeed *Time.deltaTime;
       delta = yawq * delta;
 
-      CharacterController.Move(delta);
+      CC.Move(delta);
     }
 
   }
