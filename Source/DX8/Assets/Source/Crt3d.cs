@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Crt : MonoBehaviour
+public class Crt3d : MonoBehaviour
 {
   public void SetTexture(Texture2D texture)
   {

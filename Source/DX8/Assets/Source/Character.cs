@@ -12,10 +12,10 @@ public class Character : MonoBehaviour
 
   public HeldItem   HeldItem;
 
+  public bool       IsFrozen;
+
   void Start()
   {
-    Cursor.lockState = CursorLockMode.Locked;
-    Cursor.visible = false;
     CC = GetComponent<CharacterController>();
   }
 
@@ -28,6 +28,11 @@ public class Character : MonoBehaviour
 #else
       Application.Quit();
 #endif
+    }
+
+    if (IsFrozen)
+    {
+      return;
     }
     
     RaycastHit hit;

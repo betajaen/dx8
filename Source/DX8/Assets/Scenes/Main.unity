@@ -206,6 +206,10 @@ Prefab:
       propertyPath: m_Layer
       value: 8
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
+      propertyPath: m_TagString
+      value: Floppy
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
   m_IsPrefabParent: 0
@@ -240,6 +244,20 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &126210759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 126210756}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88349fd5b26d7741a3b9ea7c1eac082, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GO: {fileID: 927696130}
+  Title: Key Test
+  Path: C:\dev\dx8\ROMS\keytest\keytest.bin.fd
 --- !u!1001 &213149048
 Prefab:
   m_ObjectHideFlags: 0
@@ -412,7 +430,7 @@ MonoBehaviour:
   m_UiScaleMode: 0
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 800, y: 600}
+  m_ReferenceResolution: {x: 1280, y: 720}
   m_ScreenMatchMode: 0
   m_MatchWidthOrHeight: 0
   m_PhysicalUnit: 3
@@ -430,7 +448,7 @@ Canvas:
   m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
@@ -446,10 +464,12 @@ RectTransform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 294736997}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 640, y: 360, z: 0}
+  m_LocalPosition: {x: 512, y: 384, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1868123826}
+  - {fileID: 613379788}
+  - {fileID: 839733819}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -663,6 +683,7 @@ MonoBehaviour:
   Yaw: 0
   Pitch: 0
   HeldItem: {fileID: 2093961690}
+  IsFrozen: 0
 --- !u!1001 &491346216
 Prefab:
   m_ObjectHideFlags: 0
@@ -779,6 +800,86 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &613379787
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 613379788}
+  - component: {fileID: 613379790}
+  - component: {fileID: 613379789}
+  - component: {fileID: 613379791}
+  m_Layer: 5
+  m_Name: RawImage
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &613379788
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 613379787}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 294737001}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &613379789
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 613379787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -98529514, guid: f70555f144d8491a825f0804e09c671c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
+      Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
+  m_Texture: {fileID: 0}
+  m_UVRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 1
+    height: -1
+--- !u!222 &613379790
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 613379787}
+--- !u!114 &613379791
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 613379787}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3777d241a1f1b004a977581c8a116504, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  RawImage: {fileID: 0}
 --- !u!1001 &639335460
 Prefab:
   m_ObjectHideFlags: 0
@@ -874,7 +975,7 @@ Prefab:
       objectReference: {fileID: 2100000, guid: 8dbefa27f5857704fbb137095e276e99, type: 2}
     - target: {fileID: 100000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_Name
-      value: Floppy (1)
+      value: Key Test
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
@@ -887,6 +988,10 @@ Prefab:
     - target: {fileID: 100000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
+      propertyPath: m_TagString
+      value: Floppy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
@@ -975,6 +1080,39 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &839733818
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 839733819}
+  m_Layer: 5
+  m_Name: Disks
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &839733819
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 839733818}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 294737001}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: -1180, y: -860}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &927696130 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 100000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
@@ -1006,6 +1144,104 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &927696133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 927696130}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88349fd5b26d7741a3b9ea7c1eac082, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GO: {fileID: 927696130}
+  Title: Key Test
+  Path: C:\dev\dx8\ROMS\virtualtest\virtualtest.bin.fd
+--- !u!1001 &1134733441
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1558026351}
+    m_Modifications:
+    - target: {fileID: 400000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.468
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.595
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.374
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 400000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_RootOrder
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_LightProbeUsage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_Layer
+      value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+      propertyPath: m_Name
+      value: FloppyDriveSensor
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 2300000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+    - {fileID: 3300000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+  m_ParentPrefab: {fileID: 100100000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+  m_IsPrefabParent: 0
+--- !u!1 &1134733442 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100000, guid: f2fbfb8ee1037764d9b350330efa363c, type: 3}
+  m_PrefabInternal: {fileID: 1134733441}
+--- !u!65 &1134733443
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1134733442}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.54, y: 1.99, z: 1.83}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1134733444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1134733442}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a22a8b1aad778f1418a97d7aed47e327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  IsEmpty: 1
 --- !u!1 &1175700084
 GameObject:
   m_ObjectHideFlags: 0
@@ -1080,15 +1316,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.8
+      value: 3.634
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 11.3
+      value: 11.12
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.53
+      value: -1.685
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1121,6 +1357,10 @@ Prefab:
     - target: {fileID: 100000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_Layer
       value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
+      propertyPath: m_TagString
+      value: Floppy
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
@@ -1156,6 +1396,25 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &1210102954
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1210102951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c88349fd5b26d7741a3b9ea7c1eac082, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GO: {fileID: 927696130}
+  Title: Key Test
+  Path: C:\dev\dx8\ROMS\keytest\keytest.bin.fd
+--- !u!1 &1334545522 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1578325802885908, guid: a44a19d5b439ff44f8bf3cef99b2b641,
+    type: 2}
+  m_PrefabInternal: {fileID: 94471398}
 --- !u!1 &1423482280
 GameObject:
   m_ObjectHideFlags: 0
@@ -1187,9 +1446,33 @@ MonoBehaviour:
   IsOpen: 0
   IsRunning: 0
   RomPath: C:\dev\dx8\ROMS\rom\rom.bin
-  FloppyPath: C:\dev\dx8\ROMS\virtualtest\virtualtest.bin.fd
+  FloppyPath: C:\dev\dx8\ROMS\keytest\keytest.bin.fd
   LastSteps: 0
-  Crt: {fileID: 0}
+  CrtTexture: {fileID: 0}
+  Crt2d: {fileID: 613379791}
+  Crt3d: {fileID: 2085816541}
+  Is2dState: 0
+  ObjectsSim3d:
+  - {fileID: 1868123825}
+  - {fileID: 1334545522}
+  - {fileID: 1175700084}
+  - {fileID: 1558026350}
+  - {fileID: 1545690365}
+  - {fileID: 0}
+  - {fileID: 927696130}
+  - {fileID: 1210102951}
+  - {fileID: 126210756}
+  - {fileID: 1954320510}
+  - {fileID: 2093961689}
+  - {fileID: 837095094}
+  ObjectsSim2d:
+  - {fileID: 613379787}
+  - {fileID: 839733818}
+  MainCamera: {fileID: 329859317}
+  Character: {fileID: 478756091}
+  UI_FloppyDiskList: {fileID: 839733819}
+  UIPrefab_FloppyDisk2d: {fileID: 1260175347552106, guid: 31866f55720a4594f86fe0f4ed2f982e,
+    type: 2}
   IsOff: 0
   InspectShared: 0
   HigherBank: 0
@@ -1754,7 +2037,7 @@ MeshRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2093961689}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1

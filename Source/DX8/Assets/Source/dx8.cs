@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 
@@ -113,9 +114,22 @@ namespace DX8
     public  bool                   IsOpen;
     public  bool                   IsRunning;
     public  string                 RomPath = @"C:\dev\dx8\ROMS\rom\rom.bin";
-    public  string                 FloppyPath = @"C:\dev\dx8\ROMS\virtualtest\virtualtest.bin.fd";
+    public  string                 FloppyPath = @"C:\dev\dx8\ROMS\virtualtest\keytest.bin.fd";
     public  int                    LastSteps = 0;
-    public  Texture2D              Crt;
+    public  Texture2D              CrtTexture;
+    public  Crt2d                  Crt2d;
+    public  Crt3d                  Crt3d;
+    public  bool                   Is2dState = false;
+
+    public  GameObject[]           ObjectsSim3d;
+    public  GameObject[]           ObjectsSim2d;
+    public  Camera                 MainCamera;
+    public  Character              Character;
+    
+    public  RectTransform          UI_FloppyDiskList;
+    public  GameObject             UIPrefab_FloppyDisk2d;
+
+
     public  bool IsOff = false;
     public  bool InspectShared = false;
     public  bool HigherBank = false;
@@ -285,12 +299,13 @@ namespace DX8
     
     void Awake()
     {
-      Crt = new Texture2D(320, 256, TextureFormat.RGB24, false);
-      Crt.filterMode = FilterMode.Point;
+      CrtTexture = new Texture2D(320, 256, TextureFormat.RGB24, false);
+      CrtTexture.filterMode = FilterMode.Point;
 
-      GameObject crtGo = GameObject.Find("Crt");
-      crtGo.GetComponent<Crt>().SetTexture(Crt);
-
+      //GameObject crtGo = GameObject.Find("Crt");
+      //crtGo.GetComponent<Crt>().SetTexture(Crt);
+      Crt2d.SetTexture(CrtTexture);
+      Crt3d.SetTexture(CrtTexture);
     }
 
     void Start()
@@ -302,6 +317,9 @@ namespace DX8
       DllWatcher.EnableRaisingEvents = true;
 #endif
       ReloadNeeded = true;
+      
+      FindDisks();
+      Update2dState(false);
     }
     
 #if UNITY_EDITOR
@@ -328,6 +346,12 @@ namespace DX8
 
     void Update()
     {
+      if (Input.GetMouseButtonUp(2))
+      {
+        Is2dState = !Is2dState;
+        Update2dState(Is2dState);
+      }
+
       if (ReloadNeeded)
       {
         ReloadNeeded = false;
@@ -337,7 +361,7 @@ namespace DX8
 
       if (IsOpen)
       {
-        if (IsRunning && GotFocus)
+        if (IsRunning && Is2dState)
         {
           SendKeys();
         }
@@ -554,8 +578,8 @@ namespace DX8
       if (Library.GetValue(Api.CrtDirty) == 1)
       {
         IntPtr crt = Library.GetCrt();
-        Crt.LoadRawTextureData(crt, 320 * 256 * 3);
-        Crt.Apply();
+        CrtTexture.LoadRawTextureData(crt, 320 * 256 * 3);
+        CrtTexture.Apply();
       }
     }
     
@@ -725,6 +749,61 @@ namespace DX8
             Library.Call(Api.KeyDown, ii);
         }
       }
+    }
+
+    void FindDisks()
+    {
+      List<string> paths = new List<string>();
+
+      FindDisksInPath(paths, "C:\\dev\\dx8\\ROMS");
+      FindDisksInPath(paths, Application.dataPath);
+      
+      int order = 0;
+      foreach(var path in paths)
+      {
+        GameObject floppy2dGo = UnityEngine.Object.Instantiate(UIPrefab_FloppyDisk2d);
+        FloppyDisk2dItem floppy2d = floppy2dGo.GetComponent<FloppyDisk2dItem>();
+        floppy2d.Title = System.IO.Path.GetFileNameWithoutExtension(path);
+        floppy2d.Path = path;
+        floppy2d.Order = order++;
+
+        floppy2d.transform.SetParent(UI_FloppyDiskList.transform, false);
+      }
+
+    }
+
+    void FindDisksInPath(List<string> paths, string m)
+    {
+      paths.AddRange(System.IO.Directory.GetFiles(m, "*.fd", System.IO.SearchOption.AllDirectories));
+    }
+
+    void Update2dState(bool is2d)
+    {
+      foreach(var obj in ObjectsSim2d)
+      {
+        if (obj != null)
+        {
+          obj.SetActive(is2d);
+        }
+      }
+      foreach(var obj in ObjectsSim3d)
+      {
+        if (obj != null)
+        {
+          obj.SetActive(!is2d);
+        }
+      }
+
+      Character.IsFrozen = is2d;
+      
+      Cursor.lockState = is2d ? CursorLockMode.None : CursorLockMode.Locked;
+    }
+
+    public void UI_InsertFloppy(string path)
+    {
+      FloppyPath = path;
+      LoadFloppy();
+      Library.Call(Api.InsertDisk, 0);
     }
 
   }
