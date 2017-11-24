@@ -136,7 +136,7 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 
 #define DO_OP_CMP(R0, R1)           Compare(R0, R1);                   REG_PC += Opf_Single;
 #define DO_OP_CMP_IMM(R0)           Compare(R0, REG_IMM);              REG_PC += Opf_Byte;
-#define DO_OP_CMP_IMMW(R0, R1)      CompareW(R0, REG_WORD);            REG_PC += Opf_Word;
+#define DO_OP_CMP_IMMW(R0)          CompareW(R0, REG_WORD);            REG_PC += Opf_Word;
 #define DO_OP_CMP_SELF(R0)          FlagsOp(R0);                       REG_PC += Opf_Single;
 
 #define DO_OP_CMP_BIT(R0)           CompareBit(R0, data.lo);           REG_PC += Opf_Byte;  

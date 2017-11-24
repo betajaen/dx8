@@ -120,9 +120,11 @@ namespace DX8
     public  Crt2d                  Crt2d;
     public  Crt3d                  Crt3d;
     public  bool                   Is2dState = false;
+    public  bool                   IsKeyState = false;
 
     public  GameObject[]           ObjectsSim3d;
     public  GameObject[]           ObjectsSim2d;
+    
     public  Camera                 MainCamera;
     public  Character              Character;
     
@@ -346,7 +348,13 @@ namespace DX8
 
     void Update()
     {
-      if (Input.GetMouseButtonUp(2))
+      if (!Is2dState && Input.GetMouseButtonUp(2))
+      {
+        IsKeyState = !IsKeyState;
+        Update2dState(Is2dState);
+      }
+
+      if (Input.GetKeyUp(KeyCode.LeftAlt))
       {
         Is2dState = !Is2dState;
         Update2dState(Is2dState);
@@ -361,7 +369,7 @@ namespace DX8
 
       if (IsOpen)
       {
-        if (IsRunning && Is2dState)
+        if (IsRunning && (IsKeyState || Is2dState))
         {
           SendKeys();
         }
@@ -702,6 +710,7 @@ namespace DX8
       KeyStates[Api.Key_LeftBrace]             = new KeyState(KeyCode.LeftBracket, KeyMod.Shift);
       KeyStates[Api.Key_RightBrace]            = new KeyState(KeyCode.RightBracket, KeyMod.Shift);
       KeyStates[Api.Key_QuestionMark]          = new KeyState(KeyCode.Question, KeyMod.None);
+      KeyStates[Api.Key_Divide]                = new KeyState(KeyCode.Slash, KeyMod.None);
       KeyStates[Api.Key_LeftAngleBracket]      = new KeyState(KeyCode.Less, KeyMod.None);
       KeyStates[Api.Key_RightAngleBracket]     = new KeyState(KeyCode.Greater, KeyMod.None);
       KeyStates[Api.Key_Colon]                 = new KeyState(KeyCode.Colon, KeyMod.None);
@@ -737,16 +746,20 @@ namespace DX8
         KeyState state = KeyStates[ii];
         if (state== null)
         {
-          
            continue;
         }
 
         if (state.Update())
         {
           if (state.Released)
+          {
+            Debug.LogFormat("Up {0} {1}", ii, state.mainKey);
             Library.Call(Api.KeyUp, ii);
+          }
           else if (state.Pressed)
+          {
             Library.Call(Api.KeyDown, ii);
+          }
         }
       }
     }
@@ -794,7 +807,7 @@ namespace DX8
         }
       }
 
-      Character.IsFrozen = is2d;
+      Character.FreezeState = is2d ? FreezeState.Frozen : (IsKeyState ? FreezeState.LookOnly : FreezeState.None);
       
       Cursor.lockState = is2d ? CursorLockMode.None : CursorLockMode.Locked;
     }

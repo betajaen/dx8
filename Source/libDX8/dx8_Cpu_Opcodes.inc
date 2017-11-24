@@ -156,13 +156,15 @@ OP(Cmp, y, Opf_Single, 2, { DO_OP_CMP_SELF(REG_Y); })
 OP(Cmp, z, Opf_Single, 2, { DO_OP_CMP_SELF(REG_Z); })
 OP(Cmp, w, Opf_Single, 2, { DO_OP_CMP_SELF(REG_W); })
 
-OP(Cmp, xB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_X); })
-OP(Cmp, yB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_Y); })
-OP(Cmp, zB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_Z); })
-OP(Cmp, wB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_W); })
-OP(Cmp, aB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_A); })
-OP(Cmp, iW, Opf_Word, 6,   { DO_OP_CMP_IMMW(REG_I, REG_WORD); })
-OP(Cmp, jW, Opf_Word, 6,   { DO_OP_CMP_IMMW(REG_J, REG_WORD); })
+// Cmpi
+OP(Cmpi, xB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_X); })
+OP(Cmpi, yB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_Y); })
+OP(Cmpi, zB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_Z); })
+OP(Cmpi, wB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_W); })
+OP(Cmpi, aB, Opf_Byte, 3,   { DO_OP_CMP_IMM(REG_A); })
+
+OP(Cmpi, iW, Opf_Word, 6,   { DO_OP_CMP_IMMW(REG_I); })
+OP(Cmpi, jW, Opf_Word, 6,   { DO_OP_CMP_IMMW(REG_J); })
 
 // Bit Test
 OP(CmpBit, xB, Opf_Byte, 3, { DO_OP_CMP_BIT(REG_X); })

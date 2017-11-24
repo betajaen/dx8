@@ -921,32 +921,37 @@ macro cmp [A, B] {
   else if A eq w
     ; [$77] cmp w
     db $77
-  else if A eq x
-    ; [$78] cmp x,$00
+  else
+    error SyntaxError
+  end if
+}
+macro cmpi [A, B] {
+  if A eq x
+    ; [$78] cmpi x,$00
     db $78
     db B
   else if A eq y
-    ; [$79] cmp y,$00
+    ; [$79] cmpi y,$00
     db $79
     db B
   else if A eq z
-    ; [$7A] cmp z,$00
+    ; [$7A] cmpi z,$00
     db $7A
     db B
   else if A eq w
-    ; [$7B] cmp w,$00
+    ; [$7B] cmpi w,$00
     db $7B
     db B
   else if A eq a
-    ; [$7C] cmp a,$00
+    ; [$7C] cmpi a,$00
     db $7C
     db B
   else if A eq i
-    ; [$7D] cmp i,$0000
+    ; [$7D] cmpi i,$0000
     db $7D
     dw B
   else if A eq j
-    ; [$7E] cmp j,$0000
+    ; [$7E] cmpi j,$0000
     db $7E
     dw B
   else
@@ -1298,13 +1303,13 @@ OP_CMP_x = $74
 OP_CMP_y = $75
 OP_CMP_z = $76
 OP_CMP_w = $77
-OP_CMP_xB = $78
-OP_CMP_yB = $79
-OP_CMP_zB = $7A
-OP_CMP_wB = $7B
-OP_CMP_aB = $7C
-OP_CMP_iA = $7D
-OP_CMP_jA = $7E
+OP_CMPI_xB = $78
+OP_CMPI_yB = $79
+OP_CMPI_zB = $7A
+OP_CMPI_wB = $7B
+OP_CMPI_aB = $7C
+OP_CMPI_iA = $7D
+OP_CMPI_jA = $7E
 OP_CMPBIT_xB = $7F
 OP_CMPBIT_yB = $80
 OP_CMPBIT_zB = $81

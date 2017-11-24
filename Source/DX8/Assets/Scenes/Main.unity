@@ -683,7 +683,7 @@ MonoBehaviour:
   Yaw: 0
   Pitch: 0
   HeldItem: {fileID: 2093961690}
-  IsFrozen: 0
+  FreezeState: 0
 --- !u!1001 &491346216
 Prefab:
   m_ObjectHideFlags: 0
@@ -939,7 +939,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -2.72
+      value: 3.91
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -947,7 +947,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.44
+      value: -1.18
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1316,7 +1316,7 @@ Prefab:
     m_Modifications:
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 3.634
+      value: -4.138
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalPosition.y
@@ -1324,7 +1324,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.685
+      value: -1.107
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 789a317c2a874e549b969549c7cc27d0, type: 3}
       propertyPath: m_LocalRotation.x
@@ -1452,6 +1452,7 @@ MonoBehaviour:
   Crt2d: {fileID: 613379791}
   Crt3d: {fileID: 2085816541}
   Is2dState: 0
+  IsKeyState: 0
   ObjectsSim3d:
   - {fileID: 1868123825}
   - {fileID: 1334545522}

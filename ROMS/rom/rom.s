@@ -233,7 +233,7 @@ IDLE:
         _CallFunction DrawCursor
 
         load a, sFloppy_Msg
-        cmp a, $00
+        cmpi a, $00
         call.neq Fn_FloppyHandler
 
         jmp IDLE

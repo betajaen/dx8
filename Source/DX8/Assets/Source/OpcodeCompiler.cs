@@ -59,6 +59,7 @@ namespace DX8
       RollLeft,
       RollRight,
       Cmp,
+      Cmpi,
       CmpBit,
       Jmp,
       JmpEq,
@@ -129,6 +130,7 @@ namespace DX8
       "rol",
       "ror",
       "cmp",
+      "cmpi",
       "cmpbit",
       "jmp",
       "jmp.eq",
@@ -746,7 +748,7 @@ namespace DX8
       System.Text.StringBuilder sb = new System.Text.StringBuilder(len * 30);
       StringBuilder temp = new StringBuilder(100);
       
-      int dataSection = 0x300;
+      int dataSection = 0x0; //300;
       byte lo = 0, hi = 0;
       
       Dictionary<int, DecompiledLine> lines = new Dictionary<int, DecompiledLine>(2048);
