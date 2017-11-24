@@ -34,6 +34,7 @@
 #define REG_IO_OP (0x003B)
 #define REG_IO_DATA_A (0x003C)
 #define REG_IO_DATA_B (0x003D)
+#define REG_RAND (0x003E)
 #define REG_MMU_PAGE_REAL_MODE (0x0040)
 #define REG_MMU_MAP0_DST (0x0041)
 #define REG_MMU_MAP0_SRC_LOWER (0x0042)

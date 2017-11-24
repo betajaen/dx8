@@ -70,8 +70,8 @@ typedef struct {
       Byte  bZero : 1;
       Byte  bNegative : 1;
       Byte  bCarry : 1;
-      Byte  flag4 : 1;
-      Byte  flag5 : 1;
+      Byte  bGreater   : 1;
+      Byte  flag  : 1;
       Byte  flag6 : 1;
       Byte  flag7 : 1;
       Byte  flag8 : 1;

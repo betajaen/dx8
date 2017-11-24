@@ -47,6 +47,7 @@ Cpu cpu;
 #define FL_Z      (cpu.flags.bZero)
 #define FL_N      (cpu.flags.bNegative)
 #define FL_C      (cpu.flags.bCarry)
+#define FL_G      (cpu.flags.bGreater)
 #define REG_IMM   (data.lo)
 #define REG_WORD  (data.w)
 
@@ -106,28 +107,41 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_CALL()                Do_Call(Opf_Address, REG_WORD);
 #define DO_OP_CALL_EQ()             Do_CallCond(FL_Z == 1, Opf_Address, REG_WORD);
 #define DO_OP_CALL_NEQ()            Do_CallCond(FL_Z == 0, Opf_Address, REG_WORD);
-#define DO_OP_CALL_GT()             Do_CallCond(FL_N == 1, Opf_Address, REG_WORD);
-#define DO_OP_CALL_LT()             Do_CallCond(FL_C == 1, Opf_Address, REG_WORD);
+#define DO_OP_CALL_GT()             Do_CallCond(FL_G == 1, Opf_Address, REG_WORD);
+#define DO_OP_CALL_LT()             Do_CallCond(FL_G == 0 && FL_Z == 0, Opf_Address, REG_WORD);
 #define DO_OP_CALL_Z()              Do_CallCond(FL_Z == 1, Opf_Address, REG_WORD);
 #define DO_OP_CALL_NOT_Z()          Do_CallCond(FL_Z == 0, Opf_Address, REG_WORD);
 
 #define DO_OP_RETURN()              Return(cpu);
 
+#define DO_OP_COPY(DST, SRC)        DST = SRC;                         REG_PC += Opf_Single;
 #define DO_OP_SET(DST, SRC)         DST = SRC;                         REG_PC += Opf_Byte;
 #define DO_OP_SETW(DST, SRC)        DST = SRC;                         REG_PC += Opf_Word;
 
 #define DO_OP_ADD(R0, R1)           R0 = FlagsOp(R0 + R1);             REG_PC += Opf_Single;
-#define DO_OP_ADC(R0, R1)           R0 = ADC(R0, R1);                  REG_PC += Opf_Single;
-#define DO_OP_ADDW(R0, R1)          R0 = FlagsOpW(R0 + R1);            REG_PC += Opf_Single;
-
 #define DO_OP_ADD_IMM(R0)           R0 = FlagsOp(R0 + REG_IMM);        REG_PC += Opf_Byte;
-#define DO_OP_ADC_IMM(R0)           R0 = ADC(R0, REG_IMM);             REG_PC += Opf_Byte;
+#define DO_OP_ADDW(R0, R1)          R0 = FlagsOpW(R0 + R1);            REG_PC += Opf_Single;
+#define DO_OP_ADDW_IMM(R0)          R0 = FlagsOpW(R0 + REG_WORD);      REG_PC += Opf_Word;
 
 #define DO_OP_SUB(R0, R1)           R0 = FlagsOp(R0 - R1);             REG_PC += Opf_Single;
 #define DO_OP_SUB_IMM(R0)           R0 = FlagsOp(R0 - REG_IMM);        REG_PC += Opf_Byte;
+#define DO_OP_SUBW(R0, R1)          R0 = FlagsOpW(R0 - R1);            REG_PC += Opf_Single;
+#define DO_OP_SUBW_IMM(R0)          R0 = FlagsOpW(R0 - REG_WORD);      REG_PC += Opf_Word;
 
 #define DO_OP_MUL(R0, R1)           R0 = FlagsOp(R0 * R1);             REG_PC += Opf_Single;
 #define DO_OP_MUL_IMM(R0)           R0 = FlagsOp(R0 * REG_IMM);        REG_PC += Opf_Byte;
+#define DO_OP_MULW(R0, R1)          R0 = FlagsOpW(R0 * R1);            REG_PC += Opf_Single;
+#define DO_OP_MULW_IMM(R0)          R0 = FlagsOpW(R0 * REG_WORD);      REG_PC += Opf_Word;
+
+#define DO_OP_DIV(R0, R1)           R0 = FlagsOp(R0 / R1);             REG_PC += Opf_Single;
+#define DO_OP_DIV_IMM(R0)           R0 = FlagsOp(R0 / REG_IMM);        REG_PC += Opf_Byte;
+#define DO_OP_DIVW(R0, R1)          R0 = FlagsOpW(R0 / R1);            REG_PC += Opf_Single;
+#define DO_OP_DIVW_IMM(R0)          R0 = FlagsOpW(R0 / REG_WORD);      REG_PC += Opf_Word;
+
+#define DO_OP_MOD(R0, R1)           R0 = FlagsOp(R0 % R1);             REG_PC += Opf_Single;
+#define DO_OP_MOD_IMM(R0)           R0 = FlagsOp(R0 % REG_IMM);        REG_PC += Opf_Byte;
+#define DO_OP_MODW(R0, R1)          R0 = FlagsOpW(R0 % R1);            REG_PC += Opf_Single;
+#define DO_OP_MODW_IMM(R0)          R0 = FlagsOpW(R0 % REG_WORD);      REG_PC += Opf_Word;
 
 #define DO_OP_INC(R0)               R0 = FlagsOp(R0 + 1);              REG_PC += Opf_Single;
 #define DO_OP_DEC(R0)               R0 = FlagsOp(R0 - 1);              REG_PC += Opf_Single;
@@ -167,15 +181,15 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_JMP_REL()             JumpRel(REG_IMM);
 #define DO_OP_JMP_EQ()              JumpCond(FL_Z == 1, data.w, Opf_Address);
 #define DO_OP_JMP_NEQ()             JumpCond(FL_Z == 0, data.w, Opf_Address);
-#define DO_OP_JMP_GT()              JumpCond(FL_N == 1, data.w, Opf_Address);
-#define DO_OP_JMP_LT()              JumpCond(FL_C == 1, data.w, Opf_Address);
+#define DO_OP_JMP_GT()              JumpCond(FL_G == 1, data.w, Opf_Address);
+#define DO_OP_JMP_LT()              JumpCond(FL_G == 0 && FL_Z == 0, data.w, Opf_Address);
 #define DO_OP_JMP_Z()               JumpCond(FL_Z == 1, data.w, Opf_Address);
 #define DO_OP_JMP_NOT_Z()           JumpCond(FL_Z == 0, data.w, Opf_Address);
 
 #define DO_OP_JMP_REL_EQ()          JumpCondRel(FL_Z == 1, REG_IMM, Opf_Byte);
 #define DO_OP_JMP_REL_NEQ()         JumpCondRel(FL_Z == 0, REG_IMM, Opf_Byte);
-#define DO_OP_JMP_REL_GT()          JumpCondRel(FL_N == 1, REG_IMM, Opf_Byte);
-#define DO_OP_JMP_REL_LT()          JumpCondRel(FL_C == 1, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_GT()          JumpCondRel(FL_G == 1, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_LT()          JumpCondRel(FL_G == 0 && FL_Z == 0, REG_IMM, Opf_Byte);
 #define DO_OP_JMP_REL_Z()           JumpCondRel(FL_Z == 1, REG_IMM, Opf_Byte);
 #define DO_OP_JMP_REL_NOT_Z()       JumpCondRel(FL_Z == 0, REG_IMM, Opf_Byte);
 #define DO_OP_INT()                 DoInterrupt(REG_IMM);              REG_PC += Opf_Byte;
@@ -532,6 +546,7 @@ inline void Compare(Byte lhs, Byte rhs)
   int val = rhs - lhs;
   cpu.flags.bZero     = (val == 0);
   cpu.flags.bNegative = (val < 0);
+  cpu.flags.bGreater  = lhs > rhs;
 }
 
 inline void CompareW(Word lhs, Word rhs)
@@ -540,6 +555,7 @@ inline void CompareW(Word lhs, Word rhs)
   int val = rhs - lhs;
   cpu.flags.bZero = (val == 0);
   cpu.flags.bNegative = (val < 0);
+  cpu.flags.bGreater = lhs > rhs;
 }
 
 inline void CompareBit(Byte val, Byte bit)
@@ -548,6 +564,7 @@ inline void CompareBit(Byte val, Byte bit)
   cpu.flags.bZero     = (v == 0);
   cpu.flags.bNegative = 0;
   cpu.flags.bCarry    = 0;
+  cpu.flags.bGreater  = 0;
 
   // LOGF("CMPBIT >> Val=$%2X Bit=$%2X => V=$%2X, $%2X", val, bit, v, cpu.flags.bZero);
 }

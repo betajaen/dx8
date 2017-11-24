@@ -3,6 +3,29 @@
 ; Opcode helpers
 ; =============================================================
 
+macro _swap R0, R1 {
+      push a
+      cpy a, R1
+      cpy R1, R0
+      cpy R0, a
+      pop a
+}
+
+macro _push_imm VAL {
+      set a, VAL
+      push a
+}
+
+macro _push i {
+      push x
+      push y
+}
+
+macro _pop i {
+      pop y
+      pop x
+}
+
 macro _rjmp x {
       .here:
             addr = x - $
@@ -99,10 +122,17 @@ macro Var_Byte Name, InitialValue {
       s#Name = kProgramSpace + sLcl#Name
 }
 
-
 macro Var_Word Name, InitialValue {
       sLcl#Name:
       dw InitialValue
+      s#Name = kProgramSpace + sLcl#Name
+}
+
+macro Var_Bytes Name, Count {
+      sLcl#Name:
+      repeat Count
+            db $00
+      end repeat
       s#Name = kProgramSpace + sLcl#Name
 }
 

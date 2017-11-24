@@ -63,6 +63,16 @@ OP(CallNotZ,A,  Opf_Address, 4, { DO_OP_CALL_NOT_Z(); })
 // Return
 OP(Return, None, Opf_Single, 4,   { DO_OP_RETURN(); })
 
+// Copy
+OP(Copy, ax, Opf_Single, 1, { DO_OP_COPY(REG_A, REG_X); })
+OP(Copy, ay, Opf_Single, 1, { DO_OP_COPY(REG_A, REG_Y); })
+OP(Copy, az, Opf_Single, 1, { DO_OP_COPY(REG_A, REG_Z); })
+OP(Copy, aw, Opf_Single, 1, { DO_OP_COPY(REG_A, REG_W); })
+OP(Copy, xa, Opf_Single, 1, { DO_OP_COPY(REG_X, REG_A); })
+OP(Copy, ya, Opf_Single, 1, { DO_OP_COPY(REG_Y, REG_A); })
+OP(Copy, za, Opf_Single, 1, { DO_OP_COPY(REG_Z, REG_A); })
+OP(Copy, wa, Opf_Single, 1, { DO_OP_COPY(REG_W, REG_A); })
+
 // Set
 OP(Set, xB, Opf_Byte, 3, { DO_OP_SET(REG_X, REG_IMM); })
 OP(Set, yB, Opf_Byte, 3, { DO_OP_SET(REG_Y, REG_IMM); })
@@ -77,7 +87,19 @@ OP(Add, ax, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_X); })
 OP(Add, ay, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_Y); })
 OP(Add, az, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_Z); })
 OP(Add, aw, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_W); })
-OP(Add, aa, Opf_Single, 3, { DO_OP_ADD(REG_A, REG_A); })
+
+OP(Add, ij, Opf_Single, 4, { DO_OP_ADDW(REG_I, REG_J) })
+
+OP(Add, ia, Opf_Single, 4, { DO_OP_ADDW(REG_I, REG_A) })
+OP(Add, iz, Opf_Single, 4, { DO_OP_ADDW(REG_I, REG_Z) })
+OP(Add, iw, Opf_Single, 4, { DO_OP_ADDW(REG_I, REG_W) })
+
+OP(Add, ja, Opf_Single, 4, { DO_OP_ADDW(REG_J, REG_A) })
+OP(Add, jx, Opf_Single, 4, { DO_OP_ADDW(REG_J, REG_X) })
+OP(Add, jy, Opf_Single, 4, { DO_OP_ADDW(REG_J, REG_Y) })
+
+OP(Add, iW, Opf_Word,   4, { DO_OP_ADDW_IMM(REG_I) })
+OP(Add, jW, Opf_Word,   4, { DO_OP_ADDW_IMM(REG_J) })
 
 OP(Add, xB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_X); })
 OP(Add, yB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_Y); })
@@ -85,27 +107,15 @@ OP(Add, zB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_Z); })
 OP(Add, wB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_W); })
 OP(Add, aB, Opf_Byte,   3, { DO_OP_ADD_IMM(REG_A); })
 
-OP(Add, iz, Opf_Single, 4, { DO_OP_ADDW(REG_I, REG_Z) })
-OP(Add, iw, Opf_Single, 4, { DO_OP_ADDW(REG_J, REG_Z) })
-
-// Adc
-OP(Adc, ax, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_X); })
-OP(Adc, ay, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_Y); })
-OP(Adc, az, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_Z); })
-OP(Adc, aw, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_W); })
-OP(Adc, aa, Opf_Single, 3, { DO_OP_ADC(REG_A, REG_A); })
-
-OP(Adc, xB, Opf_Byte,   3, { DO_OP_ADC_IMM(REG_X); })
-OP(Adc, yB, Opf_Byte,   3, { DO_OP_ADC_IMM(REG_Y); })
-OP(Adc, zB, Opf_Byte,   3, { DO_OP_ADC_IMM(REG_Z); })
-OP(Adc, wB, Opf_Byte,   3, { DO_OP_ADC_IMM(REG_W); })
-OP(Adc, aB, Opf_Byte,   3, { DO_OP_ADC_IMM(REG_A); })
-
 // Sub
 OP(Sub, ax, Opf_Single, 3, { DO_OP_SUB(REG_A, REG_X); })
 OP(Sub, ay, Opf_Single, 3, { DO_OP_SUB(REG_A, REG_Y); })
 OP(Sub, az, Opf_Single, 3, { DO_OP_SUB(REG_A, REG_Z); })
 OP(Sub, aw, Opf_Single, 3, { DO_OP_SUB(REG_A, REG_W); })
+
+OP(Sub, iW, Opf_Single, 4, { DO_OP_SUBW_IMM(REG_I) })
+OP(Sub, jW, Opf_Single, 4, { DO_OP_SUBW_IMM(REG_J) })
+OP(Sub, ij, Opf_Single, 3, { DO_OP_SUBW(REG_I, REG_J); })
 
 OP(Sub, xB, Opf_Byte,   3, { DO_OP_SUB_IMM(REG_X); })
 OP(Sub, yB, Opf_Byte,   3, { DO_OP_SUB_IMM(REG_Y); })
@@ -114,17 +124,25 @@ OP(Sub, wB, Opf_Byte,   3, { DO_OP_SUB_IMM(REG_W); })
 OP(Sub, aB, Opf_Byte,   3, { DO_OP_SUB_IMM(REG_A); })
 
 // Mul
-OP(Mul, ax, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_X); })
-OP(Mul, ay, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_Y); })
-OP(Mul, az, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_Z); })
-OP(Mul, aw, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_W); })
-OP(Mul, aa, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_A); })
+OP(Mul, ax, Opf_Single, 3, { DO_OP_MUL(REG_A, REG_X);    })
+OP(Mul, aB, Opf_Byte,   3, { DO_OP_MUL_IMM(REG_A);       })
+OP(Mul, ij, Opf_Single, 3, { DO_OP_MULW(REG_I, REG_J);   })
+OP(Mul, iW, Opf_Word, 3,   { DO_OP_MULW_IMM(REG_I); })
+OP(Mul, jW, Opf_Word, 3,   { DO_OP_MULW_IMM(REG_J); })
 
-OP(Mul, xB, Opf_Byte,   3, { DO_OP_MUL_IMM(REG_X); })
-OP(Mul, yB, Opf_Byte,   3, { DO_OP_MUL_IMM(REG_Y); })
-OP(Mul, zB, Opf_Byte,   3, { DO_OP_MUL_IMM(REG_Z); })
-OP(Mul, wB, Opf_Byte,   3, { DO_OP_MUL_IMM(REG_W); })
-OP(Mul, aB, Opf_Byte,   3, { DO_OP_MUL_IMM(REG_A); })
+// Div
+OP(Div, ax, Opf_Single, 3, { DO_OP_DIV(REG_A, REG_X);  })
+OP(Div, aB, Opf_Byte,   3, { DO_OP_DIV_IMM(REG_A);     })
+OP(Div, ij, Opf_Single, 3, { DO_OP_DIVW(REG_I, REG_J); })
+OP(Div, iW, Opf_Word,   3, { DO_OP_DIVW_IMM(REG_I); })
+OP(Div, jW, Opf_Word,   3, { DO_OP_DIVW_IMM(REG_J); })
+
+// Mod
+OP(Mod, ax, Opf_Single, 3, { DO_OP_MOD(REG_A, REG_X);  })
+OP(Mod, aB, Opf_Byte,   3, { DO_OP_MOD_IMM(REG_A);     })
+OP(Mod, ij, Opf_Single, 3, { DO_OP_MODW(REG_I, REG_J); })
+OP(Mod, iW, Opf_Word,   3, { DO_OP_MODW_IMM(REG_I); })
+OP(Mod, jW, Opf_Word,   3, { DO_OP_MODW_IMM(REG_J); })
 
 // Inc
 OP(Inc, x, Opf_Single, 1, {DO_OP_INC(REG_X);})

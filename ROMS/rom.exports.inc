@@ -12,4 +12,3 @@ MemSet_Len equ j
 MemSet_Val equ a
 ;! Constant: Table of Keycodes to ASCII equilvents
 Import_Const Rom, Keycode2Ascii, $7B06
-
