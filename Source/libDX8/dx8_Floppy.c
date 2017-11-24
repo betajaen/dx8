@@ -48,6 +48,13 @@ Byte  sFloppyOp_Track;
 
 Byte  sFloppy[FLOPPY_SIZE];
 
+bool Fpy_Busy()
+{
+  Byte op = Mmu_Get(REG_FPY_OP);
+
+  return op > 0x00 && op < 0xFF;
+}
+
 bool Fpy_HasDisk()
 {
   return (Mmu_Get(REG_FPY_STATE) & IO_FPY_STATE_DISK) != 0;

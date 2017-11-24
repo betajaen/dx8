@@ -21,6 +21,9 @@ public class Character : MonoBehaviour
 
   public FreezeState       FreezeState;
 
+  public UnityEngine.UI.Text  LookAtInfo;
+  public GameObject           LastLookedAt;
+
   void Start()
   {
     CC = GetComponent<CharacterController>();
@@ -68,24 +71,61 @@ public class Character : MonoBehaviour
           }
         }
       }
-      else if (Input.GetMouseButtonUp(0))
+      else
       {
+        bool press = (Input.GetMouseButtonUp(0));
+
         // Boolean Raycast(Vector3 origin, Vector3 direction, Single maxDistance, Int32 layerMask);
         // Physics.Raycast(
         Ray ray = Camera.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2, 0));
         //public static Boolean Raycast(Ray ray, out RaycastHit hitInfo, Single maxDistance, Int32 layerMask);
         if (Physics.Raycast(ray, out hit, 100.0f, 1 << 8))
         {
-          Debug.LogFormat("Hit {0}", hit.collider.name);
-          Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
-          if (rb)
+          if (LastLookedAt != hit.collider.gameObject)
           {
-            HeldItem.Attach(rb);
+            LastLookedAt = hit.collider.gameObject;
+
+            string text;
+
+            if (LastLookedAt.tag == "Floppy")
+            {
+              FloppyDisk3dItem floppy = LastLookedAt.GetComponent<FloppyDisk3dItem>();
+              text = floppy.Title;
+            }
+            else
+            {
+              text = LastLookedAt.name;
+            }
+
+            LookAtInfo.text = text;
+
+          }
+
+          if (press && hit.collider.name == "PowerButton")
+          {
+            Dx8.PowerButtonPressed();
+          }
+          else if (press && hit.collider.name == "FloppyButton")
+          {
+            Dx8.FloppySensor.Eject();
+            // UI_RemoveFloppy();
+          }
+          else if (press)
+          {
+            Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
+            if (rb)
+            {
+              HeldItem.Attach(rb);
+            }
           }
         }
         else
         {
-          Debug.Log("No hit");
+          if (LastLookedAt != null)
+          {
+            LookAtInfo.text = string.Empty;
+            LastLookedAt = null;
+          }
         }
 
       }

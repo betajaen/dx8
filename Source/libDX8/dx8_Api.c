@@ -63,6 +63,8 @@ int  Gpu_GetTimer();
 
 Byte Program_Get(Word address);
 
+bool Fpy_Busy();
+
 void Keyboard_ReceiveKeyUp(int key);
 void Keyboard_ReceiveKeyDown(int key);
 
@@ -124,6 +126,8 @@ EXPORT int GetValue(int name)
       return Gpu_GetTimer();
     case Api_CpuHalt:
       return Cpu_GetHalt();
+    case Api_FloppyBusy:
+      return Fpy_Busy();
   }
   return 0;
 }

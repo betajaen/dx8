@@ -130,15 +130,27 @@ namespace DX8
     
     public  RectTransform          UI_FloppyDiskList;
     public  GameObject             UIPrefab_FloppyDisk2d;
+    public  Transform              FloppyDiskStack;
+    public  GameObject             Prefab_FloppyDisk3d;
+
+    public  FloppySensor           FloppySensor;
+    public  MeshRenderer           Light_Power;
+    public  MeshRenderer           Light_Floppy;
+    public  MeshRenderer           Light_CapsLock;
+
+    Color   Light_PowerCol, Light_FloppyCol, Light_CapsLockCol;
 
 
+    public bool  PowerIsOn = false;
+    
     public  bool IsOff = false;
     public  bool InspectShared = false;
     public  bool HigherBank = false;
     public  int  InspectAddress = 0;
 
     public  bool GotFocus = false;
-    
+    public  bool IsFloppyLoaded = false;
+
     public enum KeyMod
     {
       None,
@@ -303,9 +315,27 @@ namespace DX8
     {
       CrtTexture = new Texture2D(320, 256, TextureFormat.RGB24, false);
       CrtTexture.filterMode = FilterMode.Point;
+      Color32[] col = CrtTexture.GetPixels32();
+      Color32 black = new Color32(0,0,0, 255);
+      for(int i=0;i < 320 * 256;i++)
+        col[i] = black;
 
-      //GameObject crtGo = GameObject.Find("Crt");
-      //crtGo.GetComponent<Crt>().SetTexture(Crt);
+      CrtTexture.SetPixels32(col);
+      CrtTexture.Apply();
+
+      Light_PowerCol    = new Color(0.341f, 0.846f, 0.323f, 1.000f); // Light_Power.sharedMaterial.GetColor("_EmissionColor");
+      Light_FloppyCol   = new Color(0.868f, 0.217f, 0.217f, 1.000f);
+      Light_CapsLockCol = new Color(0.801f, 0.714f, 0.348f, 1.000f);
+      
+      Debug.Log(Light_PowerCol);
+      Debug.Log(Light_FloppyCol);
+      Debug.Log(Light_CapsLockCol);
+
+
+      Light_Power.sharedMaterial.SetColor("_EmissionColor", Color.black);
+      Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Color.black);
+      Light_CapsLock.sharedMaterial.SetColor("_EmissionColor", Color.black);
+
       Crt2d.SetTexture(CrtTexture);
       Crt3d.SetTexture(CrtTexture);
     }
@@ -339,7 +369,7 @@ namespace DX8
     {
       if (IsOpen)
       {
-        if (IsRunning)
+        if (PowerIsOn && IsRunning)
         {
           RunOnce(Time.fixedDeltaTime);
         }
@@ -369,7 +399,7 @@ namespace DX8
 
       if (IsOpen)
       {
-        if (IsRunning && (IsKeyState || Is2dState))
+        if (PowerIsOn && IsRunning && (IsKeyState || Is2dState))
         {
           SendKeys();
         }
@@ -562,6 +592,9 @@ namespace DX8
     }
 #endif
 
+    float FloppyOnTimer = 0.0f;
+    bool  ShouldLoadFloppy = false;
+
     void RunOnce(float timeSec)
     {
       if (IsOff)
@@ -576,8 +609,19 @@ namespace DX8
       {
         ms = 15 * 1000;
       }
-      
+
+      if (ShouldLoadFloppy && !FloppySensor.IsEmpty && IsFloppyLoaded == false)
+      {
+        FloppyOnTimer += Time.fixedDeltaTime;
+        if (FloppyOnTimer > 0.5f)
+        {
+          ShouldLoadFloppy = false;
+          LoadFloppy();
+        }
+      }
+
       LastSteps = Library.Call(Api.CycleFn, ms);
+      CheckFloppy();
       UpdateCrt();
     }
 
@@ -593,6 +637,9 @@ namespace DX8
     
     void LoadFloppy()
     {
+      if (IsFloppyLoaded)
+        return;
+
       byte[] fd = System.IO.File.ReadAllBytes(FloppyPath);
       IntPtr romPtr = Marshal.AllocHGlobal(fd.Length);
       Marshal.Copy(fd, 0, romPtr, fd.Length);
@@ -600,8 +647,20 @@ namespace DX8
       int r = Library.SetData(Api.FloppyDisk, romPtr, fd.Length);
       Debug.LogFormat("Loaded Floppy = {0}, Length: {1}", r, fd.Length);
       Marshal.FreeHGlobal(romPtr);
+      
+      Library.Call(Api.InsertDisk, 0);
+      IsFloppyLoaded = true;
     }
-
+    
+    void UnloadFloppy()
+    {
+      if (!IsFloppyLoaded)
+        return;
+        
+      
+      Library.Call(Api.RemoveDisk, 0);
+      IsFloppyLoaded = false;
+    }
 
     void TurnOn()
     {
@@ -781,6 +840,17 @@ namespace DX8
         floppy2d.Order = order++;
 
         floppy2d.transform.SetParent(UI_FloppyDiskList.transform, false);
+        
+        GameObject floppy3dGo = UnityEngine.Object.Instantiate(Prefab_FloppyDisk3d);
+        FloppyDisk3dItem floppy3d = floppy3dGo.GetComponent<FloppyDisk3dItem>();
+        floppy3d.Title = floppy2d.Title;
+        floppy3d.Path = floppy2d.Path;
+
+        
+        floppy3d.transform.SetParent(FloppyDiskStack, false);
+        
+        floppy3d.transform.localPosition = new Vector3(0, floppy2d.Order * 10.0f, 0);
+
       }
 
     }
@@ -815,10 +885,74 @@ namespace DX8
     public void UI_InsertFloppy(string path)
     {
       FloppyPath = path;
+
+      if (PowerIsOn == false)
+        return;
+      
       LoadFloppy();
-      Library.Call(Api.InsertDisk, 0);
+      Debug.Log("InsertDisk");
     }
 
+    public void UI_RemoveFloppy()
+    {
+      FloppyPath = string.Empty;
+
+      if (PowerIsOn == false)
+        return;
+      
+      UnloadFloppy();
+      Debug.Log("RemoveDisk");
+    }
+
+    public void CheckFloppy()
+    {
+      bool isBusy = Library.GetValue(Api.FloppyBusy) == 1;
+      
+      if (isBusy)
+        Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Light_FloppyCol);
+      else
+        Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Color.black);
+    }
+
+    public void TurnOnComputer()
+    {
+      PowerIsOn = true;
+      Light_Power.sharedMaterial.SetColor("_EmissionColor", Light_PowerCol);
+      
+      IsFloppyLoaded = false;
+      FloppyOnTimer = 0.0f;
+      ShouldLoadFloppy = !FloppySensor.IsEmpty;
+    }
+
+    public void TurnOffComputer()
+    {
+      PowerIsOn = false;
+      Library.Call(Api.HardReset, 1);
+      
+      Color32[] col = CrtTexture.GetPixels32();
+      Color32 black = new Color32(0,0,0, 255);
+      for(int i=0;i < 320 * 256;i++)
+        col[i] = black;
+
+      CrtTexture.SetPixels32(col);
+      CrtTexture.Apply();
+      
+      Light_Power.sharedMaterial.SetColor("_EmissionColor", Color.black);
+      Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Color.black);
+      Light_CapsLock.sharedMaterial.SetColor("_EmissionColor", Color.black);
+
+      IsFloppyLoaded = false;
+      FloppyOnTimer = 0.0f;
+      ShouldLoadFloppy = false;
+    }
+
+    internal void PowerButtonPressed()
+    {
+      if (PowerIsOn)
+        TurnOffComputer();
+      else
+        TurnOnComputer();
+    }
   }
   
 }

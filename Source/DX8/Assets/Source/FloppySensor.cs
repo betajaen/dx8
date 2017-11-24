@@ -5,17 +5,25 @@ using UnityEngine;
 public class FloppySensor : MonoBehaviour
 {
   public bool IsEmpty = true;
+  public FloppyDisk3dItem Floppy;
 
   void OnTriggerEnter(Collider other)
   {
-    Debug.Log(other.name);
-
+    Debug.LogFormat("IsEmpty = {0}, Tag = {1}", IsEmpty, other.gameObject.tag);
+    
     if (IsEmpty && other.gameObject.tag == "Floppy")
     {
       IsEmpty = false;
-      FloppyDisk3dItem floppy = other.GetComponent<FloppyDisk3dItem>();
-      floppy.RunFloppy(this);
-      
+      Floppy = other.GetComponent<FloppyDisk3dItem>();
+      Floppy.RunFloppy(this);
+    }
+  }
+
+  public void Eject()
+  {
+    if (!IsEmpty)
+    {
+      Floppy.EjectFloppy();
     }
   }
 }
