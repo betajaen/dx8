@@ -43,7 +43,8 @@
 #error Platform not supported :(
 #endif
 
-Byte*    sCrt;
+Byte*    sCrtBuffers[2];
+Byte*    sWriteCrt, *sReadCrt;
 bool     sCrtDirty;
 Byte*    sScanLineTarget;
 Byte*    sLineCache;
@@ -66,7 +67,11 @@ Byte Mmu_Get_Real(Word address);
 
 void Gpu_Setup()
 {
-  sCrt = malloc(CRT_W * CRT_H * CRT_DEPTH);
+  sCrtBuffers[0] = malloc(CRT_W * CRT_H * CRT_DEPTH);
+  sCrtBuffers[1] = malloc(CRT_W * CRT_H * CRT_DEPTH);
+  sWriteCrt = sCrtBuffers[0];
+  sReadCrt = sCrtBuffers[1];
+
   sScanLineTarget = malloc(CRT_W * 3);
   sLineCache = malloc((CRT_W * 4) / 8);
   
@@ -79,7 +84,8 @@ void Gpu_Teardown()
 {
   free(sLineCache);
   free(sScanLineTarget);
-  free(sCrt);
+  free(sCrtBuffers[0]);
+  free(sCrtBuffers[1]);
 }
 
 void Gpu_TurnOn()
@@ -87,7 +93,8 @@ void Gpu_TurnOn()
   Gpu_Halt = true;
 
   memset(sScanLineTarget, 0, CRT_W * 3);
-  memset(sCrt, 0x00, CRT_W * CRT_H * CRT_DEPTH);
+  memset(sCrtBuffers[0], 0x00, CRT_W * CRT_H * CRT_DEPTH);
+  memset(sCrtBuffers[1], 0x00, CRT_W * CRT_H * CRT_DEPTH);
 
   LOGF("GPU Pre-init");
 
@@ -127,7 +134,21 @@ bool Crt_IsDirty()
 EXPORT void* GetCrt()
 {
   sCrtDirty = false;
-  return sCrt;
+  return sReadCrt;
+}
+
+void SwapBuffers()
+{
+  if (sReadCrt == sCrtBuffers[0])
+  {
+    sReadCrt = sCrtBuffers[1];
+    sWriteCrt = sCrtBuffers[0];
+  }
+  else
+  {
+    sReadCrt = sCrtBuffers[0];
+    sWriteCrt = sCrtBuffers[1];
+  }
 }
 
 void Gpu_FrameStart()
@@ -216,13 +237,13 @@ void Gpu_FrameStart()
 void Gpu_FrameEnd()
 {
   sCrtDirty = true;
-  // Call VBlank interrupt here.
+  SwapBuffers();
 }
 
 void SubmitLine(int line)
 {
   int offset = (CRT_W * 3 * line);
-  memcpy(sCrt + offset, sScanLineTarget, CRT_W * 3);
+  memcpy(sWriteCrt + offset, sScanLineTarget, CRT_W * 3);
   memset(sScanLineTarget, 0, CRT_W * 3);
 }
 

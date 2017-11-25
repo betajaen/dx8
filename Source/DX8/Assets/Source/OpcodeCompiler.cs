@@ -51,6 +51,7 @@ namespace DX8
       Mul,
       Div,
       Mod,
+      Neg,
       Inc,
       Dec,
       And,
@@ -71,6 +72,7 @@ namespace DX8
       JmpLt,
       JmpZ,
       JmpNotZ,
+      JmpC,
       RJmp,
       RJmpEq,
       RJmpNeq,
@@ -125,6 +127,7 @@ namespace DX8
       "mul",
       "div",
       "mod",
+      "neg",
       "inc",
       "dec",
       "and",
@@ -145,6 +148,7 @@ namespace DX8
       "jmp.lt",
       "jmp.z",
       "jmp.nz",
+      "jmp.c",
       "rjmp",
       "rjmp.eq",
       "rjmp.neq",
@@ -1117,11 +1121,14 @@ namespace DX8
         Match match = Regex.Match(lines[ii], @"CONSTANT\(\s*(\w+)\s*,\s*0x(\w+)\s*\)", RegexOptions.IgnoreCase);
 
         if (!match.Success)
+        {
           continue;
-          
+        }
         string name      = match.Groups[1].Value;
         string valueStr  = match.Groups[2].Value;
         
+        Debug.Log(name);
+
         int value;
         if (!Int32.TryParse(valueStr, System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.InvariantCulture, out value))
         {

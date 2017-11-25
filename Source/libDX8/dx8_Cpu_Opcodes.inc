@@ -144,6 +144,9 @@ OP(Mod, ij, Opf_Single, 3, { DO_OP_MODW(REG_I, REG_J); })
 OP(Mod, iW, Opf_Word,   3, { DO_OP_MODW_IMM(REG_I); })
 OP(Mod, jW, Opf_Word,   3, { DO_OP_MODW_IMM(REG_J); })
 
+// Neg
+OP(Neg, a, Opf_Single, 3, { DO_OP_NEG(REG_A); })
+
 // Inc
 OP(Inc, x, Opf_Single, 1, {DO_OP_INC(REG_X);})
 OP(Inc, y, Opf_Single, 1, {DO_OP_INC(REG_Y);})
@@ -297,6 +300,9 @@ OP(RJmpZ, B, Opf_Byte, 2, { DO_OP_JMP_REL_Z(); })
 // Jmp If Not Zero
 OP(JmpNotZ, A, Opf_Address, 2, { DO_OP_JMP_NOT_Z(); })
 OP(RJmpNotZ, B, Opf_Byte, 2, { DO_OP_JMP_REL_NOT_Z(); })
+
+// Jump Carry
+OP(JmpC, A, Opf_Address, 2, { DO_OP_JMP_CARRY(); })
 
 // Branch
 OP(JmpBranch,  Aa, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_A); })

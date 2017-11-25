@@ -5,6 +5,7 @@ include '../rom.exports.inc'
 kProgramSpace = $800
 
 _poke.w   INTVEC_ADDR_IO,         OnIvtIo
+        _poke.w         INTVEC_ADDR_HBLANK,     OnIvtHBlank
 
 jmp START_GAME
 
@@ -104,6 +105,8 @@ resume
   Var_Bytes CopyBuffer, 33
   Var_Byte  FruitX, 0
   Var_Byte  FruitY, 0
+  Var_Bytes Background, 3
+  Var_Byte  NextItemTimer, 10
 
 ; ===========================================================================
 ; Constants
@@ -121,6 +124,28 @@ resume
 ; ===========================================================================
 ; Functions
 ; ===========================================================================
+
+OnIvtHBlank:
+        rept 3 C
+        {
+                load a, sBackground + C
+                add a, x
+                store REG_GFX_BACKGROUND_COLOUR + C, a
+                neg a
+                store REG_GFX_PLANE0_COLOUR + C, a
+        }
+resume
+
+BeginFunction TickBackground
+      load a, REG_RAND
+      store sBackground + 0, a
+
+      load a, REG_RAND
+      store sBackground + 1, a
+
+      load a, REG_RAND
+      store sBackground + 2, a
+EndFunction
 
 BeginFunction SubSleep
   set j, $FFFF
@@ -200,20 +225,31 @@ BeginFunction SpawnFruit
   mod  a, NUM_COLS
   cpy  x, a
 
-  store sFruitX, x
+  load a, REG_RAND
+  mod  a, NUM_ROWS
+  cpy  y, a
+
+  set a, 'o'
+  _CallFunction SetChar
+EndFunction
+
+BeginFunction SpawnSpike
+  load a, REG_RAND
+  mod  a, NUM_COLS
+  cpy  x, a
 
   load a, REG_RAND
   mod  a, NUM_ROWS
   cpy  y, a
 
-  store sFruitY, y
-
+  set a, '*'
+  _CallFunction SetChar
 EndFunction
 
 BeginFunction NewGame
   _CallFunction Sleep
   _CallFunction ClearScreen
-
+  _CallFunction TickBackground
   ; Set direction to right
   set a, DIR_RIGHT
   store sDirection, a
@@ -225,6 +261,12 @@ BeginFunction NewGame
   ; Set dead to 0
   set a, $0
   store sDead, a
+
+  ; Set Next Item Timer
+  load a, REG_RAND
+  mod a, 10
+  inc a
+  store sNextItemTimer, a
 
   ; Put first portion of head to x, y
   set a, START_X
@@ -281,6 +323,9 @@ BeginFunction CheckCollision
   cmpi a, 's'
   jmp.eq .KillIt
 
+  cmpi a, '*'
+  jmp.eq .KillIt
+
   cmpi a, 'o'
   jmp.eq .Nom
 
@@ -293,6 +338,8 @@ BeginFunction CheckCollision
   _CallFunction AddSection
 
   _CallFunction SpawnFruit
+  _CallFunction TickBackground
+
   jmp .End
 
 .KillIt:
@@ -367,6 +414,16 @@ BeginFunction DrawSnake
   set a, 'o'
   _CallFunction SetChar
 
+  load a, sCount
+
+  set j, sSnakeX
+  add j, a
+  load x, j
+  set j, sSnakeY
+  add j, a
+  load y, j
+  set a, ' '
+  _CallFunction SetChar
 
   set a, 0
 .DrawPiece:
@@ -386,6 +443,7 @@ BeginFunction DrawSnake
   load x, sCount
   cmp a, x
   jmp.neq .DrawPiece
+
 
   set a, 'S'
   load x, sHeadX
@@ -449,12 +507,43 @@ BeginFunction MoveHead
 
 EndFunction
 
+BeginFunction SpawnItem
+  load a, sNextItemTimer
+  cmp a
+  jmp.nz .End
+
+  .Spawn:
+
+    load a, REG_RAND
+    mod a, 2
+    cmp a, 1
+    jmp.eq .SpawnFruit
+
+  .SpawnSpike:
+    _CallFunction SpawnSpike
+    jmp .NextTimer
+  .SpawnFruit:
+    _CallFunction SpawnFruit
+
+  .NextTimer:
+    load a, REG_RAND
+    mod a, 70
+    add a, 30
+    store sNextItemTimer, a
+    return
+
+  .End:
+    dec a
+    store sNextItemTimer, a
+EndFunction
+
 START_GAME:
   _CallFunction NewGame
 
 GAME_LOOP:
 
   _CallFunction MoveCheat
+  _CallFunction SpawnItem
   _CallFunction MoveHead
   _CallFunction ShiftSnake
 
@@ -465,7 +554,7 @@ GAME_LOOP:
    cmpi a, $01
    call.eq Fn_NewGame
 
-  _CallFunction ClearScreen
+  ;_CallFunction ClearScreen
   _CallFunction DrawSnake
 
   _CallFunction Sleep

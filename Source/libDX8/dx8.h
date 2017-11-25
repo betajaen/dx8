@@ -83,6 +83,7 @@ typedef struct {
   Byte lastOpcode;
   Word lastOperand;
   Byte interrupt;
+  Byte interruptMask[8];
   Byte halt;
 } Cpu;
 

@@ -102,7 +102,7 @@ void Chip_Set(Word address, Byte value)
 Byte Chip_Get(Word address)
 {
   if (address == REG_RAND)
-    return rand();
+    return rand() & 0xFF;
   return sRam[address];
 }
 

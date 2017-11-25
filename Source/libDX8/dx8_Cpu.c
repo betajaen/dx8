@@ -143,6 +143,8 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_MODW(R0, R1)          R0 = FlagsOpW(R0 % R1);            REG_PC += Opf_Single;
 #define DO_OP_MODW_IMM(R0)          R0 = FlagsOpW(R0 % REG_WORD);      REG_PC += Opf_Word;
 
+#define DO_OP_NEG(R0)               R0 = -R0;                          REG_PC += Opf_Single;
+
 #define DO_OP_INC(R0)               R0 = FlagsOp(R0 + 1);              REG_PC += Opf_Single;
 #define DO_OP_DEC(R0)               R0 = FlagsOp(R0 - 1);              REG_PC += Opf_Single;
 #define DO_OP_INCW(R0)              R0 = FlagsOpW(R0 + 1);             REG_PC += Opf_Single;
@@ -185,6 +187,7 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_JMP_LT()              JumpCond(FL_G == 0 && FL_Z == 0, data.w, Opf_Address);
 #define DO_OP_JMP_Z()               JumpCond(FL_Z == 1, data.w, Opf_Address);
 #define DO_OP_JMP_NOT_Z()           JumpCond(FL_Z == 0, data.w, Opf_Address);
+#define DO_OP_JMP_CARRY()           JumpCond(FL_C == 1, data.w, Opf_Address);
 
 #define DO_OP_JMP_REL_EQ()          JumpCondRel(FL_Z == 1, REG_IMM, Opf_Byte);
 #define DO_OP_JMP_REL_NEQ()         JumpCondRel(FL_Z == 0, REG_IMM, Opf_Byte);
@@ -269,6 +272,10 @@ void Cpu_Reset()
   REG_Z = rand() & 0xFF;
   REG_W = rand() & 0xFF;
 
+  for(int i=0;i < 8;i++)
+    cpu.interruptMask[i] = 0;
+
+  cpu.interrupt = 0;
   cpu.stack = 0;
   cpu.flags._data = 0;
   cpu.halt = false;
@@ -317,6 +324,9 @@ void DoDebugRegister(Byte byte)
     case 'i': DBG_LOG("DBG-REG ", "i   = $%4X", cpu.I.I); break;
     case 'j': DBG_LOG("DBG-REG ", "j   = $%4X", cpu.J.J); break;
     case 'I': DBG_LOG("DBG-REG ", "int = $%2X", cpu.interrupt); break;
+    case 'C':
+      DBG_LOG("DBG-CND", "Zero=%i Negative=%i Greater=%i", cpu.flags.bZero, cpu.flags.bNegative, cpu.flags.bGreater);
+    break;
     default: DBG_LOG_NT("?"); break;
   }
 }
@@ -659,17 +669,41 @@ inline void BranchCond(bool cond, Word ifTrue, Word ifFalse)
 }
 
 // Interrupts
-
 void Cpu_Interrupt(Byte name)
 {
   if (cpu.halt)
     return;
 
-  if (cpu.interrupt)
-  {
-    LOGF("Interupt already happening $%2X when I want $%2X!!!", cpu.interrupt, name);
+  if (name >= 8)
     return;
+
+  cpu.interruptMask[name] = true;
+}
+
+void Cpu_StartInterrupt(Byte name);
+
+void Cpu_Check_Interrupts()
+{
+  if (cpu.interrupt == 0)
+  {
+    for(int i=0;i < 8;i++)
+    {
+      if (cpu.interruptMask[i])
+      {
+        cpu.interrupt = i;
+        cpu.interruptMask[i] = false;
+
+        Cpu_StartInterrupt(i);
+        break;
+      }
+    }
   }
+}
+
+void Cpu_StartInterrupt(Byte name)
+{
+  if (cpu.halt)
+    return;
 
   // Grab interrupt address
   Word interruptAddress = Mmu_GetWord(0x02 * name);
@@ -863,6 +897,8 @@ int Cpu_Step()
   if (cpu.halt)
     return 4;
 
+  Cpu_Check_Interrupts();
+
   Word pc = REG_PC;
   pc += cpu.pcOffset.w;
 
@@ -892,6 +928,6 @@ int Cpu_Step()
     LOGF("**HALT - Unknown Opcode ** [$%4X] ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word)(cpu.pc.w + cpu.pcOffset.w), opcode, OpcodeStr[opcode], data.lo, data.hi);
     break;
   }
-
+  
   return 1;
 }

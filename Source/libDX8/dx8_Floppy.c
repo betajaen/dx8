@@ -32,27 +32,42 @@
 #include "dx8.h"
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "log_c/src/log.h"
 
 #define FLOPPY_TRACKS      80
 #define FLOPPY_SECTORS     2
+#define FLOPPY_TOTAL_TRACKS (FLOPPY_TRACKS * FLOPPY_SECTORS)
 #define FLOPPY_SECTOR_SIZE 1024
 #define FLOPPY_SIZE        (FLOPPY_TRACKS * FLOPPY_SECTORS * FLOPPY_SECTOR_SIZE)
+#define TRACK_SEEK_TIME    64
+#define TRACK_READ_TIME    32
 
 Byte  sFloppyOp;
 int   sFloppyOp_Src;
 Word  sFloppyOp_Dst;
 Word  sFloppyOp_Len;
 Byte  sFloppyOp_Track;
+int   sFloppyOp_Timer;
+
+Byte  sFloppySeekTrack;
+Byte  sFloppyCurrentTrack;
+int   sFloppySeekTimer;
+int   sFloppy_Clock = 0;
+int   sFloppy_Light = 0;
+int   sFloppy_ReadCounter = 0;
+int   sFloppy_WriteCounter = 0;
+
+#define FLOPPY_LIGHT_OFF 0
+#define FLOPPY_LIGHT_SEEK 1
+#define FLOPPY_LIGHT_READWRITE 2
 
 Byte  sFloppy[FLOPPY_SIZE];
 
-bool Fpy_Busy()
+int Fpy_Busy()
 {
-  Byte op = Mmu_Get(REG_FPY_OP);
-
-  return op > 0x00 && op < 0xFF;
+  return sFloppy_Light;
 }
 
 bool Fpy_HasDisk()
@@ -86,6 +101,7 @@ void Fpy_InsertDisk()
   Mmu_Set(REG_FPY_STATE, state);
 
   Fpy_Interrupt(IO_FPY_MSG_INSERT, false);
+  sFloppyCurrentTrack = rand() % FLOPPY_TOTAL_TRACKS;
 }
 
 void Fpy_RemoveDisk()
@@ -117,34 +133,114 @@ void Floppy_Interrupt()
   sFloppyOp_Len   = FLOPPY_SECTOR_SIZE;
   sFloppyOp_Track = Mmu_Get(REG_FPY_OP_TRACK);
   sFloppyOp_Src   = Fpy_CalculateTrackAddress(sFloppyOp_Track);
+  sFloppy_ReadCounter = 0;
 
   LOGF("Floppy Op!! %i", sFloppyOp);
 
   Mmu_Set(REG_FPY_OP, 0x00);
+  sFloppySeekTimer = 0;
+}
 
-  switch(sFloppyOp)
+
+inline bool Floppy_AtTrack(Byte track)
+{
+  return sFloppyCurrentTrack == track;
+}
+
+inline bool Floopy_IsSeeking()
+{
+  return sFloppyCurrentTrack != sFloppySeekTrack;
+}
+
+bool Floppy_SeekTrack()
+{
+  if (sFloppyCurrentTrack == sFloppySeekTrack)
   {
-    case 1: // IO_FPY_OP_READ_TRACK:
-    {
-      int dst = sFloppyOp_Dst, src = sFloppyOp_Src, len = sFloppyOp_Len;
-      while(sFloppyOp_Len)
-      {
-        Mmu_Set(sFloppyOp_Dst, sFloppy[sFloppyOp_Src]);
-        sFloppyOp_Dst++;
-        sFloppyOp_Src++;
-        sFloppyOp_Len--;
-      }
-      sFloppyOp = 0;
-
-      LOGF("[Floppy] Read track $%8X to $%4X, Length = $%4X", src, dst, len);
-
-      Fpy_Interrupt(IO_FPY_MSG_READ, false);
-    }
-    break;
+    return true;
   }
 
+  sFloppy_Light = FLOPPY_LIGHT_SEEK;
+
+  if (sFloppySeekTimer == 0)
+  {
+    sFloppySeekTimer = TRACK_SEEK_TIME;
+
+    if (sFloppyCurrentTrack < sFloppySeekTrack)
+    {
+      sFloppyCurrentTrack++;
+
+      Mmu_Set(REG_FPY_CURRENT_TRACK, sFloppyCurrentTrack);
+      Fpy_Interrupt(IO_FPY_MSG_SEEK, false);
+      LOGF("[Floppy] Seeked to track %i", sFloppyCurrentTrack);
+    }
+    else if (sFloppyCurrentTrack > sFloppySeekTrack)
+    {
+      sFloppyCurrentTrack--;
+
+      Mmu_Set(REG_FPY_CURRENT_TRACK, sFloppyCurrentTrack);
+      Fpy_Interrupt(IO_FPY_MSG_SEEK, false);
+      LOGF("[Floppy] Seeked to track %i", sFloppyCurrentTrack);
+    }
+
+  }
+  
+  sFloppySeekTimer--;
+
+  if (sFloppyCurrentTrack == sFloppySeekTrack)
+  {
+    LOGF("[Floppy] Seeked to track %i", sFloppyCurrentTrack);
+    return true;
+  }
+
+  return false;
 }
 
 void Floppy_Clock()
 {
+  sFloppy_Clock++;
+  if (sFloppy_Clock < 4096)
+    return;
+  
+  sFloppy_Clock = 0;
+
+  switch (sFloppyOp)
+  {
+    case IO_FPY_OP_READ_TRACK:
+    {
+        if (Floppy_SeekTrack() == false)
+          return;
+
+        sFloppy_Light = FLOPPY_LIGHT_READWRITE;
+
+        int timer = TRACK_READ_TIME;
+        while (sFloppyOp_Len)
+        {
+          Mmu_Set(sFloppyOp_Dst, sFloppy[sFloppyOp_Src]);
+          sFloppyOp_Dst++;
+          sFloppyOp_Src++;
+          sFloppyOp_Len--;
+          timer--;
+          sFloppy_ReadCounter++;
+          if (timer == 0)
+            break;
+        }
+
+        if (sFloppy_ReadCounter == 256)
+        {
+          sFloppy_ReadCounter = 0;
+          Fpy_Interrupt(IO_FPY_MSG_READING, false);
+        }
+
+        if (sFloppyOp_Len == 0)
+        {
+          LOGF("[Floppy] Read track $%8X to $%4X, Length = $%4X", sFloppyOp_Src, sFloppyOp_Dst, sFloppyOp_Len);
+
+          sFloppy_Light = FLOPPY_LIGHT_OFF;
+          sFloppyOp = 0;
+          Fpy_Interrupt(IO_FPY_MSG_READ, false);
+        }
+
+      }
+    break;
+  }
 }

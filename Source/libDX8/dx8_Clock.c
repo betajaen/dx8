@@ -32,10 +32,14 @@
 #include "dx8.h"
 #include "log_c/src/log.h"
 
+#include <stdlib.h>
+#include <time.h> 
+
 #define SLOWDOWN_RATE 1
 
 void Gpu_Clock();
 void Keyboard_Tick();
+void Floppy_Clock();
 
 inline void ClockOnce()
 {
@@ -47,6 +51,7 @@ inline void ClockOnce()
 int Clock(int ms)
 {
   int count = 0;
+  int ioClock = 0;
   if (ms < 0)
   {
     ClockOnce();
@@ -60,10 +65,15 @@ int Clock(int ms)
     {
       ClockOnce();
 
-      if ((ii % 256) == 0)
+      ioClock++;
+      
+      if (ioClock == 256)
       {
         Keyboard_Tick();
+        ioClock = 0;
       }
+
+      Floppy_Clock();
     }
   }
 
@@ -76,6 +86,8 @@ void Gpu_TurnOn();
 
 void TurnOn()
 {
+  srand((uint32_t) time(NULL));
+
   LOGF("******* TURN ON");
   Mmu_TurnOn();
   Cpu_TurnOn();

@@ -63,7 +63,7 @@ int  Gpu_GetTimer();
 
 Byte Program_Get(Word address);
 
-bool Fpy_Busy();
+int Fpy_Busy();
 
 void Keyboard_ReceiveKeyUp(int key);
 void Keyboard_ReceiveKeyDown(int key);

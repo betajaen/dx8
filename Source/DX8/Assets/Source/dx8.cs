@@ -138,7 +138,7 @@ namespace DX8
     public  MeshRenderer           Light_Floppy;
     public  MeshRenderer           Light_CapsLock;
 
-    Color   Light_PowerCol, Light_FloppyCol, Light_CapsLockCol;
+    Color   Light_PowerCol, Light_FloppyCol, Light_FloppyColDim, Light_CapsLockCol;
 
 
     public bool  PowerIsOn = false;
@@ -325,6 +325,7 @@ namespace DX8
 
       Light_PowerCol    = new Color(0.341f, 0.846f, 0.323f, 1.000f); // Light_Power.sharedMaterial.GetColor("_EmissionColor");
       Light_FloppyCol   = new Color(0.868f, 0.217f, 0.217f, 1.000f);
+      Light_FloppyColDim = new Color(0.868f * 0.75f, 0.217f * 0.75f, 0.217f * 0.75f, 1.000f);
       Light_CapsLockCol = new Color(0.801f, 0.714f, 0.348f, 1.000f);
       
       Debug.Log(Light_PowerCol);
@@ -906,10 +907,12 @@ namespace DX8
 
     public void CheckFloppy()
     {
-      bool isBusy = Library.GetValue(Api.FloppyBusy) == 1;
+      int isBusy = Library.GetValue(Api.FloppyBusy);
       
-      if (isBusy)
+      if (isBusy == 2)
         Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Light_FloppyCol);
+      else if (isBusy == 1)
+        Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Light_FloppyColDim);
       else
         Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Color.black);
     }

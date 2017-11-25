@@ -11,7 +11,6 @@ kRomSpace       = $FFFF - $800 + 1
 kConstants:
 
         Const_Include   FontData, "font.png.s"
-        Const_Byte      TestData, 'Hello!'
         Const_Include   Keycode2Ascii, 'keycode2ascii.s'
 
 ; =============================================================
@@ -83,6 +82,13 @@ kVariables:
         Var_Byte        Floppy_Track,   $00
         Var_Byte        Keyboard,       $00
         Var_Word        Cursor,         $8000
+        Var_Byte        Background_R,   $3B
+        Var_Byte        Background_G,   $3F
+        Var_Byte        Background_B,   $42
+        Var_Byte        Background_TargetR,   $FF
+        Var_Byte        Background_TargetG,   $AA
+        Var_Byte        Background_TargetB,   $CC
+
 
 ; =============================================================
 ; Interrupt Vector Table Events
@@ -99,24 +105,115 @@ return
 OnIvtReset:
         jmp Setup
 OnIvtHorzBlank:
-        load x, REG_GFX_SCANLINE_NUM
-        not x
-        and x, $E0
-        shr x, 2
+                load a, REG_GFX_SCANLINE_NUM
+                cpy  x, a
+                cmpi a, 256 - (16 + 8)
 
-        set a, 0x3B
-        add a,x
-        store REG_GFX_BACKGROUND_COLOUR + 0, a
-        set a, 0x3F
-        add a,x
-        store REG_GFX_BACKGROUND_COLOUR + 1, a
-        set a, 0x42
-        add a,x
-        store REG_GFX_BACKGROUND_COLOUR + 2, a
+                jmp.gt .LowerSection
+                jmp.eq .BlackSection
+
+                .AnimatedSection:
+                not x
+                and x, $E0
+                shr x, 2
+
+                rept 3 C
+                {
+                        load a, sBackground_R + C
+                        add a, x
+                        store REG_GFX_BACKGROUND_COLOUR + C, a
+                        neg a
+                        store REG_GFX_PLANE0_COLOUR + C, a
+                }
+                resume
+
+                .LowerSection:
+                        set a, $3B
+                        store REG_GFX_BACKGROUND_COLOUR + 0, a
+                        set a, $3F
+                        store REG_GFX_BACKGROUND_COLOUR + 1, a
+                        set a, $42
+                        store REG_GFX_BACKGROUND_COLOUR + 2, a
+                        set a, $FE
+                        store REG_GFX_PLANE0_COLOUR + 0, a
+                        set a, $FE
+                        store REG_GFX_PLANE0_COLOUR + 1, a
+                        set a, $FE
+                        store REG_GFX_PLANE0_COLOUR + 2, a
+                resume
+
+                .BlackSection:
+                        set a, $00
+                        store REG_GFX_BACKGROUND_COLOUR + 0, a
+                        store REG_GFX_BACKGROUND_COLOUR + 1, a
+                        store REG_GFX_BACKGROUND_COLOUR + 2, a
+                        store REG_GFX_PLANE0_COLOUR + 0, a
+                        store REG_GFX_PLANE0_COLOUR + 1, a
+                        store REG_GFX_PLANE0_COLOUR + 2, a
+                resume
 resume
 
 OnIvtVertBlank:
-        nop ; dbg 'IV'
+                load a, sBackground_R
+                load x, sBackground_TargetR
+                cmp a, x
+                jmp.lt .MoreR
+                jmp.gt .LessR
+
+                load a, REG_RAND
+                mod a, $7F
+                store sBackground_TargetR, a
+                jmp .CheckGreen
+
+        .MoreR:
+                inc a
+                store sBackground_R, a
+                jmp .CheckGreen
+        .LessR:
+                dec a
+                store sBackground_R, a
+
+        .CheckGreen:
+                load a, sBackground_G
+                load x, sBackground_TargetG
+                cmp a, x
+                jmp.lt .MoreG
+                jmp.gt .LessG
+
+                load a, REG_RAND
+                mod a, $7F
+                store sBackground_TargetG, a
+                jmp .CheckBlue
+
+        .MoreG:
+                inc a
+                store sBackground_G, a
+                jmp .CheckBlue
+        .LessG:
+                dec a
+                store sBackground_G, a
+
+        .CheckBlue:
+                load a, sBackground_B
+                load x, sBackground_TargetB
+                cmp a, x
+                jmp.lt .MoreB
+                jmp.gt .LessB
+
+                load a, REG_RAND
+                mod a, $7F
+                store sBackground_TargetB, a
+                jmp .End
+
+        .MoreB:
+                inc a
+                store sBackground_B, a
+                jmp .CheckBlue
+        .LessB:
+                dec a
+                store sBackground_B, a
+
+        .End:
 resume
 
 OnIvtFloppy:
@@ -143,12 +240,12 @@ resume
 
 BeginFunction DisplayLogo
         ;dbn 'dl'
-        _putchar 0,17+0, 29, 'D'
-        _putchar 0,17+1, 29, 'X'
-        _putchar 0,17+2, 29, '8'
-        _putchar 0,17+4, 29, '/'
-        _putchar 0,17+5, 29, '/'
-        _putchar 0,17+6, 29, '/'
+        _putchar 0,17+0, 30, 'D'
+        _putchar 0,17+1, 30, 'X'
+        _putchar 0,17+2, 30, '8'
+        _putchar 0,17+4, 30, '/'
+        _putchar 0,17+5, 30, '/'
+        _putchar 0,17+6, 30, '/'
 EndFunction
 
 BeginFunction DrawCursor
@@ -159,15 +256,15 @@ BeginFunction DrawCursor
                 jmp .DrawDot
         .DrawBlank:
                 set x, ' '
-                _putval 0,17+4, 29, x
-                _putval 0,17+5, 29, x
-                _putval 0,17+6, 29, x
+                _putval 0,17+4, 30, x
+                _putval 0,17+5, 30, x
+                _putval 0,17+6, 30, x
                 jmp .EndDraw
         .DrawDot:
                 set x, '/'
-                _putval 0,17+4, 29, x
-                _putval 0,17+5, 29, x
-                _putval 0,17+6, 29, x
+                _putval 0,17+4, 30, x
+                _putval 0,17+5, 30, x
+                _putval 0,17+6, 30, x
         .EndDraw:
 EndFunction
 
@@ -217,11 +314,6 @@ Setup:
         set MemSet_Len, MEM_GFX_PLANE_SIZE * 3
         set MemSet_Val, ' '
         _CallFunction MemSet
-
-        ; Copy test text over
-        set MemCpySm_Dst, MEM_GFX_PLANE0
-        set MemCpySm_Src, (kTestData)
-        set MemCpySm_Len, (kTestDataLength)
 
         _CallFunction MemCpySm
         _CallFunction DisplayLogo

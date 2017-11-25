@@ -5,6 +5,8 @@ BeginJumpTable FloppyEventDispatcher
         JumpTable_Item Fn_OnFloppySeek
         JumpTable_Item Fn_OnFloppyRead
         JumpTable_Item Fn_OnFloppyWrite
+        JumpTable_Item Fn_OnFloppyReading
+        JumpTable_Item Fn_OnFloppyWriting
 EndJumpTable
 
 BeginJumpTable FloppyReadDispatcher
@@ -90,13 +92,17 @@ BeginFunction OnFloppyRemoved
 EndFunction
 
 BeginFunction OnFloppySeek
-        dbn 'Fs'
+        load a, REG_RAND
+        store sBackground_R, a
+
+        load a, REG_RAND
+        store sBackground_G, a
+
+        load a, REG_RAND
+        store sBackground_B, a
 
         set a, $00
         store sFloppy_Msg, a
-
-        nop
-
 EndFunction
 
 BeginFunction OnFloppyRead
@@ -111,6 +117,32 @@ BeginFunction OnFloppyRead
 EndFunction
 
 BeginFunction OnFloppyWrite
+        dbn 'Fw'
+
+        set a, $00
+        store sFloppy_Msg, a
+
+        nop
+EndFunction
+
+BeginFunction OnFloppyReading
+        load a, REG_RAND
+        mod a, $7F
+        store sBackground_R, a
+
+        load a, REG_RAND
+        mod a, $7F
+        store sBackground_G, a
+
+        load a, REG_RAND
+        mod a, $7F
+        store sBackground_B, a
+
+        set a, $00
+        store sFloppy_Msg, a
+EndFunction
+
+BeginFunction OnFloppyWriting
         dbn 'Fw'
 
         set a, $00
