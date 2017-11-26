@@ -495,7 +495,7 @@ inline void Do_CallCond(bool cond, Byte lo_offset, Word callAddress)
 inline void CallBranch(Byte value, Word tableAddress, Byte lo_offset)
 {
   Word address = Mmu_GetWord(tableAddress + ((Word)value) * 2);
-  LOGF("Address=$%4X, TableAddress=$%4X, Value=$%2X", address, tableAddress, value);
+  // LOGF("Address=$%4X, TableAddress=$%4X, Value=$%2X", address, tableAddress, value);
   Do_Call(lo_offset, address);
   
 }
@@ -740,7 +740,7 @@ void Cpu_ResumeInterrupt()
   if (cpu.interrupt == 0)
   {
     LOGF("Interupt not happening. Already interrupted for $%2X!!!", cpu.interrupt);
-    //Cpu_Print("CPU", &cpu);
+    cpu.halt = 1;
     return;
   }
 

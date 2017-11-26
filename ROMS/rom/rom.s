@@ -217,9 +217,7 @@ OnIvtVertBlank:
 resume
 
 OnIvtFloppy:
-        dbn 'IF'
         load  a, REG_FPY_MSG
-        dbr 'a'
         store sFloppy_Msg, a
         set a, 0
         store REG_FPY_MSG, a
@@ -271,11 +269,7 @@ EndFunction
 include "floppy.s"
 
 BeginFunction FloppyHandler
-
-        dbn 'fh'
-
         load a, sFloppy_Msg
-        dbr 'a'
 
         ; @TODO Check for error bit
         bcall tFloppyEventDispatcher, a

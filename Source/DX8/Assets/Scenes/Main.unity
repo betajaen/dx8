@@ -1494,6 +1494,10 @@ Prefab:
       propertyPath: m_Convex
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: 74a8f564778bcdc45a68207b04838dad, type: 3}
+      propertyPath: m_Name
+      value: 
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 74a8f564778bcdc45a68207b04838dad, type: 3}
   m_IsPrefabParent: 0
@@ -2077,7 +2081,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!222 &2109767576
 CanvasRenderer:
   m_ObjectHideFlags: 0

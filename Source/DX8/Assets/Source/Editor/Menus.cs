@@ -417,6 +417,7 @@ namespace DX8
         fd.Add(0x01);                           // Copy to Lower address
         fd.Add((byte) (address & 0xFF));        // lo
         fd.Add((byte) ((address >> 8) & 0xFF)); // hi
+        address += 1024;
       }
 
       fd.Add(0x03); // Reset

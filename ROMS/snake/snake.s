@@ -4,11 +4,17 @@ include '../rom.exports.inc'
 
 kProgramSpace = $800
 
-_poke.w   INTVEC_ADDR_IO,         OnIvtIo
-        _poke.w         INTVEC_ADDR_HBLANK,     OnIvtHBlank
+jmp INIT
+
+Const_Include   FontData, "font.png.s"
+
+INIT:
+
+_poke.w   INTVEC_ADDR_IO,        OnIvtIo
+_poke.w   INTVEC_ADDR_HBLANK,    OnIvtHBlank
+_poke.w   REG_GFX_TILES_ADDR,    kFontData
 
 jmp START_GAME
-
 
 OnIvtIo:
       load  a, REG_IO_OP
@@ -116,10 +122,10 @@ resume
   START_Y   = 15
   NUM_COLS  = 320 / 8
   NUM_ROWS  = 256 / 8
-  DIR_UP    = 1
-  DIR_DOWN  = 2
-  DIR_LEFT  = 4
-  DIR_RIGHT = 8
+  DIR_UP    = 0
+  DIR_DOWN  = 1
+  DIR_LEFT  = 2
+  DIR_RIGHT = 3
 
 ; ===========================================================================
 ; Functions
@@ -138,12 +144,15 @@ resume
 
 BeginFunction TickBackground
       load a, REG_RAND
+      mod  a, 90
       store sBackground + 0, a
 
       load a, REG_RAND
+      mod  a, 90
       store sBackground + 1, a
 
       load a, REG_RAND
+      mod  a, 90
       store sBackground + 2, a
 EndFunction
 
@@ -444,8 +453,10 @@ BeginFunction DrawSnake
   cmp a, x
   jmp.neq .DrawPiece
 
-
   set a, 'S'
+  load x, sDirection
+  add a, x
+
   load x, sHeadX
   load y, sHeadY
   _CallFunction SetChar
@@ -559,3 +570,4 @@ GAME_LOOP:
 
   _CallFunction Sleep
   jmp GAME_LOOP
+
