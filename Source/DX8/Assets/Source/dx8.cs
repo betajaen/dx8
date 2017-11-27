@@ -44,6 +44,9 @@ namespace DX8
       
       [DllImport(Name, CallingConvention = CallingConvention.Cdecl)]
       internal static extern IntPtr GetCrt();
+
+      [DllImport(Name, CallingConvention = CallingConvention.Cdecl)]
+      internal static extern void GetSnd(IntPtr data, int length, int rate, int channels);
     }
 #else
     static class Dll
@@ -57,6 +60,7 @@ namespace DX8
       internal static extern int GetData(int name, IntPtr data, int length)   { return 0; }
       internal static extern int Call(int name, int value)   { return 0; }
       internal static extern IntPtr GetCrt()   { return IntPtr.Null; }
+      internal static extern void GetSnd(IntPtr data, int length, int rate, int channels) {}
     }
 #endif
     
@@ -105,7 +109,11 @@ namespace DX8
     {
       return Dll.GetCrt();
     }
-
+    
+    internal static void GetSnd(IntPtr data, int length, int rate, int channels)
+    {
+      Dll.GetSnd(data, length, rate, channels);
+    }
   }
 
   public class dx8 : MonoBehaviour
@@ -850,7 +858,7 @@ namespace DX8
         
         floppy3d.transform.SetParent(FloppyDiskStack, false);
         
-        floppy3d.transform.localPosition = new Vector3(0, floppy2d.Order * 10.0f, 0);
+        floppy3d.transform.localPosition = new Vector3(0, floppy2d.Order * 0.3f, 0);
 
       }
 

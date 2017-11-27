@@ -40,6 +40,8 @@
 void Gpu_Clock();
 void Keyboard_Tick();
 void Floppy_Clock();
+void Sound_Clock();
+void Sound_ClockFrame();
 
 inline void ClockOnce()
 {
@@ -70,13 +72,15 @@ int Clock(int ms)
       if (ioClock == 256)
       {
         Keyboard_Tick();
+        Sound_Clock();
         ioClock = 0;
       }
 
       Floppy_Clock();
     }
   }
-
+  
+  Sound_ClockFrame();
   return count;
 }
 
@@ -95,15 +99,18 @@ void TurnOn()
 }
 
 void Cpu_Reset();
+void Sound_Reset();
 
 void Reset(bool soft)
 {
   if (soft)
   {
+    Sound_Reset();
     Cpu_Reset();
   }
   else
   {
+    Sound_Reset();
     Mmu_TurnOn();
     Cpu_TurnOn();
     Gpu_TurnOn();

@@ -113,6 +113,7 @@ resume
   Var_Byte  FruitY, 0
   Var_Bytes Background, 3
   Var_Byte  NextItemTimer, 10
+  Var_Word  SoundTimer, $0000
 
 ; ===========================================================================
 ; Constants
@@ -154,6 +155,13 @@ BeginFunction TickBackground
       load a, REG_RAND
       mod  a, 90
       store sBackground + 2, a
+
+      load a, sCount
+      add a, $A
+
+      set x, 8
+      _CallFunction PlaySound
+
 EndFunction
 
 BeginFunction SubSleep
@@ -176,6 +184,11 @@ BeginFunction ClearScreen
   set j, MEM_GFX_PLANE_SIZE
   set a, ' '
   _CallFunction MemSet
+EndFunction
+
+BeginFunction PlaySound
+        store REG_SND_PARM_0, a
+        store REG_SND_MODE_0, x
 EndFunction
 
 BeginFunction SetChar_SingleNumber
@@ -215,7 +228,7 @@ EndFunction
 
 BeginFunction AddSection
   load a, sCount
-  cmp a, 31    ; Count == F31
+  cmp a, $20    ; Count == F31
   jmp.eq .End   ; No more eating for you! Jump to end
 
   ; Shift everything on a bit.
@@ -259,6 +272,7 @@ BeginFunction NewGame
   _CallFunction Sleep
   _CallFunction ClearScreen
   _CallFunction TickBackground
+
   ; Set direction to right
   set a, DIR_RIGHT
   store sDirection, a
@@ -352,6 +366,11 @@ BeginFunction CheckCollision
   jmp .End
 
 .KillIt:
+
+  set a, SND_NOTE_C2
+  set x, 80
+  _CallFunction PlaySound
+
   set a, 1
   store sDead, a
   jmp .End
@@ -538,8 +557,8 @@ BeginFunction SpawnItem
 
   .NextTimer:
     load a, REG_RAND
-    mod a, 70
-    add a, 30
+    mod a, 3 ;0
+    add a, 1 ;0
     store sNextItemTimer, a
     return
 
@@ -567,7 +586,6 @@ GAME_LOOP:
 
   ;_CallFunction ClearScreen
   _CallFunction DrawSnake
-
   _CallFunction Sleep
   jmp GAME_LOOP
 

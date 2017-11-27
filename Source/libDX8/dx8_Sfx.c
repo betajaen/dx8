@@ -30,12 +30,198 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
+#include "log_c/src/log.h"
 
-void SfxMmu_Set(Word address, Byte value)
+#include <stdlib.h>
+#include <time.h> 
+#include <math.h>
+
+#if defined(_WIN32)
+#define EXPORT extern __declspec(dllexport)
+#else
+#error Platform not supported :(
+#endif
+
+const float kSound_Gain = 32.0f;
+
+Byte  sSound_Channel0_Mode  = 0;
+Byte  sSound_Channel1_Mode  = 0;
+float sSound_Channel0_Param = 0;
+float sSound_Channel1_Param = 0;
+
+float sSound_Channel0_Frequency = 0;
+float sSound_Channel1_Frequency = 1;
+
+float sSound_Channel0_Phase     = 0;
+float sSound_Channel1_Phase     = 1;
+
+float kSineFrequencies[] = {
+  32.703f,
+  36.708f,
+  41.203f,
+  43.654f,
+  48.999f,
+  55.0f,
+  61.735f,
+  65.406f,
+  73.416f,
+  82.407f,
+  87.307f,
+  97.999f,
+  110.0f,
+  123.471f,
+  130.813f,
+  146.832f,
+  164.814f,
+  174.614f,
+  195.998f,
+  220.0f,
+  246.942f,
+  261.626f,
+  293.665f,
+  329.628f,
+  349.228f,
+  391.995f,
+  440.0f,
+  493.883f,
+  523.251f,
+  587.33f,
+  659.255f,
+  698.456f,
+  783.991f,
+  880.0f,
+  987.767f,
+  1046.502f,
+  1174.659f,
+  1318.51f,
+  1396.913f,
+  1567.982f,
+  1760.0f,
+  1975.533f
+};
+
+void Sound_Reset()
 {
+  Mmu_Set(REG_SND_MODE_0, 0);
+  Mmu_Set(REG_SND_MODE_1, 0);
+  Mmu_Set(REG_SND_PARM_0, 0);
+  Mmu_Set(REG_SND_PARM_1, 0);
+  sSound_Channel0_Mode = 0;
+  sSound_Channel0_Param = 0;
+  sSound_Channel0_Phase = 0.0f;
+  sSound_Channel1_Mode = 0;
+  sSound_Channel1_Param = 0;
+  sSound_Channel1_Phase = 0.0f;
 }
 
-Byte SfxMmu_Get(Word address)
+void Sound_Clock()
 {
-  return 0; //! TODO
+  Byte sound_Channel0_Mode = Mmu_Get(REG_SND_MODE_0);
+  Byte sound_Channel1_Mode = Mmu_Get(REG_SND_MODE_1);
+  Byte sound_Channel0_Param = Mmu_Get(REG_SND_PARM_0);
+  Byte sound_Channel1_Param = Mmu_Get(REG_SND_PARM_1);
+
+  if (sound_Channel0_Mode != sSound_Channel0_Mode)
+  {
+    sSound_Channel0_Mode   = sound_Channel0_Mode;
+    sSound_Channel0_Param  = sound_Channel0_Param;
+    sSound_Channel0_Phase  = 0.0f;
+  }
+
+  if (sound_Channel1_Mode != sSound_Channel1_Mode)
+  {
+    sSound_Channel1_Mode   = sound_Channel1_Mode;
+    sSound_Channel1_Param  = sound_Channel1_Param;
+    sSound_Channel1_Phase  = 0.0f;
+  }
+}
+
+void Sound_ClockFrame()
+{
+  Sound_Clock();
+  if (sSound_Channel0_Mode)
+  {
+    sSound_Channel0_Mode--;
+    Mmu_Set(REG_SND_MODE_0, sSound_Channel0_Mode);
+  }
+  if (sSound_Channel1_Mode)
+  {
+    sSound_Channel1_Mode--;
+    Mmu_Set(REG_SND_MODE_1, sSound_Channel1_Mode);
+  }
+}
+
+#define kPi 3.14159265358979323846f
+
+// Note: This function is accessed in a different thread when used with the Unity implementation!
+EXPORT void GetSnd(float* data, int length, int rate, int channels)
+{
+  bool mixing = (sSound_Channel0_Mode != 0 && sSound_Channel1_Mode != 0);
+  
+  float rate2 = 2.0f * kPi / (float) rate;
+
+  if (mixing)
+  {
+    float frequency1 = kSineFrequencies[(int)sSound_Channel0_Param];
+    float frequency2 = kSineFrequencies[(int)sSound_Channel1_Param];
+
+    float tone1 = frequency1 * rate2;
+    float tone2 = frequency2 * rate2;
+
+    for (int i = 0; i < length; i += channels)
+    {
+      sSound_Channel0_Phase += tone1;
+      sSound_Channel1_Phase += tone2;
+
+      float m0 = (float)(kSound_Gain * sinf(sSound_Channel0_Phase));
+      float m1 = (float)(kSound_Gain * sinf(sSound_Channel1_Phase));
+      float m  = (m0 + m1) / 2;
+      data[i + 0] = m;
+      data[i + 1] = m;
+
+      if (sSound_Channel0_Phase > 2.0f * kPi)
+        sSound_Channel0_Phase = 0.0f;
+      if (sSound_Channel1_Phase > 2.0f * kPi)
+        sSound_Channel1_Phase = 0.0f;
+    }
+  }
+  else if (sSound_Channel0_Mode != 0)
+  {
+    float frequency1 = kSineFrequencies[(int)sSound_Channel0_Param];
+
+    float tone1 = frequency1 * rate2;
+
+    for (int i = 0; i < length; i += channels)
+    {
+      sSound_Channel0_Phase += tone1;
+
+      float m0 = (float)(kSound_Gain * sinf(sSound_Channel0_Phase));
+
+      float m = m0;
+      data[i + 0] = m;
+
+      if (sSound_Channel0_Phase > 2.0f * kPi)
+        sSound_Channel0_Phase = 0.0f;
+    }
+  }
+  else if (sSound_Channel1_Mode != 0)
+  {
+    float frequency2 = kSineFrequencies[(int)sSound_Channel1_Param];
+
+    float tone2 = frequency2 * rate2;
+
+    for (int i = 0; i < length; i += channels)
+    {
+      sSound_Channel1_Phase += tone2;
+
+      float m0 = (float)(kSound_Gain * sinf(sSound_Channel1_Phase));
+
+      float m = m0;
+      data[i + 0] = m;
+
+      if (sSound_Channel1_Phase > 2.0f * kPi)
+        sSound_Channel1_Phase = 0.0f;
+    }
+  }
+  
 }

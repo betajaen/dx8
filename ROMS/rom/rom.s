@@ -88,7 +88,8 @@ kVariables:
         Var_Byte        Background_TargetR,   $FF
         Var_Byte        Background_TargetG,   $AA
         Var_Byte        Background_TargetB,   $CC
-
+        Var_Word        Sound_Timer,          $0000
+        Var_Byte        Sound_State,          $00
 
 ; =============================================================
 ; Interrupt Vector Table Events
@@ -315,12 +316,23 @@ Setup:
         dba sFloppy_Msg
         _CallFunction OnFloppyRemoved
 
+        set i, $C000
+        store sSound_Timer, i
+        set x, $00
+        store sSound_State, x
+        set x, 15
+        store REG_SND_MODE_0, x
+        set x, SND_NOTE_C5
+        store REG_SND_PARM_0, x
+
 IDLE:
         _CallFunction DrawCursor
 
         load a, sFloppy_Msg
         cmpi a, $00
         call.neq Fn_FloppyHandler
+
+
 
         jmp IDLE
 nop
