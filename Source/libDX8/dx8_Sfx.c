@@ -56,48 +56,114 @@ float sSound_Channel0_Phase     = 0;
 float sSound_Channel1_Phase     = 1;
 
 float kSineFrequencies[] = {
-  32.703f,
-  36.708f,
-  41.203f,
-  43.654f,
-  48.999f,
+  16.35f,
+  17.32f,
+  18.35f,
+  19.45f,
+  20.6f,
+  21.83f,
+  23.12f,
+  24.5f,
+  25.96f,
+  27.5f,
+  29.14f,
+  30.87f,
+  32.7f,
+  34.65f,
+  36.71f,
+  38.89f,
+  41.2f,
+  43.65f,
+  46.25f,
+  49.0f,
+  51.91f,
   55.0f,
-  61.735f,
-  65.406f,
-  73.416f,
-  82.407f,
-  87.307f,
-  97.999f,
+  58.27f,
+  61.74f,
+  65.41f,
+  69.3f,
+  73.42f,
+  77.78f,
+  82.41f,
+  87.31f,
+  92.5f,
+  98.0f,
+  103.83f,
   110.0f,
-  123.471f,
-  130.813f,
-  146.832f,
-  164.814f,
-  174.614f,
-  195.998f,
+  116.54f,
+  123.47f,
+  130.81f,
+  138.59f,
+  146.83f,
+  155.56f,
+  164.81f,
+  174.61f,
+  185.0f,
+  196.0f,
+  207.65f,
   220.0f,
-  246.942f,
-  261.626f,
-  293.665f,
-  329.628f,
-  349.228f,
-  391.995f,
+  233.08f,
+  246.94f,
+  261.63f,
+  277.18f,
+  293.66f,
+  311.13f,
+  329.63f,
+  349.23f,
+  369.99f,
+  392.0f,
+  415.3f,
   440.0f,
-  493.883f,
-  523.251f,
+  466.16f,
+  493.88f,
+  523.25f,
+  554.37f,
   587.33f,
-  659.255f,
-  698.456f,
-  783.991f,
+  622.25f,
+  659.25f,
+  698.46f,
+  739.99f,
+  783.99f,
+  830.61f,
   880.0f,
-  987.767f,
-  1046.502f,
-  1174.659f,
+  932.33f,
+  987.77f,
+  1046.5f,
+  1108.73f,
+  1174.66f,
+  1244.51f,
   1318.51f,
-  1396.913f,
-  1567.982f,
-  1760.0f,
-  1975.533f
+  1396.91f,
+  1479.98f,
+  1567.98f,
+  1661.22f,
+  176.0f,
+  1864.6f,
+  1975.5f,
+  209.0f,
+  2217.4f,
+  2349.3f,
+  2489.0f,
+  2637.0f,
+  2793.8f,
+  2959.9f,
+  3135.9f,
+  3322.4f,
+  352.0f,
+  3729.3f,
+  3951.0f,
+  4186.0f,
+  4434.9f,
+  4698.6f,
+  4978.0f,
+  5274.0f,
+  5587.6f,
+  5919.9f,
+  6271.9f,
+  6644.8f,
+  704.0f,
+  7458.6f,
+  7902.13f,
 };
 
 void Sound_Reset()
@@ -126,6 +192,8 @@ void Sound_Clock()
     sSound_Channel0_Mode   = sound_Channel0_Mode;
     sSound_Channel0_Param  = sound_Channel0_Param;
     sSound_Channel0_Phase  = 0.0f;
+
+    LOGF("SND.0 %i for %i", sSound_Channel0_Param, sSound_Channel0_Mode);
   }
 
   if (sound_Channel1_Mode != sSound_Channel1_Mode)
@@ -133,6 +201,8 @@ void Sound_Clock()
     sSound_Channel1_Mode   = sound_Channel1_Mode;
     sSound_Channel1_Param  = sound_Channel1_Param;
     sSound_Channel1_Phase  = 0.0f;
+
+    LOGF("SND.1 %i for %i", sSound_Channel1_Param, sSound_Channel1_Mode);
   }
 }
 
@@ -199,6 +269,7 @@ EXPORT void GetSnd(float* data, int length, int rate, int channels)
 
       float m = m0;
       data[i + 0] = m;
+      data[i + 1] = m;
 
       if (sSound_Channel0_Phase > 2.0f * kPi)
         sSound_Channel0_Phase = 0.0f;
@@ -218,6 +289,7 @@ EXPORT void GetSnd(float* data, int length, int rate, int channels)
 
       float m = m0;
       data[i + 0] = m;
+      data[i + 1] = m;
 
       if (sSound_Channel1_Phase > 2.0f * kPi)
         sSound_Channel1_Phase = 0.0f;

@@ -20,7 +20,7 @@ public class SpeakerSource : MonoBehaviour
       return;
     
     GCHandle dataHandle = GCHandle.Alloc(data, GCHandleType.Pinned);
-    IntPtr dataPtr = dataHandle .AddrOfPinnedObject();
+    IntPtr dataPtr = dataHandle.AddrOfPinnedObject();
 
     DX8.Library.GetSnd(dataPtr, data.Length, rate, channels); 
 

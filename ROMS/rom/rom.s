@@ -297,16 +297,14 @@ EntryPoint:
         _poke.w         REG_GFX_TILES_ADDR,         (kFontData)
         _poke           REG_GFX_PLANE0_TYPE,        $00
         _poke           REG_GFX_PLANE1_TYPE,        $00
-        _poke           REG_GFX_PLANE2_TYPE,        $00
-        _poke           REG_GFX_PLANE3_TYPE,        $00
-        _poke           REG_GFX_PLANES_COUNT,       $04
+        _poke           REG_GFX_PLANES_COUNT,       $01
 
         int INT_GPUON
 
 Setup:
         ; Clear screen
         set MemSet_Dst, MEM_GFX_PLANE0
-        set MemSet_Len, MEM_GFX_PLANE_SIZE * 3
+        set MemSet_Len, MEM_GFX_PLANE_SIZE * 1
         set MemSet_Val, ' '
         _CallFunction MemSet
 
