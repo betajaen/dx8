@@ -248,10 +248,10 @@ BeginFunction Floppy_Instruction_End
         ;printl "DefaultIvt=", DefaultIvt
         ;printl "Calc=", ($7800 - $800 + DefaultIvt)
 
-        _poke.w         INTVEC_ADDR_HBLANK,     $7800 - $800 + DefaultIvt
-        _poke.w         INTVEC_ADDR_VBLANK,     $7800 - $800 + DefaultIvt
-        _poke.w         INTVEC_ADDR_FLOPPY,     $7800 - $800 + DefaultIvt
-        _poke.w         INTVEC_ADDR_IO,         $7800 - $800 + DefaultIvt
+        _poke.w         INTVEC_ADDR_HBLANK,     $7000 - $800 + DefaultIvt
+        _poke.w         INTVEC_ADDR_VBLANK,     $7000 - $800 + DefaultIvt
+        _poke.w         INTVEC_ADDR_FLOPPY,     $7000 - $800 + DefaultIvt
+        _poke.w         INTVEC_ADDR_IO,         $7000 - $800 + DefaultIvt
         _poke.w         INTVEC_ADDR_RESET,      $0800 - ThunkLength ;OnIvtReset
 
         ;offset $0800

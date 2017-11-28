@@ -116,6 +116,15 @@ macro Const_Byte Name, Value {
       k#Name#Length = $ - kLcl#Name
 }
 
+macro Const_Bytes_Begin Name {
+      kLcl#Name:
+}
+
+macro Const_Bytes_End Name {
+      k#Name = kProgramSpace + kLcl#Name
+      k#Name#Length = $ - kLcl#Name
+}
+
 macro Var_Byte Name, InitialValue {
       sLcl#Name:
       db InitialValue
@@ -206,7 +215,7 @@ macro Export_Const TT, NN, DOC {
 
 macro Begin_Exports {
       display '; Exports. Copy these to rom.exports.inc', 13,10
-      display 'kRomSpace = $7800', 13, 10
+      display 'kRomSpace = $7000', 13, 10
 }
 
 macro End_Exports {

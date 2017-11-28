@@ -1,8 +1,8 @@
 include "../dx8.inc"
 include "../dx8_crt.inc"
 
-kProgramSpace   = $7800
-kRomSpace       = $FFFF - $800 + 1
+kProgramSpace   = $7000
+kRomSpace       = $FFFF - 4096 + 1
 
 ; =============================================================
 ; Data and Constants
@@ -20,52 +20,8 @@ Begin_Exports
 
 kExports:
 
-        ;! MemCpySm
-        ;! Copy upto 256 bytes from a src address to a dst address
-        MemCpySm_Dst equ i
-        MemCpySm_Src equ j
-        MemCpySm_Len equ a
-
-        BeginFunction MemCpySm
-                .loop:
-                        ;dbr 'i'
-                        ;dbr 'j'
-                        ;dbr 'a'
-
-                        dec a
-                        push a
-                        load a, j
-                        store i, a
-                        pop a
-                        inc i
-                        inc j
-                        cmp a
-                        _rjmp.nz .loop
-        EndFunction
-
-        Export_Function      Rom, MemCpySm, 'Copy up to 256 bytes to another part of memory'
-        Export_Function_Arg  MemCpySm, Dst, i
-        Export_Function_Arg  MemCpySm, Src, j
-        Export_Function_Arg  MemCpySm, Len, a
-
-        ;! MemSet
-        ;! Copy a constant to dst, len times
-        MemSet_Dst equ i
-        MemSet_Len equ j
-        MemSet_Val equ a
-
-        BeginFunction MemSet
-                .loop:  store i, a
-                        inc i
-                        dec j
-                        _rjmp.nz .loop
-        EndFunction
-
-        Export_Function      Rom, MemSet, 'Set range of memory to constant'
-        Export_Function_Arg  MemSet, Dst, i
-        Export_Function_Arg  MemSet, Len, j
-        Export_Function_Arg  MemSet, Val, a
-
+        include 'rom_mem_functions.s'
+        include 'rom_print_functions.s'
 
         Export_Const    Rom, Keycode2Ascii, 'Table of Keycodes to ASCII equilvents'
 
@@ -249,22 +205,22 @@ EndFunction
 
 BeginFunction DrawCursor
         ;dbn 'dc'
-                load x, REG_GFX_COUNTERS
-                cmpbit x, GFX_FLG_COUNTERS_ODDEVEN
-                jmp.z .DrawBlank
-                jmp .DrawDot
-        .DrawBlank:
-                set x, ' '
-                _putval 0,17+4, 30, x
-                _putval 0,17+5, 30, x
-                _putval 0,17+6, 30, x
-                jmp .EndDraw
-        .DrawDot:
-                set x, '/'
-                _putval 0,17+4, 30, x
-                _putval 0,17+5, 30, x
-                _putval 0,17+6, 30, x
-        .EndDraw:
+        ;        load x, REG_GFX_COUNTERS
+        ;        cmpbit x, GFX_FLG_COUNTERS_ODDEVEN
+        ;        jmp.z .DrawBlank
+        ;        jmp .DrawDot
+        ;.DrawBlank:
+        ;        set x, ' '
+        ;        _putval 0,17+4, 30, x
+        ;        ;_putval 0,17+5, 30, x
+        ;        ;_putval 0,17+6, 30, x
+        ;        jmp .EndDraw
+        ;.DrawDot:
+        ;        set x, '/'
+        ;        _putval 0,17+4, 30, x
+        ;        ;_putval 0,17+5, 30, x
+        ;        ;_putval 0,17+6, 30, x
+        ;.EndDraw:
 EndFunction
 
 include "floppy.s"
@@ -323,6 +279,21 @@ Setup:
         set x, SND_NOTE_C5
         store REG_SND_PARM_0, x
 
+        set a, 1
+        set x, 4
+        set y, 8
+        _CallFunction PrintNum
+
+        set a, 12
+        set x, 4
+        set y, 9
+        _CallFunction PrintNum
+
+        set a, 123
+        set x, 4
+        set y, 10
+        _CallFunction PrintNum
+
 IDLE:
         _CallFunction DrawCursor
 
@@ -351,10 +322,10 @@ CopyAndLaunch:
 
         length = CopyAndLaunch
         ;printl "Code Length ", length
-        pages = 2048 / 0xFF
+        pages = 4096 / 0xFF
         ;printl "Pages ", pages
 
-        pagesMod = 2048 mod 0xFF
+        pagesMod = 4096 mod 0xFF
         ;printl "Mod", pagesMod
 
         count = 0
@@ -375,9 +346,8 @@ CopyAndLaunch:
         offset  kProgramSpace
         jmp     EntryPoint
 
-
 kEndSize = 8
-repeat (2048 - $ - kEndSize)
+repeat (4096 - $ - kEndSize)
         db $00
 end repeat
 
@@ -386,7 +356,3 @@ Launch:
         jmp     CopyAndLaunch
 FEFF:
         _rjmp   Launch
-
-; =============================================================
-; Exports
-; =============================================================
