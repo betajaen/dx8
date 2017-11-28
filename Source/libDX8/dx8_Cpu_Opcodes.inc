@@ -339,3 +339,9 @@ OP(dba, B, Opf_Address,   1, { DO_OP_DEBUG_ADDRESS();  })
 OP(dbb, None, Opf_Single, 1, { DO_OP_DEBUG_BREAKPOINT(); })
 OP(dbn, W, Opf_Address,   1, { DO_OP_DEBUG_NOTE();  })
 OP(dbo, B, Opf_Byte,      1, { DO_OP_DEBUG_OPTION(); })
+
+// Sti
+OP(sti, None, Opf_Single, 1, { DO_OP_STOP_INTERRUPTS(); })
+
+// Rti
+OP(rti, None, Opf_Single, 1, { DO_OP_RESUME_INTERRUPTS(); })

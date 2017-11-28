@@ -42,7 +42,7 @@ BeginFunction PrintChar
         .End:
 EndFunction
 
-Export_Function      Rom, Print, 'Copy a char to the screen at x, y'
+Export_Function      Rom, PrintChar, 'Copy a char to the screen at x, y'
 Export_Function_Arg  PrintChar, X, x
 Export_Function_Arg  PrintChar, Y, y
 Export_Function_Arg  PrintChar, Char, a
@@ -141,3 +141,14 @@ Export_Function_Arg  PrintNum, X, x
 Export_Function_Arg  PrintNum, Y, y
 Export_Function_Arg  PrintNum, Num, a
 
+
+
+;! Clear Screen
+BeginFunction Cls
+  set i, MEM_GFX_PLANE0
+  set j, MEM_GFX_PLANE_SIZE
+  set a, ' '
+  _CallFunction MemSet
+EndFunction
+
+Export_Function      Rom, Cls, 'Clears the screen'

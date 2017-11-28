@@ -1490,6 +1490,14 @@ macro dbo [A, B] {
   db $EF
   db A
 }
+macro rti [A, B] {
+  ; [$F1] rti
+  db $F1
+}
+macro sti [A, B] {
+  ; [$F0] sti
+  db $F0
+}
 ; Opcodes
 OP_NOP = $00
 OP_PUSH_x = $01
@@ -1731,3 +1739,5 @@ OP_DBA_B = $EC
 OP_DBB = $ED
 OP_DBN_A = $EE
 OP_DBO_B = $EF
+OP_STI = $F0
+OP_RTI = $F1

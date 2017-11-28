@@ -93,6 +93,8 @@ namespace DX8
       dbb,
       dbn,
       dbo,
+      rti,
+      sti,
       COUNT
     }
 
@@ -168,7 +170,9 @@ namespace DX8
       "dba",
       "dbb",
       "dbn",
-      "dbo"
+      "dbo",
+      "rti",
+      "sti"
     };
 
     public enum Operand

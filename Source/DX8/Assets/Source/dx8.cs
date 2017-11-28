@@ -826,6 +826,7 @@ namespace DX8
           }
           else if (state.Pressed)
           {
+            Debug.LogFormat("Down {0} {1}", ii, state.mainKey);
             Library.Call(Api.KeyDown, ii);
           }
         }

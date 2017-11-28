@@ -11,7 +11,7 @@ MemSet_Dst equ i
 MemSet_Len equ j
 MemSet_Val equ a
 ;! Function: Copy a char to the screen at x, y
-Import_Function Rom, Print, $03A7
+Import_Function Rom, PrintChar, $037F
 PrintChar_X equ x
 PrintChar_Y equ y
 PrintChar_Char equ a
@@ -25,5 +25,7 @@ Import_Function Rom, PrintNum, $03BD
 PrintNum_X equ x
 PrintNum_Y equ y
 PrintNum_Num equ a
+;! Function: Clears the screen
+Import_Function Rom, Cls, $03EC
 ;! Constant: Table of Keycodes to ASCII equilvents
 Import_Const Rom, Keycode2Ascii, $7300

@@ -182,28 +182,10 @@ void Sound_Reset()
 
 void Sound_Clock()
 {
-  Byte sound_Channel0_Mode = Mmu_Get(REG_SND_MODE_0);
-  Byte sound_Channel1_Mode = Mmu_Get(REG_SND_MODE_1);
-  Byte sound_Channel0_Param = Mmu_Get(REG_SND_PARM_0);
-  Byte sound_Channel1_Param = Mmu_Get(REG_SND_PARM_1);
-
-  if (sound_Channel0_Mode != sSound_Channel0_Mode)
-  {
-    sSound_Channel0_Mode   = sound_Channel0_Mode;
-    sSound_Channel0_Param  = sound_Channel0_Param;
-    sSound_Channel0_Phase  = 0.0f;
-
-    LOGF("SND.0 %i for %i", sSound_Channel0_Param, sSound_Channel0_Mode);
-  }
-
-  if (sound_Channel1_Mode != sSound_Channel1_Mode)
-  {
-    sSound_Channel1_Mode   = sound_Channel1_Mode;
-    sSound_Channel1_Param  = sound_Channel1_Param;
-    sSound_Channel1_Phase  = 0.0f;
-
-    LOGF("SND.1 %i for %i", sSound_Channel1_Param, sSound_Channel1_Mode);
-  }
+  sSound_Channel0_Mode   = Mmu_Get(REG_SND_MODE_0);
+  sSound_Channel0_Param  = Mmu_Get(REG_SND_MODE_1);
+  sSound_Channel1_Mode   = Mmu_Get(REG_SND_PARM_0);
+  sSound_Channel1_Param  = Mmu_Get(REG_SND_PARM_1);
 }
 
 void Sound_ClockFrame()

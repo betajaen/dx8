@@ -210,6 +210,10 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_JMP_BRANCH(R0)        CallBranch(R0, REG_WORD, Opf_Address);
 #define DO_OP_CALL_BRANCH(R0)       JumpBranch(R0, REG_WORD);
 
+#define DO_OP_STOP_INTERRUPTS()     Cpu_Interrupts_Enabled(false); REG_PC += Opf_Single;
+#define DO_OP_RESUME_INTERRUPTS()   Cpu_Interrupts_Enabled(true);  REG_PC += Opf_Single;
+
+
 bool DebugLog = false;
 
 enum OpFormat
@@ -275,6 +279,7 @@ void Cpu_Reset()
   for(int i=0;i < 8;i++)
     cpu.interruptMask[i] = 0;
 
+  cpu.interruptsStopped = false;
   cpu.interrupt = 0;
   cpu.stack = 0;
   cpu.flags._data = 0;
@@ -684,6 +689,9 @@ void Cpu_StartInterrupt(Byte name);
 
 void Cpu_Check_Interrupts()
 {
+  if (cpu.interruptsStopped == true)
+    return;
+
   if (cpu.interrupt == 0)
   {
     for(int i=0;i < 8;i++)
@@ -698,6 +706,11 @@ void Cpu_Check_Interrupts()
       }
     }
   }
+}
+
+void Cpu_Interrupts_Enabled(bool isEnabled)
+{
+  cpu.interruptsStopped = isEnabled;
 }
 
 void Cpu_StartInterrupt(Byte name)
@@ -897,7 +910,6 @@ int Cpu_Step()
   if (cpu.halt)
     return 4;
 
-  Cpu_Check_Interrupts();
 
   Word pc = REG_PC;
   pc += cpu.pcOffset.w;
@@ -915,7 +927,7 @@ int Cpu_Step()
   }
 
 #undef OP
-#define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; return TIME;
+#define OP(OP, OPERANDS, FORMAT, TIME, CODE) case Op_##OP##_##OPERANDS: CODE; break; // TIME;
 
   cpu.lastOpcode = opcode;
   cpu.lastOperand = data.w;
@@ -928,6 +940,8 @@ int Cpu_Step()
     LOGF("**HALT - Unknown Opcode ** [$%4X] ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word)(cpu.pc.w + cpu.pcOffset.w), opcode, OpcodeStr[opcode], data.lo, data.hi);
     break;
   }
-  
+
+  Cpu_Check_Interrupts();
+
   return 1;
 }

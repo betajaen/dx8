@@ -84,6 +84,7 @@ typedef struct {
   Word lastOperand;
   Byte interrupt;
   Byte interruptMask[8];
+  Byte interruptsStopped;
   Byte halt;
 } Cpu;
 
