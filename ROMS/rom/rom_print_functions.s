@@ -97,19 +97,17 @@ BeginFunction PrintNum
                 cmp a
                 jmp.z .PrintZero
 
-                cmp a, 10
+                cmpi a, 10
                 jmp.lt .PrintChar
 
-                cmp a, 100
+                cmpi a, 100
                 jmp.lt .Two
 
-                inc x
                 inc x
                 inc x
                 jmp .PrintChar
 
         .Two:
-                inc x
                 inc x
 
 

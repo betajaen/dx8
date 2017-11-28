@@ -204,23 +204,22 @@ BeginFunction DisplayLogo
 EndFunction
 
 BeginFunction DrawCursor
-        ;dbn 'dc'
-        ;        load x, REG_GFX_COUNTERS
-        ;        cmpbit x, GFX_FLG_COUNTERS_ODDEVEN
-        ;        jmp.z .DrawBlank
-        ;        jmp .DrawDot
-        ;.DrawBlank:
-        ;        set x, ' '
-        ;        _putval 0,17+4, 30, x
-        ;        ;_putval 0,17+5, 30, x
-        ;        ;_putval 0,17+6, 30, x
-        ;        jmp .EndDraw
-        ;.DrawDot:
-        ;        set x, '/'
-        ;        _putval 0,17+4, 30, x
-        ;        ;_putval 0,17+5, 30, x
-        ;        ;_putval 0,17+6, 30, x
-        ;.EndDraw:
+                load x, REG_GFX_COUNTERS
+                cmpbit x, GFX_FLG_COUNTERS_ODDEVEN
+                jmp.z .DrawBlank
+                jmp .DrawDot
+        .DrawBlank:
+                set x, ' '
+                _putval 0,17+4, 30, x
+                _putval 0,17+5, 30, x
+                _putval 0,17+6, 30, x
+                jmp .EndDraw
+        .DrawDot:
+                set x, '/'
+                _putval 0,17+4, 30, x
+                _putval 0,17+5, 30, x
+                _putval 0,17+6, 30, x
+        .EndDraw:
 EndFunction
 
 include "floppy.s"
@@ -279,29 +278,12 @@ Setup:
         set x, SND_NOTE_C5
         store REG_SND_PARM_0, x
 
-        set a, 1
-        set x, 4
-        set y, 8
-        _CallFunction PrintNum
-
-        set a, 12
-        set x, 4
-        set y, 9
-        _CallFunction PrintNum
-
-        set a, 123
-        set x, 4
-        set y, 10
-        _CallFunction PrintNum
-
 IDLE:
         _CallFunction DrawCursor
 
         load a, sFloppy_Msg
         cmpi a, $00
         call.neq Fn_FloppyHandler
-
-
 
         jmp IDLE
 nop

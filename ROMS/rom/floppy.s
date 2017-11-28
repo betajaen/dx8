@@ -101,8 +101,19 @@ BeginFunction OnFloppySeek
         load a, REG_RAND
         store sBackground_B, a
 
+        load a, REG_FPY_CURRENT_TRACK
+        set x, 2
+        set y, 2
+        _CallFunction PrintNum
+
+        load a, REG_FPY_OP_TRACK
+        set x, 7
+        set y, 2
+        _CallFunction PrintNum
+
         set a, $00
         store sFloppy_Msg, a
+
 EndFunction
 
 BeginFunction OnFloppyRead
@@ -154,6 +165,7 @@ EndFunction
 ; Have read the first track.
 BeginFunction OnFloppyReadHeaderTrack
         dbn 'rH'
+
 
         ; We've read the header
         _poke sFloppy_Mode, $01
