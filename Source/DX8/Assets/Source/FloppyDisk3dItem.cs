@@ -13,6 +13,8 @@ public class FloppyDisk3dItem : MonoBehaviour
   private int     State;
   private int     Direction;
 
+  public FloppyDisk2dItem Counterpart;
+
   public void Update()
   {
     if (Direction == 1)
@@ -47,8 +49,13 @@ public class FloppyDisk3dItem : MonoBehaviour
     }
     else if (State == 3)
     {
-      GameObject.Find("DX8").GetComponent<DX8.dx8>().UI_InsertFloppy(Path);
+      DX8.dx8 dx8 = GameObject.Find("DX8").GetComponent<DX8.dx8>();
+      dx8.SetEjectButton(true);
+
+      dx8.UI_InsertFloppy(Path);
+      
       State++;
+      Direction = 0;
     }
   }
 
@@ -56,11 +63,15 @@ public class FloppyDisk3dItem : MonoBehaviour
   {
     if (State == 1)
     {
+
       transform.localPosition = Vector3.Lerp(PosA, PosB, Time / MaxTime);
       Time += UnityEngine.Time.deltaTime;
+
       if (Time >= MaxTime)
       {
-        GameObject.Find("DX8").GetComponent<DX8.dx8>().UI_RemoveFloppy();
+        DX8.dx8 dx8 = GameObject.Find("DX8").GetComponent<DX8.dx8>();
+        dx8.FloppySensor.Ejecting = true;
+        dx8.UI_RemoveFloppy();
 
         State++;
         Time = 0;
@@ -74,10 +85,14 @@ public class FloppyDisk3dItem : MonoBehaviour
       Rigidbody rb = GetComponent<Rigidbody>();
       rb.isKinematic = false;
       rb.detectCollisions = true;
-      rb.AddRelativeForce(new Vector3(0, 0, -4.0f));
+      //rb.AddRelativeForce(new Vector3(0, 0, 2.0f));
 
       dx8.FloppySensor.Floppy = null;
       dx8.FloppySensor.IsEmpty = true;
+
+      dx8.FloppySensor.EjectCooldown = 0.25f;
+      Direction = 0;
+      State++;
 
     }
   }
@@ -91,6 +106,9 @@ public class FloppyDisk3dItem : MonoBehaviour
     
     PosA = transform.localPosition;
     PosB = new Vector3(0,0, -1.5f);
+    
+    DX8.dx8 dx8 = GameObject.Find("DX8").GetComponent<DX8.dx8>();
+    dx8.SetEjectButton(false);
   }
 
   public void RunFloppy(FloppySensor sensor)
@@ -123,6 +141,30 @@ public class FloppyDisk3dItem : MonoBehaviour
       //transform.localRotation = Quaternion.Euler(180,0,-90);
     }
 
+  }
+
+  public void WarpFloppy(FloppySensor sensor)
+  {
+    Rigidbody rb = GetComponent<Rigidbody>();
+    rb.isKinematic = true;
+    
+    HeldItem hd = GameObject.Find("Character").GetComponent<Character>().HeldItem;
+    if (hd.Rb == rb)
+    {
+      hd.Deattach();
+    }
+    
+    rb.isKinematic = true;
+    rb.detectCollisions = false;
+    
+    transform.SetParent(sensor.transform, true);
+    transform.localPosition = new Vector3(0, 0, 0.25f); //Vector3.Lerp(PosB, PosC, Time / MaxTime);
+    transform.localRotation = Quaternion.Euler(180,0,-90);
+    
+    sensor.IsEmpty = false;
+    sensor.Floppy = this;
+    DX8.dx8 dx8 = GameObject.Find("DX8").GetComponent<DX8.dx8>();
+    dx8.SetEjectButton(true);
   }
 
 }

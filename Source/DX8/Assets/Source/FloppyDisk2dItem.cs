@@ -8,6 +8,7 @@ public class FloppyDisk2dItem : MonoBehaviour
   public String Title;
   public String Path;
   public int    Order;
+  public FloppyDisk3dItem Counterpart;
 
   public void Start()
   {
@@ -19,7 +20,10 @@ public class FloppyDisk2dItem : MonoBehaviour
 
   public void RunFloppy()
   {
-    GameObject.Find("DX8").GetComponent<DX8.dx8>().UI_InsertFloppy(Path);
+    DX8.dx8 dx8 = GameObject.Find("DX8").GetComponent<DX8.dx8>();
+    
+    Counterpart.WarpFloppy(dx8.FloppySensor);
+    dx8.UI_InsertFloppy(Path);
   }
 
 }

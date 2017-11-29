@@ -121,7 +121,7 @@ namespace DX8
     public  bool                   ReloadNeeded;
     public  bool                   IsOpen;
     public  bool                   IsRunning;
-    public  string                 RomPath = @"C:\dev\dx8\ROMS\rom\rom.bin";
+    public  string                 RomPath    = @"C:\dev\dx8\ROMS\rom\rom.bin";                 // <<<<< Change to relative.
     public  string                 FloppyPath = @"C:\dev\dx8\ROMS\virtualtest\keytest.bin.fd";
     public  int                    LastSteps = 0;
     public  Texture2D              CrtTexture;
@@ -146,7 +146,11 @@ namespace DX8
     public  MeshRenderer           Light_Floppy;
     public  MeshRenderer           Light_CapsLock;
 
+    public  Transform              Button_Power;
+    public  Transform              Button_Eject;
+
     Color   Light_PowerCol, Light_FloppyCol, Light_FloppyColDim, Light_CapsLockCol;
+    Vector3  Button_PowerOffPos, Button_EjectOutPos;
 
 
     public bool  PowerIsOn = false;
@@ -335,16 +339,14 @@ namespace DX8
       Light_FloppyCol   = new Color(0.868f, 0.217f, 0.217f, 1.000f);
       Light_FloppyColDim = new Color(0.868f * 0.75f, 0.217f * 0.75f, 0.217f * 0.75f, 1.000f);
       Light_CapsLockCol = new Color(0.801f, 0.714f, 0.348f, 1.000f);
-      
-      Debug.Log(Light_PowerCol);
-      Debug.Log(Light_FloppyCol);
-      Debug.Log(Light_CapsLockCol);
-
 
       Light_Power.sharedMaterial.SetColor("_EmissionColor", Color.black);
       Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Color.black);
       Light_CapsLock.sharedMaterial.SetColor("_EmissionColor", Color.black);
 
+      Button_PowerOffPos = Button_Power.localPosition;
+      Button_EjectOutPos = Button_Eject.localPosition;
+      
       Crt2d.SetTexture(CrtTexture);
       Crt3d.SetTexture(CrtTexture);
     }
@@ -359,8 +361,11 @@ namespace DX8
 #endif
       ReloadNeeded = true;
       
+
       FindDisks();
       Update2dState(false);
+      SetEjectButton(false);
+      SetPowerButton(false);
     }
     
 #if UNITY_EDITOR
@@ -845,7 +850,7 @@ namespace DX8
       {
         GameObject floppy2dGo = UnityEngine.Object.Instantiate(UIPrefab_FloppyDisk2d);
         FloppyDisk2dItem floppy2d = floppy2dGo.GetComponent<FloppyDisk2dItem>();
-        floppy2d.Title = System.IO.Path.GetFileNameWithoutExtension(path);
+        floppy2d.Title = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(path));
         floppy2d.Path = path;
         floppy2d.Order = order++;
 
@@ -856,6 +861,8 @@ namespace DX8
         floppy3d.Title = floppy2d.Title;
         floppy3d.Path = floppy2d.Path;
 
+        floppy3d.Counterpart = floppy2d;
+        floppy2d.Counterpart = floppy3d;
         
         floppy3d.transform.SetParent(FloppyDiskStack, false);
         
@@ -863,6 +870,31 @@ namespace DX8
 
       }
 
+    }
+
+    public void SetEjectButton(bool isOut)
+    {
+      Vector3 p = Button_EjectOutPos;
+      
+      if (!isOut)
+      {
+        p.z += 0.045f;
+      }
+
+      Button_Eject.transform.localPosition = p;
+
+    }
+    
+    public void SetPowerButton(bool isOn)
+    {
+      Vector3 p = Button_PowerOffPos;
+      
+      if (isOn)
+      {
+        p.z += 0.045f;
+      }
+
+      Button_Power.transform.localPosition = p;
     }
 
     void FindDisksInPath(List<string> paths, string m)
@@ -934,6 +966,8 @@ namespace DX8
       IsFloppyLoaded = false;
       FloppyOnTimer = 0.0f;
       ShouldLoadFloppy = !FloppySensor.IsEmpty;
+
+      SetPowerButton(true);
     }
 
     public void TurnOffComputer()
@@ -956,6 +990,8 @@ namespace DX8
       IsFloppyLoaded = false;
       FloppyOnTimer = 0.0f;
       ShouldLoadFloppy = false;
+      
+      SetPowerButton(false);
     }
 
     internal void PowerButtonPressed()

@@ -85,16 +85,12 @@ public class Character : MonoBehaviour
           {
             LastLookedAt = hit.collider.gameObject;
 
-            string text;
+            string text = string.Empty;
 
             if (LastLookedAt.tag == "Floppy")
             {
               FloppyDisk3dItem floppy = LastLookedAt.GetComponent<FloppyDisk3dItem>();
               text = floppy.Title;
-            }
-            else
-            {
-              text = LastLookedAt.name;
             }
 
             LookAtInfo.text = text;
@@ -115,7 +111,7 @@ public class Character : MonoBehaviour
             Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
             if (rb)
             {
-              HeldItem.Attach(rb);
+              HeldItem.Attach(rb, hit.collider);
             }
           }
         }

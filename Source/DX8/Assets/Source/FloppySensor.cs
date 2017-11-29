@@ -6,12 +6,16 @@ public class FloppySensor : MonoBehaviour
 {
   public bool IsEmpty = true;
   public FloppyDisk3dItem Floppy;
+  public bool Ejecting = false;
+  public bool CanRead = true;
+  public float EjectCooldown = 0.0f;
 
   void OnTriggerEnter(Collider other)
   {
     Debug.LogFormat("IsEmpty = {0}, Tag = {1}", IsEmpty, other.gameObject.tag);
     
-    if (IsEmpty && other.gameObject.tag == "Floppy")
+
+    if (CanRead && IsEmpty && other.gameObject.tag == "Floppy")
     {
       IsEmpty = false;
       Floppy = other.GetComponent<FloppyDisk3dItem>();
@@ -26,4 +30,14 @@ public class FloppySensor : MonoBehaviour
       Floppy.EjectFloppy();
     }
   }
+
+  public void FixedUpdate()
+  {
+    if (EjectCooldown > 0.0f)
+    {
+      EjectCooldown -= Time.fixedDeltaTime;
+      CanRead = (EjectCooldown <= 0.0f);
+    }
+  }
+
 }
