@@ -24,6 +24,7 @@ GameObject:
   - component: {fileID: 114695626734478732}
   - component: {fileID: 54406249933473210}
   - component: {fileID: 65809880700895678}
+  - component: {fileID: 114939663324285786}
   m_Layer: 8
   m_Name: FloppyPrefab
   m_TagString: Floppy
@@ -38,7 +39,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1896710893213986}
   m_LocalRotation: {x: -6.123234e-17, y: 1, z: -6.123234e-17, w: 6.123234e-17}
-  m_LocalPosition: {x: -8.677939, y: 14.081102, z: -3.764021}
+  m_LocalPosition: {x: 3.226677, y: 5.979041, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -126,3 +127,16 @@ MonoBehaviour:
   GO: {fileID: 0}
   Title: 
   Path: 
+--- !u!114 &114939663324285786
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1896710893213986}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc4acea348ca8754aba02a1cbd06f7a4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Mirror: {fileID: 1080449295449688, guid: 24dab558d8231f8478e4beb15938cc59, type: 2}
+  Proxy: {fileID: 0}
