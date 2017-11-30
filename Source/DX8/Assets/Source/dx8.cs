@@ -129,7 +129,8 @@ namespace DX8
     public  Texture2D              CrtTexture;
     public  Crt2d                  Crt2d;
     public  Crt3d                  Crt3d;
-    public  bool                   Is2dState = false;
+    public  bool                   IsPaused   = false;
+    public  bool                   Is2dState  = false;
     public  bool                   IsKeyState = false;
 
     public  GameObject[]           ObjectsSim3d;
@@ -138,10 +139,9 @@ namespace DX8
     public  Camera                 MainCamera;
     public  Character              Character;
     
-    public  RectTransform          UI_FloppyDiskList;
-    public  GameObject             UIPrefab_FloppyDisk2d;
     public  Transform              FloppyDiskStack;
     public  GameObject             Prefab_FloppyDisk3d;
+    public  List<FloppyDisk3dItem> Floppys;
 
     public  FloppySensor           FloppySensor;
     public  MeshRenderer           Light_Power;
@@ -152,6 +152,7 @@ namespace DX8
     public  Transform              Button_Eject;
 
     public  UserInterface          UserInterface;
+    public  PausedUserInterface    PausedUserInterface;
 
     Color   Light_PowerCol, Light_FloppyCol, Light_FloppyColDim, Light_CapsLockCol;
     Vector3  Button_PowerOffPos, Button_EjectOutPos;
@@ -329,12 +330,15 @@ namespace DX8
     
     void Awake()
     {
-    
+      Physics.autoSimulation = false;
+
       #if UNITY_EDITOR
           RomPath    = @"C:\dev\dx8\ROMS\rom\rom.bin";
       #else
-          RomPath    = Application.dataPath + @"\rom.bin";
+          RomPath    = Application.dataPath + @"/../rom.bin";
       #endif
+
+      Floppys = new List<FloppyDisk3dItem>(8);
 
       CrtTexture = new Texture2D(320, 256, TextureFormat.RGB24, false);
       CrtTexture.filterMode = FilterMode.Point;
@@ -360,6 +364,8 @@ namespace DX8
       
       Crt2d.SetTexture(CrtTexture);
       Crt3d.SetTexture(CrtTexture);
+
+      TogglePaused();
     }
 
     void Start()
@@ -394,15 +400,30 @@ namespace DX8
     {
       if (IsOpen)
       {
-        if (PowerIsOn && IsRunning)
+        if (!IsPaused && PowerIsOn && IsRunning)
         {
           RunOnce(Time.fixedDeltaTime);
         }
       }
     }
+    float timer;
 
     void Update()
     {
+      if (IsPaused)
+        return;
+
+      if (!Physics.autoSimulation)
+      {
+        timer += Time.deltaTime;
+        
+        while (timer >= Time.fixedDeltaTime)
+        {
+            timer -= Time.fixedDeltaTime;
+            Physics.Simulate(Time.fixedDeltaTime);
+        }
+      }
+
       if (!Is2dState && Input.GetMouseButtonUp(2))
       {
         IsKeyState = !IsKeyState;
@@ -682,7 +703,6 @@ namespace DX8
     {
       if (!IsFloppyLoaded)
         return;
-        
       
       Library.Call(Api.RemoveDisk, 0);
       IsFloppyLoaded = false;
@@ -854,32 +874,25 @@ namespace DX8
     {
       List<string> paths = new List<string>();
       
-      FindDisksInPath(paths, "C:\\dev\\dx8\\ROMS");
-      FindDisksInPath(paths, Application.dataPath);
+      #if UNITY_EDITOR
+        FindDisksInPath(paths, "C:\\dev\\dx8\\ROMS");
+      #endif
+
+      FindDisksInPath(paths, Application.dataPath + @"/../");
       
       int order = 0;
       foreach(var path in paths)
       {
-        GameObject floppy2dGo = UnityEngine.Object.Instantiate(UIPrefab_FloppyDisk2d);
-        FloppyDisk2dItem floppy2d = floppy2dGo.GetComponent<FloppyDisk2dItem>();
-        floppy2d.Title = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(path));
-        floppy2d.Path = path;
-        floppy2d.Order = order++;
-
-        floppy2d.transform.SetParent(UI_FloppyDiskList.transform, false);
-        
         GameObject floppy3dGo = UnityEngine.Object.Instantiate(Prefab_FloppyDisk3d);
         FloppyDisk3dItem floppy3d = floppy3dGo.GetComponent<FloppyDisk3dItem>();
-        floppy3d.Title = floppy2d.Title;
-        floppy3d.Path = floppy2d.Path;
-
-        floppy3d.Counterpart = floppy2d;
-        floppy2d.Counterpart = floppy3d;
+        floppy3d.Title = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(path));
+        floppy3d.Path = path;
+        floppy3d.UI_Order = order++;
+        
         
         floppy3d.transform.SetParent(FloppyDiskStack, false);
-        
-        floppy3d.transform.localPosition = new Vector3(0, floppy2d.Order * 0.3f, 0);
-
+        floppy3d.transform.localPosition = new Vector3(0, floppy3d.UI_Order * 0.3f, 0);
+        Floppys.Add(floppy3d);
       }
 
     }
@@ -965,11 +978,20 @@ namespace DX8
       int isBusy = Library.GetValue(Api.FloppyBusy);
       
       if (isBusy == 2)
+      {
         Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Light_FloppyCol);
+        UserInterface.SetFloppyAccess(true);
+      }
       else if (isBusy == 1)
+      {
         Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Light_FloppyColDim);
+        UserInterface.SetFloppyAccess(true);
+      }
       else
+      {
         Light_Floppy.sharedMaterial.SetColor("_EmissionColor", Color.black);
+        UserInterface.SetFloppyAccess(false);
+      }
     }
 
     public void TurnOnComputer()
@@ -1012,10 +1034,31 @@ namespace DX8
     {
       FloppySensor.Eject();
     }
+    
+    public void UI_WarpEject()
+    {
+      FloppySensor.WarpEject();
+    }
 
     public void UI_Power()
     {
       PowerButtonPressed();
+    }
+
+    public void TogglePaused()
+    {
+      IsPaused = !IsPaused;
+      
+      if (IsPaused)
+      {
+        PausedUserInterface.Show();
+        UserInterface.Hide();
+      }
+      else
+      {
+        PausedUserInterface.Hide();
+        UserInterface.Show();
+      }
     }
 
     internal void PowerButtonPressed()

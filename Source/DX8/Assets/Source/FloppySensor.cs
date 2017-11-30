@@ -30,6 +30,14 @@ public class FloppySensor : MonoBehaviour
       Floppy.EjectFloppy();
     }
   }
+  
+  public void WarpEject()
+  {
+    if (!IsEmpty)
+    {
+      Floppy.WarpEjectFloppy();
+    }
+  }
 
   public void FixedUpdate()
   {
@@ -37,6 +45,7 @@ public class FloppySensor : MonoBehaviour
     {
       EjectCooldown -= Time.fixedDeltaTime;
       CanRead = (EjectCooldown <= 0.0f);
+      Ejecting = false;
     }
   }
 

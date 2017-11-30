@@ -24,6 +24,9 @@ public class Character : MonoBehaviour
   public UnityEngine.UI.Text  LookAtInfo;
   public GameObject           LastLookedAt;
 
+
+  public bool CanPickUpHeavy = false;
+
   void Start()
   {
     CC = GetComponent<CharacterController>();
@@ -33,13 +36,19 @@ public class Character : MonoBehaviour
   {
     if (Input.GetKeyUp(KeyCode.Escape))
     {
+      Dx8.TogglePaused();
+    /*
 #if UNITY_EDITOR
        UnityEditor.EditorApplication.isPlaying = false;
 #else
       Application.Quit();
 #endif
+*/
     }
     
+    if (Dx8.IsPaused)
+      return;
+
     if (FreezeState == FreezeState.Frozen)
       return;
 
@@ -109,9 +118,15 @@ public class Character : MonoBehaviour
           else if (press)
           {
             Rigidbody rb = hit.collider.GetComponent<Rigidbody>();
+
             if (rb)
             {
-              HeldItem.Attach(rb, hit.collider);
+              bool isFloppy = (rb.tag == "Floppy");
+
+              if (isFloppy || (!isFloppy && CanPickUpHeavy))
+              {
+                HeldItem.Attach(rb, hit.collider);
+              }
             }
           }
         }

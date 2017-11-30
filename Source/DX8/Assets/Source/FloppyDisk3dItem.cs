@@ -3,18 +3,18 @@ using System;
 
 public class FloppyDisk3dItem : MonoBehaviour
 {
-  public GameObject GO;
-  public String Title;
-  public String Path;
+  public GameObject  GO;
+  public String      Title;
+  public String      Path;
 
-  private Vector3 PosA, PosB, PosC;
+  private Vector3    PosA, PosB, PosC;
   private Quaternion RotA, RotB;
-  private float   Time, MaxTime;
-  private int     State;
-  private int     Direction;
-
-  public FloppyDisk2dItem Counterpart;
-
+  private float      Time, MaxTime;
+  private int        State;
+  private int        Direction;
+  public  int        UI_Order;
+  public  int        UI_X0, UI_Y0, UI_X1, UI_Y1;
+  
   public void Update()
   {
     if (Direction == 1)
@@ -89,7 +89,7 @@ public class FloppyDisk3dItem : MonoBehaviour
 
       dx8.FloppySensor.Floppy = null;
       dx8.FloppySensor.IsEmpty = true;
-
+      
       dx8.FloppySensor.EjectCooldown = 0.25f;
       Direction = 0;
       State++;
@@ -109,6 +109,22 @@ public class FloppyDisk3dItem : MonoBehaviour
     
     DX8.dx8 dx8 = GameObject.Find("DX8").GetComponent<DX8.dx8>();
     dx8.SetEjectButton(false);
+  }
+  
+  public void WarpEjectFloppy()
+  {
+    DX8.dx8 dx8 = GameObject.Find("DX8").GetComponent<DX8.dx8>();
+    
+    transform.localPosition = new Vector3(0,0, -1.5f);
+    transform.parent = dx8.FloppyDiskStack;
+
+    Rigidbody rb = GetComponent<Rigidbody>();
+    rb.isKinematic = false;
+    rb.detectCollisions = true;
+
+    dx8.FloppySensor.Floppy = null;
+    dx8.FloppySensor.IsEmpty = true;
+    dx8.FloppySensor.EjectCooldown = 0.25f;
   }
 
   public void RunFloppy(FloppySensor sensor)

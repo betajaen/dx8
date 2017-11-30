@@ -15,8 +15,8 @@ MonoBehaviour:
   atlasIdB: 418425994
   mSprites:
   - name: Giraffe/White
-    left: 2
-    top: 106
+    left: 30
+    top: 122
     width: 4
     height: 4
     scale: 1
@@ -55,18 +55,18 @@ MonoBehaviour:
     offsetX: 0
     offsetY: 0
   - name: Button_Up
-    left: 66
-    top: 42
-    width: 32
-    height: 16
+    left: 2
+    top: 106
+    width: 13
+    height: 13
     scale: 1
     offsetX: 0
     offsetY: 0
   - name: Button_Down
     left: 66
-    top: 62
-    width: 32
-    height: 16
+    top: 42
+    width: 13
+    height: 13
     scale: 1
     offsetX: 0
     offsetY: 0
@@ -91,6 +91,22 @@ MonoBehaviour:
     top: 2
     width: 252
     height: 36
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Button_Light
+    left: 19
+    top: 106
+    width: 1
+    height: 13
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Button_Dark
+    left: 24
+    top: 106
+    width: 1
+    height: 13
     scale: 1
     offsetX: 0
     offsetY: 0
