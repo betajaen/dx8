@@ -93,8 +93,8 @@ public class Character : MonoBehaviour
               text = floppy.Title;
             }
 
-            LookAtInfo.text = text;
-
+            // LookAtInfo.text = text;
+            Dx8.UserInterface.SetCaption(text);
           }
 
           if (press && hit.collider.name == "PowerButton")
@@ -119,7 +119,8 @@ public class Character : MonoBehaviour
         {
           if (LastLookedAt != null)
           {
-            LookAtInfo.text = string.Empty;
+            //LookAtInfo.text = string.Empty;
+            Dx8.UserInterface.SetCaption(string.Empty);
             LastLookedAt = null;
           }
         }

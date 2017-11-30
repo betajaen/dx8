@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85b61d2f31eb2464690f587d64c6eae7, type: 3}
+  m_Name: UI
+  m_EditorClassIdentifier: 
+  atlasIdA: 326320398
+  atlasIdB: 418425994
+  mSprites:
+  - name: Giraffe/White
+    left: 2
+    top: 106
+    width: 4
+    height: 4
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Power_Up
+    left: 30
+    top: 42
+    width: 32
+    height: 16
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Power_Down
+    left: 30
+    top: 62
+    width: 32
+    height: 16
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Eject_Up
+    left: 30
+    top: 82
+    width: 32
+    height: 16
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Eject_Down
+    left: 30
+    top: 102
+    width: 32
+    height: 16
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Button_Up
+    left: 66
+    top: 42
+    width: 32
+    height: 16
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Button_Down
+    left: 66
+    top: 62
+    width: 32
+    height: 16
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Crosshair
+    left: 2
+    top: 78
+    width: 24
+    height: 24
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Button_Floppy
+    left: 2
+    top: 42
+    width: 24
+    height: 32
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: VictoriaBold
+    left: 2
+    top: 2
+    width: 252
+    height: 36
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  texture: {fileID: 2800000, guid: d8648b4c07fecf843b70b40227157140, type: 3}
+  useCustomMaterial: 0
+  customMaterial: {fileID: 0}

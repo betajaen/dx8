@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f996448429b55d340a45dc445e2a091a, type: 3}
+  m_Name: UI ImportData
+  m_EditorClassIdentifier: 
+  atlasIdA: 326320398
+  atlasIdB: 418425994
+  parts:
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 3a48b2f9a23ed0143965467f739bc3bc, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 7f11fabcd5312784898e959f1b88de30, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 005a208cfb71d0e4f860920de8f73e19, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: a0f871d725fda82498473ba6128fb2d8, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: f4606fef4b38a4c4da896afa2c9d1a60, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: daaed79ec448b424d9d60c8e56781ae5, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 4731c57951a85114bb38b74ffb099d78, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 06db6617076b8d348b5dd40609f00e20, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: f37cf74b6e8d97e41aea448f32dd9352, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  atlasOutOfDate: 0
+  border: 2
+  padding: 0
+  generateWhiteTexture: 1

@@ -9,10 +9,10 @@ namespace DX8
   public static class Library
   {
 #if UNITY_EDITOR
-    public const String DllPath = "C:\\dev\\DX8Tests\\DX8\\DX8.dll";
+    //public const String DllPath = "C:\\dev\\DX8Tests\\DX8\\DX8.dll";
     public const String Name = "libDX8-DevKit";
 #else
-    public const String Name = "DX8";
+    public const String Name = "libDX8";
 #endif
 
 #if UNITY_EDITOR_WIN || UNITY_STANDALONE_WIN
@@ -121,7 +121,9 @@ namespace DX8
     public  bool                   ReloadNeeded;
     public  bool                   IsOpen;
     public  bool                   IsRunning;
-    public  string                 RomPath    = @"C:\dev\dx8\ROMS\rom\rom.bin";                 // <<<<< Change to relative.
+    
+    public  string                 RomPath;
+
     public  string                 FloppyPath = @"C:\dev\dx8\ROMS\virtualtest\keytest.bin.fd";
     public  int                    LastSteps = 0;
     public  Texture2D              CrtTexture;
@@ -148,6 +150,8 @@ namespace DX8
 
     public  Transform              Button_Power;
     public  Transform              Button_Eject;
+
+    public  UserInterface          UserInterface;
 
     Color   Light_PowerCol, Light_FloppyCol, Light_FloppyColDim, Light_CapsLockCol;
     Vector3  Button_PowerOffPos, Button_EjectOutPos;
@@ -325,6 +329,13 @@ namespace DX8
     
     void Awake()
     {
+    
+      #if UNITY_EDITOR
+          RomPath    = @"C:\dev\dx8\ROMS\rom\rom.bin";
+      #else
+          RomPath    = Application.dataPath + @"\rom.bin";
+      #endif
+
       CrtTexture = new Texture2D(320, 256, TextureFormat.RGB24, false);
       CrtTexture.filterMode = FilterMode.Point;
       Color32[] col = CrtTexture.GetPixels32();
@@ -402,6 +413,7 @@ namespace DX8
       {
         Is2dState = !Is2dState;
         Update2dState(Is2dState);
+        UserInterface.SetSimulationMode(Is2dState ? UserInterface.SimulationMode.Two : UserInterface.SimulationMode.Three);
       }
 
       if (ReloadNeeded)
@@ -841,7 +853,7 @@ namespace DX8
     void FindDisks()
     {
       List<string> paths = new List<string>();
-
+      
       FindDisksInPath(paths, "C:\\dev\\dx8\\ROMS");
       FindDisksInPath(paths, Application.dataPath);
       
@@ -882,6 +894,7 @@ namespace DX8
       }
 
       Button_Eject.transform.localPosition = p;
+      UserInterface.SetEjectButtonIsDown(!isOut);
 
     }
     
@@ -895,6 +908,7 @@ namespace DX8
       }
 
       Button_Power.transform.localPosition = p;
+      UserInterface.SetPowerButtonIsDown(isOn);
     }
 
     void FindDisksInPath(List<string> paths, string m)
@@ -992,6 +1006,16 @@ namespace DX8
       ShouldLoadFloppy = false;
       
       SetPowerButton(false);
+    }
+
+    public void UI_Eject()
+    {
+      FloppySensor.Eject();
+    }
+
+    public void UI_Power()
+    {
+      PowerButtonPressed();
     }
 
     internal void PowerButtonPressed()
