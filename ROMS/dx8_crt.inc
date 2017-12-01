@@ -27,7 +27,6 @@ macro _pop i {
 }
 
 macro _rjmp x {
-      .here:
             addr = x - $
             if (addr < -128 | addr > 127)
                   Display 'Address exceeds relative range'
@@ -36,7 +35,6 @@ macro _rjmp x {
 }
 
 macro _rjmp.nz x {
-      .here:
             addr = x - $
             if (addr < -128 | addr > 127)
                   Display 'Address exceeds relative range'
@@ -50,6 +48,22 @@ macro _rjmp.z x {
                   Display 'Address exceeds relative range'
             end if
             rjmp.z addr
+}
+
+macro _rjmp.gt x {
+            addr = x - $
+            if (addr < -128 | addr > 127)
+                  Display 'Address exceeds relative range'
+            end if
+            rjmp.gt addr
+}
+
+macro _rjmp.lt x {
+            addr = x - $
+            if (addr < -128 | addr > 127)
+                  Display 'Address exceeds relative range'
+            end if
+            rjmp.lt addr
 }
 
 macro _poke addr, value {

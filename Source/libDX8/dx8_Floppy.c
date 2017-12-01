@@ -77,8 +77,8 @@ bool Fpy_HasDisk()
 
 int  Fpy_CalculateTrackAddress(Byte track)
 {
-  if (track > 160)
-    track = 160;
+  if (track >= 159)
+    track = 159;
   return track * FLOPPY_SECTOR_SIZE;
 }
 
@@ -132,13 +132,18 @@ void Floppy_Interrupt()
   sFloppyOp_Dst   = Mmu_GetWord(REG_FPY_OP_ADDR);
   sFloppyOp_Len   = FLOPPY_SECTOR_SIZE;
   sFloppyOp_Track = Mmu_Get(REG_FPY_OP_TRACK);
+  
+  if (sFloppyOp_Track >= 160)
+    sFloppyOp_Track = 159;
+
   sFloppyOp_Src   = Fpy_CalculateTrackAddress(sFloppyOp_Track);
   sFloppy_ReadCounter = 0;
 
-  LOGF("Floppy Op!! %i", sFloppyOp);
+  LOGF("Floppy Op!! Id=%i Track=%i Len=%i Dst=%i Src=%i", sFloppyOp, sFloppyOp_Track, sFloppyOp_Len, sFloppyOp_Dst, sFloppyOp_Src);
 
   Mmu_Set(REG_FPY_OP, 0x00);
   sFloppySeekTimer = 0;
+  sFloppySeekTrack = sFloppyOp_Track;
 }
 
 
@@ -233,7 +238,7 @@ void Floppy_Clock()
 
         if (sFloppyOp_Len == 0)
         {
-          LOGF("[Floppy] Read track $%8X to $%4X, Length = $%4X", sFloppyOp_Src, sFloppyOp_Dst, sFloppyOp_Len);
+          LOGF("[Floppy] Read track %i $%8X to $%4X, Length = $%4X", sFloppyCurrentTrack, sFloppyOp_Src, sFloppyOp_Dst, sFloppyOp_Len);
 
           sFloppy_Light = FLOPPY_LIGHT_OFF;
           sFloppyOp = 0;

@@ -725,7 +725,7 @@ namespace DX8
       Marshal.Copy(data, 0, romPtr, data.Length);
       
       int r = Library.SetData(Api.Rom, romPtr, data.Length);
-      Debug.LogFormat("Loaded Program = {0}, Length: {1}", r, data.Length);
+      Debug.LogFormat("Loaded ROM = {0}, Length: {1}, from {2}", r, data.Length, RomPath);
       Marshal.FreeHGlobal(romPtr);
 
       Library.Call(Api.HardReset, 0);
@@ -896,6 +896,10 @@ namespace DX8
         GameObject floppy3dGo = UnityEngine.Object.Instantiate(Prefab_FloppyDisk3d);
         FloppyDisk3dItem floppy3d = floppy3dGo.GetComponent<FloppyDisk3dItem>();
         floppy3d.Title = System.IO.Path.GetFileNameWithoutExtension(System.IO.Path.GetFileNameWithoutExtension(path));
+        if (floppy3d.Title.EndsWith("_fd"))
+        {
+          floppy3d.Title = floppy3d.Title.Substring(0, floppy3d.Title.Length - 3);
+        }
         floppy3d.Path = path;
         floppy3d.UI_Order = order++;
         
@@ -936,7 +940,9 @@ namespace DX8
 
     void FindDisksInPath(List<string> paths, string m)
     {
+      // *.fd, *_fd.bin
       paths.AddRange(System.IO.Directory.GetFiles(m, "*.fd", System.IO.SearchOption.AllDirectories));
+      paths.AddRange(System.IO.Directory.GetFiles(m, "*_fd.bin", System.IO.SearchOption.AllDirectories));
     }
 
     void Update2dState(bool is2d)

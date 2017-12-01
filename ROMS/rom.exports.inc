@@ -16,16 +16,16 @@ PrintChar_X equ x
 PrintChar_Y equ y
 PrintChar_Char equ a
 ;! Function: Copy a zero-terminated string to the screen at x, y
-Import_Function Rom, Print, $03A7
+Import_Function Rom, Print, $03A2
 Print_X equ x
 Print_Y equ y
 Print_Str equ j
 ;! Function: Print a byte decimal number to the screen at x, y
-Import_Function Rom, PrintNum, $03BD
+Import_Function Rom, PrintNum, $03D4
 PrintNum_X equ x
 PrintNum_Y equ y
 PrintNum_Num equ a
 ;! Function: Clears the screen
-Import_Function Rom, Cls, $03EC
+Import_Function Rom, Cls, $0414
 ;! Constant: Table of Keycodes to ASCII equilvents
 Import_Const Rom, Keycode2Ascii, $7300

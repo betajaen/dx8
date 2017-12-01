@@ -56,14 +56,13 @@ BeginFunction OnFloppyInserted
         ; Setup modes
         _poke sFloppy_Mode,             $00     ; Current state (0 = Reading Header, 1 = Doing Instructions, 2 = Done)
         _poke.w sFloppy_Addr,           $FC00   ; Pointer to current track info
-        _poke sFloppy_Track,            $00     ; Current track
+        _poke sFloppy_Track,            $FF     ; Current track (-1)
 
-        ; Copy sector#1 to $FC00
-        _poke REG_FPY_OP_TRACK,         $00
+        ; Copy sector 179 to $FC00
+        _poke REG_FPY_OP_TRACK,         $FF
         _poke.w REG_FPY_OP_ADDR,        $FC00
         _poke REG_FPY_OP,               $01
         int INT_FLOPPY_OP
-
 EndFunction
 
 BeginFunction OnFloppyRemoved
@@ -226,6 +225,10 @@ BeginFunction Floppy_Instruction_ReadLowerTrackToAddress
         inc a
         store sFloppy_Track, a
         store REG_FPY_OP_TRACK, a
+
+        dbn 'TR'
+        dbn 'NO'
+        dbr 'a'
 
         ; Set to read operation
         set a, $01

@@ -1,9 +1,3 @@
-
-
-
-
-
-
 ;! PrintChar
 ;! Copy a character to the screen at x, y
 ;! Note:
@@ -15,15 +9,16 @@ PrintChar_X equ x
 PrintChar_Y equ y
 PrintChar_Char equ a
 
+
 BeginFunction PrintChar
         cmpi x, SCREEN_COLS
-        jmp.gt .CantPrint
+        _rjmp.gt .CantPrint
         cmpi y, SCREEN_ROWS
-        jmp.gt .CantPrint
+        _rjmp.gt .CantPrint
         cmpi a, CHAR_Space
-        jmp.lt .CantPrint
+        _rjmp.lt .CantPrint
         cmpi a, CHAR_Hat
-        jmp.gt .CantPrint
+        _rjmp.gt .CantPrint
 
         .Print:
                 set j, $0000            ; j = $8000 + (y * 40) + x
@@ -34,7 +29,7 @@ BeginFunction PrintChar
                 store j, a
                 set a, $01
 
-                jmp .End
+                _rjmp .End
 
         .CantPrint:
                 set a, $00
@@ -53,7 +48,7 @@ Export_Function_Arg  PrintChar, Char, a
 
 
 ;! Print
-;! Copy a zero-terminated string to the screen at x, y
+;! Copy a zero-terminated string (j) to the screen at x, y
 Print_X   equ x
 Print_Y   equ y
 Print_Str equ j
@@ -62,17 +57,43 @@ BeginFunction Print
         .DoPrint:
                 load a, j
                 cmp a
-                jmp.z .End
+                _rjmp.z .End
                 push z
                 push w
-                _CallFunction PrintChar
+
+                ; _CallFunction PrintChar
+                        cmpi x, SCREEN_COLS
+                        _rjmp.gt .CantPrint
+                        cmpi y, SCREEN_ROWS
+                        _rjmp.gt .CantPrint
+                        cmpi a, CHAR_Space
+                        _rjmp.lt .CantPrint
+                        cmpi a, CHAR_Hat
+                        _rjmp.gt .CantPrint
+
+                        .Print:
+                                set j, $0000            ; j = $8000 + (y * 40) + x
+                                add j, y                ;
+                                mul j, SCREEN_COLS      ;
+                                add j, x                ;
+                                add j, MEM_GFX_PLANE0   ;
+                                store j, a
+                                set a, $01
+
+                                _rjmp .End1
+
+                        .CantPrint:
+                                set a, $00
+
+                        .End1:
+
                 pop w
                 pop z
                 cmp a
-                jmp.z .End
+                _rjmp.z .End
                 inc j
                 inc x
-                jmp .DoPrint
+                _rjmp .DoPrint
         .End:
 EndFunction
 
@@ -94,18 +115,18 @@ PrintNum_Num equ a
 
 BeginFunction PrintNum
         .DoPrint:
-                cmp a
-                jmp.z .PrintZero
+                ;cmp a
+                ;_rjmp.z .PrintZero
 
                 cmpi a, 10
-                jmp.lt .PrintChar
+                _rjmp.lt .PrintChar
 
                 cmpi a, 100
-                jmp.lt .Two
+                _rjmp.lt .Two
 
                 inc x
                 inc x
-                jmp .PrintChar
+                _rjmp .PrintChar
 
         .Two:
                 inc x
@@ -118,7 +139,32 @@ BeginFunction PrintNum
                 add a, '0'
 
                 push z
-                _CallFunction PrintChar
+
+                        cmpi x, SCREEN_COLS
+                        _rjmp.gt .CantPrint
+                        cmpi y, SCREEN_ROWS
+                        _rjmp.gt .CantPrint
+                        cmpi a, CHAR_Space
+                        _rjmp.lt .CantPrint
+                        cmpi a, CHAR_Hat
+                        _rjmp.gt .CantPrint
+
+                        .Print:
+                                set j, $0000            ; j = $8000 + (y * 40) + x
+                                add j, y                ;
+                                mul j, SCREEN_COLS      ;
+                                add j, x                ;
+                                add j, MEM_GFX_PLANE0   ;
+                                store j, a
+                                set a, $01
+
+                                _rjmp .End1
+
+                        .CantPrint:
+                                set a, $00
+
+                        .End1:
+
                 pop z
 
                 dec x
@@ -127,12 +173,12 @@ BeginFunction PrintNum
                 div a, 10
 
                 cmp a
-                jmp.z .End
-                jmp .PrintChar
+                _rjmp.z .End
+                _rjmp .PrintChar
 
-        .PrintZero:
-                set a, '0'
-                _CallFunction PrintChar
+        ;.PrintZero:
+                ;set a, '0'
+                ;_CallFunction PrintChar
         .End:
 EndFunction
 
