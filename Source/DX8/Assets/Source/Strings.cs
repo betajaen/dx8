@@ -42,4 +42,6 @@ public static class Strings
     "Most keys are mapped to the modern counterpart.",
     "Some games use ZX KM for movement instead of WASD"
   };
+
+  public static string kNotEmptyDrive = "A disk is in the drive";
 }

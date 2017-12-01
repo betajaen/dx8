@@ -104,6 +104,18 @@ MonoBehaviour:
     width: 32
     height: 32
     count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: bf7f8d71277eb9a4cb8164fd579407d3, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 504b834d66eefc040b201ed84c417221, type: 3}
+    width: 32
+    height: 32
+    count: 1
   atlasOutOfDate: 0
   border: 2
   padding: 0

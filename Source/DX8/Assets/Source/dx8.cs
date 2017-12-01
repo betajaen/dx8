@@ -133,6 +133,8 @@ namespace DX8
     public  bool                   Is2dState  = false;
     public  bool                   IsKeyState = false;
     public  bool                   Mute = false;
+    public  bool                   ShowOptionsOnStart = true;
+    public  bool                   FirstRun = true;
 
     public  GameObject[]           ObjectsSim3d;
     public  GameObject[]           ObjectsSim2d;
@@ -335,6 +337,9 @@ namespace DX8
 
       Mute                          = PlayerPrefs.GetInt("Mute") == 1;
       Is2dState                     = PlayerPrefs.GetInt("Is2d") == 1;
+      FirstRun                      = !(PlayerPrefs.GetInt("HasRun", 0) == 1);
+      ShowOptionsOnStart            = PlayerPrefs.GetInt("ShowOptionsOnStart", 1) == 1;
+
 
       #if UNITY_EDITOR
           RomPath    = @"C:\dev\dx8\ROMS\rom\rom.bin";
@@ -372,7 +377,9 @@ namespace DX8
       if (Is2dState)
         Set2DState(Is2dState);
 
-      TogglePaused();
+      if (ShowOptionsOnStart)
+        TogglePaused();
+
     }
 
     void Start()
@@ -387,7 +394,7 @@ namespace DX8
       
 
       FindDisks();
-      Update2dState(false);
+      Update2dState(Is2dState);
       SetEjectButton(false);
       SetPowerButton(false);
     }
@@ -1115,6 +1122,7 @@ namespace DX8
     {
       IsKeyState = isKeyState;
       Update2dState(Is2dState);
+      UserInterface.SetKeyState(isKeyState);
     }
 
     public void SetMute(bool isMuted)
@@ -1122,6 +1130,13 @@ namespace DX8
       Mute = isMuted;
       
       PlayerPrefs.SetInt("Mute", Mute ? 1 : 0);
+    }
+    
+    public void SetShowOptionsOnStart(bool showOptionsOnStart)
+    {
+      ShowOptionsOnStart = showOptionsOnStart;
+
+      PlayerPrefs.SetInt("ShowOptionsOnStart", ShowOptionsOnStart ? 1 : 0);
     }
 
     public void DoReset()

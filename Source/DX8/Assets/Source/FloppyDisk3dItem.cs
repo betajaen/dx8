@@ -70,7 +70,8 @@ public class FloppyDisk3dItem : MonoBehaviour
       if (Time >= MaxTime)
       {
         DX8.dx8 dx8 = GameObject.Find("DX8").GetComponent<DX8.dx8>();
-        dx8.FloppySensor.Ejecting = true;
+        //dx8.FloppySensor.Ejecting = true;
+        dx8.FloppySensor.EjectCooldown = MaxTime + 0.25f;
         dx8.UI_RemoveFloppy();
 
         State++;
@@ -90,7 +91,7 @@ public class FloppyDisk3dItem : MonoBehaviour
       dx8.FloppySensor.Floppy = null;
       dx8.FloppySensor.IsEmpty = true;
       
-      dx8.FloppySensor.EjectCooldown = 0.25f;
+      //dx8.FloppySensor.EjectCooldown = 0.25f;
       Direction = 0;
       State++;
 
@@ -115,7 +116,7 @@ public class FloppyDisk3dItem : MonoBehaviour
   {
     DX8.dx8 dx8 = GameObject.Find("DX8").GetComponent<DX8.dx8>();
     
-    transform.localPosition = new Vector3(0,0, -1.5f);
+    transform.localPosition = new Vector3(2.5f,0, -1.5f);
     transform.parent = dx8.FloppyDiskStack;
 
     Rigidbody rb = GetComponent<Rigidbody>();
@@ -124,12 +125,14 @@ public class FloppyDisk3dItem : MonoBehaviour
 
     dx8.FloppySensor.Floppy = null;
     dx8.FloppySensor.IsEmpty = true;
-    dx8.FloppySensor.EjectCooldown = 0.25f;
+    dx8.FloppySensor.EjectCooldown = 1.25f;
+    Debug.LogFormat("Warp Eject {0}", rb.isKinematic);
   }
 
   public void RunFloppy(FloppySensor sensor)
   {
     Rigidbody rb = GetComponent<Rigidbody>();
+    Debug.Log("RunFloppy.1 true");
     rb.isKinematic = true;
     
     HeldItem hd = GameObject.Find("Character").GetComponent<Character>().HeldItem;
@@ -137,6 +140,7 @@ public class FloppyDisk3dItem : MonoBehaviour
     {
       hd.Deattach();
       
+      Debug.Log("RunFloppy.2 true");
       rb.isKinematic = true;
       rb.detectCollisions = false;
 
@@ -159,10 +163,9 @@ public class FloppyDisk3dItem : MonoBehaviour
 
   }
 
-  public void WarpFloppy(FloppySensor sensor)
+  public void RunFloppyWithOutHeld(FloppySensor sensor)
   {
     Rigidbody rb = GetComponent<Rigidbody>();
-    rb.isKinematic = true;
     
     HeldItem hd = GameObject.Find("Character").GetComponent<Character>().HeldItem;
     if (hd.Rb == rb)
@@ -170,6 +173,41 @@ public class FloppyDisk3dItem : MonoBehaviour
       hd.Deattach();
     }
     
+    Debug.Log("RunFloppyWithOutHeld.1 true");
+   
+    rb.isKinematic = true;
+    rb.detectCollisions = false;
+
+    transform.SetParent(sensor.transform, true);
+      
+    PosA = transform.localPosition;
+    PosB = new Vector3(0,0, -1.0f);
+    PosC = new Vector3(0,0, 0.25f);
+    RotA = transform.localRotation;
+    RotB = Quaternion.Euler(180,0,-90);
+
+    Time  = 0.0f;
+    MaxTime = 0.5f;
+    State = 1;
+    Direction = 1;
+
+    //transform.localPosition = new Vector3(0,0, 0.25f);
+    //transform.localRotation = Quaternion.Euler(180,0,-90);
+
+  }
+
+  public void WarpFloppy(FloppySensor sensor)
+  {
+    Rigidbody rb = GetComponent<Rigidbody>();
+
+    HeldItem hd = GameObject.Find("Character").GetComponent<Character>().HeldItem;
+    if (hd.Rb == rb)
+    {
+      hd.Deattach();
+    }
+    
+    Debug.Log("WarpFloppy.1 true");
+   
     rb.isKinematic = true;
     rb.detectCollisions = false;
     

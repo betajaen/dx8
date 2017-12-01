@@ -10,22 +10,13 @@ public class UserInterface : MonoBehaviour
     Three
   }
 
-  public const int kPowerButton_X0 = 32;
-  public const int kPowerButton_Y0 = 0;
-  public const int kPowerButton_W  = 32;
-  public const int kPowerButton_H  = 16;
+  public const int kMenuButton_X0 = 0;
+  public const int kMenuButton_Y0 = 0;
+  public const int kMenuButton_W  = 13;
+  public const int kMenuButton_H  = 13;
 
-  public const int kPowerButton_X1 = kPowerButton_X0 + kPowerButton_W;
-  public const int kPowerButton_Y1 = kPowerButton_Y0 + kPowerButton_H;
-  
-  public const int kEjectButton_X0 = 0;
-  public const int kEjectButton_Y0 = 0;
-  public const int kEjectButton_W  = 32;
-  public const int kEjectButton_H  = 16;
-
-  public const int kEjectButton_X1 = kEjectButton_X0 + kEjectButton_W;
-  public const int kEjectButton_Y1 = kEjectButton_Y0 + kEjectButton_H;
-
+  public const int kMenuButton_X1 = kMenuButton_X0 + kMenuButton_W;
+  public const int kMenuButton_Y1 = kMenuButton_Y0 + kMenuButton_H;
 
   public DX8.dx8      DX8;
   public GiraffeLayer Layer;
@@ -34,13 +25,9 @@ public class UserInterface : MonoBehaviour
   GiraffeSprite Crosshair;
   GiraffeSprite Power_Up;
   GiraffeSprite Power_Down;
-  GiraffeSprite Eject_Up;
-  GiraffeSprite Eject_Down;
-  GiraffeSprite Button_Up;
-  GiraffeSprite Button_Down;
-  GiraffeSprite Button_Light;
-  GiraffeSprite Button_Dark;
   GiraffeSprite Floppy;
+  GiraffeSprite KeyboardMode;
+  GiraffeSprite PauseButton;
 
   SimulationMode   Mode        = SimulationMode.Three;
   bool             IsDirty     = true;
@@ -48,6 +35,7 @@ public class UserInterface : MonoBehaviour
   bool             PowerIsDown = false;
   bool             EjectIsDown = false;
   bool             IsAccessing = false;
+  bool             IsKeyState  = false;
   
   public void Show()
   {
@@ -104,6 +92,15 @@ public class UserInterface : MonoBehaviour
       IsDirty = true;
     }
   }
+  
+  public void SetKeyState(bool isKeyState)
+  {
+    if (isKeyState != IsKeyState)
+    {
+      IsKeyState = isKeyState;
+      IsDirty = true;
+    }
+  }
 
   void Start()
   {
@@ -111,12 +108,8 @@ public class UserInterface : MonoBehaviour
     Floppy       = Layer.atlas.GetSprite("Button_Floppy");
     Power_Up     = Layer.atlas.GetSprite("Power_Up");
     Power_Down   = Layer.atlas.GetSprite("Power_Down");
-    Eject_Up     = Layer.atlas.GetSprite("Eject_Up");
-    Eject_Down   = Layer.atlas.GetSprite("Eject_Down");
-    Button_Up    = Layer.atlas.GetSprite("Button_Up");
-    Button_Down  = Layer.atlas.GetSprite("Button_Down");
-    Button_Light = Layer.atlas.GetSprite("Button_Light");
-    Button_Dark  = Layer.atlas.GetSprite("Button_Dark");
+    KeyboardMode = Layer.atlas.GetSprite("KeyboardMode");
+    PauseButton  = Layer.atlas.GetSprite("Button_Pause");
     Draw3d();
   }
   
@@ -147,6 +140,9 @@ public class UserInterface : MonoBehaviour
     if (IsAccessing)
       numQuads++;
 
+    if (IsKeyState)
+      numQuads++;
+
     int kScale = Layer.scale;
 
     Layer.Begin(numQuads);
@@ -157,56 +153,35 @@ public class UserInterface : MonoBehaviour
 
     if (IsAccessing)
     {
-      Layer.Add(0, Screen.height / kScale - Floppy.height, Floppy);
+      Layer.Add(2, Screen.height / kScale - 2 - Floppy.height, Floppy);
     }
+    
+    if (IsKeyState)
+    {
+      Layer.Add(Screen.width / kScale - KeyboardMode.width - 2, Screen.height / kScale - 2 - KeyboardMode.height, KeyboardMode);
+    }
+
     Layer.End();
   }
 
   void Draw2d()
   {
-    int numQuads = 2; // Power/Eject Buttons
+    int numQuads = 1;
     
     int kScale = Layer.scale;
 
     if (IsAccessing)
       numQuads++;
-
-    if (DX8.FloppySensor.IsEmpty == true)
-    {
-      foreach(var floppy in DX8.Floppys)
-      {
-        numQuads += 3;
-        numQuads += Font.Estimate(floppy.Title);
-      }
-    }
     
     Layer.Begin(numQuads);
     
-    Layer.Add(kPowerButton_X0, kPowerButton_Y0, PowerIsDown ? Power_Down : Power_Up);
-    Layer.Add(kEjectButton_X0, kEjectButton_Y0, EjectIsDown ? Eject_Down : Eject_Up);
+    Layer.Add(kMenuButton_X0, kMenuButton_Y0, PauseButton);
     
     if (IsAccessing)
     {
-      Layer.Add(0, Screen.height / kScale - Floppy.height, Floppy);
+      Layer.Add(2, Screen.height / kScale - 2 - Floppy.height, Floppy);
     }
-    if (DX8.FloppySensor.IsEmpty == true)
-    {
-      foreach(var floppy in DX8.Floppys)
-      {
-        int y = 16 + floppy.UI_Order * 13;
-        int w = floppy.Title.Length * 9;
-        Layer.Add(0, y, Button_Light);
-        Layer.Add(1, y, w, 13, Button_Up);
-        Layer.Add(1 + w, y, Button_Dark);
-        Font.AddTo(Layer, 1, y + 2, floppy.Title);
-
-        floppy.UI_X0 = 1;
-        floppy.UI_Y0 = y;
-        floppy.UI_X1 = 1 + w;
-        floppy.UI_Y1 = y + 13;
-      }
-    }
-
+    
     Layer.End();
   }
   
@@ -227,34 +202,13 @@ public class UserInterface : MonoBehaviour
     x /= 2;
     y /= 2;
     
-    if (CheckMp(x, y, kPowerButton_X0, kPowerButton_Y0, kPowerButton_X1, kPowerButton_Y1))
+    if (CheckMp(x, y, kMenuButton_X0, kMenuButton_Y0, kMenuButton_X1, kMenuButton_Y1))
     {
-      DX8.UI_Power();
+      DX8.TogglePaused();
       IsDirty = true;
       return;
     }
     
-    if (CheckMp(x, y, kEjectButton_X0, kEjectButton_Y0, kEjectButton_X1, kEjectButton_Y1))
-    {
-      DX8.UI_WarpEject();
-      IsDirty = true;
-      return;
-    }
-    
-    if (DX8.FloppySensor.IsEmpty == true)
-    {
-      foreach(var floppy in DX8.Floppys)
-      {
-        if (CheckMp(x, y, floppy.UI_X0, floppy.UI_Y0, floppy.UI_X1, floppy.UI_Y1))
-        {
-          floppy.WarpFloppy(DX8.FloppySensor);
-          DX8.UI_InsertFloppy(floppy.Path);
-          IsDirty = true;
-          return;
-        }
-      }
-    }
-
   }
 
 }

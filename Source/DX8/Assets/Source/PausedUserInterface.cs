@@ -9,6 +9,7 @@ public class PausedUserInterface : MonoBehaviour
     Welcome,
     About,
     Controls,
+    Disks,
     Options
   }
 
@@ -36,6 +37,8 @@ public class PausedUserInterface : MonoBehaviour
   
   int    kControlsSize;
   int    kAboutSize;
+  int    kNotEmptyDriveSize;
+
   PauseMode    Mode;
   
   public enum Gadget
@@ -99,20 +102,22 @@ public class PausedUserInterface : MonoBehaviour
     }
   }
 
-  const int kAbout_Start               = 1;
-  const int kAbout_Quit                = 2;
-  const int kTabs_Controls             = 3;
-  const int kTabs_Options              = 4;
-  const int kTabs_About                = 5;
-  const int kTabs_Resume               = 6;
-  const int kTabs_Quit                 = 7;
-  const int kOptions_Heavy             = 8;
-  const int kOptions_KeyboardCapture   = 9;
-  const int kOptions_3D                = 10;
-  const int kOptions_Mute              = 11;
-  const int kOptions_Eject             = 12;
-  const int kOptions_Power             = 13;
-  const int kOptions_Reset             = 14;
+  const int kAbout_Start                = 1;
+  const int kAbout_Quit                 = 2;
+  const int kTabs_Controls              = 3;
+  const int kTabs_Options               = 4;
+  const int kTabs_Disks                 = 5;
+  const int kTabs_About                 = 6;
+  const int kTabs_Resume                = 7;
+  const int kTabs_Quit                  = 8;
+  const int kOptions_Heavy              = 9;
+  const int kOptions_KeyboardCapture    = 10;
+  const int kOptions_3D                 = 11;
+  const int kOptions_Mute               = 12;
+  const int kOptions_Eject              = 13;
+  const int kOptions_Power              = 14;
+  const int kOptions_Reset              = 15;
+  const int kOptions_ShowOptionsOnStart = 16;
 
   List<Hitbox> welcomeHitboxes = new List<Hitbox>();
 
@@ -131,7 +136,17 @@ public class PausedUserInterface : MonoBehaviour
 
   void Start()
   {
-    Mode         = PauseMode.Welcome;
+    if (DX8.FirstRun)
+    {
+      Mode         = PauseMode.Welcome;
+      DX8.FirstRun = false;
+      PlayerPrefs.SetInt("HasRun", 1);
+    }
+    else
+    {
+      Mode         = PauseMode.Options;
+    }
+    
     White        = Layer.atlas.GetSprite("Gorilla/White");
     Crosshair    = Layer.atlas.GetSprite("Crosshair");
     Floppy       = Layer.atlas.GetSprite("Button_Floppy");
@@ -158,6 +173,8 @@ public class PausedUserInterface : MonoBehaviour
     for(int i=0;i < Strings.kControls.Length;i++)
       kControlsSize += Font.Estimate(Strings.kControls[i]);
     
+    kNotEmptyDriveSize = Font.Estimate(Strings.kNotEmptyDrive);
+
     Scale = Layer.scale;
 
     WindowW = (50 * 9);
@@ -174,7 +191,8 @@ public class PausedUserInterface : MonoBehaviour
     tabHitBoxes.Clear();
     tabHitBoxes.Add(new Hitbox(WindowX + 75 * 0, WindowY, 75, kTabs_Controls, "Controls", Font, Gadget.Button));
     tabHitBoxes.Add(new Hitbox(WindowX + 75 * 1, WindowY, 75, kTabs_Options,  "Options", Font, Gadget.Button));
-    tabHitBoxes.Add(new Hitbox(WindowX + 75 * 2, WindowY, 75, kTabs_About,  "About", Font, Gadget.Button));
+    tabHitBoxes.Add(new Hitbox(WindowX + 75 * 2, WindowY, 75, kTabs_Disks,  "Disks", Font, Gadget.Button));
+    tabHitBoxes.Add(new Hitbox(WindowX + 75 * 3, WindowY, 75, kTabs_About,  "About", Font, Gadget.Button));
     tabHitBoxes.Add(new Hitbox(WindowX + WindowW / 2 - (150 / 2),  WindowY + WindowH - 15, 150, kTabs_Resume,  "[TAB] Resume", Font, Gadget.Button));
     tabHitBoxes.Add(new Hitbox(WindowX + WindowW - 75, WindowY, 75, kTabs_Quit,  "Quit", Font, Gadget.Button));
     
@@ -185,6 +203,7 @@ public class PausedUserInterface : MonoBehaviour
     optionBoxes.Add(new Hitbox(WindowX + 8, WindowY + 45 + 1 * 15 , 75, kOptions_KeyboardCapture, "Keyboard Mode [MMB]", Font, Gadget.Check));
     optionBoxes.Add(new Hitbox(WindowX + 8, WindowY + 45 + 2 * 15 , 75, kOptions_3D, "3D Mode [LALT]", Font, Gadget.Check));
     optionBoxes.Add(new Hitbox(WindowX + 8, WindowY + 45 + 3 * 15 , 75, kOptions_Mute, "Mute Sound", Font, Gadget.Check));
+    optionBoxes.Add(new Hitbox(WindowX + 8, WindowY + 45 + 4 * 15 , 75, kOptions_ShowOptionsOnStart, "Show options on start", Font, Gadget.Check));
 
     optionBoxes.Add(new Hitbox(WindowX + WindowW / 2, WindowY + 45 + 0 * 15 , 150, kOptions_Eject, "Eject Floppy", Font, Gadget.Button));
     optionBoxes.Add(new Hitbox(WindowX + WindowW / 2, WindowY + 45 + 1 * 15 , 150, kOptions_Power, "Power Switch", Font, Gadget.Button));
@@ -263,6 +282,23 @@ public class PausedUserInterface : MonoBehaviour
       case PauseMode.Welcome:  numQuads += kAboutSize + welcomeHitboxes_Size; break;
       case PauseMode.About:    numQuads += kAboutSize + tabHitboxes_Size; break;
       case PauseMode.Controls: numQuads += kControlsSize + tabHitboxes_Size; break;
+      case PauseMode.Disks:
+      {
+        if (DX8.FloppySensor.IsEmpty == true)
+        {
+          foreach(var floppy in DX8.Floppys)
+          {
+            numQuads += 3;
+            numQuads += Font.Estimate(floppy.Title);
+          }
+        }
+        else
+        {
+          numQuads += kNotEmptyDriveSize;
+        }
+        numQuads += tabHitboxes_Size;
+      }
+      break;
       case PauseMode.Options:
       {
        numQuads += optionBoxes_Size + tabHitboxes_Size;
@@ -355,12 +391,58 @@ public class PausedUserInterface : MonoBehaviour
              {
               Layer.Add(hb.x0, hb.y0, 150, 13, Ghost150);
              }
-
+            }
+            break;
+            case kOptions_ShowOptionsOnStart:
+            {
+              DrawHitbox(hb, DX8.ShowOptionsOnStart);
             }
             break;
           }
         }
       }
+      else if (Mode == PauseMode.Disks)
+      {
+        if (DX8.FloppySensor.IsEmpty == true)
+        {
+          int x = WindowX;
+          int y = WindowY + 15;
+          int w = 75;
+          
+          foreach(var floppy in DX8.Floppys)
+          {
+            Layer.SetColour(new Color32(0xFF, 0xFF, 0xFF, 0xFF));
+
+            y += 13;
+
+            if (y >= WindowY + WindowH - 13)
+            {
+              x += 75;
+              y = WindowY + 15;
+            }
+            
+            Layer.Add(x, y, Button_Light);
+            Layer.Add(x + 1, y, w, 13, Button_Up);
+            Layer.Add(x + 1 + w, y, Button_Dark);
+            
+            Layer.SetColour(new Color32(0x29, 0x2c, 0x2e, 0xFF));
+            Font.AddTo(Layer, x + 1, y + 2, floppy.Title);
+
+            floppy.UI_X0 = x;
+            floppy.UI_Y0 = y;
+            floppy.UI_X1 = x + w;
+            floppy.UI_Y1 = y + 13;
+          }
+        }
+        else
+        {
+            Layer.SetColour(new Color32(0x29, 0x2c, 0x2e, 0xFF));
+            Font.AddTo(Layer, WindowX + WindowW / 2 - (Strings.kNotEmptyDrive.Length * 9) / 2, WindowY + 45, Strings.kNotEmptyDrive);
+        }
+      }
+
+
+
     }
    
     Layer.End();
@@ -419,6 +501,29 @@ public class PausedUserInterface : MonoBehaviour
           }
         }
       }
+      else if (Mode == PauseMode.Disks)
+      {
+        if (DX8.FloppySensor.IsEmpty == true)
+        {
+          foreach(var floppy in DX8.Floppys)
+          {
+            if (CheckMp(x, y, floppy.UI_X0, floppy.UI_Y0, floppy.UI_X1, floppy.UI_Y1))
+            {
+              floppy.WarpFloppy(DX8.FloppySensor);
+              DX8.UI_InsertFloppy(floppy.Path);
+              IsDirty = true;
+
+              if (DX8.PowerIsOn == false)
+              {
+                DX8.UI_Power();
+              }
+
+              DX8.TogglePaused();
+              return;
+            }
+          }
+        }
+      }
     }
   }
 
@@ -457,6 +562,11 @@ public class PausedUserInterface : MonoBehaviour
       case kTabs_Options:
       {
         Mode = PauseMode.Options;
+      }
+      break;
+      case kTabs_Disks:
+      {
+        Mode = PauseMode.Disks;
       }
       break;
       case kTabs_Resume:
@@ -509,6 +619,11 @@ public class PausedUserInterface : MonoBehaviour
       {
         DX8.SetMute(!DX8.Mute);
         //DX8.TogglePaused();
+      }
+      break;
+      case kOptions_ShowOptionsOnStart:
+      {
+        DX8.SetShowOptionsOnStart(!DX8.ShowOptionsOnStart);
       }
       break;
     }

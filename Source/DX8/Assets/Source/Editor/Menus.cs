@@ -495,5 +495,11 @@ namespace DX8
         Debug.LogFormat("Checked {0}", count);
     }
 
+    [MenuItem("DX8/Reset Player Prefs")]
+    public static void ResetPlayerPrefs()
+    {
+      PlayerPrefs.DeleteAll();
+    }
+
   }
 }
