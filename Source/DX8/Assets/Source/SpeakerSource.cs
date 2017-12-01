@@ -16,7 +16,7 @@ public class SpeakerSource : MonoBehaviour
 
   void OnAudioFilterRead(float[] data, int channels)
   {
-    if (dx8.IsRunning == false || dx8.IsPaused)
+    if (dx8.IsRunning == false || dx8.IsPaused || dx8.Mute)
       return;
     
     GCHandle dataHandle = GCHandle.Alloc(data, GCHandleType.Pinned);

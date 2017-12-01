@@ -132,6 +132,7 @@ namespace DX8
     public  bool                   IsPaused   = false;
     public  bool                   Is2dState  = false;
     public  bool                   IsKeyState = false;
+    public  bool                   Mute = false;
 
     public  GameObject[]           ObjectsSim3d;
     public  GameObject[]           ObjectsSim2d;
@@ -332,6 +333,9 @@ namespace DX8
     {
       Physics.autoSimulation = false;
 
+      Mute                          = PlayerPrefs.GetInt("Mute") == 1;
+      Is2dState                     = PlayerPrefs.GetInt("Is2d") == 1;
+
       #if UNITY_EDITOR
           RomPath    = @"C:\dev\dx8\ROMS\rom\rom.bin";
       #else
@@ -364,6 +368,9 @@ namespace DX8
       
       Crt2d.SetTexture(CrtTexture);
       Crt3d.SetTexture(CrtTexture);
+
+      if (Is2dState)
+        Set2DState(Is2dState);
 
       TogglePaused();
     }
@@ -410,6 +417,12 @@ namespace DX8
 
     void Update()
     {
+      if (Input.GetKeyUp(KeyCode.Tab))
+      {
+        TogglePaused();
+        return;
+      }
+    
       if (IsPaused)
         return;
 
@@ -426,15 +439,12 @@ namespace DX8
 
       if (!Is2dState && Input.GetMouseButtonUp(2))
       {
-        IsKeyState = !IsKeyState;
-        Update2dState(Is2dState);
+        ToggleKeyState();
       }
 
       if (Input.GetKeyUp(KeyCode.LeftAlt))
       {
-        Is2dState = !Is2dState;
-        Update2dState(Is2dState);
-        UserInterface.SetSimulationMode(Is2dState ? UserInterface.SimulationMode.Two : UserInterface.SimulationMode.Three);
+        Toggle2DState();
       }
 
       if (ReloadNeeded)
@@ -948,7 +958,10 @@ namespace DX8
 
       Character.FreezeState = is2d ? FreezeState.Frozen : (IsKeyState ? FreezeState.LookOnly : FreezeState.None);
       
-      Cursor.lockState = is2d ? CursorLockMode.None : CursorLockMode.Locked;
+      if (IsPaused)
+        Cursor.lockState = CursorLockMode.None;
+      else
+        Cursor.lockState = is2d ? CursorLockMode.None : CursorLockMode.Locked;
     }
 
     public void UI_InsertFloppy(string path)
@@ -1044,7 +1057,7 @@ namespace DX8
     {
       PowerButtonPressed();
     }
-
+    
     public void TogglePaused()
     {
       IsPaused = !IsPaused;
@@ -1053,11 +1066,15 @@ namespace DX8
       {
         PausedUserInterface.Show();
         UserInterface.Hide();
+        
+        Cursor.lockState = CursorLockMode.None;
       }
       else
       {
         PausedUserInterface.Hide();
         UserInterface.Show();
+        
+        Cursor.lockState = Is2dState ? CursorLockMode.None : CursorLockMode.Locked;
       }
     }
 
@@ -1068,6 +1085,45 @@ namespace DX8
       else
         TurnOnComputer();
     }
+
+    public void Toggle2DState()
+    {
+      Set2DState(!Is2dState);
+    }
+
+    public void Set2DState(bool is2d)
+    {
+      Is2dState = is2d;
+      Update2dState(Is2dState);
+      UserInterface.SetSimulationMode(Is2dState ? UserInterface.SimulationMode.Two : UserInterface.SimulationMode.Three);
+
+      PlayerPrefs.SetInt("Is2d", Is2dState ? 1 : 0);
+    }
+
+    public void ToggleKeyState()
+    {
+      SetKeyState(!IsKeyState);
+    }
+
+    public void SetKeyState(bool isKeyState)
+    {
+      IsKeyState = isKeyState;
+      Update2dState(Is2dState);
+    }
+
+    public void SetMute(bool isMuted)
+    {
+      Mute = isMuted;
+      
+      PlayerPrefs.SetInt("Mute", Mute ? 1 : 0);
+    }
+
+    public void DoReset()
+    {
+      TurnOffComputer();
+      UnityEngine.SceneManagement.SceneManager.LoadScene(0);
+    }
+
   }
   
 }

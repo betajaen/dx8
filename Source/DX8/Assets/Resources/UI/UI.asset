@@ -15,8 +15,8 @@ MonoBehaviour:
   atlasIdB: 418425994
   mSprites:
   - name: Giraffe/White
-    left: 30
-    top: 122
+    left: 58
+    top: 93
     width: 4
     height: 4
     scale: 1
@@ -24,31 +24,31 @@ MonoBehaviour:
     offsetY: 0
   - name: Power_Up
     left: 30
-    top: 42
+    top: 104
     width: 32
     height: 16
     scale: 1
     offsetX: 0
     offsetY: 0
   - name: Power_Down
-    left: 30
-    top: 62
+    left: 81
+    top: 59
     width: 32
     height: 16
     scale: 1
     offsetX: 0
     offsetY: 0
   - name: Eject_Up
-    left: 30
-    top: 82
+    left: 117
+    top: 59
     width: 32
     height: 16
     scale: 1
     offsetX: 0
     offsetY: 0
   - name: Eject_Down
-    left: 30
-    top: 102
+    left: 81
+    top: 79
     width: 32
     height: 16
     scale: 1
@@ -56,23 +56,23 @@ MonoBehaviour:
     offsetY: 0
   - name: Button_Up
     left: 2
-    top: 106
+    top: 112
     width: 13
     height: 13
     scale: 1
     offsetX: 0
     offsetY: 0
   - name: Button_Down
-    left: 66
-    top: 42
+    left: 58
+    top: 76
     width: 13
     height: 13
     scale: 1
     offsetX: 0
     offsetY: 0
   - name: Crosshair
-    left: 2
-    top: 78
+    left: 30
+    top: 76
     width: 24
     height: 24
     scale: 1
@@ -80,7 +80,7 @@ MonoBehaviour:
     offsetY: 0
   - name: Button_Floppy
     left: 2
-    top: 42
+    top: 76
     width: 24
     height: 32
     scale: 1
@@ -96,7 +96,7 @@ MonoBehaviour:
     offsetY: 0
   - name: Button_Light
     left: 19
-    top: 106
+    top: 112
     width: 1
     height: 13
     scale: 1
@@ -104,8 +104,40 @@ MonoBehaviour:
     offsetY: 0
   - name: Button_Dark
     left: 24
-    top: 106
+    top: 112
     width: 1
+    height: 13
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Check
+    left: 66
+    top: 104
+    width: 11
+    height: 11
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Ghost13
+    left: 81
+    top: 99
+    width: 13
+    height: 13
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Ghost75
+    left: 2
+    top: 59
+    width: 75
+    height: 13
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Ghost150
+    left: 2
+    top: 42
+    width: 150
     height: 13
     scale: 1
     offsetX: 0

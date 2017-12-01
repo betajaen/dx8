@@ -34,18 +34,7 @@ public class Character : MonoBehaviour
 
   void Update ()
   {
-    if (Input.GetKeyUp(KeyCode.Escape))
-    {
-      Dx8.TogglePaused();
-    /*
-#if UNITY_EDITOR
-       UnityEditor.EditorApplication.isPlaying = false;
-#else
-      Application.Quit();
-#endif
-*/
-    }
-    
+
     if (Dx8.IsPaused)
       return;
 
