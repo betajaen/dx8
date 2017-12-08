@@ -428,7 +428,7 @@ void DoDebugNote(Word note)
 
 void DoDebugBreakpoint()
 {
-  Cpu_Halt(HALT_BREAKPOINT);
+  //Cpu_Halt(HALT_BREAKPOINT);
   // DX8_LOGF("DBG-BRK  Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", cpu.pc.w, cpu.interrupt, cpu.a, cpu.I.x, cpu.I.y, cpu.J.z, cpu.J.w, cpu.lastOpcode, LO_BYTE(cpu.lastOperand), HI_BYTE(cpu.lastOperand));
   rand();
 }

@@ -39,34 +39,16 @@ MemSet_Dst equ i
 MemSet_Len equ j
 MemSet_Val equ a
 
+; dst, val, len
 Entry_MemSet:
-        push x
-        push y
-        push z
-        push w
-        push a
-
-        load a, kArguments + 0
-        load i, kArguments + 1
-        load j, kArguments + 3
-
-        call Fn_MemSet
-
-        pop a
-        pop w
-        pop z
-        pop y
-        pop x
-EndFunction
-
-BeginFunction MemSet
-        .loop:  store i, a
-                inc i
-                dec j
+        dbb
+        pop MemSet_Dst
+        pop MemSet_Val
+        pop MemSet_Len
+        dbb
+Fn_MemSet:
+        .loop:  store MemSet_Dst, MemSet_Val
+                inc MemSet_Dst
+                dec MemSet_Len
                 _rjmp.nz .loop
-EndFunction
-
-;Export_Function      Rom, MemSet, 'Set range of memory to constant'
-;Export_Function_Arg  MemSet, Dst, i
-;Export_Function_Arg  MemSet, Len, j
-;Export_Function_Arg  MemSet, Val, a
+return

@@ -38,15 +38,10 @@ MAIN:
 
 kArguments equ $0406
 
-  set   x, ' '
-  store kArguments + 0, x
-  set   i, MEM_GFX_PLANE0
-  store kArguments + 1, x
-  store   kArguments + 2, y
-  set   i, MEM_GFX_PLANE_SIZE
-  store   kArguments + 3, x
-  store   kArguments + 4, y
-
+  ; dst, val, len
+  push.w MEM_GFX_PLANE_SIZE
+  push.b '.'
+  push.w MEM_GFX_PLANE0
   RomFunction MemSet
 
   ; Set Background Colour to Black $000000
