@@ -4,6 +4,9 @@ MemCpySm_Dst equ i
 MemCpySm_Src equ j
 MemCpySm_Len equ a
 
+Entry_MemCpySm:
+EndFunction
+
 BeginFunction MemCpySm
         .loop:
                 ;dbr 'i'
@@ -21,10 +24,10 @@ BeginFunction MemCpySm
                 _rjmp.nz .loop
 EndFunction
 
-Export_Function      Rom, MemCpySm, 'Copy up to 256 bytes to another part of memory'
-Export_Function_Arg  MemCpySm, Dst, i
-Export_Function_Arg  MemCpySm, Src, j
-Export_Function_Arg  MemCpySm, Len, a
+;Export_Function      Rom, MemCpySm, 'Copy up to 256 bytes to another part of memory'
+;Export_Function_Arg  MemCpySm, Dst, i
+;Export_Function_Arg  MemCpySm, Src, j
+;Export_Function_Arg  MemCpySm, Len, a
 
 
 
@@ -36,6 +39,26 @@ MemSet_Dst equ i
 MemSet_Len equ j
 MemSet_Val equ a
 
+Entry_MemSet:
+        push x
+        push y
+        push z
+        push w
+        push a
+
+        load a, kArguments + 0
+        load i, kArguments + 1
+        load j, kArguments + 3
+
+        call Fn_MemSet
+
+        pop a
+        pop w
+        pop z
+        pop y
+        pop x
+EndFunction
+
 BeginFunction MemSet
         .loop:  store i, a
                 inc i
@@ -43,7 +66,7 @@ BeginFunction MemSet
                 _rjmp.nz .loop
 EndFunction
 
-Export_Function      Rom, MemSet, 'Set range of memory to constant'
-Export_Function_Arg  MemSet, Dst, i
-Export_Function_Arg  MemSet, Len, j
-Export_Function_Arg  MemSet, Val, a
+;Export_Function      Rom, MemSet, 'Set range of memory to constant'
+;Export_Function_Arg  MemSet, Dst, i
+;Export_Function_Arg  MemSet, Len, j
+;Export_Function_Arg  MemSet, Val, a

@@ -24,10 +24,10 @@ namespace DX8
       Nop,
       Push,
       Pop,
-      PushF,
-      PopF,
-      PushR,
-      PopR,
+      PushPc,
+      PopPc,
+      PushB,
+      PushW,
       Load,
       Store,
       Read,
@@ -80,8 +80,8 @@ namespace DX8
       RJmpLt,
       RJmpZ,
       RJmpNotZ,
-      CallBranch,
       JmpBranch,
+      CallBranch,
       Int,
       Resume,
       Clc,
@@ -102,10 +102,10 @@ namespace DX8
       "nop",
       "push",
       "pop",
-      "push.f",
-      "pop.f",
-      "push.r",
-      "pop.r",
+      "pushpc",
+      "poppc",
+      "push.b",
+      "push.w",
       "load",
       "store",
       "read",
@@ -187,6 +187,8 @@ namespace DX8
       A,
       I,
       J,
+      Pc,
+      F,
       COUNT
     }
 
@@ -200,7 +202,9 @@ namespace DX8
       "w",
       "a",
       "i",
-      "j"
+      "j",
+      "pc",
+      "f"
     };
 
     public struct Op
@@ -309,6 +313,8 @@ namespace DX8
           case Operand.J: sb.Append("_j"); break;
           case Operand.Address: sb.Append("_A"); break;
           case Operand.Byte: sb.Append("_B"); break;
+          case Operand.Pc: sb.Append("_P"); break;
+          case Operand.F: sb.Append("_F"); break;
         }
         
         switch(Operand2)
@@ -322,6 +328,8 @@ namespace DX8
           case Operand.J: sb.Append('j'); break;
           case Operand.Address: sb.Append('A'); break;
           case Operand.Byte: sb.Append('B'); break;
+          case Operand.Pc: sb.Append('P'); break;
+          case Operand.F: sb.Append('F'); break;
         }
 
       }
@@ -439,24 +447,32 @@ namespace DX8
       bool op1 = false;
       switch(op.Operand1)
       {
-        case Operand.X: sb.Append("A eq x"); op1 = true; break;
-        case Operand.Y: sb.Append("A eq y"); op1 = true; break;
-        case Operand.Z: sb.Append("A eq z"); op1 = true; break;
-        case Operand.W: sb.Append("A eq w"); op1 = true; break;
-        case Operand.A: sb.Append("A eq a"); op1 = true; break;
-        case Operand.I: sb.Append("A eq i"); op1 = true; break;
-        case Operand.J: sb.Append("A eq j"); op1 = true; break;
+        case Operand.X:     sb.Append("A eq x"); op1 = true; break;
+        case Operand.Y:     sb.Append("A eq y"); op1 = true; break;
+        case Operand.Z:     sb.Append("A eq z"); op1 = true; break;
+        case Operand.W:     sb.Append("A eq w"); op1 = true; break;
+        case Operand.A:     sb.Append("A eq a"); op1 = true; break;
+        case Operand.I:     sb.Append("A eq i"); op1 = true; break;
+        case Operand.J:     sb.Append("A eq j"); op1 = true; break;
+        case Operand.Pc:    sb.Append("A eq pc"); op1 = true; break;
+        case Operand.F:     sb.Append("A eq f"); op1 = true; break;
+        case Operand.Byte:  sb.Append("(A eqtype 'x' | A eqtype $FF)"); op1 = true; break;
+        case Operand.Address:  sb.Append("A eqtype $FFFF"); op1 = true; break;
       }
       
       switch(op.Operand2)
       {
-        case Operand.X: if (op1) { sb.Append(" & "); } sb.Append("B eq x"); break;
-        case Operand.Y: if (op1) { sb.Append(" & "); } sb.Append("B eq y"); break;
-        case Operand.Z: if (op1) { sb.Append(" & "); } sb.Append("B eq z"); break;
-        case Operand.W: if (op1) { sb.Append(" & "); } sb.Append("B eq w"); break;
-        case Operand.A: if (op1) { sb.Append(" & "); } sb.Append("B eq a"); break;
-        case Operand.I: if (op1) { sb.Append(" & "); } sb.Append("B eq i"); break;
-        case Operand.J: if (op1) { sb.Append(" & "); } sb.Append("B eq j"); break;
+        case Operand.X:    if (op1) { sb.Append(" & "); } sb.Append("B eq x"); break;
+        case Operand.Y:    if (op1) { sb.Append(" & "); } sb.Append("B eq y"); break;
+        case Operand.Z:    if (op1) { sb.Append(" & "); } sb.Append("B eq z"); break;
+        case Operand.W:    if (op1) { sb.Append(" & "); } sb.Append("B eq w"); break;
+        case Operand.A:    if (op1) { sb.Append(" & "); } sb.Append("B eq a"); break;
+        case Operand.I:    if (op1) { sb.Append(" & "); } sb.Append("B eq i"); break;
+        case Operand.J:    if (op1) { sb.Append(" & "); } sb.Append("B eq j"); break;
+        case Operand.Pc:   if (op1) { sb.Append(" & "); } sb.Append("B eq pc"); break;
+        case Operand.F:    if (op1) { sb.Append(" & "); } sb.Append("B eq f"); break;
+        case Operand.Byte: if (op1) { sb.Append(" & "); } sb.Append("(B eqtype 'x' | B eqtype $FF)"); break;
+        case Operand.Address: if (op1) { sb.Append(" & "); } sb.Append("B eqtype $FFFF"); break;
       }
       
       
@@ -576,6 +592,12 @@ namespace DX8
             Op op = ops[jj];
             
             if (op.Operand1 == Operand.Address && op.Operand2 == Operand.None)
+            {
+              elseOp = op;
+              continue;
+            }
+
+            if (op.Operand1 == Operand.Pc && op.Operand2 == Operand.Byte)
             {
               elseOp = op;
               continue;
@@ -755,7 +777,7 @@ namespace DX8
       }
     }
 
-    public static String Decompile(List<Op> ops, Byte[] data)
+    public static String Decompile(List<Op> ops, Byte[] data, int org)
     {
       int len = data.Length;
 
@@ -771,7 +793,7 @@ namespace DX8
       {
         DecompiledLine line = new DecompiledLine();
         
-        int address = ii;
+        int address = ii + org;
 
         if (ii < dataSection)
         {
@@ -1015,6 +1037,8 @@ namespace DX8
                 case 'A': operand1 = Operand.Address; break;
                 case 'W': operand1 = Operand.Address; break;
                 case 'B': operand1 = Operand.Byte; break;
+                case 'P': operand1 = Operand.Pc; break;
+                case 'F': operand1 = Operand.F; break;
 
               }
             }
@@ -1032,6 +1056,8 @@ namespace DX8
                 case 'W': operand1 = Operand.Address; break;
                 case 'A': operand1 = Operand.Address; break;
                 case 'B': operand1 = Operand.Byte; break;
+                case 'P': operand1 = Operand.Pc; break;
+                case 'F': operand1 = Operand.F; break;
               }
               switch(operands[1])
               {
@@ -1045,6 +1071,8 @@ namespace DX8
                 case 'W': operand2 = Operand.Address; break;
                 case 'A': operand2 = Operand.Address; break;
                 case 'B': operand2 = Operand.Byte; break;
+                case 'P': operand2 = Operand.Pc; break;
+                case 'F': operand2 = Operand.F; break;
               }
             }
 

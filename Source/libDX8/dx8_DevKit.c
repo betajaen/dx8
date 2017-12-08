@@ -52,6 +52,7 @@ typedef int(*GetDataFn)(int name, void* data, int length);
 typedef int(*CallFn)(int name, int value);
 typedef void*(*GetCrtFn)();
 typedef void(*GetSndFn)(float* length, int lengthSize, int rate, int channels);
+typedef void(*SetDebugPathFn)(const char* path);
 
 #if defined(_WIN32)
 HMODULE dll;
@@ -67,6 +68,7 @@ GetDataFn    getDataFn;
 CallFn       callFn;
 GetCrtFn     getCrtFn;
 GetSndFn     getSndFn;
+SetDebugPathFn setDebugPathFn;
 
 #define SRC_PATH "C:/dev/dx8/Source/libDX8/Build/libDX8.dll"
 #define LIB_PATH "C:/dev/dx8/Source/RT/libDX8.dll"
@@ -98,6 +100,8 @@ EXPORT int Initialise()
   callFn = (CallFn)GetProcAddress(dll, "Call");
   getCrtFn = (GetCrtFn)GetProcAddress(dll, "GetCrt");
   getSndFn = (GetSndFn)GetProcAddress(dll, "GetSnd");
+  setDebugPathFn = (SetDebugPathFn) GetProcAddress(dll, "SetDebugPath");
+
 
   if (initialiseFn == NULL ||
     shutdownFn == NULL ||
@@ -107,7 +111,8 @@ EXPORT int Initialise()
     getDataFn == NULL ||
     callFn == NULL ||
     getCrtFn == NULL ||
-    getSndFn == NULL
+    getSndFn == NULL ||
+    setDebugPathFn == NULL
     )
   {
 
@@ -126,6 +131,7 @@ EXPORT int Initialise()
     callFn = NULL;
     getCrtFn = NULL;
     getSndFn = NULL;
+    setDebugPathFn = NULL;
 
     return 10004;
   }
@@ -160,6 +166,7 @@ EXPORT int Shutdown()
   callFn = NULL;
   getCrtFn = NULL;
   getSndFn = NULL;
+  setDebugPathFn = NULL;
 
   return 0;
 }
@@ -260,6 +267,18 @@ EXPORT void GetSnd(float* data, int length, int rate, int channels)
 #endif
 
   getSndFn(data, length, rate, channels);
+}
+
+EXPORT void SetDebugPath(const char* path)
+{
+#if defined(_WIN32)
+  if (dll == NULL)
+    return;
+#else
+  return;
+#endif
+
+  setDebugPathFn(path);
 }
 
 #endif

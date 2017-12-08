@@ -62,24 +62,40 @@ enum ApiName
 
 int main()
 {
-  const char* romPath= "C:\\dev\\dx8\\ROMS\\boot.bin";
+  const char* romPath = "C:\\dev\\dx8\\ROMS\\rom\\rom.bin";
+  const char* fdPath  = "C:\\dev\\dx8\\ROMS\\minimal\\minimal_fd.bin";
 
-  Byte* rom = malloc(2048);
-  FILE* f = fopen(romPath, "rb");
-  fseek(f, 0, SEEK_END);
-  long fsize = ftell(f);
-  fseek(f, 0, SEEK_SET);  //same as rewind(f);
-  fread(rom, fsize, 1, f);
+  FILE* f;
+  Byte* rom = malloc(4096);
+  Byte* fd = malloc(160 * 1024);
+
+  f = fopen(romPath, "rb");
+  fread(rom, 4096, 1, f);
   fclose(f);
 
+  f = fopen(fdPath, "rb");
+  fread(fd, 160 * 1024, 1, f);
+  fclose(f);
+
+
   Initialise();
-  SetData(Api_Rom, rom, fsize);
+  SetData(Api_Rom, rom, 4096);
   Call(Api_HardReset, 0);
 
-  for(int i=0;i < (60 * 10);i++)
+  for(int i=0;i < (50 * 4);i++)
   {
     Call(Api_CycleFn, 15 * 1000);
   }
+
+
+  SetData(Api_FloppyDisk, fd, 160 * 1024);
+  Call(Api_InsertDisk, 0);
+
+  for (int i = 0; i < (50 * 12); i++)
+  {
+    Call(Api_CycleFn, 15 * 1000);
+  }
+
 
   Shutdown();
 

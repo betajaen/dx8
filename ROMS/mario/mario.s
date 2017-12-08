@@ -2,16 +2,20 @@ include '../dx8.inc'
 include '../dx8_crt.inc'
 include '../rom.exports.inc'
 
-kProgramSpace = $800
+kProgramSpace = $1400
+
+org $1400
 
 jmp MAIN
+
+
 
 ; ===========================================================================
 ; Music
 ; ===========================================================================
 
-MARIO_IMAGE:
-  include 'mario.png.s'
+;MARIO_IMAGE:
+;  include 'mario.png.s'
 
 MAIN_THEME:
   db  SND_NOTE_E7, SND_NOTE_E7, 0, SND_NOTE_E7
@@ -144,17 +148,17 @@ BeginFunction PlayNote
 EndFunction
 
 MAIN:
-  _poke.w         INTVEC_ADDR_VBLANK,     OnIvtVertBlank
+  ;_poke.w         INTVEC_ADDR_VBLANK,     OnIvtVertBlank
 
- count = 0
- repeat (IMG_MARIO_SIZE / 0xFF)
-          set MemCpySm_Len, 0xFF
-          set MemCpySm_Dst, $8000 + count
-          set MemCpySm_Src, kProgramSpace + MARIO_IMAGE + count
-          _CallFunction MemCpySm
-
-          count = count + 0xFF
-  end repeat
+ ;count = 0
+ ;repeat (IMG_MARIO_SIZE / 0xFF)
+ ;         set MemCpySm_Len, 0xFF
+ ;         set MemCpySm_Dst, $8000 + count
+ ;         set MemCpySm_Src, kProgramSpace + MARIO_IMAGE + count
+ ;         _CallFunction MemCpySm;
+;
+ ;         count = count + 0xFF
+ ; end repeat
 
   _poke.rgb REG_GFX_BACKGROUND_COLOUR, $00, $00, $00
   _poke.rgb REG_GFX_PLANE0_COLOUR,     $FF, $FF, $FF

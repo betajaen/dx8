@@ -32,7 +32,12 @@
 #include "dx8.h"
 #include <string.h>
 #include <stdlib.h>
-#include "log_c/src/log.h"
+
+#define DEBUG_HISTORY      0
+#define MAX_OPCODE_HISTORY 512
+
+#define QUOTE(name) #name
+#define STR(macro) QUOTE(macro)
 
 Cpu cpu;
 
@@ -88,13 +93,19 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 
 #define DO_OP_NOP()                                                    REG_PC += Opf_Single;
 
-#define DO_OP_PUSH(R0)              PushToStack(R0);                   REG_PC += Opf_Single; 
-#define DO_OP_PUSHF()               PushFlagsToStack();                REG_PC += Opf_Single; 
-#define DO_OP_PUSHR()               PushRegisters();                   REG_PC += Opf_Single; 
+#define DO_OP_PUSH(R0)              PushToStack(R0);                   REG_PC += Opf_Single;
+#define DO_OP_PUSHW(R0)             PushToStackW(R0);                  REG_PC += Opf_Single;
+#define DO_OP_PUSHF()               PushFlagsToStack();                REG_PC += Opf_Single;
+#define DO_OP_PUSHIMM()             PushToStack(REG_IMM);              REG_PC += Opf_Byte;
+#define DO_OP_PUSHIMM_W()           PushToStackW(REG_WORD);            REG_PC += Opf_Word;
+#define DO_OP_PUSHPC()              PushToPcStack(0);                  REG_PC += Opf_Single;
+#define DO_OP_PUSHPC_R(R0)          PushToPcStack(R0);                 REG_PC += Opf_Single;
+#define DO_OP_PUSHPC_IMM()          PushToPcStack(REG_IMM);            REG_PC += Opf_Byte;
 
-#define DO_OP_POP(R0)               R0 = PopFromStack();               REG_PC += Opf_Single; 
-#define DO_OP_POPF()                PopFlagsFromStack();               REG_PC += Opf_Single; 
-#define DO_OP_POPR()                PopRegisters();                    REG_PC += Opf_Single; 
+#define DO_OP_POP(R0)               R0 = PopFromStack();               REG_PC += Opf_Single;
+#define DO_OP_POPW(R0)              R0 = PopFromStackW();              REG_PC += Opf_Single;
+#define DO_OP_POPF()                PopFlagsFromStack();               REG_PC += Opf_Single;
+#define DO_OP_POPPC()               PopFromPcStack();                  
 
 #define DO_OP_LOAD_INDIRECT(DST, SRC)   DST = FlagsOp(LoadFromMemory(SRC));         REG_PC += Opf_Single;
 #define DO_OP_LOAD_ABSOLUTE(DST, SRC)   DST = FlagsOp(LoadFromMemory(SRC));         REG_PC += Opf_Address;
@@ -133,7 +144,7 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_MULW(R0, R1)          R0 = FlagsOpW(R0 * R1);            REG_PC += Opf_Single;
 #define DO_OP_MULW_IMM(R0)          R0 = FlagsOpW(R0 * REG_WORD);      REG_PC += Opf_Word;
 
-#define DO_OP_DIV(R0, R1)           R0 = FlagsOp(R0 / R1);             REG_PC += Opf_Single;
+#define DO_OP_DIV(R0, R1)           if (R1 == 0) { Cpu_Halt(HALT_DIVISION_BY_ZERO); } else { R0 =  FlagsOp(R0 / R1); } REG_PC += Opf_Single;
 #define DO_OP_DIV_IMM(R0)           R0 = FlagsOp(R0 / REG_IMM);        REG_PC += Opf_Byte;
 #define DO_OP_DIVW(R0, R1)          R0 = FlagsOpW(R0 / R1);            REG_PC += Opf_Single;
 #define DO_OP_DIVW_IMM(R0)          R0 = FlagsOpW(R0 / REG_WORD);      REG_PC += Opf_Word;
@@ -198,8 +209,8 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_INT()                 DoInterrupt(REG_IMM);              REG_PC += Opf_Byte;
 #define DO_OP_RESUME()              Cpu_ResumeInterrupt()                  
 
-#define DO_OP_SET_PC_OFFSET()       cpu.pcOffset.w = REG_WORD; REG_PC += Opf_Address;
-#define DO_OP_SET_PC_ROFFSET()      cpu.pcOffset.w = REG_WORD; cpu.pc.w = 0;
+#define DO_OP_SET_PC_OFFSET()       REG_PC += Opf_Address;
+#define DO_OP_SET_PC_ROFFSET()      cpu.pc.w = 0;
 
 #define DO_OP_DEBUG_REGISTER()      DoDebugRegister(REG_IMM);   REG_PC += Opf_Byte;
 #define DO_OP_DEBUG_ADDRESS()       DoDebugAddress(REG_WORD);    REG_PC += Opf_Word;
@@ -207,8 +218,8 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_DEBUG_NOTE()          DoDebugNote(REG_WORD); REG_PC += Opf_Word;
 #define DO_OP_DEBUG_OPTION()        DoDebugOption(REG_IMM); REG_PC += Opf_Byte;
 
-#define DO_OP_JMP_BRANCH(R0)        CallBranch(R0, REG_WORD, Opf_Address);
-#define DO_OP_CALL_BRANCH(R0)       JumpBranch(R0, REG_WORD);
+#define DO_OP_JMP_BRANCH(R0)        JumpBranch(R0, REG_WORD);
+#define DO_OP_CALL_BRANCH(R0)       CallBranch(R0, REG_WORD, Opf_Address);
 
 #define DO_OP_STOP_INTERRUPTS()     Cpu_Interrupts_Enabled(false); REG_PC += Opf_Single;
 #define DO_OP_RESUME_INTERRUPTS()   Cpu_Interrupts_Enabled(true);  REG_PC += Opf_Single;
@@ -235,10 +246,38 @@ enum Instructions
 
 // Power/Reset Routines
 
+void Cpu_Halt(Byte name);
 void Cpu_TurnOn();
+
+typedef struct {
+  Word pc;
+  Byte opcode;
+  Word operand;
+} OpcodeHistory;
+
+OpcodeHistory opcodes[MAX_OPCODE_HISTORY];
+
+void PushOpcodeHistory(Word pc, Byte opcode, Word operand)
+{
+  for(int i=1;i < MAX_OPCODE_HISTORY;i++)
+  {
+    opcodes[i - 1] = opcodes[i];
+  }
+  
+  OpcodeHistory h;
+  h.pc = pc;
+  h.opcode = opcode;
+  h.operand = operand;
+
+  opcodes[MAX_OPCODE_HISTORY - 1] = h;
+}
 
 void Cpu_Setup()
 {
+#define CPU_Version "DX8-CPU-1"
+
+  DX8_INFOF("Cpu %s", CPU_Version);
+  DX8_INFOF("%i Opcodes", Op_COUNT);
   memset(&cpu, 0, sizeof(Cpu));
 }
 
@@ -256,18 +295,17 @@ void Cpu_TurnOn()
   REG_Y = rand() & 0xFF;
   REG_Z = rand() & 0xFF;
   REG_W = rand() & 0xFF;
+  cpu.stack = rand() & 0xFF;
+  cpu.pcStack = rand() & 0xFF;
   cpu.pc.lo = rand() & 0xFF;
   cpu.pc.hi = rand() & 0xFF;
-  cpu.pcOffset.lo = rand() & 0xFF;
-  cpu.pcOffset.hi = rand() & 0xFF;
   cpu.flags._data = rand() & 0xFF;
 
   // Cpu is halted.
   cpu.halt = true;
 
-  LOGF("CPU Turn On");
+  DX8_INFOF("Cpu Turned On.");
 }
-
 void Cpu_Reset()
 {
   REG_A = rand() & 0xFF;
@@ -282,14 +320,15 @@ void Cpu_Reset()
   cpu.interruptsStopped = false;
   cpu.interrupt = 0;
   cpu.stack = 0;
+  cpu.pcStack = 0;
   cpu.flags._data = 0;
   cpu.halt = false;
-  cpu.pcOffset.lo = 0;
-  cpu.pcOffset.hi = 0;
   cpu.pc.lo = Mmu_Get(INTVEC_ADDR_RESET  ); // Get Reset from IVT
   cpu.pc.hi = Mmu_Get(INTVEC_ADDR_RESET+1);
+  cpu.interruptsStopped = true;
 
-  LOGF("CPU Reset ResetIVT=$%4X", cpu.pc.w);
+  DX8_INFOF("Cpu Reset.");
+  DX8_INFOF("Reset Address=$%04X", cpu.pc.w);
 }
 
 // Debug Routines
@@ -297,23 +336,58 @@ void Cpu_Reset()
 #if defined OP
 #undef OP
 #endif
-#define QUOTE(name) #name
-#define STR(macro) QUOTE(macro)
 #define OP(OP, A,B,C,D)  STR(OP),
 
 const char* kOpcodesStr[] = {
 #include "dx8_Cpu_Opcodes.inc"
 };
 
-void Cpu_Print(const char* name, Cpu* c)
+void Cpu_Print()
 {
-  LOGF("Cpu[%s] Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", name, c->pc.w, c->interrupt, c->a, c->I.x, c->I.y, c->J.z, c->J.w, c->lastOpcode, LO_BYTE(c->lastOperand), HI_BYTE(c->lastOperand));
+  DX8_LOGF("Cpu State");
+  DX8_LOGF("CPU PC = $%04X", cpu.pc.w);
+  DX8_LOGF("CPU A = $%04X", cpu.a);
+  DX8_LOGF("CPU X = $%02X", cpu.I.x);
+  DX8_LOGF("CPU Y = $%02X", cpu.I.y);
+  DX8_LOGF("CPU I = $%04X", cpu.I.I);
+  DX8_LOGF("CPU Z = $%02X", cpu.J.z);
+  DX8_LOGF("CPU W = $%02X", cpu.J.w);
+  DX8_LOGF("CPU J = $%04X", cpu.J.J);
+  DX8_LOGF("CPU Stack = $%02X", cpu.stack);
+  DX8_LOGF("CPU Pc Stack = $%02X", cpu.pcStack);
+  DX8_LOGF("CPU Interrupt = $%02X", cpu.interrupt);
+  DX8_LOGF("CPU Interrupts Enabled = %s", cpu.interruptsStopped ? "false" : "true");
+
+  char interruptMask[9];
+
+  for(int i=0;i < 8;i++)
+  {
+    interruptMask[i] = '0' + cpu.interruptMask[i];
+  }
+  
+  interruptMask[8] = '\0';
+
+  DX8_LOGF("CPU Interrupts Mask = %sb", interruptMask);
+
+  DX8_LOGF("CPU Opcode     = '%s' $%02X", kOpcodesStr[cpu.lastOpcode], cpu.lastOpcode);
+  DX8_LOGF("CPU Lo Operand = $%02X", LO_BYTE(cpu.lastOperand));
+  DX8_LOGF("CPU Hi Operand = $%02X", HI_BYTE(cpu.lastOperand));
+  DX8_LOGF("CPU Ad Operand = $%04X", cpu.lastOperand);
+
+  #if DEBUG_HISTORY == 1
+  for (int i = 0; i < MAX_OPCODE_HISTORY; i++)
+  {
+    OpcodeHistory h = opcodes[i];
+    DX8_LOGF("$%04X: $%02X $%04X '%s' Lo=$%02X Hi=$%02X", h.pc, h.opcode, h.operand, kOpcodesStr[h.opcode], LO_BYTE(h.operand), HI_BYTE(h.operand));
+  }
+  #endif
+
 }
 
 #define DBG_LOG(NAME, EXTRA_TEXT, ...)\
-  LOGF(NAME " [$%4X ($%4X)]" EXTRA_TEXT, cpu.pc.w, (cpu.pcOffset.w + cpu.pc.w), __VA_ARGS__)
+  DX8_DEBUGF(NAME " [$%4X]" EXTRA_TEXT, cpu.pc.w, __VA_ARGS__)
 #define DBG_LOG_NT(NAME)\
-  LOGF("%s [$%4X ($%4X)]", NAME, cpu.pc.w, (cpu.pcOffset.w + cpu.pc.w))
+  DX8_DEBUGF("%s [$%4X]", NAME, cpu.pc.w)
 
 void DoDebugRegister(Byte byte)
 {
@@ -354,8 +428,9 @@ void DoDebugNote(Word note)
 
 void DoDebugBreakpoint()
 {
-  cpu.halt = true;
-  LOGF("DBG-BRK  Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", cpu.pc.w, cpu.interrupt, cpu.a, cpu.I.x, cpu.I.y, cpu.J.z, cpu.J.w, cpu.lastOpcode, LO_BYTE(cpu.lastOperand), HI_BYTE(cpu.lastOperand));
+  Cpu_Halt(HALT_BREAKPOINT);
+  // DX8_LOGF("DBG-BRK  Pc=$%4X Int=$%2X A=$%2X X=$%2X Y=$%2X Z=$%2X W=$%2X Op=$%2X Lo=$%2X Hi=$%2X", cpu.pc.w, cpu.interrupt, cpu.a, cpu.I.x, cpu.I.y, cpu.J.z, cpu.J.w, cpu.lastOpcode, LO_BYTE(cpu.lastOperand), HI_BYTE(cpu.lastOperand));
+  rand();
 }
 
 void Mmu_SetDboV(bool v);
@@ -371,6 +446,43 @@ void DoDebugOption(Byte option)
   else if (option == 'v')
     Mmu_SetDboV(false);
 }
+
+// Halt routines
+
+inline void Cpu_Halt(Byte id)
+{
+  cpu.halt = 1;
+  DX8_LOGF("*** CPU HALTED ***");
+  switch(id)
+  {
+    case HALT_UNKNOWN_OPCODE:
+      DX8_LOGF(" Unknown Opcode ");
+    break;
+    case HALT_DIVISION_BY_ZERO:
+      DX8_LOGF(" Division by Zero ");
+    break;
+    case HALT_STACK_OVERFLOW:
+      DX8_LOGF(" Stack overflow ");
+    break;
+    case HALT_PCSTACK_OVERFLOW:
+      DX8_LOGF(" Program Counter Stack overflow ");
+      break;
+    case HALT_STACK_UNDERFLOW:
+      DX8_LOGF(" Stack underflow ");
+    break;
+    case HALT_PCSTACK_UNDERFLOW:
+      DX8_LOGF(" Program Counter Stack underflow ");
+      break;
+    case HALT_BLOCKED_INTERRUPT:
+      DX8_LOGF(" Interrupt being fired whilst an interrupt is happening");
+    break;
+    case HALT_BREAKPOINT:
+      DX8_LOGF(" Breakpoint");
+    break;
+  }
+  Cpu_Print();
+}
+
 
 // Pc Routines
 inline void Pc_Set(Word address)
@@ -394,10 +506,10 @@ inline void Pc_SetLoHi(Byte lo, Byte hi)
 
 inline void Stack_Print()
 {
-  LOGF("Stack = %i", cpu.stack);
+  DX8_LOGF("Stack = %i", cpu.stack);
   for (int i = 0; i < 16; i++)
   {
-    LOGF("[%i:$%2X] $%2X", i, i, Stack_Get(i));
+    DX8_LOGF("[%i:$%2X] $%2X", i, i, Stack_Get(i));
   }
 }
 
@@ -405,27 +517,39 @@ inline void PushToStack(Byte value)
 {
   if (cpu.stack == 0xFF)
   {
-    LOGF("Stack Overflow!!");
-    Cpu_Print("CPU", &cpu);
-    Stack_Print();
+    Cpu_Halt(HALT_STACK_OVERFLOW);
+    return;
   }
   Stack_Set(cpu.stack, value);
   ++cpu.stack;
- // LOGF("Pushed %02X to stack. Stack size is %i", value, cpu.stack);
+ // DX8_LOGF("Pushed %02X to stack. Stack size is %i", value, cpu.stack);
+}
+
+inline void PushToStackW(Word value)
+{
+  PushToStack(LO_BYTE(value));
+  PushToStack(HI_BYTE(value));
 }
 
 inline Byte PopFromStack()
 {
   if (cpu.stack == 0)
   {
-    LOGF("Stack Underflow!!");
-    Cpu_Print("CPU", &cpu);
-    Stack_Print();
+    Cpu_Halt(HALT_STACK_UNDERFLOW);
+    return 0;
   }
   --cpu.stack;
   Byte value = Stack_Get(cpu.stack);
- // LOGF("Popped %02X from stack. Stack size is %i", value, cpu.stack);
+ // DX8_LOGF("Popped %02X from stack. Stack size is %i", value, cpu.stack);
   return value;
+}
+
+inline Word PopFromStackW()
+{
+  Word w;
+  w = PopFromStack() * 256;
+  w += PopFromStack();
+  return w;
 }
 
 inline void PushFlagsToStack()
@@ -436,6 +560,37 @@ inline void PushFlagsToStack()
 inline void PopFlagsFromStack()
 {
   cpu.flags._data = PopFromStack(); 
+}
+
+inline void PushToPcStack(Word address)
+{
+  if (cpu.pcStack == 0xFF)
+  {
+    Cpu_Halt(HALT_PCSTACK_OVERFLOW);
+    return;
+  }
+
+  PcStack_Set((cpu.pcStack * 2) + 0, LO_BYTE(address));
+  PcStack_Set((cpu.pcStack * 2) + 1, HI_BYTE(address));
+
+  ++cpu.pcStack;
+}
+
+inline Word PopFromPcStack()
+{
+  if (cpu.pcStack == 0)
+  {
+    Cpu_Halt(HALT_PCSTACK_UNDERFLOW);
+    return 0;
+  }
+  --cpu.pcStack;
+
+  Word pc;
+
+  pc = PcStack_Get((cpu.pcStack * 2) + 0);
+  pc += PcStack_Get((cpu.pcStack * 2) + 1) * 256;
+
+  return pc;
 }
 
 inline void PushRegisters()
@@ -458,28 +613,13 @@ inline void PopRegisters()
   REG_X = PopFromStack();
 }
 
-inline void PushPc()
-{
-  Word pc = cpu.pc.w;
-
-  PushToStack(LO_BYTE(pc));
-  PushToStack(HI_BYTE(pc));
-}
-
-inline void PopPc()
-{
-  cpu.pc.hi = PopFromStack();
-  cpu.pc.lo = PopFromStack();
-}
-
 // Opcodes
 
 inline void Do_Call(Byte lo_offset, Word callAddress)
 {
   Word pc = cpu.pc.w + lo_offset;
 
-  PushToStack(LO_BYTE(pc));
-  PushToStack(HI_BYTE(pc));
+  PushToPcStack(pc);
   // REG_PC = callAddress;
   Pc_Set(callAddress);
 }
@@ -500,16 +640,14 @@ inline void Do_CallCond(bool cond, Byte lo_offset, Word callAddress)
 inline void CallBranch(Byte value, Word tableAddress, Byte lo_offset)
 {
   Word address = Mmu_GetWord(tableAddress + ((Word)value) * 2);
-  // LOGF("Address=$%4X, TableAddress=$%4X, Value=$%2X", address, tableAddress, value);
+  DX8_LOGF("***CALL*** Address=$%4X, TableAddress=$%4X, Value=$%2X", address, tableAddress, value);
   Do_Call(lo_offset, address);
-  
 }
 
 
 inline void Return()
 {
-  cpu.pc.hi = PopFromStack();
-  cpu.pc.lo = PopFromStack();
+  cpu.pc.w = PopFromPcStack();
 }
 
 inline Byte LoadFromMemory(Word address)
@@ -581,7 +719,7 @@ inline void CompareBit(Byte val, Byte bit)
   cpu.flags.bCarry    = 0;
   cpu.flags.bGreater  = 0;
 
-  // LOGF("CMPBIT >> Val=$%2X Bit=$%2X => V=$%2X, $%2X", val, bit, v, cpu.flags.bZero);
+  // DX8_LOGF("CMPBIT >> Val=$%2X Bit=$%2X => V=$%2X, $%2X", val, bit, v, cpu.flags.bZero);
 }
 
 inline Byte ADC(Byte r0, Byte r1)
@@ -619,12 +757,13 @@ inline void JumpAbs(Word lo, Word hi)
   //Word lastPc = cpu.pc.w;
   //@@@ cpu.pc.w = (lo + hi * 256) & 0xFFFF;
   Pc_Set((lo + hi * 256) & 0xFFFF);
-  //LOGF("JMP hi= %2X lo=%2X pc  from %4X  to %4X", hi, lo, lastPc, cpu.pc.w);
+  //DX8_LOGF("JMP hi= %2X lo=%2X pc  from %4X  to %4X", hi, lo, lastPc, cpu.pc.w);
 }
 
 inline void JumpBranch(Byte value, Word tableAddress)
 {
   Word address = Mmu_GetWord(tableAddress + ((Word)value) * 2);
+  DX8_LOGF("**JUMP** Address=$%4X, TableAddress=$%4X, Value=$%2X", address, tableAddress, value);
   Pc_Set(address);
 }
 
@@ -710,7 +849,7 @@ void Cpu_Check_Interrupts()
 
 void Cpu_Interrupts_Enabled(bool isEnabled)
 {
-  cpu.interruptsStopped = isEnabled;
+  cpu.interruptsStopped = !isEnabled;
 }
 
 void Cpu_StartInterrupt(Byte name)
@@ -723,12 +862,12 @@ void Cpu_StartInterrupt(Byte name)
 
   if (interruptAddress == 0)
   {
-    LOGF("Cannot do interrupt. No address for $%2X", name);
+    DX8_LOGF("Cannot do interrupt. No address for $%2X", name);
     return;
   }
 
   PushRegisters();
-  PushPc();
+  PushToPcStack(REG_PC);
 
  // interruptAddress = Mmu_Get((name * 2));
  // interruptAddress |= ((Word) Mmu_Get((name * 2) + 1)) << 8;
@@ -736,6 +875,13 @@ void Cpu_StartInterrupt(Byte name)
   cpu.interrupt = name;
   //@@@ cpu.pc.w = interruptAddress;
   Pc_Set(interruptAddress);
+
+  if (name == INTVEC_HALT)
+  {
+    DX8_LOGF("HALT INTERRUPT!! $%4X", interruptAddress);
+    //cpu.halt = 1;
+  }
+
   REG_A = 0;
   REG_X = 0;
   REG_Y = 0;
@@ -752,8 +898,8 @@ void Cpu_ResumeInterrupt()
 
   if (cpu.interrupt == 0)
   {
-    LOGF("Interupt not happening. Already interrupted for $%2X!!!", cpu.interrupt);
-    cpu.halt = 1;
+    DX8_LOGF("Interupt not happening. Already interrupted for $%2X!!!", cpu.interrupt);
+    Cpu_Halt(HALT_BLOCKED_INTERRUPT);
     return;
   }
 
@@ -761,7 +907,7 @@ void Cpu_ResumeInterrupt()
 
   cpu.interrupt = 0;
 
-  PopPc();
+  REG_PC = PopFromPcStack();
   PopRegisters();
 }
 
@@ -776,7 +922,7 @@ void Floppy_Interrupt();
 
 inline void DoInterrupt(Byte name)
 {
-  LOGF("Interrupt $%2X", name);
+  DX8_LOGF("Interrupt $%2X", name);
   switch(name)
   {
     case INT_RESET:
@@ -855,7 +1001,7 @@ void Cpu_SetWRegister(Byte value)
 
 Word Cpu_GetPcRegister()
 {
-  return REG_PC + cpu.pcOffset.w;
+  return REG_PC;
 }
 
 void Cpu_SetPcRegister(Word value)
@@ -890,7 +1036,7 @@ Byte Cpu_GetHalt()
 
 void Cpu_SetHalt(Byte value)
 {
-  LOGF("Cpu_SetHalt = %i", value);
+  DX8_LOGF("Cpu_SetHalt = %i", value);
   cpu.halt = value != 0 ? true : false;
 }
 
@@ -910,20 +1056,23 @@ int Cpu_Step()
   if (cpu.halt)
     return 4;
 
-
   Word pc = REG_PC;
-  pc += cpu.pcOffset.w;
+
+  //if (cpu.interrupt != 0)
+  //{
+  //   pc += cpu.pcOffset.w;
+  //}
 
   Byte opcode = Mmu_Get(pc);
   Data data;
   data.lo = Mmu_Get(pc + 1);
   data.hi = Mmu_Get(pc + 2);
 
- // LOGF("![$%4X] ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
+ // DX8_LOGF("![$%4X] ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word) (cpu.pc.w - cpu.pcOffset.w),  opcode, OpcodeStr[opcode], data.lo, data.hi);
 
   if (DebugLog)
   {
-    LOGF("[$%4X:$%4X] $%2X:%-12s LO=$%2X HI=$%2X", cpu.pc.w, pc, opcode, OpcodeStr[opcode], data.lo, data.hi);
+    DX8_LOGF("[$%4X:$%4X] $%2X:%-12s LO=$%2X HI=$%2X", cpu.pc.w, pc, opcode, OpcodeStr[opcode], data.lo, data.hi);
   }
 
 #undef OP
@@ -932,12 +1081,15 @@ int Cpu_Step()
   cpu.lastOpcode = opcode;
   cpu.lastOperand = data.w;
 
+#if DEBUG_HISTORY == 1
+  PushOpcodeHistory(cpu.pc.w, cpu.lastOpcode, cpu.lastOperand);
+#endif
+
   switch (opcode)
   {
 #include "dx8_Cpu_Opcodes.inc"
   default:
-    cpu.halt = 1;
-    LOGF("**HALT - Unknown Opcode ** [$%4X] ($%4X) OP=%2X:%s LO=$%2X HI=$%2X", REG_PC, (Word)(cpu.pc.w + cpu.pcOffset.w), opcode, OpcodeStr[opcode], data.lo, data.hi);
+    Cpu_Halt(HALT_UNKNOWN_OPCODE);
     break;
   }
 

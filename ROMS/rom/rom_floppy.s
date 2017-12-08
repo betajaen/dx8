@@ -22,7 +22,7 @@ BeginJumpTable FloppyReadInstruction
 EndJumpTable
 
 BeginFunction OnFloppyNop
-        dbn 'Fn'
+        ;dbn 'Fn'
 
         set a, $00
         store sFloppy_Msg, a
@@ -30,7 +30,7 @@ BeginFunction OnFloppyNop
 EndFunction
 
 BeginFunction OnFloppyInserted
-        dbn 'Fi'
+        ;dbn 'Fi'
 
         set a, $00
         store sFloppy_Msg, a
@@ -55,18 +55,18 @@ BeginFunction OnFloppyInserted
 
         ; Setup modes
         _poke sFloppy_Mode,             $00     ; Current state (0 = Reading Header, 1 = Doing Instructions, 2 = Done)
-        _poke.w sFloppy_Addr,           $FC00   ; Pointer to current track info
+        _poke.w sFloppy_Addr,           $D400   ; Pointer to current track info
         _poke sFloppy_Track,            $FF     ; Current track (-1)
 
         ; Copy sector 179 to $FC00
         _poke REG_FPY_OP_TRACK,         $FF
-        _poke.w REG_FPY_OP_ADDR,        $FC00
+        _poke.w REG_FPY_OP_ADDR,        $D400
         _poke REG_FPY_OP,               $01
         int INT_FLOPPY_OP
 EndFunction
 
 BeginFunction OnFloppyRemoved
-        dbn 'Fx'
+        ;dbn 'Fx'
 
         set a, $00
         store sFloppy_Msg, a
@@ -116,7 +116,7 @@ BeginFunction OnFloppySeek
 EndFunction
 
 BeginFunction OnFloppyRead
-        dbn 'Fr'
+        ;dbn 'Fr'
 
         set a, $00
         store sFloppy_Msg, a
@@ -127,7 +127,7 @@ BeginFunction OnFloppyRead
 EndFunction
 
 BeginFunction OnFloppyWrite
-        dbn 'Fw'
+        ;dbn 'Fw'
 
         set a, $00
         store sFloppy_Msg, a
@@ -153,7 +153,7 @@ BeginFunction OnFloppyReading
 EndFunction
 
 BeginFunction OnFloppyWriting
-        dbn 'Fw'
+        ; dbn 'Fw'
 
         set a, $00
         store sFloppy_Msg, a
@@ -163,7 +163,7 @@ EndFunction
 
 ; Have read the first track.
 BeginFunction OnFloppyReadHeaderTrack
-        dbn 'rH'
+        ; dbn 'rH'
 
 
         ; We've read the header
@@ -195,24 +195,24 @@ BeginFunction HandleFloppyInstruction
 EndFunction
 
 BeginFunction Floppy_Instruction_Nop
-        dbn 'iN'
+        ; dbn 'iN'
         nop
         _poke sFloppy_Mode, $03 ; Stop
 EndFunction
 
 BeginFunction Floppy_Instruction_ReadLowerTrackToAddress
-        dbn 'iL'
+        ; dbn 'iL'
 
         ; Copy dst to OP_ADDR
         load i, sFloppy_Addr
         load z, i
         inc i
         store REG_FPY_OP_ADDR, z
-        dbr 'z'
+        ; dbr 'z'
 
         load z, i
         store REG_FPY_OP_ADDR+1, z
-        dbr 'z'
+        ; dbr 'z'
 
         ; sFloppy_Addr += 2
         load i, sFloppy_Addr
@@ -226,9 +226,9 @@ BeginFunction Floppy_Instruction_ReadLowerTrackToAddress
         store sFloppy_Track, a
         store REG_FPY_OP_TRACK, a
 
-        dbn 'TR'
-        dbn 'NO'
-        dbr 'a'
+        ; dbn 'TR'
+        ; dbn 'NO'
+        ; dbr 'a'
 
         ; Set to read operation
         set a, $01
@@ -239,44 +239,30 @@ BeginFunction Floppy_Instruction_ReadLowerTrackToAddress
 EndFunction
 
 BeginFunction Floppy_Instruction_ReadUpperTrackToAddress
-        dbn 'iU'
+        ; dbn 'iU'
 
         ; @TODO
 EndFunction
 
-BootThunk:
-  nop
-  nop
-  roffset $0800
-BootThunkEnd:
-
 ThunkLength = 5
 
 BeginFunction Floppy_Instruction_End
-        dbn 'iE'
+        ; dbn 'iE'
 
         ; Mark mode as $02, done!
         _poke sFloppy_Mode, $03
 
-        ; Set the origin, reset and boot into the program!
+        ; Reset the Interrupt Vectors
+        _poke.w         INTVEC_ADDR_HBLANK,     DefaultIvt
+        _poke.w         INTVEC_ADDR_VBLANK,     DefaultIvt
+        _poke.w         INTVEC_ADDR_FLOPPY,     DefaultIvt
+        _poke.w         INTVEC_ADDR_IO,         DefaultIvt
+        _poke.w         INTVEC_ADDR_HALT,       OnIvtHalt
 
-        ;printl "DefaultIvt=", DefaultIvt
-        ;printl "Calc=", ($7800 - $800 + DefaultIvt)
+        ; Set the reset vector to the start of the program
+        _poke.w         INTVEC_ADDR_RESET,      $1400
 
-        _poke.w         INTVEC_ADDR_HBLANK,     $7000 - $800 + DefaultIvt
-        _poke.w         INTVEC_ADDR_VBLANK,     $7000 - $800 + DefaultIvt
-        _poke.w         INTVEC_ADDR_FLOPPY,     $7000 - $800 + DefaultIvt
-        _poke.w         INTVEC_ADDR_IO,         $7000 - $800 + DefaultIvt
-        _poke.w         INTVEC_ADDR_RESET,      $0800 - ThunkLength ;OnIvtReset
-
-        ;offset $0800
-        ;int $FF
-
-        set MemCpySm_Dst, $0800 - ThunkLength
-        set MemCpySm_Src, kProgramSpace + BootThunk
-        set MemCpySm_Len, ThunkLength
-        _CallFunction MemCpySm
-
+        ; And call a soft reset.
+        dbn 'RR'
         int $FF
-
 EndFunction

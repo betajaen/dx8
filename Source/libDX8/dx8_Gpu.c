@@ -33,7 +33,6 @@
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
-#include "log_c/src/log.h"
 
 #define TEXT_TEST
 
@@ -48,7 +47,6 @@ Byte*    sWriteCrt, *sReadCrt;
 bool     sCrtDirty;
 Byte*    sScanLineTarget;
 Byte*    sLineCache;
-Byte*    sBufferRam;
 Byte*    Ram_Get();
 Byte     Gpu_Halt;
 
@@ -62,9 +60,6 @@ int      numPlanes;
 Word     tilesAddr;
 int  charRow;
 
-void Mmu_Set_Real(Word address, Byte value);
-Byte Mmu_Get_Real(Word address);
-
 void Gpu_Setup()
 {
   sCrtBuffers[0] = malloc(CRT_W * CRT_H * CRT_DEPTH);
@@ -75,8 +70,6 @@ void Gpu_Setup()
   sScanLineTarget = malloc(CRT_W * 3);
   sLineCache = malloc((CRT_W * 4) / 8);
   
-  sBufferRam = Ram_Get(); 
-
   sCrtDirty = true;
 }
 
@@ -96,38 +89,38 @@ void Gpu_TurnOn()
   memset(sCrtBuffers[0], 0x00, CRT_W * CRT_H * CRT_DEPTH);
   memset(sCrtBuffers[1], 0x00, CRT_W * CRT_H * CRT_DEPTH);
 
-  LOGF("GPU Pre-init");
+  DX8_LOGF("GPU Pre-init");
 
-  Mmu_Set_Real(REG_GFX_PLANES_COUNT, 0x01);
+  Mmu_Set(REG_GFX_PLANES_COUNT, 0x01);
 
-  Mmu_Set_Real(REG_GFX_PLANE0_TYPE, 0x00);
-  Mmu_Set_Real(REG_GFX_PLANE1_TYPE, 0x00);
-  Mmu_Set_Real(REG_GFX_PLANE2_TYPE, 0x00);
-  Mmu_Set_Real(REG_GFX_PLANE3_TYPE, 0x00);
+  Mmu_Set(REG_GFX_PLANE0_TYPE, 0x00);
+  Mmu_Set(REG_GFX_PLANE1_TYPE, 0x00);
+  Mmu_Set(REG_GFX_PLANE2_TYPE, 0x00);
+  Mmu_Set(REG_GFX_PLANE3_TYPE, 0x00);
 
-  Mmu_Set_Real(REG_GFX_BACKGROUND_COLOUR + 0, 0x3B);
-  Mmu_Set_Real(REG_GFX_BACKGROUND_COLOUR + 1, 0x3F);
-  Mmu_Set_Real(REG_GFX_BACKGROUND_COLOUR + 2, 0x42);
+  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 0, 0x3B);
+  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 1, 0x3F);
+  Mmu_Set(REG_GFX_BACKGROUND_COLOUR + 2, 0x42);
 
-  Mmu_Set_Real(REG_GFX_PLANE0_COLOUR + 0, 0xFE);
-  Mmu_Set_Real(REG_GFX_PLANE0_COLOUR + 1, 0xFE);
-  Mmu_Set_Real(REG_GFX_PLANE0_COLOUR + 2, 0xFE);
+  Mmu_Set(REG_GFX_PLANE0_COLOUR + 0, 0xFE);
+  Mmu_Set(REG_GFX_PLANE0_COLOUR + 1, 0xFE);
+  Mmu_Set(REG_GFX_PLANE0_COLOUR + 2, 0xFE);
 
-  Mmu_Set_Real(REG_GFX_PLANE1_COLOUR + 0, 0xF2);
-  Mmu_Set_Real(REG_GFX_PLANE1_COLOUR + 1, 0x4C);
-  Mmu_Set_Real(REG_GFX_PLANE1_COLOUR + 2, 0x27);
+  Mmu_Set(REG_GFX_PLANE1_COLOUR + 0, 0xF2);
+  Mmu_Set(REG_GFX_PLANE1_COLOUR + 1, 0x4C);
+  Mmu_Set(REG_GFX_PLANE1_COLOUR + 2, 0x27);
 
-  Mmu_Set_Real(REG_GFX_PLANE2_COLOUR + 0, 0xFB);
-  Mmu_Set_Real(REG_GFX_PLANE2_COLOUR + 1, 0xBA);
-  Mmu_Set_Real(REG_GFX_PLANE2_COLOUR + 2, 0x42);
+  Mmu_Set(REG_GFX_PLANE2_COLOUR + 0, 0xFB);
+  Mmu_Set(REG_GFX_PLANE2_COLOUR + 1, 0xBA);
+  Mmu_Set(REG_GFX_PLANE2_COLOUR + 2, 0x42);
 
-  Mmu_Set_Real(REG_GFX_PLANE3_COLOUR + 0, 0x56);
-  Mmu_Set_Real(REG_GFX_PLANE3_COLOUR + 1, 0xB9);
-  Mmu_Set_Real(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
+  Mmu_Set(REG_GFX_PLANE3_COLOUR + 0, 0x56);
+  Mmu_Set(REG_GFX_PLANE3_COLOUR + 1, 0xB9);
+  Mmu_Set(REG_GFX_PLANE3_COLOUR + 2, 0xD0);
 
   // @TODO - Reset GPU state here.
 
-  LOGF("GPU Turn On.");
+  DX8_LOGF("GPU Turn On.");
 }
 
 Byte activity = 0;
@@ -182,10 +175,10 @@ void Gpu_FrameStart()
 
   tilesAddr = Mmu_GetWord(REG_GFX_TILES_ADDR);
 
- //  LOGF("Tiles address = $%4X", tilesAddr);
+ //  DX8_LOGF("Tiles address = $%4X", tilesAddr);
 
-  int  numFrames = Mmu_Get_Real(REG_GFX_FRAME_NUM);
-  int  seconds   = Mmu_Get_Real(REG_GFX_SECOND_NUM);
+  int  numFrames = Mmu_Get(REG_GFX_FRAME_NUM);
+  int  seconds   = Mmu_Get(REG_GFX_SECOND_NUM);
   Byte counters = 0;
   numFrames++;
 
@@ -216,31 +209,31 @@ void Gpu_FrameStart()
   if (numFrames == 30)
     counters |= GFX_FLG_COUNTERS_30;
 
-  // LOGF("Counters= $%2X Seconds = $%2X Frames = $%2X", counters, seconds, numFrames);
+  // DX8_LOGF("Counters= $%2X Seconds = $%2X Frames = $%2X", counters, seconds, numFrames);
 
-  Mmu_Set_Real(REG_GFX_COUNTERS, counters);
-  Mmu_Set_Real(REG_GFX_SECOND_NUM, seconds & 0xFF);
-  Mmu_Set_Real(REG_GFX_FRAME_NUM, numFrames);
+  Mmu_Set(REG_GFX_COUNTERS, counters);
+  Mmu_Set(REG_GFX_SECOND_NUM, seconds & 0xFF);
+  Mmu_Set(REG_GFX_FRAME_NUM, numFrames);
 
-  numPlanes = Mmu_Get_Real(REG_GFX_PLANES_COUNT);
+  numPlanes = Mmu_Get(REG_GFX_PLANES_COUNT);
 
   switch(numPlanes)
   {
     default:
-      LOGF("Invalid Plane value!!! %i", numPlanes);
+      DX8_LOGF("Invalid Plane value!!! %i", numPlanes);
       numPlanes = 1;
     case 1:
-      planeModes[0] = Mmu_Get_Real(REG_GFX_PLANE0_TYPE);
+      planeModes[0] = Mmu_Get(REG_GFX_PLANE0_TYPE);
     break;
     case 2:
-      planeModes[0] = Mmu_Get_Real(REG_GFX_PLANE0_TYPE);
-      planeModes[1] = Mmu_Get_Real(REG_GFX_PLANE1_TYPE);
+      planeModes[0] = Mmu_Get(REG_GFX_PLANE0_TYPE);
+      planeModes[1] = Mmu_Get(REG_GFX_PLANE1_TYPE);
     break;
     case 4:
-      planeModes[0] = Mmu_Get_Real(REG_GFX_PLANE0_TYPE);
-      planeModes[1] = Mmu_Get_Real(REG_GFX_PLANE1_TYPE);
-      planeModes[2] = Mmu_Get_Real(REG_GFX_PLANE2_TYPE);
-      planeModes[3] = Mmu_Get_Real(REG_GFX_PLANE3_TYPE);
+      planeModes[0] = Mmu_Get(REG_GFX_PLANE0_TYPE);
+      planeModes[1] = Mmu_Get(REG_GFX_PLANE1_TYPE);
+      planeModes[2] = Mmu_Get(REG_GFX_PLANE2_TYPE);
+      planeModes[3] = Mmu_Get(REG_GFX_PLANE3_TYPE);
     break;
   }
 }
@@ -293,7 +286,7 @@ inline bool Gpu_Coroutine_Common()
       SubmitLine(scanline - 1);
     }
 
-    Mmu_Set_Real(REG_GFX_SCANLINE_NUM, scanline);
+    Mmu_Set(REG_GFX_SCANLINE_NUM, scanline);
     Cpu_Interrupt(INTVEC_HBLANK);
     
     charRow = (scanline % 8) * 96;
@@ -312,7 +305,7 @@ inline bool Gpu_Coroutine_Common()
         if (planeModes[0] == 0xFF)
           copyStride = scanline;
 
-        memcpy(sLineCache + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sLineCache + (0 * GPU_BUFFER_W), sFastRam + MEM_GFX_PLANE0_FAST + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
       }
       break;
       case 2:
@@ -321,13 +314,13 @@ inline bool Gpu_Coroutine_Common()
         if (planeModes[0] == 0xFF)
           copyStride = scanline;
 
-        memcpy(sLineCache + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sLineCache + (0 * GPU_BUFFER_W), sFastRam + MEM_GFX_PLANE0_FAST + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
         
         copyStride = rows;
         if (planeModes[1] == 0xFF)
           copyStride = scanline;
 
-        memcpy(sLineCache + (1 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 1) + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sLineCache + (1 * GPU_BUFFER_W), sFastRam + MEM_GFX_PLANE1_FAST + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
       }
       break;
       case 4:
@@ -337,25 +330,25 @@ inline bool Gpu_Coroutine_Common()
         if (planeModes[0] == 0xFF)
           copyStride = scanline;
 
-        memcpy(sLineCache + (0 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 0) + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sLineCache + (0 * GPU_BUFFER_W), sFastRam + MEM_GFX_PLANE0_FAST + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
 
         copyStride = rows;
         if (planeModes[1] == 0xFF)
           copyStride = scanline;
 
-        memcpy(sLineCache + (1 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 1) + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sLineCache + (1 * GPU_BUFFER_W), sFastRam + MEM_GFX_PLANE1_FAST + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
 
         copyStride = rows;
         if (planeModes[2] == 0xFF)
           copyStride = scanline;
 
-        memcpy(sLineCache + (2 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 2) + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sLineCache + (2 * GPU_BUFFER_W), sFastRam + MEM_GFX_PLANE2_FAST + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
 
         copyStride = rows;
         if (planeModes[3] == 0xFF)
           copyStride = scanline;
 
-        memcpy(sLineCache + (3 * GPU_BUFFER_W), sBufferRam + MEM_SHARED_ADDR + (GPU_PLANE_SIZE * 3) + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
+        memcpy(sLineCache + (3 * GPU_BUFFER_W), sFastRam + MEM_GFX_PLANE3_FAST + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
 
       }
       break;
@@ -388,21 +381,21 @@ void Gpu_ElectronBeam()
 
   if (x == 0)
   {
-    int lineR1 = Mmu_Get_Real(REG_GFX_PLANE0_COLOUR + 0);
-    int lineG1 = Mmu_Get_Real(REG_GFX_PLANE0_COLOUR + 1);
-    int lineB1 = Mmu_Get_Real(REG_GFX_PLANE0_COLOUR + 2);
-    int lineR2 = Mmu_Get_Real(REG_GFX_PLANE1_COLOUR + 0);
-    int lineG2 = Mmu_Get_Real(REG_GFX_PLANE1_COLOUR + 1);
-    int lineB2 = Mmu_Get_Real(REG_GFX_PLANE1_COLOUR + 2);
-    int lineR3 = Mmu_Get_Real(REG_GFX_PLANE2_COLOUR + 0);
-    int lineG3 = Mmu_Get_Real(REG_GFX_PLANE2_COLOUR + 1);
-    int lineB3 = Mmu_Get_Real(REG_GFX_PLANE2_COLOUR + 2);
-    int lineR4 = Mmu_Get_Real(REG_GFX_PLANE3_COLOUR + 0);
-    int lineG4 = Mmu_Get_Real(REG_GFX_PLANE3_COLOUR + 1);
-    int lineB4 = Mmu_Get_Real(REG_GFX_PLANE3_COLOUR + 2);
-    int backR  = Mmu_Get_Real(REG_GFX_BACKGROUND_COLOUR + 0);
-    int backG  = Mmu_Get_Real(REG_GFX_BACKGROUND_COLOUR + 1);
-    int backB  = Mmu_Get_Real(REG_GFX_BACKGROUND_COLOUR + 2);
+    int lineR1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 0);
+    int lineG1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 1);
+    int lineB1 = Mmu_Get(REG_GFX_PLANE0_COLOUR + 2);
+    int lineR2 = Mmu_Get(REG_GFX_PLANE1_COLOUR + 0);
+    int lineG2 = Mmu_Get(REG_GFX_PLANE1_COLOUR + 1);
+    int lineB2 = Mmu_Get(REG_GFX_PLANE1_COLOUR + 2);
+    int lineR3 = Mmu_Get(REG_GFX_PLANE2_COLOUR + 0);
+    int lineG3 = Mmu_Get(REG_GFX_PLANE2_COLOUR + 1);
+    int lineB3 = Mmu_Get(REG_GFX_PLANE2_COLOUR + 2);
+    int lineR4 = Mmu_Get(REG_GFX_PLANE3_COLOUR + 0);
+    int lineG4 = Mmu_Get(REG_GFX_PLANE3_COLOUR + 1);
+    int lineB4 = Mmu_Get(REG_GFX_PLANE3_COLOUR + 2);
+    int backR  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 0);
+    int backG  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 1);
+    int backB  = Mmu_Get(REG_GFX_BACKGROUND_COLOUR + 2);
 
     #define COLOUR_MASK(IDX, R, G, B) \
       lineR[IDX] = R; \
@@ -448,7 +441,7 @@ void Gpu_ElectronBeam()
       else
       {
         character = sLineCache[(GPU_BUFFER_W * 0) + offset] - ' ';
-        pixelRow = Mmu_Get_Real(tilesAddr + character + charRow);
+        pixelRow = Mmu_Get(tilesAddr + character + charRow);
       }
       col |= !!(pixelRow & bitShift);
     }
@@ -462,7 +455,7 @@ void Gpu_ElectronBeam()
       else
       {
         character = sLineCache[(GPU_BUFFER_W * 0) + offset] - ' ';
-        pixelRow = Mmu_Get_Real(tilesAddr + character + charRow);
+        pixelRow = Mmu_Get(tilesAddr + character + charRow);
       }
       col |= !!(pixelRow & bitShift);
 
@@ -473,7 +466,7 @@ void Gpu_ElectronBeam()
       else
       {
         character = sLineCache[(GPU_BUFFER_W * 1) + offset] - ' ';
-        pixelRow = Mmu_Get_Real(tilesAddr + character + charRow);
+        pixelRow = Mmu_Get(tilesAddr + character + charRow);
       }
       col |= !!(pixelRow & bitShift) << 1;
 
@@ -488,7 +481,7 @@ void Gpu_ElectronBeam()
       else
       {
         character = sLineCache[(GPU_BUFFER_W * 0) + offset] - ' ';
-        pixelRow = Mmu_Get_Real(tilesAddr + character + charRow);
+        pixelRow = Mmu_Get(tilesAddr + character + charRow);
       }
       col |= !!(pixelRow & bitShift);
 
@@ -499,7 +492,7 @@ void Gpu_ElectronBeam()
       else
       {
         character = sLineCache[(GPU_BUFFER_W * 1) + offset] - ' ';
-        pixelRow = Mmu_Get_Real(tilesAddr + character + charRow);
+        pixelRow = Mmu_Get(tilesAddr + character + charRow);
       }
       col |= !!(pixelRow & bitShift) << 1;
 
@@ -510,7 +503,7 @@ void Gpu_ElectronBeam()
       else
       {
         character = sLineCache[(GPU_BUFFER_W * 2) + offset] - ' ';
-        pixelRow = Mmu_Get_Real(tilesAddr + character + charRow);
+        pixelRow = Mmu_Get(tilesAddr + character + charRow);
       }
       col |= !!(pixelRow & bitShift) << 2;
 
@@ -521,7 +514,7 @@ void Gpu_ElectronBeam()
       else
       {
         character = sLineCache[(GPU_BUFFER_W * 3) + offset] - ' ';
-        pixelRow = Mmu_Get_Real(tilesAddr + character + charRow);
+        pixelRow = Mmu_Get(tilesAddr + character + charRow);
       }
       col |= !!(pixelRow & bitShift) << 3;
     }
@@ -557,8 +550,8 @@ Gpu_CoroutineData gpuCoroutineData;
 
 #define GPU_DATA       gpuCoroutineData
 #define GPU_YIELD      return 2;
-#define GPU_RETURN     GPU_DATA.op = 0xFF; LOGF("Returned Gpu Coop");return 1;
-#define GPU_YIELD_FAIL GPU_DATA.state = 0xFF; GPU_DATA.op = 0xFF; LOGF("Failed Gpu Coop"); return -1;
+#define GPU_RETURN     GPU_DATA.op = 0xFF; DX8_LOGF("Returned Gpu Coop");return 1;
+#define GPU_YIELD_FAIL GPU_DATA.state = 0xFF; GPU_DATA.op = 0xFF; DX8_LOGF("Failed Gpu Coop"); return -1;
 
 int Gpu_Coroutine_Start(Byte type)
 {

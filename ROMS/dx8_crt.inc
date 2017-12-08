@@ -117,51 +117,42 @@ macro _CallFunction Name {
 }
 
 macro Const_Include Name, File {
-      kLcl#Name:
+      k#Name:
       include File
-      k#Name = kProgramSpace + kLcl#Name
-      k#Name#Length = $ - kLcl#Name
+      k#Name#Length = $ - k#Name
 }
 
 macro Const_Byte Name, Value {
-      kLcl#Name:
+      k#Name:
       db Value
-      k#Name = kProgramSpace + kLcl#Name
-      k#Name#Length = $ - kLcl#Name
+      k#Name#Length = $ - k#Name
 }
 
 macro Const_Bytes_Begin Name {
-      kLcl#Name:
+      k#Name:
 }
 
-macro Const_Bytes_End Name {
-      k#Name = kProgramSpace + kLcl#Name
-      k#Name#Length = $ - kLcl#Name
-}
+macro Const_Bytes_End Name {}
 
 macro Var_Byte Name, InitialValue {
-      sLcl#Name:
+      s#Name:
       db InitialValue
-      s#Name = kProgramSpace + sLcl#Name
 }
 
 macro Var_Word Name, InitialValue {
-      sLcl#Name:
+      s#Name:
       dw InitialValue
-      s#Name = kProgramSpace + sLcl#Name
 }
 
 macro Var_Bytes Name, Count {
-      sLcl#Name:
+      s#Name:
       repeat Count
             db $00
       end repeat
-      s#Name = kProgramSpace + sLcl#Name
 }
 
 macro BeginJumpTable Name {
-      tLcl#Name:
-      t#Name = kProgramSpace + tLcl#Name
+      t#Name:
 }
 
 macro JumpTable_Item Name {
@@ -284,4 +275,13 @@ macro _mmu_map index, real, virtualBegin, virtualEnd {
       _PrintValue "DST=", DST
       _PrintValue "SRCl=", SRCl
       _PrintValue "SRCu=", SRCu
+}
+
+macro Import M, A {
+      External_#M equ A
+}
+
+macro RomFunction M {
+      set a, External_#M
+      bcall $400, a
 }

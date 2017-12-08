@@ -31,7 +31,7 @@ macro MAKE_FLOPPY NAME {
   _PrintValue 'Number of Tracks is = 0x', NUM_TRACKS
 
   ; Destination in memory to copy the track into
-  ENTRY_POINT = $800
+  ENTRY_POINT = $1400
 
   repeat NUM_TRACKS
       db $01          ; Copy

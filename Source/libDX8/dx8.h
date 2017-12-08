@@ -35,6 +35,10 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#include "dx8_Registers.inc"
+#include "dx8_Constants.inc"
+#include "dx8_Interrupts.inc"
+
 #define CRT_W 320
 #define CRT_H 256
 #define CRT_DEPTH 3
@@ -61,9 +65,9 @@ typedef struct {
   CPU_REGISTER(I, x, y) I;
   CPU_REGISTER(J, z, w) J;
   CPU_REGISTER(w, lo, hi) pc;
-  CPU_REGISTER(w, lo, hi) pcOffset;
   Byte a;
   Byte stack;
+  Byte pcStack;
   union
   {
     struct {
@@ -87,6 +91,9 @@ typedef struct {
   Byte interruptsStopped;
   Byte halt;
 } Cpu;
+
+extern Byte* sRam;
+extern Byte* sFastRam;
 
 int Clock(int ms);
 
@@ -142,13 +149,43 @@ Byte Mmu_Get(Word address);
 
 Word Mmu_GetWord(Word address);
 
-Byte Mmu_GetAbs(int address);
+inline Byte FastRam_Get(Word address)
+{
+  return sFastRam[address];
+}
 
-Word Mmu_GetWordAbs(int address);
+inline Word FastRam_GetWord(Word address)
+{
+  Word v;
+  v  = FastRam_Get(address);
+  v |= ((Word)FastRam_Get(address + 1)) << 8;
+  return v;
+}
 
-void Stack_Set(Byte offset, Byte value);
+inline void FastRam_Set(Word address, Byte value)
+{
+  sFastRam[address] = value;
+}
 
-Byte Stack_Get(Byte offset);
+inline void Stack_Set(Byte offset, Byte value)
+{
+  sRam[REG_STACK_END - offset] = value;
+}
+
+inline Byte Stack_Get(Byte offset)
+{
+  return sRam[REG_STACK_END - offset];
+}
+
+inline void PcStack_Set(Word offset, Byte value)
+{
+  sRam[REG_PCSTACK_END - offset] = value;
+}
+
+inline Byte PcStack_Get(Word offset)
+{
+  return sRam[REG_PCSTACK_END - offset];
+}
 
 void Mmu_TurnOn();
 
@@ -160,11 +197,13 @@ Byte Rom_Get(Word address);
 
 void Io_Interrupt(Byte name, Byte dataA, Byte dataB);
 
-#define RAM_SIZE      (96 * 1024) // Chip + Shared >> 0x400 + 0x7C00 + 0xFFFF)
-#define ROM_SIZE      (4  * 1024) // Chip + Shared >> (0x800)
+void Log_Format(const char* text, ...);
 
-#include "dx8_Registers.inc"
-#include "dx8_Constants.inc"
-#include "dx8_Interrupts.inc"
+#define DX8_LOGF(TEXT, ...)  Log_Format("*** " TEXT, __VA_ARGS__)
+#define DX8_INFOF(TEXT, ...) Log_Format("INF " TEXT, __VA_ARGS__)
+#define DX8_DEBUGF(TEXT, ...) Log_Format("DBG " TEXT, __VA_ARGS__)
+
+#define RAM_SIZE      ((16 + 64) * 1024) // Chip + Shared >> 0x4000 + 0xFFFF)
+#define ROM_SIZE      (4  * 1024) // Chip + Shared >> (0x800)
 
 #endif

@@ -34,8 +34,6 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include "log_c/src/log.h"
-
 #define FLOPPY_TRACKS      80
 #define FLOPPY_SECTORS     2
 #define FLOPPY_TOTAL_TRACKS (FLOPPY_TRACKS * FLOPPY_SECTORS)
@@ -120,7 +118,7 @@ bool Fpy_CopyToFloppyController(void* data, int length)
   if (length > FLOPPY_SIZE)
     return false;
 
-//  LOGF("Floppy Data %p %i", data, length);
+//  DX8_LOGF("Floppy Data %p %i", data, length);
   memcpy(sFloppy, data, length);
 
   return false;
@@ -139,7 +137,7 @@ void Floppy_Interrupt()
   sFloppyOp_Src   = Fpy_CalculateTrackAddress(sFloppyOp_Track);
   sFloppy_ReadCounter = 0;
 
-  LOGF("Floppy Op!! Id=%i Track=%i Len=%i Dst=%i Src=%i", sFloppyOp, sFloppyOp_Track, sFloppyOp_Len, sFloppyOp_Dst, sFloppyOp_Src);
+  // DX8_LOGF("Floppy Op!! Id=%i Track=%i Len=$%4X Dst=$%4X Src=$%8X", sFloppyOp, sFloppyOp_Track, sFloppyOp_Len, sFloppyOp_Dst, sFloppyOp_Src);
 
   Mmu_Set(REG_FPY_OP, 0x00);
   sFloppySeekTimer = 0;
@@ -176,7 +174,7 @@ bool Floppy_SeekTrack()
 
       Mmu_Set(REG_FPY_CURRENT_TRACK, sFloppyCurrentTrack);
       Fpy_Interrupt(IO_FPY_MSG_SEEK, false);
-      LOGF("[Floppy] Seeked to track %i", sFloppyCurrentTrack);
+      // DX8_LOGF("[Floppy] Seeked to track %i", sFloppyCurrentTrack);
     }
     else if (sFloppyCurrentTrack > sFloppySeekTrack)
     {
@@ -184,7 +182,7 @@ bool Floppy_SeekTrack()
 
       Mmu_Set(REG_FPY_CURRENT_TRACK, sFloppyCurrentTrack);
       Fpy_Interrupt(IO_FPY_MSG_SEEK, false);
-      LOGF("[Floppy] Seeked to track %i", sFloppyCurrentTrack);
+      // DX8_LOGF("[Floppy] Seeked to track %i", sFloppyCurrentTrack);
     }
 
   }
@@ -193,7 +191,7 @@ bool Floppy_SeekTrack()
 
   if (sFloppyCurrentTrack == sFloppySeekTrack)
   {
-    LOGF("[Floppy] Seeked to track %i", sFloppyCurrentTrack);
+    // DX8_LOGF("[Floppy] Seeked to track %i", sFloppyCurrentTrack);
     return true;
   }
 
@@ -238,7 +236,7 @@ void Floppy_Clock()
 
         if (sFloppyOp_Len == 0)
         {
-          LOGF("[Floppy] Read track %i $%8X to $%4X, Length = $%4X", sFloppyCurrentTrack, sFloppyOp_Src, sFloppyOp_Dst, sFloppyOp_Len);
+          DX8_LOGF("[Floppy] Read track %i $%8X to $%4X, Length = $%4X", sFloppyCurrentTrack, sFloppyOp_Src, sFloppyOp_Dst - FLOPPY_SECTOR_SIZE, FLOPPY_SECTOR_SIZE);
 
           sFloppy_Light = FLOPPY_LIGHT_OFF;
           sFloppyOp = 0;

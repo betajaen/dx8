@@ -32,8 +32,6 @@
 #include "dx8.h"
 #include "dx8_Scancodes.inc"
 
-#include "log_c/src/log.h"
-
 const char* kKeyStr[] = {
   "0",
   "1",
@@ -196,7 +194,7 @@ void Keyboard_ReceiveKeyUp(int key)
     Keyboard_PushEvent(key);
   }
 
-  LOGF("KeyUp = $%2X: %s", key, kKeyStr[key]);
+  DX8_LOGF("KeyUp = $%2X: %s", key, kKeyStr[key]);
 }
 
 void Keyboard_ReceiveKeyDown(int key)
@@ -207,7 +205,7 @@ void Keyboard_ReceiveKeyDown(int key)
     Keyboard_PushEvent(key);
   }
 
-  LOGF("KeyDown = $%2X: %s", key, kKeyStr[key]);
+  DX8_LOGF("KeyDown = $%2X: %s", key, kKeyStr[key]);
 }
 
 void Keyboard_Tick()

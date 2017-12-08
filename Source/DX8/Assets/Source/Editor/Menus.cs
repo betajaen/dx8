@@ -123,17 +123,28 @@ namespace DX8
       Debug.Log(sb.ToString());
     }
 
-    [MenuItem("DX8/Decompile")]
-    public static void Decompile()
+    [MenuItem("DX8/Decompile (org $1400)")]
+    public static void Decompile1400()
     {
       List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
 
       string path = EditorUtility.OpenFilePanel("Open ROM file", @"C:\dev\dx8\ROMS", "bin");
       byte[] data = System.IO.File.ReadAllBytes(path);
       
-      System.IO.File.WriteAllText(path + ".s", OpcodeCompiler.Decompile(ops, data));
+      System.IO.File.WriteAllText(path + ".s", OpcodeCompiler.Decompile(ops, data, 0x1400));
     }
     
+    [MenuItem("DX8/Decompile (org $400)")]
+    public static void Decompile400()
+    {
+      List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
+
+      string path = EditorUtility.OpenFilePanel("Open ROM file", @"C:\dev\dx8\ROMS", "bin");
+      byte[] data = System.IO.File.ReadAllBytes(path);
+      
+      System.IO.File.WriteAllText(path + ".s", OpcodeCompiler.Decompile(ops, data, 0x400));
+    }
+
     [MenuItem("DX8/Generate Cs Api")]
     public static void GenerateApi()
     {

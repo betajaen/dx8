@@ -37,6 +37,6 @@ void Io_Interrupt(Byte name, Byte dataA, Byte dataB)
   Mmu_Set(REG_IO_OP, name);
   Mmu_Set(REG_IO_DATA_A, dataA);
   Mmu_Set(REG_IO_DATA_B, dataB);
-  // LOGF("IO Interrupt %i ")
+  // DX8_LOGF("IO Interrupt %i ")
   Cpu_Interrupt(INTVEC_IO);
 }

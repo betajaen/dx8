@@ -2,7 +2,9 @@ include '../dx8.inc'
 include '../dx8_crt.inc'
 include '../rom.exports.inc'
 
-kProgramSpace = $800
+kProgramSpace = $1400
+
+org $1400
 
 jmp INIT
 

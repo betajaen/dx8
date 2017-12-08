@@ -30,7 +30,6 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
-#include "log_c/src/log.h"
 
 #if defined(_WIN32)
 #define EXPORT extern __declspec(dllexport)
@@ -68,22 +67,25 @@ int Fpy_Busy();
 void Keyboard_ReceiveKeyUp(int key);
 void Keyboard_ReceiveKeyDown(int key);
 
-FILE* logFp;
+//FILE* logFp;
+
+
+void Log_Setup(const char* path);
+void Log_Teardown();
+
+EXPORT void SetDebugPath(const char* path)
+{
+  Log_Setup(path);
+}
 
 EXPORT int Initialise()
 {
-  logFp = fopen("dx8.log", "w+");
-  log_set_fp(logFp);
-  
-  LOGF("CPU_SETUP");
+  SetDebugPath("dx8.log");
+;
   Cpu_Setup();
-  LOGF("ROM_SETUP");
   Rom_Setup();
-  LOGF("MMU_SETUP");
   Mmu_Setup();
-  LOGF("GPU_SETUP");
   Gpu_Setup();
-  LOGF("SETUP DONE");
   return 0;
 }
 
@@ -92,7 +94,7 @@ EXPORT int Shutdown()
   Rom_Teardown();
   Mmu_Teardown();
   Gpu_Teardown();
-  fclose(logFp);
+  Log_Teardown();
   return 0;
 }
 

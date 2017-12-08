@@ -35,87 +35,103 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "log_c/src/log.h"
+Byte*   sRam;
+Byte*   sFastRam;
+Word    sRand;
 
-Byte* sRam;
+#define PAGE_SIZE 1024
 
 #define DBO_V_ALLOWED 1
-bool  sDboV;
+bool  sRam_DebugMode;
+
+inline bool Mmu_IsRealMode()
+{
+  return sRam[REG_MMU_PAGE_REAL_MODE] != 0;
+}
+
+Byte Mmu_Real_Get(Word address)
+{
+
+  if (address == REG_RAND)
+  {
+    // http://excamera.com/sphinx/article-xorshift.html
+    sRand ^= sRand << 13;
+    sRand ^= (Word)((int)sRand >> 17);
+    sRand ^= sRand << 5;
+    if (sRand == 0)
+      sRand = -1;
+    return (Byte)sRand;
+  }
+
+  if (address >= MEM_CHIP_SIZE)
+  {
+    return Rom_Get(address);
+  }
+  else
+  {
+    return sRam[address];
+  }
+}
+
+void Mmu_Real_Set(Word address, Byte value)
+{
+  if (address < MEM_CHIP_SIZE)
+  {
+    sRam[address] = value;
+
+    if (address == 0xE0)
+    {
+      DX8_LOGF("Real Mode = %i", value);
+    }
+
+  }
+
+}
+
+inline int Mmu_Virtual_To_Real_Address(Word address)
+{
+  Byte page = address / PAGE_SIZE;
+  Byte pageTarget = sRam[REG_MMU_PAGE + page];
+
+  int  m = (pageTarget * PAGE_SIZE) + (address % PAGE_SIZE);
+
+  return m;
+}
+
+Byte Mmu_Virtual_Get(Word address)
+{
+  int real = Mmu_Virtual_To_Real_Address(address);
+
+  if (real >= RAM_SIZE)
+    return 0x00;
+
+  return sRam[real];
+}
+
+void Mmu_Virtual_Set(Word address, Byte value)
+{
+  int real = Mmu_Virtual_To_Real_Address(address);
+
+  if (real < RAM_SIZE)
+  {
+    sRam[real] = value;
+  }
+}
+
+
 
 void Mmu_SetDboV(bool v)
 {
-  sDboV = v;
+  sRam_DebugMode = v;
 }
 
-Byte Bank_Get(Byte bank, int address)
-{
-  Byte mask = sRam[REG_MMU_BANK + bank];
-
-  //LOGF("Get Bank=%i Mask=$%2X Address=%i", bank, mask, address);
-
-  switch(mask)
-  {
-    default:
-    case 0:
-      return sRam[0x8000 + (bank * 0x1000) + address];
-    case 1:
-      return sRam[0xFFFF + (bank * 0x1000) + address];
-    case 0xFF:
-      return Rom_Get(address);
-  }
-}
-
-void Bank_Set(Byte bank, int address, Byte value)
-{
-  Byte mask = sRam[REG_MMU_BANK + bank];
-  //LOGF("Set Bank=%i Mask=$%2X Address=%i", bank, mask, address);
-
-  switch (mask)
-  {
-    default:
-    case 0:
-      sRam[0x8000 + (bank * 0x1000) + address] = value;
-    break;
-    case 1:
-      sRam[0xFFFF + (bank * 0x1000) + address] = value;
-    break;
-    case 0xFF:
-      return; // Can't write to the ROM!
-  }
-}
-
-void Stack_Set(Byte offset, Byte value)
-{
-  sRam[REG_STACK_END - offset] = value;
-}
-
-Byte Stack_Get(Byte offset)
-{
-  return sRam[REG_STACK_END - offset];
-}
-
-void Chip_Set(Word address, Byte value)
-{
-  sRam[address] = value;
-}
-
-Byte Chip_Get(Word address)
-{
-  if (address == REG_RAND)
-    return rand() & 0xFF;
-  return sRam[address];
-}
-
-Byte* Ram_Get()
-{
-  return sRam;
-}
 
 void Mmu_Setup()
 {
-  sDboV = false;
+  sRam_DebugMode = false;
   sRam = malloc(RAM_SIZE);
-  LOGF("Mmu Ram Ptr=%p Size=%i", sRam, RAM_SIZE);
+  sFastRam = &sRam[MEM_CHIP_SIZE];
+  DX8_LOGF("Mmu Ram Ptr=%p Size=%i", sRam, RAM_SIZE);
 }
 
 void Mmu_Teardown()
@@ -125,226 +141,40 @@ void Mmu_Teardown()
 
 void Mmu_TurnOn()
 {
-  LOGF("MMU Turn on");
-  sDboV = false;
+  DX8_LOGF("MMU Turn on");
+  sRam_DebugMode = false;
+  sRand = 7;
   memset(sRam, 0xFF, RAM_SIZE); // Memory is initialised with 0xFF's
+  sRam[REG_MMU_PAGE_REAL_MODE] = 0xFF;
 }
 
-#define PAGE_SIZE 512
 #define MAX_PAGE_DEFS 8
-
-inline int Page_VirtualToReal(Word virtual)
-{
-  int virtualI = virtual, dst, srcLower, srcUpper;
-  for(int i=0;i < MAX_PAGE_DEFS;i++)
-  {
-    dst      = sRam[(REG_MMU_MAP0_DST + 3 * i) + 0] * PAGE_SIZE;
-
-    if (dst == 0)
-      continue;
-
-    srcLower = sRam[(REG_MMU_MAP0_DST + 3 * i) + 1] * PAGE_SIZE;
-    srcUpper = sRam[(REG_MMU_MAP0_DST + 3 * i) + 2] * PAGE_SIZE;
-
-    if (virtualI >= srcLower && virtualI > srcUpper)
-    {
-      int realAddress = dst + (virtualI - srcLower);
-
-      LOGF("Id=%i Virtual=%8x Virtual.lo=%8x Virtual.hi=%8x  Dest=%8x", i, virtualI, srcLower, srcUpper, realAddress);
-
-      return realAddress;
-    }
-  }
-  return -1;
-}
-
-void Mmu_Set_Real(Word address, Byte value)
-{
-  int m = address & 0xF000;
-
-  switch(address & 0xF000)
-  {
-    // Chip or var
-    case 0x0000:
-      if (address < 512)  // Chip
-        Chip_Set(address, value);
-      else                // Stack/Var
-        sRam[address] = value;
-      break;
-    // Program
-    case 0x1000:
-    case 0x2000:
-    case 0x3000:
-    case 0x4000:
-    case 0x5000:
-    case 0x6000:
-    case 0x7000:
-       sRam[address] = value;
-       break;
-    // Shared
-    case 0x8000:  // Bank 0
-      Bank_Set(0, address - 0x8000, value);
-      break;
-    case 0x9000:  // Bank 1
-      Bank_Set(1, address - 0x9000, value);
-      break;
-    case 0xA000:  // Bank 2
-      Bank_Set(2, address - 0xA000, value);
-      break;
-    case 0xB000:  // Bank 3
-      Bank_Set(3, address - 0xB000, value);
-      break;
-    case 0xC000:  // Bank 4
-      Bank_Set(4, address - 0xC000, value);
-      break;
-    case 0xD000:  // Bank 5
-      Bank_Set(5, address - 0xD000, value);
-      break;
-    case 0xE000:  // Bank 6
-      Bank_Set(6, address - 0xE000, value);
-      break;
-    case 0xF000:  // Bank 7
-      Bank_Set(7, address - 0xF000, value);
-      break;
-  }
-
-}
 
 void Mmu_Set(Word address, Byte value)
 {
-  
-  // Virtual mode
-  if (sRam[REG_MMU_PAGE_REAL_MODE] == 0)
+  bool realMode = Mmu_IsRealMode();
+
+  if (address < 1024 || realMode)
   {
-    // First page is as is. Registers, etc.
-    if (address < PAGE_SIZE)
-    {
-    #if DBO_V_ALLOWED == 1
-      if (sDboV)
-      {
-        LOGF("[Mmu_Set] Virtual Mode;  Virtual=$%4X, Real=$%8X, Value=$%2X", address, address, value);
-      }
-    #endif
-      sRam[address] = value;
-    }
-    else
-    {
-      int realAddress = Page_VirtualToReal(address);
-    
-      if (realAddress >= 0 && realAddress < RAM_SIZE)
-      {
-
-#if DBO_V_ALLOWED == 1
-        if (sDboV)
-        {
-          LOGF("[Mmu_Set] Virtual Mode;  Virtual=$%4X, Real=$%8X, Value=$%2X", address, realAddress, value);
-        }
-#endif
-
-        sRam[realAddress] = value;
-      }
-    }
-
-#if DBO_V_ALLOWED == 1
-    if (sDboV)
-    {
-      LOGF("[Mmu_Set] Virtual Mode;  Virtual=$%4X, Real=Unmapped, Value=$%2X", address, value);
-    }
-#endif
-    return;
+    Mmu_Real_Set(address, value);
   }
-  // Real mode
   else
   {
-    Mmu_Set_Real(address, value);
+    Mmu_Virtual_Set(address, value);
   }
-}
-
-Byte Mmu_Get_Real(Word address)
-{
-
-  switch(address & 0xF000)
-  {
-    // Chip or var
-    case 0x0000:
-      if (address < 512)  // Chip
-        return Chip_Get(address);
-      else                // Var
-        return sRam[address];
-    // Program
-    case 0x1000:
-    case 0x2000:
-    case 0x3000:
-    case 0x4000:
-    case 0x5000:
-    case 0x6000:
-    case 0x7000:
-       return sRam[address];
-    // Shared
-    case 0x8000:  // Bank 0
-      return Bank_Get(0, address - 0x8000);
-    case 0x9000:  // Bank 1
-      return Bank_Get(1, address - 0x9000);
-    case 0xA000:  // Bank 2
-      return Bank_Get(2, address - 0xA000);
-    case 0xB000:  // Bank 3
-      return Bank_Get(3, address - 0xB000);
-    case 0xC000:  // Bank 4
-      return Bank_Get(4, address - 0xC000);
-    case 0xD000:  // Bank 5
-      return Bank_Get(5, address - 0xD000);
-    case 0xE000:  // Bank 6
-      return Bank_Get(6, address - 0xE000);
-    case 0xF000:  // Bank 7
-      return Bank_Get(7, address - 0xF000);
-  }
-  return 0xFF;
 }
 
 Byte Mmu_Get(Word address)
 {
-  // Virtual mode
-  if (sRam[REG_MMU_PAGE_REAL_MODE] == 0)
+  bool realMode = Mmu_IsRealMode();
+
+  if (address < 1024 || realMode)
   {
-    // First page is as is. Registers, etc.
-    if (address < PAGE_SIZE)
-    {
-#if DBO_V_ALLOWED == 1
-      if (sDboV)
-      {
-        LOGF("[Mmu_Get] Virtual Mode;  Virtual=$%4X, Real=$%8X, Value=$%2X", address, address, sRam[address]);
-      }
-#endif
-      return sRam[address];
-    }
-    else
-    {
-      int realAddress = Page_VirtualToReal(address);
-
-      if (realAddress >= 0 && realAddress < RAM_SIZE)
-      {
-#if DBO_V_ALLOWED == 1
-        if (sDboV)
-        {
-          LOGF("[Mmu_Get] Virtual Mode;  Virtual=$%4X, Real=$%8X, Value=$%2X", address, realAddress, sRam[realAddress]);
-        }
-#endif
-        return sRam[realAddress];
-      }
-    }
-
-#if DBO_V_ALLOWED == 1
-    if (sDboV)
-    {
-      LOGF("[Mmu_Get] Virtual Mode;  Virtual=$%4X, Real=Unmapped, Value=$%2X", address, 0x00);
-    }
-#endif
-    return 0x00;
+    return Mmu_Real_Get(address);
   }
-  // Real mode
   else
   {
-    return Mmu_Get_Real(address);
+    return Mmu_Virtual_Get(address);
   }
 }
 
@@ -353,20 +183,5 @@ Word Mmu_GetWord(Word address)
   Word v;
   v = Mmu_Get(address);
   v |= ((Word) Mmu_Get(address + 1)) << 8;
-  return v;
-}
-
-Byte Mmu_GetAbs(int address)
-{
-  if (address >= RAM_SIZE)
-    address = address % RAM_SIZE;
-  return sRam[address];
-}
-
-Word Mmu_GetWordAbs(int address)
-{
-  Word v;
-  v = Mmu_GetAbs(address);
-  v |= ((Word)Mmu_GetAbs(address + 1)) << 8;
   return v;
 }

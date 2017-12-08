@@ -9,7 +9,6 @@ PrintChar_X equ x
 PrintChar_Y equ y
 PrintChar_Char equ a
 
-
 BeginFunction PrintChar
         cmpi x, SCREEN_COLS
         _rjmp.gt .CantPrint
@@ -37,10 +36,10 @@ BeginFunction PrintChar
         .End:
 EndFunction
 
-Export_Function      Rom, PrintChar, 'Copy a char to the screen at x, y'
-Export_Function_Arg  PrintChar, X, x
-Export_Function_Arg  PrintChar, Y, y
-Export_Function_Arg  PrintChar, Char, a
+;Export_Function      Rom, PrintChar, 'Copy a char to the screen at x, y'
+;Export_Function_Arg  PrintChar, X, x
+;Export_Function_Arg  PrintChar, Y, y
+;Export_Function_Arg  PrintChar, Char, a
 
 
 
@@ -97,10 +96,10 @@ BeginFunction Print
         .End:
 EndFunction
 
-Export_Function      Rom, Print, 'Copy a zero-terminated string to the screen at x, y'
-Export_Function_Arg  Print, X, x
-Export_Function_Arg  Print, Y, y
-Export_Function_Arg  Print, Str, j
+;Export_Function      Rom, Print, 'Copy a zero-terminated string to the screen at x, y'
+;Export_Function_Arg  Print, X, x
+;Export_Function_Arg  Print, Y, y
+;Export_Function_Arg  Print, Str, j
 
 
 
@@ -182,10 +181,10 @@ BeginFunction PrintNum
         .End:
 EndFunction
 
-Export_Function      Rom, PrintNum, 'Print a byte decimal number to the screen at x, y'
-Export_Function_Arg  PrintNum, X, x
-Export_Function_Arg  PrintNum, Y, y
-Export_Function_Arg  PrintNum, Num, a
+;Export_Function      Rom, PrintNum, 'Print a byte decimal number to the screen at x, y'
+;Export_Function_Arg  PrintNum, X, x
+;Export_Function_Arg  PrintNum, Y, y
+;Export_Function_Arg  PrintNum, Num, a
 
 
 
@@ -197,4 +196,4 @@ BeginFunction Cls
   _CallFunction MemSet
 EndFunction
 
-Export_Function      Rom, Cls, 'Clears the screen'
+;Export_Function      Rom, Cls, 'Clears the screen'

@@ -32,117 +32,41 @@
 #include "dx8.h"
 
 #include <stdlib.h>
-#include <time.h> 
+#include <stdio.h>
+#include <stdarg.h>
 
-#define SLOWDOWN_RATE 1
+FILE* sLogFp = NULL;
 
-void Gpu_Clock();
-void Keyboard_Tick();
-void Floppy_Clock();
-void Sound_Clock();
-void Sound_ClockFrame();
-
-int ClockMilliseconds;
-int ClockCycle;
-int ClockNumFrames;
-
-inline void ClockOnce()
+void Log_Setup(const char* path)
 {
-  Cpu_Step();
-  Gpu_Clock();
-  Cpu_Step();
+  sLogFp = fopen(path, "w");
 }
 
-int Clock(int ms)
+void Log_Teardown()
 {
-  int count = 0;
-  int ioClock = 0;
-  
-  ClockMilliseconds += ms;
-
-  if (ms < 0)
+  if (sLogFp != NULL)
   {
-    ClockOnce();
-    count = 1;
-  }
-  else
-  {
-    // Temp: Take milliseconds into account.
-    count = (CRT_SCAN_TOTAL_TIME / SLOWDOWN_RATE);
-    for (int ii = 0; ii < count; ii++)
-    {
-      ClockOnce();
-
-      ioClock++;
-      
-      if (ioClock == 256)
-      {
-        Keyboard_Tick();
-        Sound_Clock();
-        ioClock = 0;
-      }
-
-      Floppy_Clock();
-
-      ClockCycle = ii;
-    }
-    ClockNumFrames++;
-  }
-  
-  Sound_ClockFrame();
-  return count;
-}
-
-void Mmu_TurnOn();
-void Mmu_TurnOn();
-void Gpu_TurnOn();
-
-void TurnOn()
-{
-  srand((uint32_t) time(NULL));
-  ClockCycle   = 0;
-  ClockMilliseconds = 0;
-
-  DX8_LOGF("******* TURN ON");
-  Mmu_TurnOn();
-  Cpu_TurnOn();
-  Gpu_TurnOn();
-}
-
-void Cpu_Reset();
-void Sound_Reset();
-
-void Reset(bool soft)
-{
-  if (soft)
-  {
-    Sound_Reset();
-    Cpu_Reset();
-  }
-  else
-  {
-    Sound_Reset();
-    Mmu_TurnOn();
-    Cpu_TurnOn();
-    Gpu_TurnOn();
-
-    // "Called" by the MMU after setup.
-    Mmu_Set(0, 0xFE);
-    Cpu_Reset();
+    fclose(sLogFp);
   }
 }
 
-int Clock_GetCycle()
-{
-  return ClockCycle;
-}
+int Clock_GetCycle();
+int Clock_GetMilliseconds();
+int Clock_GetFrame();
 
-int Clock_GetMilliseconds()
+void Log_Format(const char* text, ...)
 {
-  return ClockMilliseconds;
-}
+  if (sLogFp != NULL)
+  {
+    va_list args;
 
-int Clock_GetFrame()
-{
-  return ClockNumFrames;
+    fprintf(sLogFp, "[f%05i.c%05i] ", Clock_GetFrame(), Clock_GetCycle());
+
+    va_start(args, text);
+    vfprintf(sLogFp, text, args);
+    va_end(args);
+
+    fprintf(sLogFp, "\n");
+    fflush(sLogFp);
+  }
 }

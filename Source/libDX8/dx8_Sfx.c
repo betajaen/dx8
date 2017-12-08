@@ -30,7 +30,6 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
-#include "log_c/src/log.h"
 
 #include <stdlib.h>
 #include <time.h> 
