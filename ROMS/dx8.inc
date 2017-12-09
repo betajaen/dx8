@@ -1300,25 +1300,15 @@ macro jmp [A, B] {
   else if A eq j
     ; [$CB] jmp j
     db $CB
-  else if A eqtype $FFFF & B eq x
-    ; [$CC] jmp $0000,x
+  else if A eq i & B eq a
+    ; [$CC] jmp i,a
     db $CC
-    dw A
-  else if A eqtype $FFFF & B eq y
-    ; [$CD] jmp $0000,y
+  else if A eq j & B eq a
+    ; [$CD] jmp j,a
     db $CD
-    dw A
-  else if A eqtype $FFFF & B eq z
-    ; [$CE] jmp $0000,z
-    db $CE
-    dw A
-  else if A eqtype $FFFF & B eq w
-    ; [$CF] jmp $0000,w
-    db $CF
-    dw A
   else if A eqtype $FFFF & B eq a
-    ; [$D0] jmp $0000,a
-    db $D0
+    ; [$CE] jmp $0000,a
+    db $CE
     dw A
   else
     ; [$C9] jmp $0000
@@ -1362,8 +1352,8 @@ macro jmp.c [A, B] {
   dw A
 }
 macro rjmp [A, B] {
-  ; [$D1] rjmp $00
-  db $D1
+  ; [$CF] rjmp $00
+  db $CF
   db A
 }
 macro rjmp.eq [A, B] {
@@ -1396,114 +1386,74 @@ macro rjmp.nz [A, B] {
   db $DD
   db A
 }
-macro bjmp [A, B] {
-  if A eqtype $FFFF & B eq a
-    ; [$DF] bjmp $0000,a
-    db $DF
-    dw A
-  else if A eqtype $FFFF & B eq x
-    ; [$E0] bjmp $0000,x
-    db $E0
-    dw A
-  else if A eqtype $FFFF & B eq y
-    ; [$E1] bjmp $0000,y
-    db $E1
-    dw A
-  else if A eqtype $FFFF & B eq z
-    ; [$E2] bjmp $0000,z
-    db $E2
-    dw A
-  else if A eqtype $FFFF & B eq w
-    ; [$E3] bjmp $0000,w
-    db $E3
-    dw A
-  else
-    error SyntaxError
-  end if
+macro jmpt [A, B] {
+  ; [$D0] jmpt $0000,a
+  db $D0
+  dw A
 }
-macro bcall [A, B] {
-  if A eqtype $FFFF & B eq a
-    ; [$E4] bcall $0000,a
-    db $E4
-    dw A
-  else if A eqtype $FFFF & B eq x
-    ; [$E5] bcall $0000,x
-    db $E5
-    dw A
-  else if A eqtype $FFFF & B eq y
-    ; [$E6] bcall $0000,y
-    db $E6
-    dw A
-  else if A eqtype $FFFF & B eq z
-    ; [$E7] bcall $0000,z
-    db $E7
-    dw A
-  else if A eqtype $FFFF & B eq w
-    ; [$E8] bcall $0000,w
-    db $E8
-    dw A
-  else
-    error SyntaxError
-  end if
+macro callt [A, B] {
+  ; [$D1] callt $0000,a
+  db $D1
+  dw A
 }
 macro int [A, B] {
-  ; [$E9] int $00
-  db $E9
+  ; [$DF] int $00
+  db $DF
   db A
 }
 macro resume [A, B] {
-  ; [$EA] resume
-  db $EA
+  ; [$E0] resume
+  db $E0
 }
 macro sec [A, B] {
-  ; [$EB] sec
-  db $EB
+  ; [$E1] sec
+  db $E1
 }
 macro clc [A, B] {
-  ; [$EC] clc
-  db $EC
+  ; [$E2] clc
+  db $E2
 }
 macro offset [A, B] {
-  ; [$ED] offset $0000
-  db $ED
+  ; [$E3] offset $0000
+  db $E3
   dw A
 }
 macro roffset [A, B] {
-  ; [$EE] roffset $0000
-  db $EE
+  ; [$E4] roffset $0000
+  db $E4
   dw A
 }
 macro dbr [A, B] {
-  ; [$EF] dbr $0000
-  db $EF
+  ; [$E5] dbr $0000
+  db $E5
   db A
 }
 macro dba [A, B] {
-  ; [$F0] dba $00
-  db $F0
+  ; [$E6] dba $00
+  db $E6
   dw A
 }
 macro dbb [A, B] {
-  ; [$F1] dbb
-  db $F1
+  ; [$E7] dbb
+  db $E7
 }
 macro dbn [A, B] {
-  ; [$F2] dbn $0000
-  db $F2
+  ; [$E8] dbn $0000
+  db $E8
   dw A
 }
 macro dbo [A, B] {
-  ; [$F3] dbo $00
-  db $F3
+  ; [$E9] dbo $00
+  db $E9
   db A
 }
 macro rti [A, B] {
-  ; [$F5] rti
-  db $F5
+  ; [$EB] rti
+  db $EB
 }
 macro sti [A, B] {
-  ; [$F4] sti
-  db $F4
+  ; [$EA] sti
+  db $EA
 }
 ; Opcodes
 OP_NOP = $00
@@ -1710,12 +1660,12 @@ OP_ROR_a = $C8
 OP_JMP_A = $C9
 OP_JMP_i = $CA
 OP_JMP_j = $CB
-OP_JMP_Ax = $CC
-OP_JMP_Ay = $CD
-OP_JMP_Az = $CE
-OP_JMP_Aw = $CF
-OP_JMP_Aa = $D0
-OP_RJMP_B = $D1
+OP_JMP_ia = $CC
+OP_JMP_ja = $CD
+OP_JMP_Aa = $CE
+OP_RJMP_B = $CF
+OP_JMPT_Aa = $D0
+OP_CALLT_Aa = $D1
 OP_JMP_EQ_A = $D2
 OP_RJMP_EQ_B = $D3
 OP_JMP_NEQ_A = $D4
@@ -1729,26 +1679,16 @@ OP_RJMP_Z_B = $DB
 OP_JMP_NZ_A = $DC
 OP_RJMP_NZ_B = $DD
 OP_JMP_C_A = $DE
-OP_BJMP_Aa = $DF
-OP_BJMP_Ax = $E0
-OP_BJMP_Ay = $E1
-OP_BJMP_Az = $E2
-OP_BJMP_Aw = $E3
-OP_BCALL_Aa = $E4
-OP_BCALL_Ax = $E5
-OP_BCALL_Ay = $E6
-OP_BCALL_Az = $E7
-OP_BCALL_Aw = $E8
-OP_INT_B = $E9
-OP_RESUME = $EA
-OP_SEC = $EB
-OP_CLC = $EC
-OP_OFFSET_A = $ED
-OP_ROFFSET_A = $EE
-OP_DBR_A = $EF
-OP_DBA_B = $F0
-OP_DBB = $F1
-OP_DBN_A = $F2
-OP_DBO_B = $F3
-OP_STI = $F4
-OP_RTI = $F5
+OP_INT_B = $DF
+OP_RESUME = $E0
+OP_SEC = $E1
+OP_CLC = $E2
+OP_OFFSET_A = $E3
+OP_ROFFSET_A = $E4
+OP_DBR_A = $E5
+OP_DBA_B = $E6
+OP_DBB = $E7
+OP_DBN_A = $E8
+OP_DBO_B = $E9
+OP_STI = $EA
+OP_RTI = $EB

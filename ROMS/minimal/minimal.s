@@ -14,6 +14,9 @@ kProgramSpace = $1400            ; Where the program is in memory (usually $800)
 org kProgramSpace
 
 jmp MAIN
+jmp MAIN
+jmp MAIN
+jmp MAIN
 
 ; Any constants or variables you use should go here.
 ; Use the macros to avoid any bugs.
@@ -31,7 +34,6 @@ MAIN:
   set   a, $00
   store REG_GFX_PLANE0_TYPE,  a   ; Set to text mode
 
-dbb
   push.b '+'
   RomFunction Cls
 

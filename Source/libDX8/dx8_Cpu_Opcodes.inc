@@ -65,7 +65,7 @@ OP(CallZ,   A,  Opf_Address, 4, { DO_OP_CALL_Z(); })
 OP(CallNotZ,A,  Opf_Address, 4, { DO_OP_CALL_NOT_Z(); })
 
 // Return
-OP(Cpu_Return, None, Opf_Single, 4,   { DO_OP_RETURN(); })
+OP(Return, None, Opf_Single, 4,   { DO_OP_RETURN(); })
 
 // Copy
 OP(Copy, ax, Opf_Single, 1, { DO_OP_COPY(REG_A, REG_X); })
@@ -271,15 +271,15 @@ OP(RollRight, w, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_W); })
 OP(RollRight, a, Opf_Single, 1, { DO_OP_ROLL_RIGHT(REG_A); })
 
 // Jmp
-OP(Jmp, A,  Opf_Address, 2, { DO_OP_JMP(); })
-OP(Jmp, i,  Opf_Single, 3, { DO_OP_JMP_ABS(REG_X, REG_Y); })
-OP(Jmp, j,  Opf_Single, 3, { DO_OP_JMP_ABS(REG_Z, REG_W); })
-OP(Jmp, Ax, Opf_Address, 4, { DO_OP_JMP_ADD(REG_X, 0); })
-OP(Jmp, Ay, Opf_Address, 4, { DO_OP_JMP_ADD(REG_Y, 0); })
-OP(Jmp, Az, Opf_Address, 4, { DO_OP_JMP_ADD(REG_Z, 0); })
-OP(Jmp, Aw, Opf_Address, 4, { DO_OP_JMP_ADD(REG_W, 0); })
-OP(Jmp, Aa, Opf_Address, 4, { DO_OP_JMP_ADD(REG_A, 0); })
-OP(RJmp, B, Opf_Byte, 2,     { DO_OP_JMP_REL(); })
+OP(Jmp, A,  Opf_Address, 2,        { DO_OP_JMP(REG_WORD); })
+OP(Jmp, i,  Opf_Single, 3,         { DO_OP_JMP(REG_I); })
+OP(Jmp, j,  Opf_Single, 3,         { DO_OP_JMP(REG_J); })
+OP(Jmp, ia, Opf_Single, 4,         { DO_OP_JMP(REG_I + REG_A); })
+OP(Jmp, ja, Opf_Single, 4,         { DO_OP_JMP(REG_J + REG_A); })
+OP(Jmp, Aa, Opf_Address, 4,        { DO_OP_JMP(REG_WORD + REG_A); })
+OP(RJmp, B, Opf_Byte, 2,           { DO_OP_JMP_REL(); })
+OP(JmpTable, Aa, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_A); })
+OP(CallTable, Aa, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_A); })
 
 // Jmp Eq
 OP(JmpEq, A, Opf_Address, 2, { DO_OP_JMP_EQ(); })
@@ -309,17 +309,6 @@ OP(RJmpNotZ, B, Opf_Byte, 2, { DO_OP_JMP_REL_NOT_Z(); })
 OP(JmpC, A, Opf_Address, 2, { DO_OP_JMP_CARRY(); })
 
 // Branch
-OP(JmpBranch,  Aa, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_A); })
-OP(JmpBranch,  Ax, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_X); })
-OP(JmpBranch,  Ay, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_Y); })
-OP(JmpBranch,  Az, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_Z); })
-OP(JmpBranch,  Aw, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_W); })
-OP(Cpu_Pc_BranchCall, Aa, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_A); })
-OP(Cpu_Pc_BranchCall, Ax, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_X); })
-OP(Cpu_Pc_BranchCall, Ay, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_Y); })
-OP(Cpu_Pc_BranchCall, Az, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_Z); })
-OP(Cpu_Pc_BranchCall, Aw, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_W); })
-
 
 // Interrupt
 OP(Int, B, Opf_Byte, 4, { DO_OP_INT(); })

@@ -49,7 +49,7 @@ Init:
         ; 'a' should be zero here, so we can abuse that
         ; and call 'EntryPoint' in the Exports table
         ; of the ROM via the Branch Jump command
-        bjmp    1024, a
+        jmpt    1024, a
         nop
 
 FFFE:

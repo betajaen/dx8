@@ -35,6 +35,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+#define DX8_CPU_NO_INLINING
+
 #include "dx8_Registers.inc"
 #include "dx8_Constants.inc"
 #include "dx8_Interrupts.inc"
@@ -52,6 +54,15 @@
 #define CRT_SCAN_TOTAL_TIME ((CRT_SCAN_W * CRT_SCAN_H) + CRT_V_BLANK_TIME)
 
 #define GPU_PLANE_SIZE ((CRT_W * CRT_H) / 8)
+
+#define LO_BYTE(WORD)  ((Byte)(WORD & 0xFF))
+#define HI_BYTE(WORD)  ((Byte)((WORD >> 8) & 0xFF))
+
+#define MAKE_WORD(LO, HI) ((LO) + (HI) * 256)
+#define MAKE_LOHI(W, LO, HI) LO = (W & 0xFF);  HI = (W >> 8) & 0xFF;
+
+#define QUOTE(name) #name
+#define STR(macro) QUOTE(macro)
 
 typedef uint8_t  Byte;
 typedef uint16_t Word;

@@ -122,7 +122,7 @@ BeginFunction OnFloppyRead
         store sFloppy_Msg, a
 
         load a, sFloppy_Mode
-        bcall tFloppyReadDispatcher, a
+        callt tFloppyReadDispatcher, a
 
 EndFunction
 
@@ -191,7 +191,7 @@ BeginFunction HandleFloppyInstruction
     inc i
     store sFloppy_Addr, i
 
-    bcall tFloppyReadInstruction, a
+    callt tFloppyReadInstruction, a
 EndFunction
 
 BeginFunction Floppy_Instruction_Nop

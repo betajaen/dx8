@@ -283,5 +283,5 @@ macro Import M, A {
 
 macro RomFunction M {
       set a, External_#M
-      bcall $400, a
+      callt $400, a
 }

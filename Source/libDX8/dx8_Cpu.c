@@ -36,10 +36,17 @@
 #define DEBUG_HISTORY      1
 #define MAX_OPCODE_HISTORY 512
 
-#define QUOTE(name) #name
-#define STR(macro) QUOTE(macro)
-
 Cpu cpu;
+
+void Cpu_Halt(Byte id);
+void Cpu_TurnOn();
+
+#include "dx8_Cpu_Stack.inc"
+#include "dx8_Cpu_PcStack.inc"
+#include "dx8_Cpu_Jump.inc"
+#include "dx8_Cpu_Call.inc"
+#include "dx8_Cpu_Memory.inc"
+#include "dx8_Cpu_Debug.inc"
 
 #define REG_A     (cpu.a)
 #define REG_PC    (cpu.pc.w)
@@ -58,11 +65,7 @@ Cpu cpu;
 
 typedef CPU_REGISTER(w, lo, hi) Data;
 
-#define LO_BYTE(WORD)  ((Byte)(WORD & 0xFF))
-#define HI_BYTE(WORD)  ((Byte)((WORD >> 8) & 0xFF))
 
-#define MAKE_WORD(LO, HI) ((LO) + (HI) * 256)
-#define MAKE_LOHI(W, LO, HI) LO = (W & 0xFF);  HI = (W >> 8) & 0xFF;
 
 // NOP      -- Noop
 // PUSH     -- Push R to stack
@@ -123,7 +126,7 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_CALL_Z()              Cpu_Call_Conditional(FL_Z == 1, Opf_Address, REG_WORD);
 #define DO_OP_CALL_NOT_Z()          Cpu_Call_Conditional(FL_Z == 0, Opf_Address, REG_WORD);
 
-#define DO_OP_RETURN()              Cpu_Return(cpu);
+#define DO_OP_RETURN()              Cpu_Call_Return(cpu);
 
 #define DO_OP_COPY(DST, SRC)        DST = SRC;                         REG_PC += Opf_Single;
 #define DO_OP_SET(DST, SRC)         DST = SRC;                         REG_PC += Opf_Byte;
@@ -188,24 +191,22 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_ROLL_LEFT(R0)         /*  */                             REG_PC += Opf_Single;
 #define DO_OP_ROLL_RIGHT(R0)        /*  */                             REG_PC += Opf_Single;
 
-#define DO_OP_JMP()                 Cpu_Pc_Set(REG_WORD);
-#define DO_OP_JMP_ADD(LO, HI)       Cpu_Pc_SetAdd(REG_WORD, LO, HI);
-#define DO_OP_JMP_ABS(LO, HI)       Cpu_Pc_SetHiLo(LO, HI);
-#define DO_OP_JMP_REL()             Cpu_Pc_SetRelative(REG_IMM);
-#define DO_OP_JMP_EQ()              Cpu_Pc_SetCond(FL_Z == 1, data.w, Opf_Address);
-#define DO_OP_JMP_NEQ()             Cpu_Pc_SetCond(FL_Z == 0, data.w, Opf_Address);
-#define DO_OP_JMP_GT()              Cpu_Pc_SetCond(FL_G == 1, data.w, Opf_Address);
-#define DO_OP_JMP_LT()              Cpu_Pc_SetCond(FL_G == 0 && FL_Z == 0, data.w, Opf_Address);
-#define DO_OP_JMP_Z()               Cpu_Pc_SetCond(FL_Z == 1, data.w, Opf_Address);
-#define DO_OP_JMP_NOT_Z()           Cpu_Pc_SetCond(FL_Z == 0, data.w, Opf_Address);
-#define DO_OP_JMP_CARRY()           Cpu_Pc_SetCond(FL_C == 1, data.w, Opf_Address);
+#define DO_OP_JMP(R0)               Cpu_Jump_Always(R0);
+#define DO_OP_JMP_REL()             Cpu_JumpRel_Always(REG_IMM);
+#define DO_OP_JMP_EQ()              Cpu_Jump_Conditional(FL_Z == 1, data.w, Opf_Address);
+#define DO_OP_JMP_NEQ()             Cpu_Jump_Conditional(FL_Z == 0, data.w, Opf_Address);
+#define DO_OP_JMP_GT()              Cpu_Jump_Conditional(FL_G == 1, data.w, Opf_Address);
+#define DO_OP_JMP_LT()              Cpu_Jump_Conditional(FL_G == 0 && FL_Z == 0, data.w, Opf_Address);
+#define DO_OP_JMP_Z()               Cpu_Jump_Conditional(FL_Z == 1, data.w, Opf_Address);
+#define DO_OP_JMP_NOT_Z()           Cpu_Jump_Conditional(FL_Z == 0, data.w, Opf_Address);
+#define DO_OP_JMP_CARRY()           Cpu_Jump_Conditional(FL_C == 1, data.w, Opf_Address);
 
-#define DO_OP_JMP_REL_EQ()          Cpu_Pc_SetRelativeCond(FL_Z == 1, REG_IMM, Opf_Byte);
-#define DO_OP_JMP_REL_NEQ()         Cpu_Pc_SetRelativeCond(FL_Z == 0, REG_IMM, Opf_Byte);
-#define DO_OP_JMP_REL_GT()          Cpu_Pc_SetRelativeCond(FL_G == 1, REG_IMM, Opf_Byte);
-#define DO_OP_JMP_REL_LT()          Cpu_Pc_SetRelativeCond(FL_G == 0 && FL_Z == 0, REG_IMM, Opf_Byte);
-#define DO_OP_JMP_REL_Z()           Cpu_Pc_SetRelativeCond(FL_Z == 1, REG_IMM, Opf_Byte);
-#define DO_OP_JMP_REL_NOT_Z()       Cpu_Pc_SetRelativeCond(FL_Z == 0, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_EQ()          Cpu_JumpRel_Conditional(FL_Z == 1, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_NEQ()         Cpu_JumpRel_Conditional(FL_Z == 0, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_GT()          Cpu_JumpRel_Conditional(FL_G == 1, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_LT()          Cpu_JumpRel_Conditional(FL_G == 0 && FL_Z == 0, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_Z()           Cpu_JumpRel_Conditional(FL_Z == 1, REG_IMM, Opf_Byte);
+#define DO_OP_JMP_REL_NOT_Z()       Cpu_JumpRel_Conditional(FL_Z == 0, REG_IMM, Opf_Byte);
 #define DO_OP_INT()                 Cpu_Interrupt_Emit(REG_IMM);              REG_PC += Opf_Byte;
 #define DO_OP_RESUME()              Cpu_Interrupt_Resume()                  
 
@@ -218,14 +219,11 @@ typedef CPU_REGISTER(w, lo, hi) Data;
 #define DO_OP_DEBUG_NOTE()          Cpu_Debug_Note(REG_WORD); REG_PC += Opf_Word;
 #define DO_OP_DEBUG_OPTION()        Cpu_Debug_Option(REG_IMM); REG_PC += Opf_Byte;
 
-#define DO_OP_JMP_BRANCH(R0)        Cpu_Pc_BranchJump(R0, REG_WORD);
-#define DO_OP_CALL_BRANCH(R0)       Cpu_Pc_BranchCall(R0, REG_WORD, Opf_Address);
+#define DO_OP_JMP_BRANCH(R0)        Cpu_Jump_Branch(R0, REG_WORD);
+#define DO_OP_CALL_BRANCH(R0)       Cpu_Call_Branch(R0, REG_WORD, Opf_Address);
 
 #define DO_OP_STOP_INTERRUPTS()     Cpu_Interrupt_SetEnabled(false); REG_PC += Opf_Single;
 #define DO_OP_RESUME_INTERRUPTS()   Cpu_Interrupt_SetEnabled(true);  REG_PC += Opf_Single;
-
-
-bool DebugLog = false;
 
 enum OpFormat
 {
@@ -236,6 +234,9 @@ enum OpFormat
   Opf_DoubleWord = 5,
 };
 
+#ifdef OP
+#undef OP
+#endif
 #define OP(OP, OPERANDS, FORMAT, TIME, CODE) Op_##OP##_##OPERANDS,
 
 enum Instructions
@@ -246,30 +247,6 @@ enum Instructions
 
 // Power/Reset Routines
 
-void Cpu_Halt(Byte name);
-void Cpu_TurnOn();
-
-typedef struct {
-  Word pc;
-  Byte opcode;
-  Word operand;
-} OpcodeHistory;
-
-OpcodeHistory sDebugHistory[MAX_OPCODE_HISTORY];
-Word sDebugHistoryIdx = 0;
-
-void PushOpcodeHistory(Word pc, Byte opcode, Word operand)
-{
-  OpcodeHistory h;
-  h.pc = pc;
-  h.opcode = opcode;
-  h.operand = operand;
-
-  sDebugHistory[sDebugHistoryIdx++] = h;
-
-  if (sDebugHistoryIdx == MAX_OPCODE_HISTORY)
-    sDebugHistoryIdx = 0;
-}
 
 void Cpu_Setup()
 {
@@ -330,129 +307,9 @@ void Cpu_Reset()
   DX8_INFOF("Reset Address=$%04X", cpu.pc.w);
 }
 
-// Debug Routines
-
-#if defined OP
-#undef OP
-#endif
-#define OP(OP, A,B,C,D)  STR(OP),
-
-const char* kOpcodesStr[] = {
-#include "dx8_Cpu_Opcodes.inc"
-};
-
-void Cpu_Print()
-{
-  DX8_LOGF("Cpu State");
-  DX8_LOGF("CPU PC = $%04X", cpu.pc.w);
-  DX8_LOGF("CPU A = $%04X", cpu.a);
-  DX8_LOGF("CPU X = $%02X", cpu.I.x);
-  DX8_LOGF("CPU Y = $%02X", cpu.I.y);
-  DX8_LOGF("CPU I = $%04X", cpu.I.I);
-  DX8_LOGF("CPU Z = $%02X", cpu.J.z);
-  DX8_LOGF("CPU W = $%02X", cpu.J.w);
-  DX8_LOGF("CPU J = $%04X", cpu.J.J);
-  DX8_LOGF("CPU Stack = $%02X", cpu.stack);
-  DX8_LOGF("CPU Pc Stack = $%02X", cpu.pcStack);
-  DX8_LOGF("CPU Interrupt = $%02X", cpu.interrupt);
-  DX8_LOGF("CPU Interrupts Enabled = %s", cpu.interruptsStopped ? "false" : "true");
-
-  char interruptMask[9];
-
-  for(int i=0;i < 8;i++)
-  {
-    interruptMask[i] = '0' + cpu.interruptMask[i];
-  }
-  
-  interruptMask[8] = '\0';
-
-  DX8_LOGF("CPU Interrupts Mask = %sb", interruptMask);
-
-  DX8_LOGF("CPU Opcode     = '%s' $%02X", kOpcodesStr[cpu.lastOpcode], cpu.lastOpcode);
-  DX8_LOGF("CPU Lo Operand = $%02X", LO_BYTE(cpu.lastOperand));
-  DX8_LOGF("CPU Hi Operand = $%02X", HI_BYTE(cpu.lastOperand));
-  DX8_LOGF("CPU Ad Operand = $%04X", cpu.lastOperand);
-
-  #if DEBUG_HISTORY == 1
-  int idx = sDebugHistoryIdx - 1;
-
-  for (int i = 0; i < MAX_OPCODE_HISTORY; i++)
-  {
-    if (idx < 0)
-      idx = MAX_OPCODE_HISTORY - 1;
-
-    OpcodeHistory h = sDebugHistory[idx];
-    DX8_LOGF("[$%04X] %02X %02X %02X %s", h.pc, h.opcode, LO_BYTE(h.operand), HI_BYTE(h.operand), kOpcodesStr[h.opcode]);
-    idx--;
-  }
-  #endif
-
-}
-
-#define DBG_LOG(NAME, EXTRA_TEXT, ...)\
-  DX8_DEBUGF(NAME " [$%4X]" EXTRA_TEXT, cpu.pc.w, __VA_ARGS__)
-#define DBG_LOG_NT(NAME)\
-  DX8_DEBUGF("%s [$%4X]", NAME, cpu.pc.w)
-
-void Cpu_Debug_Register(Byte byte)
-{
-  switch(byte)
-  {
-    case 'a': DBG_LOG("DBG-REG ", "a   = $%2X", cpu.a);   break;
-    case 'x': DBG_LOG("DBG-REG ", "x   = $%2X", cpu.I.x); break;
-    case 'y': DBG_LOG("DBG-REG ", "y   = $%2X", cpu.I.y); break;
-    case 'z': DBG_LOG("DBG-REG ", "z   = $%2X", cpu.J.z); break;
-    case 'w': DBG_LOG("DBG-REG ", "w   = $%2X", cpu.J.w); break;
-    case 'p': DBG_LOG("DBG-REG ", "pc  = $%4X", cpu.pc.w); break;
-    case 's': DBG_LOG("DBG-REG ", "st  = $%2X", cpu.stack); break;
-    case 'i': DBG_LOG("DBG-REG ", "i   = $%4X", cpu.I.I); break;
-    case 'j': DBG_LOG("DBG-REG ", "j   = $%4X", cpu.J.J); break;
-    case 'I': DBG_LOG("DBG-REG ", "int = $%2X", cpu.interrupt); break;
-    case 'C':
-      DBG_LOG("DBG-CND", "Zero=%i Negative=%i Greater=%i", cpu.flags.bZero, cpu.flags.bNegative, cpu.flags.bGreater);
-    break;
-    default: DBG_LOG_NT("?"); break;
-  }
-}
-
-void Cpu_Debug_Address(Word address)
-{
-  Byte b = Mmu_Get(address);
-  DBG_LOG("DBG-ADDR", "$%4X = $%2X/%i", address, b, b);
-}
-
-void Cpu_Debug_Note(Word note)
-{
-  Byte* np = (Byte*) &note;
-  Byte m[3];
-  m[0] = np[0];
-  m[1] = np[1];
-  m[2] = 0;
-  DBG_LOG("DBG-NOTE", "%s", m);
-}
-
-void Cpu_Debug_Breakpoint()
-{
-  Cpu_Halt(HALT_BREAKPOINT);
-}
-
-void Mmu_SetDboV(bool v);
-
-void Cpu_Debug_Option(Byte option)
-{
-  if (option == 'L')
-    DebugLog = true;
-  else if (option == 'l')
-    DebugLog = false;
-  else if (option == 'V')
-    Mmu_SetDboV(true);
-  else if (option == 'v')
-    Mmu_SetDboV(false);
-}
-
 // Halt routines
 
-inline void Cpu_Halt(Byte id)
+void Cpu_Halt(Byte id)
 {
   cpu.halt = 1;
   DX8_LOGF("*** CPU HALTED ***");
@@ -484,200 +341,6 @@ inline void Cpu_Halt(Byte id)
     break;
   }
   Cpu_Print();
-}
-
-
-// Pc Routines
-inline void Cpu_Pc_Set(Word address)
-{
-  cpu.pc.w = address;
-}
-
-inline void Pc_Add(int address)
-{
-  Cpu_Pc_Set(cpu.pc.w + address);
-}
-
-inline void Pc_SetLoHi(Byte lo, Byte hi)
-{
-  Word w = lo;
-  w |= ((Word) hi) << 8;
-  Cpu_Pc_Set(w);
-}
-
-// Stack Routines
-
-inline void Stack_Print()
-{
-  DX8_LOGF("Stack = %i", cpu.stack);
-  for (int i = 0; i < 16; i++)
-  {
-    DX8_LOGF("[%i:$%2X] $%2X", i, i, Stack_Get(i));
-  }
-}
-
-inline void Cpu_Stack_PushByte(Byte value)
-{
-  if (cpu.stack == 0xFF)
-  {
-    Cpu_Halt(HALT_STACK_OVERFLOW);
-    return;
-  }
-  Stack_Set(cpu.stack, value);
-  ++cpu.stack;
- // DX8_LOGF("Pushed %02X to stack. Stack size is %i", value, cpu.stack);
-}
-
-inline void Cpu_Stack_PushWord(Word value)
-{
-  Cpu_Stack_PushByte(LO_BYTE(value));
-  Cpu_Stack_PushByte(HI_BYTE(value));
-}
-
-inline Byte Cpu_Stack_PopByte()
-{
-  if (cpu.stack == 0)
-  {
-    Cpu_Halt(HALT_STACK_UNDERFLOW);
-    return 0;
-  }
-  --cpu.stack;
-  Byte value = Stack_Get(cpu.stack);
- // DX8_LOGF("Popped %02X from stack. Stack size is %i", value, cpu.stack);
-  return value;
-}
-
-inline Word Cpu_Stack_PopWord()
-{
-  Word w;
-  w = Cpu_Stack_PopByte() * 256;
-  w += Cpu_Stack_PopByte();
-  return w;
-}
-
-inline void Cpu_Stack_PushFlags()
-{
-  Cpu_Stack_PushByte(cpu.flags._data);
-}
-
-inline void Cpu_Stack_PopFlags()
-{
-  cpu.flags._data = Cpu_Stack_PopByte(); 
-}
-
-inline void Cpu_PcStack_Push(Word address)
-{
-  if (cpu.pcStack == 0xFF)
-  {
-    Cpu_Halt(HALT_PCSTACK_OVERFLOW);
-    return;
-  }
-
-  PcStack_Set((cpu.pcStack * 2) + 0, LO_BYTE(address));
-  PcStack_Set((cpu.pcStack * 2) + 1, HI_BYTE(address));
-
-  ++cpu.pcStack;
-}
-
-inline Word Cpu_PcStack_Pop()
-{
-  if (cpu.pcStack == 0)
-  {
-    Cpu_Halt(HALT_PCSTACK_UNDERFLOW);
-    return 0;
-  }
-  --cpu.pcStack;
-
-  Word pc;
-
-  pc = PcStack_Get((cpu.pcStack * 2) + 0);
-  pc += PcStack_Get((cpu.pcStack * 2) + 1) * 256;
-
-  return pc;
-}
-
-inline void PushRegisters()
-{
-  Cpu_Stack_PushByte(REG_X);
-  Cpu_Stack_PushByte(REG_Y);
-  Cpu_Stack_PushByte(REG_Z);
-  Cpu_Stack_PushByte(REG_W);
-  Cpu_Stack_PushByte(REG_A);
-  Cpu_Stack_PushByte(cpu.flags._data);
-}
-
-inline void PopRegisters()
-{
-  cpu.flags._data = Cpu_Stack_PopByte();
-  REG_A = Cpu_Stack_PopByte();
-  REG_W = Cpu_Stack_PopByte();
-  REG_Z = Cpu_Stack_PopByte();
-  REG_Y = Cpu_Stack_PopByte();
-  REG_X = Cpu_Stack_PopByte();
-}
-
-// Opcodes
-
-inline void Cpu_Call_Always(Byte lo_offset, Word callAddress)
-{
-  Word pc = cpu.pc.w + lo_offset;
-
-  Cpu_PcStack_Push(pc);
-  // REG_PC = callAddress;
-  Cpu_Pc_Set(callAddress);
-}
-
-inline void Cpu_Call_Conditional(bool cond, Byte lo_offset, Word callAddress)
-{
-  if (cond)
-  {
-    Cpu_Call_Always(lo_offset, callAddress);
-  }
-  else
-  {
-    //@@@ cpu.pc.w = ifFalse;
-    Pc_Add(lo_offset);
-  }
-}
-
-inline void Cpu_Pc_BranchCall(Byte value, Word tableAddress, Byte lo_offset)
-{
-  Word address = Mmu_GetWord(tableAddress + ((Word)value) * 2);
-  //DX8_LOGF("***CALL*** Address=$%4X, TableAddress=$%4X, Value=$%2X", address, tableAddress, value);
-  Cpu_Call_Always(lo_offset, address);
-}
-
-
-inline void Cpu_Return()
-{
-  cpu.pc.w = Cpu_PcStack_Pop();
-}
-
-inline Byte Cpu_Memory_LoadByte(Word address)
-{
-  return Mmu_Get(address);
-}
-
-inline Word Cpu_Memory_LoadWord(Word address)
-{
-  Byte lo, hi;
-  lo = Cpu_Memory_LoadByte(address);
-  hi = Cpu_Memory_LoadByte(address+1);
-
-  return MAKE_WORD(lo, hi);
-}
-
-inline void Cpu_Memory_StoreByte(Word address, Byte value)
-{
-  Mmu_Set(address, value);
-}
-
-inline void Cpu_Memory_StoreWord(Word address, Word value)
-{
-  Byte lo, hi;
-  MAKE_LOHI(value, lo, hi);
-  Mmu_Set(address,   lo);
-  Mmu_Set(address+1, hi);
 }
 
 inline Byte FlagsOp(int value)
@@ -725,94 +388,18 @@ inline void CompareBit(Byte val, Byte bit)
   // DX8_LOGF("CMPBIT >> Val=$%2X Bit=$%2X => V=$%2X, $%2X", val, bit, v, cpu.flags.bZero);
 }
 
-inline Byte ADC(Byte r0, Byte r1)
-{
-  return 0; // @TODO
-}
-
-inline void ADW(Byte* lo0, Byte* hi0, Byte lo1, Byte hi1)
-{
-  Word a = *lo0;
-  a |= ((Word) *hi0) << 8;
-
-  Word b = lo1;
-  a |= ((Word) hi1) << 8;
-
-  int value = a + b;
-
-  cpu.flags.bZero = (value == 0);
-  cpu.flags.bNegative = (value < 0);
-  cpu.flags.bCarry = (value > 0xFFFF);
-
-  *lo0 = value & 0xFF;
-  *hi0 = ((value >> 8)) & 0xFF;
-
-}
-
 inline void Cpu_Pc_SetAdd(Word addr, Word lo, Word hi)
 {
   //@@@cpu.pc.w = (addr + lo + hi * 256) & 0xFFFF;
-  Cpu_Pc_Set((addr + lo + hi * 256) & 0xFFFF);
+  Cpu_Jump_Always((addr + lo + hi * 256) & 0xFFFF);
 }
 
 inline void Cpu_Pc_SetHiLo(Word lo, Word hi)
 {
   //Word lastPc = cpu.pc.w;
   //@@@ cpu.pc.w = (lo + hi * 256) & 0xFFFF;
-  Cpu_Pc_Set((lo + hi * 256) & 0xFFFF);
+  Cpu_Jump_Always((lo + hi * 256) & 0xFFFF);
   //DX8_LOGF("JMP hi= %2X lo=%2X pc  from %4X  to %4X", hi, lo, lastPc, cpu.pc.w);
-}
-
-inline void Cpu_Pc_BranchJump(Byte value, Word tableAddress)
-{
-  Word address = Mmu_GetWord(tableAddress + ((Word)value) * 2);
-  //DX8_LOGF("***JUMP*** Address=$%4X, TableAddress=$%4X, Value=$%2X", address, tableAddress, value);
-  Cpu_Pc_Set(address);
-}
-
-inline void Cpu_Pc_SetRelative(Byte signedValue)
-{
-  int relAddr = (char) signedValue;
-  Pc_Add(relAddr);
-}
-
-inline void Cpu_Pc_SetCond(bool cond, Word absIfTrue, Byte relIfFalse)
-{
-  if (cond)
-  {
-    //@@@ cpu.pc.w = ifTrue;
-    Cpu_Pc_Set(absIfTrue);
-  }
-  else
-  {
-    //@@@ cpu.pc.w = ifFalse;
-    Pc_Add(relIfFalse);
-  }
-}
-
-inline void Cpu_Pc_SetRelativeCond(bool cond, Byte relIfTrue, Byte relIfFalse)
-{
-  if (cond)
-  {
-    Cpu_Pc_SetRelative(relIfTrue);
-  }
-  else
-  {
-    Pc_Add(relIfFalse);
-  }
-}
-
-inline void BranchCond(bool cond, Word ifTrue, Word ifFalse)
-{
-  if (cond)
-  {
-    Cpu_Call_Always(0, ifTrue);
-  }
-  else
-  {
-    //@@@ cpu.pc.w = ifFalse;
-    Cpu_Pc_Set(ifFalse);
-  }
 }
 
 // Interrupts
@@ -877,7 +464,7 @@ void Cpu_StartInterrupt(Byte name)
 
   cpu.interrupt = name;
   //@@@ cpu.pc.w = interruptAddress;
-  Cpu_Pc_Set(interruptAddress);
+  Cpu_Jump_Always(interruptAddress);
 
   if (name == INTVEC_HALT)
   {

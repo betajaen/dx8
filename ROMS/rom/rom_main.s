@@ -266,7 +266,7 @@ BeginFunction FloppyHandler
         load a, sFloppy_Msg
 
         ; @TODO Check for error bit
-        bcall tFloppyEventDispatcher, a
+        callt tFloppyEventDispatcher, a
 EndFunction
 
 ; =============================================================
