@@ -55,12 +55,14 @@ Byte Mmu_Real_Get(Word address)
   if (address == REG_RAND)
   {
     // http://excamera.com/sphinx/article-xorshift.html
+    /*
     sRand ^= sRand << 13;
     sRand ^= (Word)((int)sRand >> 17);
     sRand ^= sRand << 5;
     if (sRand == 0)
       sRand = -1;
-    return (Byte)sRand;
+    */
+    return (Byte) rand() & 0xFF;
   }
 
   if (address >= MEM_CHIP_SIZE)

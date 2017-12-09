@@ -21,28 +21,19 @@ jmp MAIN
   ; Variable which is named 'sCounter', initialised to 0.
   Var_Byte Counter, $00
 
-MAIN:
+HelloText:
+  db 'Hello', 0
 
+MAIN:
   ; Configure graphics
   set   a, $01                    ; Configure to use one plane only
   store REG_GFX_PLANES_COUNT, a
   set   a, $00
   store REG_GFX_PLANE0_TYPE,  a   ; Set to text mode
 
-  ; Clear the Screen through exposed MemSet function in the ROM.
-  ; This is similar to the C function memset.
-  ;set i, MEM_GFX_PLANE0           ; Which graphics plane
-  ;set j, MEM_GFX_PLANE_SIZE       ; Size in bytes
-  ;set a, ' '                      ; Character
-  ;_CallFunction MemSet
-
-kArguments equ $0406
-
-  ; dst, val, len
-  push.w MEM_GFX_PLANE_SIZE
-  push.b '.'
-  push.w MEM_GFX_PLANE0
-  RomFunction MemSet
+dbb
+  push.b '+'
+  RomFunction Cls
 
   ; Set Background Colour to Black $000000
   set a, $00
@@ -56,25 +47,22 @@ kArguments equ $0406
   store REG_GFX_PLANE0_COLOUR + 1, a  ; Green
   store REG_GFX_PLANE0_COLOUR + 2, a  ; Blue
 
-  set a, 'H'
-  store $8000 + 40, a
-  set a, 'i'
-  store $8000 + 41, a
-
 ; Loop forever
 FOREVER:
 
-  ; Increase counter...
+  load a, REG_RAND
+  mod a, 320/8
+  push a
+
+  load a, REG_RAND
+  mod a, 256/8
+  push a
+
   load a, sCounter
   inc a,
   store sCounter, a
+  push a
 
-  ; Show number on the Screen
-  ;  x = X-Coord
-  ;  y = Y-Coord
-  ;  a = Number to show
-  ;set x, 20
-  ;set y, 10
-  ;_CallFunction PrintNum
+  RomFunction PrintNum
 
   jmp FOREVER

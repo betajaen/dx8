@@ -214,6 +214,7 @@ namespace DX8
       public Operand Operand1;
       public Operand Operand2;
       public int Length;
+      public string Code;
 
       public Op(int idx)
       {
@@ -222,15 +223,17 @@ namespace DX8
         Operand1 = Operand.None;
         Operand2 = Operand.None;
         Length = 1;
+        Code = String.Empty;
       }
 
-      public Op(int idx, Opcode opcode, Operand operand1, Operand operand2, int length)
+      public Op(int idx, Opcode opcode, Operand operand1, Operand operand2, int length, string code)
       {
         Index = idx;
         Opcode = opcode;
         Operand1 = operand1;
         Operand2 = operand2;
         Length = length;
+        Code = code;
       }
 
       static System.Text.StringBuilder sTemp = new System.Text.StringBuilder(32);
@@ -1010,13 +1013,15 @@ namespace DX8
         if (LineStartsWith_OP(line) == false)
           continue;
         
-        Match match = Regex.Match(line, @"OP\(\s*(\w+)\s*,\s*(\w+)\s*,\s*Opf_(\w+)\s*,\s*(\d)", RegexOptions.IgnoreCase);
+        Match match = Regex.Match(line, @"OP\(\s*(\w+)\s*,\s*(\w+)\s*,\s*Opf_(\w+)\s*,\s*(\d)\s*,\s*(.*)", RegexOptions.IgnoreCase);
 
         if (match.Success)
         {
             string name     = match.Groups[1].Value;
             string operands = match.Groups[2].Value;
             string format   = match.Groups[3].Value;
+            string time     = match.Groups[4].Value;
+            string code     = match.Groups[5].Value;
 
             int    idx = nextIdx++;
             Opcode op = (Opcode) Enum.Parse(typeof(Opcode), name);
@@ -1085,7 +1090,7 @@ namespace DX8
               length = 2;
             }
             
-            ops[idx] = new Op(idx, op, operand1, operand2, length);
+            ops[idx] = new Op(idx, op, operand1, operand2, length, code);
         }
         else
         {

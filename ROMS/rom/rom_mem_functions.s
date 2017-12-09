@@ -4,25 +4,23 @@ MemCpySm_Dst equ i
 MemCpySm_Src equ j
 MemCpySm_Len equ a
 
-Entry_MemCpySm:
-EndFunction
-
-BeginFunction MemCpySm
+; dst, src, length
+ltr_MemCpySm:
+        pop MemCpySm_Len
+        pop MemCpySm_Src
+        pop MemCpySm_Dst
+Fn_MemCpySm:
         .loop:
-                ;dbr 'i'
-                ;dbr 'j'
-                ;dbr 'a'
-
-                dec a
+                dec MemCpySm_Len
                 push a
                 load a, j
                 store i, a
                 pop a
-                inc i
-                inc j
-                cmp a
+                inc MemCpySm_Dst
+                inc MemCpySm_Src
+                cmp MemCpySm_Len
                 _rjmp.nz .loop
-EndFunction
+return
 
 ;Export_Function      Rom, MemCpySm, 'Copy up to 256 bytes to another part of memory'
 ;Export_Function_Arg  MemCpySm, Dst, i
@@ -40,12 +38,10 @@ MemSet_Len equ j
 MemSet_Val equ a
 
 ; dst, val, len
-Entry_MemSet:
-        dbb
-        pop MemSet_Dst
-        pop MemSet_Val
+ltr_MemSet:
         pop MemSet_Len
-        dbb
+        pop MemSet_Val
+        pop MemSet_Dst
 Fn_MemSet:
         .loop:  store MemSet_Dst, MemSet_Val
                 inc MemSet_Dst

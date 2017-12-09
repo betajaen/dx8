@@ -13,6 +13,7 @@ namespace DX8
     public static string Config            = @"C:\dev\dx8\Source\libDX8\dx8_Config.inc";
     public static string ApiPath           = @"C:\dev\dx8\Source\libDX8\dx8_Api.inc";
     public static string OpcodesPath       = @"C:\dev\dx8\Source\libDX8\dx8_Cpu_Opcodes.inc";
+    public static string StepPath          = @"C:\dev\dx8\Source\libDX8\dx8_Cpu_Step.c";
     public static string Registers         = @"C:\dev\dx8\Source\libDX8\dx8_Registers.inc";
     public static string Constants         = @"C:\dev\dx8\Source\libDX8\dx8_Constants.inc";
     public static string Interrupts        = @"C:\dev\dx8\Source\libDX8\dx8_Interrupts.inc";
@@ -150,6 +151,71 @@ namespace DX8
     {
       Dictionary<string, KeyValuePair<int, string>> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
       System.IO.File.WriteAllText(ApiCsPath, OpcodeCompiler.GenerateCsApi(ApiPath, scancodes));
+    }
+
+    [MenuItem("DX8/Generate Switch")]
+    public static void GenerateSwitchStatement()
+    {
+      List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
+      System.Text.StringBuilder sb = new System.Text.StringBuilder(16384);
+
+      sb.AppendLine("#include \"dx8.h\"");
+      sb.AppendLine();
+
+      sb.AppendLine("void Cpu_StepOnce()");
+      sb.AppendLine("{");
+      sb.AppendLine("  Byte opcode = Mmu_Get(cpu.pc.w);");
+      sb.AppendLine("  switch (opcode)");
+      sb.AppendLine("  {");
+
+      foreach (var op in ops)
+      {
+        sb.AppendFormat("    // ");
+        op.ToAssemblerFormat(ref sb);
+        sb.AppendLine();
+        sb.AppendFormat("    case 0x{0:X2}:", op.Index);
+        sb.AppendLine();
+        sb.AppendLine("    {");
+
+        if (op.Length == 2)
+        {
+          sb.AppendLine("      Byte imm  = Mmu_Get(cpu.pc.w + 1);");
+        }
+        else if (op.Length == 3)
+        {
+          sb.AppendLine("      Word imm = Mmu_GetWord(cpu.pc.w + 1);");
+        }
+
+        string m = op.Code.TrimStart(new char[] { '{' });
+        m = m.TrimEnd(new char[] { '}', ')' });
+        m = m.Trim();
+
+        if (m.EndsWith(";") == false)
+          m = m + ";";
+          
+        m = m.Replace("REG_IMM",  "imm");
+        m = m.Replace("REG_BYTE", "imm");
+        m = m.Replace("REG_WORD", "imm");
+        m = m.Replace("REG_PC",   "cpu.pc.w");
+        m = m.Replace("REG_A",    "cpu.a");
+        m = m.Replace("REG_X",    "cpu.I.x");
+        m = m.Replace("REG_Y",    "cpu.I.y");
+        m = m.Replace("REG_I",    "cpu.I.I");
+        m = m.Replace("REG_Z",    "cpu.J.z");
+        m = m.Replace("REG_W",    "cpu.J.w");
+        m = m.Replace("REG_J",    "cpu.J.J");
+
+        sb.Append("      ");
+        sb.AppendLine(m);
+
+        sb.AppendLine("    }");
+        sb.AppendLine("    break;");
+      }
+
+      sb.AppendLine("  }");
+      sb.AppendLine("}");
+      
+      System.IO.File.WriteAllText(StepPath, sb.ToString());
     }
 
     [MenuItem("DX8/Convert PNG Image to 1-bit ROM")]

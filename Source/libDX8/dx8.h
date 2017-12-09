@@ -92,6 +92,7 @@ typedef struct {
   Byte halt;
 } Cpu;
 
+extern Cpu   cpu;
 extern Byte* sRam;
 extern Byte* sFastRam;
 

@@ -65,7 +65,7 @@ OP(CallZ,   A,  Opf_Address, 4, { DO_OP_CALL_Z(); })
 OP(CallNotZ,A,  Opf_Address, 4, { DO_OP_CALL_NOT_Z(); })
 
 // Return
-OP(Return, None, Opf_Single, 4,   { DO_OP_RETURN(); })
+OP(Cpu_Return, None, Opf_Single, 4,   { DO_OP_RETURN(); })
 
 // Copy
 OP(Copy, ax, Opf_Single, 1, { DO_OP_COPY(REG_A, REG_X); })
@@ -314,11 +314,11 @@ OP(JmpBranch,  Ax, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_X); })
 OP(JmpBranch,  Ay, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_Y); })
 OP(JmpBranch,  Az, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_Z); })
 OP(JmpBranch,  Aw, Opf_Address, 4,  { DO_OP_JMP_BRANCH(REG_W); })
-OP(CallBranch, Aa, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_A); })
-OP(CallBranch, Ax, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_X); })
-OP(CallBranch, Ay, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_Y); })
-OP(CallBranch, Az, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_Z); })
-OP(CallBranch, Aw, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_W); })
+OP(Cpu_Pc_BranchCall, Aa, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_A); })
+OP(Cpu_Pc_BranchCall, Ax, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_X); })
+OP(Cpu_Pc_BranchCall, Ay, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_Y); })
+OP(Cpu_Pc_BranchCall, Az, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_Z); })
+OP(Cpu_Pc_BranchCall, Aw, Opf_Address, 4, { DO_OP_CALL_BRANCH(REG_W); })
 
 
 // Interrupt

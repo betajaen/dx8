@@ -7,10 +7,13 @@ kProgramSpace = $1400
 org $1400
 
 jmp INIT
+jmp INIT
 
 Const_Include   FontData, "font.png.s"
 
 INIT:
+dbb
+rti
 
 _poke.w   INTVEC_ADDR_IO,        OnIvtIo
 _poke.w   INTVEC_ADDR_HBLANK,    OnIvtHBlank
@@ -105,12 +108,12 @@ resume
   Var_Byte  Dead,  1
   Var_Byte  Cheat, 1
   Var_Byte  HeadX, 0
-  Var_Bytes SnakeX, 32
+  Var_Bytes SnakeX, 64
   Var_Byte  SnakeX_Pad, 1
   Var_Byte  HeadY, 0
-  Var_Bytes SnakeY, 32
+  Var_Bytes SnakeY, 64
   Var_Byte  SnakeY_Pad, 1
-  Var_Bytes CopyBuffer, 33
+  Var_Bytes CopyBuffer, 65
   Var_Byte  FruitX, 0
   Var_Byte  FruitY, 0
   Var_Bytes Background, 3
@@ -182,10 +185,8 @@ BeginFunction Sleep
 EndFunction
 
 BeginFunction ClearScreen
-  set i, MEM_GFX_PLANE0
-  set j, MEM_GFX_PLANE_SIZE
-  set a, ' '
-  _CallFunction MemSet
+  push.b ' '
+  RomFunction Cls
 EndFunction
 
 BeginFunction PlaySound
@@ -302,20 +303,20 @@ BeginFunction NewGame
   store sSnakeY, a
   store sHeadY, a
 
-  set MemSet_Len, 32
-  set MemSet_Dst, sSnakeX
-  set MemSet_Val, 0
-  _CallFunction MemSet
+  push.w sSnakeX
+  push.b 0
+  push.w 64
+  RomFunction MemSet
 
-  set MemSet_Len, 32
-  set MemSet_Dst, sSnakeY
-  set MemSet_Val, 0
-  _CallFunction MemSet
+  push.w sSnakeY
+  push.b 0
+  push.w 64
+  RomFunction MemSet
 
-  set MemSet_Len, 33
-  set MemSet_Dst, sCopyBuffer
-  set MemSet_Val, 0
-  _CallFunction MemSet
+  push.w sCopyBuffer
+  push.b 0
+  push.w 65
+  RomFunction MemSet
 
   _CallFunction SpawnFruit
   _CallFunction SpawnFruit
@@ -382,27 +383,31 @@ EndFunction
 
 BeginFunction ShiftSnake
   ; Copy X
-  load MemCpySm_Len, sCount
-  set  MemCpySm_Dst, sCopyBuffer
-  set  MemCpySm_Src, sSnakeX
-  _CallFunction MemCpySm
+  push.w sCopyBuffer
+  push.w sSnakeX
+  load a, sCount
+  push a
+  RomFunction MemCpySm
 
-  load MemCpySm_Len, sCount
-  set  MemCpySm_Dst, sSnakeX + 1
-  set  MemCpySm_Src, sCopyBuffer
-  _CallFunction MemCpySm
 
+  push.w sSnakeX + 1
+  push.w sCopyBuffer
+  load a, sCount
+  push a
+  RomFunction MemCpySm
 
   ; Copy Y
-  load MemCpySm_Len, sCount
-  set  MemCpySm_Dst, sCopyBuffer
-  set  MemCpySm_Src, sSnakeY
-  _CallFunction MemCpySm
+  push.w sCopyBuffer
+  push.w sSnakeY
+  load a, sCount
+  push a
+  RomFunction MemCpySm
 
-  load MemCpySm_Len, sCount
-  set  MemCpySm_Dst, sSnakeY + 1
-  set  MemCpySm_Src, sCopyBuffer
-  _CallFunction MemCpySm
+  push.w sSnakeY + 1
+  push.w sCopyBuffer
+  load a, sCount
+  push a
+  RomFunction MemCpySm
 
   load a, sHeadX
   store sSnakeX, a

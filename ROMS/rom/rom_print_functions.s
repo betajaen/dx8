@@ -9,7 +9,12 @@ PrintChar_X equ x
 PrintChar_Y equ y
 PrintChar_Char equ a
 
-BeginFunction PrintChar
+; x, y, character
+ltr_PrintChar:
+        pop PrintChar_Char
+        pop PrintChar_Y
+        pop PrintChar_X
+Fn_PrintChar:
         cmpi x, SCREEN_COLS
         _rjmp.gt .CantPrint
         cmpi y, SCREEN_ROWS
@@ -34,7 +39,7 @@ BeginFunction PrintChar
                 set a, $00
 
         .End:
-EndFunction
+return
 
 ;Export_Function      Rom, PrintChar, 'Copy a char to the screen at x, y'
 ;Export_Function_Arg  PrintChar, X, x
@@ -52,7 +57,12 @@ Print_X   equ x
 Print_Y   equ y
 Print_Str equ j
 
-BeginFunction Print
+; x, y, string
+ltr_Print:
+        pop Print_Str
+        pop Print_Y
+        pop Print_X
+Fn_Print:
         .DoPrint:
                 load a, j
                 cmp a
@@ -94,7 +104,7 @@ BeginFunction Print
                 inc x
                 _rjmp .DoPrint
         .End:
-EndFunction
+return
 
 ;Export_Function      Rom, Print, 'Copy a zero-terminated string to the screen at x, y'
 ;Export_Function_Arg  Print, X, x
@@ -112,7 +122,12 @@ PrintNum_X   equ x
 PrintNum_Y   equ y
 PrintNum_Num equ a
 
-BeginFunction PrintNum
+; void PrintNum(Byte x, Byte y, Byte num)
+ltr_PrintNum:
+        pop PrintNum_Num
+        pop PrintNum_Y
+        pop PrintNum_X
+Fn_PrintNum:
         .DoPrint:
                 ;cmp a
                 ;_rjmp.z .PrintZero
@@ -179,7 +194,7 @@ BeginFunction PrintNum
                 ;set a, '0'
                 ;_CallFunction PrintChar
         .End:
-EndFunction
+return
 
 ;Export_Function      Rom, PrintNum, 'Print a byte decimal number to the screen at x, y'
 ;Export_Function_Arg  PrintNum, X, x
@@ -189,11 +204,15 @@ EndFunction
 
 
 ;! Clear Screen
-BeginFunction Cls
+Cls_Character equ a
+
+; void Cls(Byte character)
+ltr_Cls:
+  pop Cls_Character
+Fn_Cls:
   set i, MEM_GFX_PLANE0
   set j, MEM_GFX_PLANE_SIZE
-  set a, ' '
-  _CallFunction MemSet
-EndFunction
+  call Fn_MemSet
+return
 
 ;Export_Function      Rom, Cls, 'Clears the screen'

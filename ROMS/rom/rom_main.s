@@ -11,8 +11,8 @@ org kProgramSpace
 
 TableCounter = 0
 
-macro TableExport Name {
-        dw      Entry_#Name
+macro Public Name {
+        dw      ltr_#Name
         display "Import "
         display `Name
         _PrintValue ", ", TableCounter
@@ -20,22 +20,17 @@ macro TableExport Name {
 }
 
 Exports:
-
-dw Fn_EntryPoint
-TableExport MemCpySm
-TableExport MemSet
+        Public EntryPoint
+        Public MemCpySm
+        Public MemSet
+        Public Cls
+        Public Print
+        Public PrintChar
+        Public PrintNum
 
 ; =============================================================
 ; Exported Functions
 ; =============================================================
-
-kArguments:
-        repeat 8
-                db $00
-        end repeat
-
-_PrintValue "kArguments ", kArguments
-
 
 kExports:
 
@@ -277,7 +272,7 @@ EndFunction
 ; =============================================================
 ; MAIN
 ; =============================================================
-Fn_EntryPoint:
+ltr_EntryPoint:
         ; Setup basic IVT
         call ConfigureIVT
 
