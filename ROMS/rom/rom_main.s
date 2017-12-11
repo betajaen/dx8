@@ -79,10 +79,10 @@ return
 OnIvtReset:
         jmp Setup
 OnIvtHorzBlank:
-        load a, REG_RAND
-        store kPalette, a
-        load a, REG_RAND
-        store kPalette+1, a
+        ;load a, REG_RAND
+        ;store kPalette, a
+        ;load a, REG_RAND
+        ;store kPalette+1, a
 resume
 
 OnIvtVertBlank:
@@ -271,12 +271,31 @@ nop
 kConstants:
 
         kPalette:
-                ;  G0    R0
-                db 0000_0000b
-                ;  B1    R0
-                db 0000_1111b
-                ;  G1    B0
-                db 1111_1111b
+                db $A6
+                db $BF
+                db $E8
+                db $D1
+                db $10
+                db $00
+                db $00
+                db $0F
+                db $11
+                db $E3
+                db $3F
+                db $00
+                db $A6
+                db $6B
+                db $33
+                db $F5
+                db $5E
+                db $22
+                db $A2
+                db $2B
+                db $3F
+                db $F9
+                db $9E
+                db $44
+
 
 
         Const_Include   FontData, "font.png.s"

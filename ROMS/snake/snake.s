@@ -17,6 +17,7 @@ rti
 _poke.w   INTVEC_ADDR_IO,        OnIvtIo
 _poke.w   INTVEC_ADDR_HBLANK,    OnIvtHBlank
 _poke.w   REG_GFX_TILES_ADDR,    kFontData
+_poke.w   REG_GFX_PALETTE_ADDR,  kPalette
 
 jmp START_GAME
 
@@ -595,3 +596,29 @@ GAME_LOOP:
   _CallFunction Sleep
   jmp GAME_LOOP
 
+
+kPalette:
+db $8B
+db $62
+db $9D
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
+db $00
