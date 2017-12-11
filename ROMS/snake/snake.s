@@ -137,28 +137,28 @@ resume
 ; ===========================================================================
 
 OnIvtHBlank:
-        rept 3 C
-        {
-                load a, sBackground + C
-                add a, x
-                store REG_GFX_BACKGROUND_COLOUR + C, a
-                neg a
-                store REG_GFX_PLANE0_COLOUR + C, a
-        }
+        ;rept 3 C
+        ;{
+        ;        load a, sBackground + C
+        ;        add a, x
+        ;        store REG_GFX_BACKGROUND_COLOUR + C, a
+        ;        neg a
+        ;        store REG_GFX_PLANE0_COLOUR + C, a
+        ;}
 resume
 
 BeginFunction TickBackground
-      load a, REG_RAND
-      mod  a, 90
-      store sBackground + 0, a
+      ;load a, REG_RAND
+      ;mod  a, 90
+      ;store sBackground + 0, a
 
-      load a, REG_RAND
-      mod  a, 90
-      store sBackground + 1, a
+      ;load a, REG_RAND
+      ;mod  a, 90
+      ;store sBackground + 1, a
 
-      load a, REG_RAND
-      mod  a, 90
-      store sBackground + 2, a
+      ;load a, REG_RAND
+      ;mod  a, 90
+      ;store sBackground + 2, a
 
       load a, sCount
       add a, $A

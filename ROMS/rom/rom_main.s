@@ -79,116 +79,14 @@ return
 OnIvtReset:
         jmp Setup
 OnIvtHorzBlank:
-
-                load a, REG_GFX_SCANLINE_NUM
-                cpy  x, a
-                cmp a, 255 - (16 + 8)
-
-                jmp.gt .LowerSection
-                jmp.eq .BlackSection
-
-                .AnimatedSection:
-                ;not x
-                ; and x, $E0
-                ; shr x, 2
-
-                rept 3 C
-                {
-                        load a, sBackground_R + C
-                        add a, x
-                        store REG_GFX_BACKGROUND_COLOUR + C, a
-                        neg a
-                        store REG_GFX_PLANE0_COLOUR + C, a
-                }
-                resume
-
-                .LowerSection:
-                        set a, $3B
-                        store REG_GFX_BACKGROUND_COLOUR + 0, a
-                        set a, $3F
-                        store REG_GFX_BACKGROUND_COLOUR + 1, a
-                        set a, $42
-                        store REG_GFX_BACKGROUND_COLOUR + 2, a
-                        set a, $FE
-                        store REG_GFX_PLANE0_COLOUR + 0, a
-                        set a, $FE
-                        store REG_GFX_PLANE0_COLOUR + 1, a
-                        set a, $FE
-                        store REG_GFX_PLANE0_COLOUR + 2, a
-                resume
-
-                .BlackSection:
-                        set a, $00
-                        store REG_GFX_BACKGROUND_COLOUR + 0, a
-                        store REG_GFX_BACKGROUND_COLOUR + 1, a
-                        store REG_GFX_BACKGROUND_COLOUR + 2, a
-                        store REG_GFX_PLANE0_COLOUR + 0, a
-                        store REG_GFX_PLANE0_COLOUR + 1, a
-                        store REG_GFX_PLANE0_COLOUR + 2, a
-                resume
+        load a, REG_RAND
+        store kPalette, a
+        load a, REG_RAND
+        store kPalette+1, a
 resume
 
 OnIvtVertBlank:
-                load a, sBackground_R
-                load x, sBackground_TargetR
-                cmp a, x
-                jmp.lt .MoreR
-                jmp.gt .LessR
-
-                load a, REG_RAND
-                mod a, $7F
-                store sBackground_TargetR, a
-                jmp .CheckGreen
-
-        .MoreR:
-                inc a
-                store sBackground_R, a
-                jmp .CheckGreen
-        .LessR:
-                dec a
-                store sBackground_R, a
-
-        .CheckGreen:
-                load a, sBackground_G
-                load x, sBackground_TargetG
-                cmp a, x
-                jmp.lt .MoreG
-                jmp.gt .LessG
-
-                load a, REG_RAND
-                mod a, $7F
-                store sBackground_TargetG, a
-                jmp .CheckBlue
-
-        .MoreG:
-                inc a
-                store sBackground_G, a
-                jmp .CheckBlue
-        .LessG:
-                dec a
-                store sBackground_G, a
-
-        .CheckBlue:
-                load a, sBackground_B
-                load x, sBackground_TargetB
-                cmp a, x
-                jmp.lt .MoreB
-                jmp.gt .LessB
-
-                load a, REG_RAND
-                mod a, $7F
-                store sBackground_TargetB, a
-                jmp .End
-
-        .MoreB:
-                inc a
-                store sBackground_B, a
-                jmp .CheckBlue
-        .LessB:
-                dec a
-                store sBackground_B, a
-
-        .End:
+        nop
 resume
 
 OnIvtFloppy:
@@ -315,8 +213,8 @@ ltr_EntryPoint:
 
         ; Set font
         _poke.w         REG_GFX_TILES_ADDR,         (kFontData)
-        _poke           REG_GFX_PLANE0_TYPE,        $00
-        _poke           REG_GFX_PLANES_COUNT,       $01
+        _poke.w         REG_GFX_PALETTE_ADDR,       (kPalette)
+        _poke           REG_GFX_MODE,               $00
 
         set a, $00
         store $E0, a
@@ -371,6 +269,15 @@ nop
 ; =============================================================
 
 kConstants:
+
+        kPalette:
+                ;  G0    R0
+                db 0000_0000b
+                ;  B1    R0
+                db 0000_1111b
+                ;  G1    B0
+                db 1111_1111b
+
 
         Const_Include   FontData, "font.png.s"
         Const_Include   Keycode2Ascii, 'keycode2ascii.s'

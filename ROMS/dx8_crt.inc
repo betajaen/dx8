@@ -1,3 +1,5 @@
+Rom equ $400
+
 
 ; =============================================================
 ; Opcode helpers
@@ -278,10 +280,16 @@ macro _mmu_map index, real, virtualBegin, virtualEnd {
 }
 
 macro Import M, A {
-      External_#M equ A
+      ltr_#M equ A
 }
 
 macro RomFunction M {
-      set a, External_#M
+      set a, ltr_#M
       callt $400, a
+}
+
+macro Invoke T, N, [ARGS] {
+      forward push ARGS
+      push a, ltr_#M
+      common callt T, a
 }

@@ -29,25 +29,23 @@ HelloText:
 
 MAIN:
   ; Configure graphics
-  set   a, $01                    ; Configure to use one plane only
-  store REG_GFX_PLANES_COUNT, a
-  set   a, $00
-  store REG_GFX_PLANE0_TYPE,  a   ; Set to text mode
+  set   a, $00                    ; Configure to use one plane only
+  store REG_GFX_MODE, a
 
   push.b 'e'
   RomFunction Cls
 
   ; Set Background Colour to Black $000000
-  set a, $00
-  store REG_GFX_BACKGROUND_COLOUR + 0, a  ; Red
-  store REG_GFX_BACKGROUND_COLOUR + 1, a  ; Green
-  store REG_GFX_BACKGROUND_COLOUR + 2, a  ; Blue
+  ;set a, $00
+  ;store REG_GFX_BACKGROUND_COLOUR + 0, a  ; Red
+  ;store REG_GFX_BACKGROUND_COLOUR + 1, a  ; Green
+  ;store REG_GFX_BACKGROUND_COLOUR + 2, a  ; Blue
 
   ; Set Text Colour to White $FFFFFF
-  set a, $FF
-  store REG_GFX_PLANE0_COLOUR + 0, a  ; Red
-  store REG_GFX_PLANE0_COLOUR + 1, a  ; Green
-  store REG_GFX_PLANE0_COLOUR + 2, a  ; Blue
+  ;set a, $FF
+  ;store REG_GFX_PLANE0_COLOUR + 0, a  ; Red
+  ;store REG_GFX_PLANE0_COLOUR + 1, a  ; Green
+  ;store REG_GFX_PLANE0_COLOUR + 2, a  ; Blue
 
 ; Loop forever
 FOREVER:
