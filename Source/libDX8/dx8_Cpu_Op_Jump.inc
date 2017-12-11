@@ -14,6 +14,11 @@ inline void Cpu_JumpAdd_Always(int imm);
 inline void Cpu_Jump_Always(Word imm)
 {
   cpu.pc.w = imm;
+
+#if defined(DX8_DEBUG_INSTRUCTIONS)
+  sDebugInstruction.context1.w = imm;
+  sDebugInstruction.context1Type = CpuCtx_Pc;
+#endif
 }
 
 inline void Cpu_Jump_Conditional(bool cond, Word absIfTrue, Byte relIfFalse)
@@ -22,11 +27,21 @@ inline void Cpu_Jump_Conditional(bool cond, Word absIfTrue, Byte relIfFalse)
   {
     //@@@ cpu.pc.w = ifTrue;
     Cpu_Jump_Always(absIfTrue);
+
+#if defined(DX8_DEBUG_INSTRUCTIONS)
+    sDebugInstruction.context2.lo = 1;
+    sDebugInstruction.context2Type = CpuCtx_Condition;
+#endif
   }
   else
   {
     //@@@ cpu.pc.w = ifFalse;
     Cpu_JumpAdd_Always(relIfFalse);
+
+#if defined(DX8_DEBUG_INSTRUCTIONS)
+    sDebugInstruction.context2.lo = 0;
+    sDebugInstruction.context2Type = CpuCtx_Condition;
+#endif
   }
 }
 
@@ -47,10 +62,21 @@ inline void Cpu_JumpRel_Conditional(bool cond, Byte relIfTrue, Byte relIfFalse)
   if (cond)
   {
     Cpu_JumpRel_Always(relIfTrue);
+
+#if defined(DX8_DEBUG_INSTRUCTIONS)
+    sDebugInstruction.context2.lo = 1;
+    sDebugInstruction.context2Type = CpuCtx_Condition;
+#endif
+
   }
   else
   {
     Cpu_JumpAdd_Always(relIfFalse);
+
+#if defined(DX8_DEBUG_INSTRUCTIONS)
+    sDebugInstruction.context2.lo = 1;
+    sDebugInstruction.context2Type = CpuCtx_Condition;
+#endif
   }
 }
 

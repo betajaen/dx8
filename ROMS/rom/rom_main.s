@@ -79,17 +79,18 @@ return
 OnIvtReset:
         jmp Setup
 OnIvtHorzBlank:
+
                 load a, REG_GFX_SCANLINE_NUM
                 cpy  x, a
-                cmpi a, 256 - (16 + 8)
+                cmp a, 255 - (16 + 8)
 
                 jmp.gt .LowerSection
                 jmp.eq .BlackSection
 
                 .AnimatedSection:
-                not x
-                and x, $E0
-                shr x, 2
+                ;not x
+                ; and x, $E0
+                ; shr x, 2
 
                 rept 3 C
                 {
@@ -228,7 +229,7 @@ EndFunction
 
 BeginFunction DrawCursor
                 load x, REG_GFX_COUNTERS
-                cmpbit x, GFX_FLG_COUNTERS_ODDEVEN
+                bit x, GFX_FLG_COUNTERS_ODDEVEN
                 jmp.z .DrawBlank
                 jmp .DrawDot
         .DrawBlank:
@@ -359,7 +360,7 @@ IDLE:
         _CallFunction DrawCursor
 
         load a, sFloppy_Msg
-        cmpi a, $00
+        cmp a, $00
         call.neq Fn_FloppyHandler
 
         jmp IDLE

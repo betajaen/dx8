@@ -12,7 +12,6 @@ jmp INIT
 Const_Include   FontData, "font.png.s"
 
 INIT:
-dbb
 rti
 
 _poke.w   INTVEC_ADDR_IO,        OnIvtIo
@@ -24,47 +23,47 @@ jmp START_GAME
 OnIvtIo:
       load  a, REG_IO_OP
 
-      cmpi a, $01
+      cmp a, $01
       jmp.eq .OnKeyChange
 
       .OnKeyChange:
 
               ; Only on up events.
               load z, REG_IO_DATA_B
-              cmpi z, $01
+              cmp z, $01
               jmp.neq .End
 
               ; Get Scan code
               load  z, REG_IO_DATA_A
 
               ; Check is up
-              cmpi z, KEY_LowercaseK
+              cmp z, KEY_LowercaseK
               jmp.eq .IsUp
-              cmpi z, KEY_UppercaseK
+              cmp z, KEY_UppercaseK
               jmp.eq .IsUp
 
               ; Check is down
-              cmpi z, KEY_LowercaseM
+              cmp z, KEY_LowercaseM
               jmp.eq .IsDown
-              cmpi z, KEY_UppercaseM
+              cmp z, KEY_UppercaseM
               jmp.eq .IsDown
 
               ; Check is left
-              cmpi z, KEY_LowercaseZ
+              cmp z, KEY_LowercaseZ
               jmp.eq .IsLeft
-              cmpi z, KEY_UppercaseZ
+              cmp z, KEY_UppercaseZ
               jmp.eq .IsLeft
 
               ; Check is right
-              cmpi z, KEY_LowercaseX
+              cmp z, KEY_LowercaseX
               jmp.eq .IsRight
-              cmpi z, KEY_UppercaseX
+              cmp z, KEY_UppercaseX
               jmp.eq .IsRight
 
               ; Cheat key
-              cmpi z, KEY_LowercaseC
+              cmp z, KEY_LowercaseC
               jmp.eq .IsCheat
-              cmpi z, KEY_UppercaseC
+              cmp z, KEY_UppercaseC
               jmp.eq .IsCheat
 
               jmp .End
@@ -330,11 +329,11 @@ BeginFunction CheckCollision
   load x, sHeadX
   load y, sHeadY
 
-  cmpi x, NUM_COLS
+  cmp x, NUM_COLS
   jmp.eq .KillIt
   jmp.gt .KillIt
 
-  cmpi y, NUM_ROWS
+  cmp y, NUM_ROWS
   jmp.eq .KillIt
   jmp.gt .KillIt
 
@@ -343,16 +342,16 @@ BeginFunction CheckCollision
   ; Peek where the head will be.
   _CallFunction PeekChar
 
-  cmpi a, ' '
+  cmp a, ' '
   jmp.eq .End
 
-  cmpi a, 's'
+  cmp a, 's'
   jmp.eq .KillIt
 
-  cmpi a, '*'
+  cmp a, '*'
   jmp.eq .KillIt
 
-  cmpi a, 'o'
+  cmp a, 'o'
   jmp.eq .Nom
 
   jmp .End
@@ -510,7 +509,7 @@ BeginFunction MoveHead
 
   ; Up
   ; y--
-  cmpi a, DIR_UP
+  cmp a, DIR_UP
   jmp.neq .NotUp
   dec y
   jmp .NotRight
@@ -518,7 +517,7 @@ BeginFunction MoveHead
 
   ; Down
   ; y++
-  cmpi a, DIR_DOWN
+  cmp a, DIR_DOWN
   jmp.neq .NotDown
   inc y
   jmp .NotRight
@@ -526,7 +525,7 @@ BeginFunction MoveHead
 
   ; Left
   ; x--
-  cmpi a, DIR_LEFT
+  cmp a, DIR_LEFT
   jmp.neq .NotLeft
   dec x
   jmp .NotRight
@@ -534,7 +533,7 @@ BeginFunction MoveHead
 
   ; Right
   ; x++
-  cmpi a, DIR_RIGHT
+  cmp a, DIR_RIGHT
   jmp.neq .NotRight
   inc x
 .NotRight:
@@ -588,7 +587,7 @@ GAME_LOOP:
 
    ; Check for death
    load a, sDead
-   cmpi a, $01
+   cmp a, $01
    call.eq Fn_NewGame
 
   ;_CallFunction ClearScreen

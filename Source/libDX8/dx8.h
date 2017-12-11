@@ -41,6 +41,9 @@
 #include "dx8_Constants.inc"
 #include "dx8_Interrupts.inc"
 
+#define DX8_DEBUG_INSTRUCTIONS      1
+#define DX8_DEBUG_INSTRUCTIONS_HISTORY 512
+
 #define CRT_W 320
 #define CRT_H 256
 #define CRT_DEPTH 3
@@ -101,11 +104,46 @@ typedef struct {
   Byte interruptMask[8];
   Byte interruptsStopped;
   Byte halt;
+  Word cycle;
 } Cpu;
+
+typedef struct {
+  Byte opcode;
+  Byte length;
+  Word pc;
+  Byte context1Type, context2Type;
+  CPU_REGISTER(w, lo, hi) operand;
+  CPU_REGISTER(w, lo, hi) context1;
+  CPU_REGISTER(w, lo, hi) context2;
+} DebuggedInstruction;
+
+typedef enum {
+  CpuCtx_None,
+  CpuCtx_Pc,
+  CpuCtx_A,
+  CpuCtx_X,
+  CpuCtx_Y,
+  CpuCtx_Z,
+  CpuCtx_W,
+  CpuCtx_I,
+  CpuCtx_J,
+  CpuCtx_Stack,
+  CpuCtx_PcStack,
+  CpuCtx_LeftByte,
+  CpuCtx_RightByte,
+  CpuCtx_LeftWord,
+  CpuCtx_RightWord,
+  CpuCtx_Condition,
+  CpuCtx_Param,
+  CpuCtx_MemoryAddress,
+  CpuCtx_MemoryByte,
+  CpuCtx_MemoryWord,
+} CpuContext;
 
 extern Cpu   cpu;
 extern Byte* sRam;
 extern Byte* sFastRam;
+extern DebuggedInstruction sDebugInstruction;
 
 int Clock(int ms);
 

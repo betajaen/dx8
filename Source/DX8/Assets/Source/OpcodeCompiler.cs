@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -63,8 +64,7 @@ namespace DX8
       RollLeft,
       RollRight,
       Cmp,
-      Cmpi,
-      CmpBit,
+      Bit,
       Jmp,
       JmpEq,
       JmpNeq,
@@ -141,8 +141,7 @@ namespace DX8
       "rol",
       "ror",
       "cmp",
-      "cmpi",
-      "cmpbit",
+      "bit",
       "jmp",
       "jmp.eq",
       "jmp.neq",
@@ -192,10 +191,31 @@ namespace DX8
       COUNT
     }
 
+    public enum PcMod
+    {
+      Length,
+      Set
+    }
+
     public static String[] OperandAsm = new String[(int) Operand.COUNT] {
       "",
       "$00",
       "$0000",
+      "x",
+      "y",
+      "z",
+      "w",
+      "a",
+      "i",
+      "j",
+      "pc",
+      "f"
+    };
+    
+    public static String[] OperandSprintf = new String[(int) Operand.COUNT] {
+      "",
+      "$%02X",
+      "$%04X",
       "x",
       "y",
       "z",
@@ -213,6 +233,7 @@ namespace DX8
       public Opcode Opcode;
       public Operand Operand1;
       public Operand Operand2;
+      public PcMod PcMod;
       public int Length;
       public string Code;
 
@@ -224,9 +245,10 @@ namespace DX8
         Operand2 = Operand.None;
         Length = 1;
         Code = String.Empty;
+        PcMod = PcMod.Length;
       }
 
-      public Op(int idx, Opcode opcode, Operand operand1, Operand operand2, int length, string code)
+      public Op(int idx, Opcode opcode, Operand operand1, Operand operand2, int length, string code, PcMod pcMod)
       {
         Index = idx;
         Opcode = opcode;
@@ -234,6 +256,7 @@ namespace DX8
         Operand2 = operand2;
         Length = length;
         Code = code;
+        PcMod = pcMod;
       }
 
       static System.Text.StringBuilder sTemp = new System.Text.StringBuilder(32);
@@ -245,6 +268,41 @@ namespace DX8
         return sTemp.ToString();
       }
       
+      public void ToAssemblerFormatName(ref System.Text.StringBuilder sb)
+      {
+        sb.Append(OpcodeCompiler.OpcodeAsm[(int) Opcode]);
+      }
+
+      public void ToCEnumName(ref System.Text.StringBuilder sb)
+      {
+        sb.Append("Op_");
+        
+        string n = OpcodeCompiler.OpcodeAsm[(int) Opcode];
+       
+        TextInfo txtInfo = new CultureInfo("en-us", false).TextInfo;
+        n = txtInfo.ToTitleCase(n.Replace('.', ' ')).Replace(" ", String.Empty);
+      
+        sb.Append(n);
+
+        if (Operand1 != Operand.None)
+        {
+          sb.Append('_');
+          sb.Append(Operand1);
+
+          if (Operand2 != Operand.None)
+          {
+            sb.Append('_');
+            sb.Append(Operand2);
+          }
+        }
+
+        if (Opcode == Opcode.Nop && Index > 1)
+        {
+          sb.AppendFormat("_{0:X2}", Index);
+        }
+
+      }
+
       public void ToAssemblerFormat(ref System.Text.StringBuilder sb)
       {
         sb.Append(OpcodeCompiler.OpcodeAsm[(int) Opcode]);
@@ -294,6 +352,27 @@ namespace DX8
               sb.AppendFormat("${0:X4}", lo | (hi << 8));
             else
               sb.Append(OperandAsm[(int) Operand2]);
+          }
+        }
+      }
+
+      
+      public void ToSprintfFormat(ref System.Text.StringBuilder sb)
+      {
+        sb.Append(OpcodeCompiler.OpcodeAsm[(int) Opcode]);
+
+        if (Operand1 != Operand.None)
+        {
+          sb.Append(' ');
+          sb.Append(OperandSprintf[(int) Operand1]);
+
+          if (Operand2 != Operand.None)
+          {
+            if (Opcode == Opcode.Jmp && Operand2 == Operand.Address)
+              sb.Append('+');
+            else
+              sb.Append(',');
+            sb.Append(OperandSprintf[(int) Operand2]);
           }
         }
       }
@@ -465,16 +544,17 @@ namespace DX8
       
       switch(op.Operand2)
       {
-        case Operand.X:    if (op1) { sb.Append(" & "); } sb.Append("B eq x"); break;
-        case Operand.Y:    if (op1) { sb.Append(" & "); } sb.Append("B eq y"); break;
-        case Operand.Z:    if (op1) { sb.Append(" & "); } sb.Append("B eq z"); break;
-        case Operand.W:    if (op1) { sb.Append(" & "); } sb.Append("B eq w"); break;
-        case Operand.A:    if (op1) { sb.Append(" & "); } sb.Append("B eq a"); break;
-        case Operand.I:    if (op1) { sb.Append(" & "); } sb.Append("B eq i"); break;
-        case Operand.J:    if (op1) { sb.Append(" & "); } sb.Append("B eq j"); break;
-        case Operand.Pc:   if (op1) { sb.Append(" & "); } sb.Append("B eq pc"); break;
-        case Operand.F:    if (op1) { sb.Append(" & "); } sb.Append("B eq f"); break;
-        case Operand.Byte: if (op1) { sb.Append(" & "); } sb.Append("(B eqtype 'x' | B eqtype $FF)"); break;
+        case Operand.None:    if (op1) { sb.Append(" & ");   sb.Append("B eq "); }  break;
+        case Operand.X:       if (op1) { sb.Append(" & "); } sb.Append("B eq x"); break;
+        case Operand.Y:       if (op1) { sb.Append(" & "); } sb.Append("B eq y"); break;
+        case Operand.Z:       if (op1) { sb.Append(" & "); } sb.Append("B eq z"); break;
+        case Operand.W:       if (op1) { sb.Append(" & "); } sb.Append("B eq w"); break;
+        case Operand.A:       if (op1) { sb.Append(" & "); } sb.Append("B eq a"); break;
+        case Operand.I:       if (op1) { sb.Append(" & "); } sb.Append("B eq i"); break;
+        case Operand.J:       if (op1) { sb.Append(" & "); } sb.Append("B eq j"); break;
+        case Operand.Pc:      if (op1) { sb.Append(" & "); } sb.Append("B eq pc"); break;
+        case Operand.F:       if (op1) { sb.Append(" & "); } sb.Append("B eq f"); break;
+        case Operand.Byte:    if (op1) { sb.Append(" & "); } sb.Append("(B eqtype 'x' | B eqtype $FF)"); break;
         case Operand.Address: if (op1) { sb.Append(" & "); } sb.Append("B eqtype $FFFF"); break;
       }
       
@@ -1013,19 +1093,22 @@ namespace DX8
         if (LineStartsWith_OP(line) == false)
           continue;
         
-        Match match = Regex.Match(line, @"OP\(\s*(\w+)\s*,\s*(\w+)\s*,\s*Opf_(\w+)\s*,\s*(\d)\s*,\s*(.*)", RegexOptions.IgnoreCase);
+        Match match = Regex.Match(line, @"OP\(\s*(\w+)\s*,\s*(\w+)\s*,\s*Opf_(\w+)\s*,\s*Pcm_(\w+)\s*,\s*(\d)\s*,\s*(.*)", RegexOptions.IgnoreCase);
 
         if (match.Success)
         {
             string name     = match.Groups[1].Value;
             string operands = match.Groups[2].Value;
             string format   = match.Groups[3].Value;
-            string time     = match.Groups[4].Value;
-            string code     = match.Groups[5].Value;
+            string pcmod    = match.Groups[4].Value;
+            string time     = match.Groups[5].Value;
+            string code     = match.Groups[6].Value;
 
             int    idx = nextIdx++;
             Opcode op = (Opcode) Enum.Parse(typeof(Opcode), name);
             Operand operand1 = Operand.None, operand2 = Operand.None;
+            PcMod pcMod = pcmod == "Set" ? PcMod.Set : PcMod.Length;
+
             int    length = 1;
 
             if (operands.Length == 1)
@@ -1090,7 +1173,7 @@ namespace DX8
               length = 2;
             }
             
-            ops[idx] = new Op(idx, op, operand1, operand2, length, code);
+            ops[idx] = new Op(idx, op, operand1, operand2, length, code, pcMod);
         }
         else
         {

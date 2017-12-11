@@ -15,6 +15,13 @@ inline void Cpu_PcStack_Push(Word address)
   PcStack_Set((cpu.pcStack * 2) + 0, LO_BYTE(address));
   PcStack_Set((cpu.pcStack * 2) + 1, HI_BYTE(address));
 
+#if defined(DX8_DEBUG_INSTRUCTIONS)
+  sDebugInstruction.context1.w = address;
+  sDebugInstruction.context1Type = CpuCtx_MemoryAddress;
+  sDebugInstruction.context2.lo = cpu.pcStack + 1;
+  sDebugInstruction.context2Type = CpuCtx_PcStack;
+#endif
+
   ++cpu.pcStack;
 }
 
@@ -31,6 +38,13 @@ inline Word Cpu_PcStack_Pop()
 
   pc = PcStack_Get((cpu.pcStack * 2) + 0);
   pc += PcStack_Get((cpu.pcStack * 2) + 1) * 256;
+
+#if defined(DX8_DEBUG_INSTRUCTIONS)
+  sDebugInstruction.context1.w = pc;
+  sDebugInstruction.context1Type = CpuCtx_MemoryAddress;
+  sDebugInstruction.context2.lo = cpu.pcStack - 1;
+  sDebugInstruction.context2Type = CpuCtx_PcStack;
+#endif
 
   return pc;
 }

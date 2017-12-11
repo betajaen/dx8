@@ -1,998 +1,1125 @@
-0400:          : nop                      ; F8
+0400:          : nop                      ; E3
 0401:          : push j                   ; 07
 0402:          : pop w                    ; 0E
 0403:          : push w                   ; 04
-0404:          : load w, $C304            ; 1C 04 C3
+0404:          : load w, $B504            ; 1C 04 B5
 0407:          : push w                   ; 04
-0408:          : add i, w                 ; 4B
+0408:          : add a, w                 ; 47
 0409:          : push w                   ; 04
 040A:          : store j, y               ; 25
 040B:          : push w                   ; 04
-040C:          : cmp a, x                 ; 80
+040C:          : dec x                    ; 78
 040D:          : push w                   ; 04
 040E:          : pop a                    ; 0F
 040F:          : pop j                    ; 11
 0410:          : pop i                    ; 10
-0411: LBL_1041 : dec a                    ; 7D
+0411: LBL_1041 : dec a                    ; 77
 0412:          : push a                   ; 05
 0413:          : load a, j                ; 16
 0414:          : store i, a               ; 20
 0415:          : pop a                    ; 0F
-0416:          : inc i                    ; 77
-0417:          : inc j                    ; 78
-0418:          : cmp a                    ; 84
-0419:          : rjmp.nz $F8              ; DD F8     LBL_1041 $0411
+0416:          : inc i                    ; 75
+0417:          : inc j                    ; 76
+0418:          : cmp a                    ; 82
+0419:          : rjmp.nz $F8              ; CC F8     LBL_1041 $0411
 041B:          : return                   ; 34
 041C:          : pop j                    ; 11
 041D:          : pop a                    ; 0F
 041E:          : pop i                    ; 10
 041F: LBL_1055 : store i, a               ; 20
-0420:          : inc i                    ; 77
-0421:          : dec j                    ; 7F
-0422:          : rjmp.nz $FD              ; DD FD     LBL_1055 $041F
+0420:          : inc i                    ; 75
+0421:          : dec j                    ; 7D
+0422:          : rjmp.nz $FD              ; CC FD     LBL_1055 $041F
 0424:          : return                   ; 34
 0425:          : pop a                    ; 0F
 0426:          : pop y                    ; 0C
 0427:          : pop x                    ; 0B
-0428:          : cmpi x, $28              ; 89 28(()
-042A:          : rjmp.gt $1E              ; D7 1E     LBL_1096 $0448
-042C:          : cmpi y, $20              ; 8A 20
-042E:          : rjmp.gt $1A              ; D7 1A     LBL_1096 $0448
-0430:          : cmpi a, $20              ; 8D 20
-0432:          : rjmp.lt $16              ; D9 16     LBL_1096 $0448
-0434:          : cmpi a, $7F              ; 8D 7F()
-0436:          : rjmp.gt $12              ; D7 12     LBL_1096 $0448
-0438:          : set j, $0000             ; 43 00 00
-043B:          : add j, y                 ; 4E
-043C:          : mul j, $0028             ; 66 28 00
-043F:          : add j, x                 ; 4D
-0440:          : add j, $8000             ; 50 00 80
-0443:          : store j, a               ; 23
-0444:          : set a, $01               ; 41 01
-0446:          : rjmp $04                 ; D1 04     LBL_1098 $044A
-0448: LBL_1096 : set a, $00               ; 41 00
-044A: LBL_1098 : return                   ; 34
-044B:          : pop j                    ; 11
-044C:          : pop y                    ; 0C
-044D:          : pop x                    ; 0B
-044E: LBL_1102 : load a, j                ; 16
-044F:          : cmp a                    ; 84
-0450:          : rjmp.z $2F               ; DB 2F(/)  LBL_1151 $047F
-0452:          : push z                   ; 03
-0453:          : push w                   ; 04
-0454:          : cmpi x, $28              ; 89 28(()
-0456:          : rjmp.gt $1E              ; D7 1E     LBL_1140 $0474
-0458:          : cmpi y, $20              ; 8A 20
-045A:          : rjmp.gt $1A              ; D7 1A     LBL_1140 $0474
-045C:          : cmpi a, $20              ; 8D 20
-045E:          : rjmp.lt $16              ; D9 16     LBL_1140 $0474
-0460:          : cmpi a, $7F              ; 8D 7F()
-0462:          : rjmp.gt $12              ; D7 12     LBL_1140 $0474
-0464:          : set j, $0000             ; 43 00 00
-0467:          : add j, y                 ; 4E
-0468:          : mul j, $0028             ; 66 28 00
-046B:          : add j, x                 ; 4D
-046C:          : add j, $8000             ; 50 00 80
-046F:          : store j, a               ; 23
-0470:          : set a, $01               ; 41 01
-0472:          : rjmp $04                 ; D1 04     LBL_1142 $0476
-0474: LBL_1140 : set a, $00               ; 41 00
-0476: LBL_1142 : pop w                    ; 0E
-0477:          : pop z                    ; 0D
-0478:          : cmp a                    ; 84
-0479:          : rjmp.z $06               ; DB 06     LBL_1151 $047F
-047B:          : inc j                    ; 78
-047C:          : inc x                    ; 72
-047D:          : rjmp $D1                 ; D1 D1     LBL_1102 $044E
-047F: LBL_1151 : return                   ; 34
-0480:          : pop a                    ; 0F
-0481:          : pop y                    ; 0C
-0482:          : pop x                    ; 0B
-0483: FUN_1155 : cmpi a, $0A              ; 8D 0A
-0485:          : rjmp.lt $0B              ; D9 0B     LBL_1168 $0490
-0487:          : cmpi a, $64              ; 8D 64(d)
-0489:          : rjmp.lt $06              ; D9 06     LBL_1167 $048F
-048B:          : inc x                    ; 72
-048C:          : inc x                    ; 72
-048D:          : rjmp $03                 ; D1 03     LBL_1168 $0490
-048F: LBL_1167 : inc x                    ; 72
-0490: LBL_1168 : cpy z, a                 ; 3B
-0491:          : mod a, $0A               ; 6D 0A
-0493:          : add a, $30               ; 55 30(0)
-0495:          : push z                   ; 03
-0496:          : cmpi x, $28              ; 89 28(()
-0498:          : rjmp.gt $1E              ; D7 1E     LBL_1206 $04B6
-049A:          : cmpi y, $20              ; 8A 20
-049C:          : rjmp.gt $1A              ; D7 1A     LBL_1206 $04B6
-049E:          : cmpi a, $20              ; 8D 20
-04A0:          : rjmp.lt $16              ; D9 16     LBL_1206 $04B6
-04A2:          : cmpi a, $7F              ; 8D 7F()
-04A4:          : rjmp.gt $12              ; D7 12     LBL_1206 $04B6
-04A6:          : set j, $0000             ; 43 00 00
-04A9:          : add j, y                 ; 4E
-04AA:          : mul j, $0028             ; 66 28 00
-04AD:          : add j, x                 ; 4D
-04AE:          : add j, $8000             ; 50 00 80
-04B1:          : store j, a               ; 23
-04B2:          : set a, $01               ; 41 01
-04B4:          : rjmp $04                 ; D1 04     LBL_1208 $04B8
-04B6: LBL_1206 : set a, $00               ; 41 00
-04B8: LBL_1208 : pop z                    ; 0D
-04B9:          : dec x                    ; 79
-04BA:          : cpy a, z                 ; 37
-04BB:          : div a, $0A               ; 68 0A
-04BD:          : cmp a                    ; 84
-04BE:          : rjmp.z $04               ; DB 04     LBL_1218 $04C2
-04C0:          : rjmp $D0                 ; D1 D0     LBL_1168 $0490
-04C2: LBL_1218 : return                   ; 34
-04C3:          : pop a                    ; 0F
-04C4:          : set i, $8000             ; 42 00 80
-04C7:          : set j, $2800             ; 43 00 28
-04CA:          : call $041F               ; 2D 1F 04  LBL_1055 $041F
-04CD:          : return                   ; 34
-04CE:          : nop                      ; 00
-04CF:          : nop                      ; 00
+0428:          : cmp x                    ; 83
+0429:          : rjmp.gt $1B              ; C6 1B     LBL_1092 $0444
+042B:          : cmp y                    ; 84
+042C:          : rjmp.gt $18              ; C6 18     LBL_1092 $0444
+042E:          : cmp a                    ; 82
+042F:          : rjmp.lt $15              ; C8 15     LBL_1092 $0444
+0431:          : cmp a                    ; 82
+0432:          : rjmp.gt $12              ; C6 12     LBL_1092 $0444
+0434:          : set j, $0000             ; 43 00 00
+0437:          : add j, y                 ; 4E
+0438:          : mul j, $0028             ; 63 28 00
+043B:          : add j, x                 ; 4D
+043C:          : add j, $8000             ; 50 00 80
+043F:          : store j, a               ; 23
+0440:          : set a, $01               ; 41 01
+0442:          : rjmp $04                 ; BE 04     LBL_1094 $0446
+0444: LBL_1092 : set a, $00               ; 41 00
+0446: LBL_1094 : return                   ; 34
+0447:          : pop j                    ; 11
+0448:          : pop y                    ; 0C
+0449:          : pop x                    ; 0B
+044A: LBL_1098 : load a, j                ; 16
+044B:          : cmp a                    ; 82
+044C:          : rjmp.z $2B               ; CA 2B(+)  LBL_1143 $0477
+044E:          : push z                   ; 03
+044F:          : push w                   ; 04
+0450:          : cmp x                    ; 83
+0451:          : rjmp.gt $1B              ; C6 1B     LBL_1132 $046C
+0453:          : cmp y                    ; 84
+0454:          : rjmp.gt $18              ; C6 18     LBL_1132 $046C
+0456:          : cmp a                    ; 82
+0457:          : rjmp.lt $15              ; C8 15     LBL_1132 $046C
+0459:          : cmp a                    ; 82
+045A:          : rjmp.gt $12              ; C6 12     LBL_1132 $046C
+045C:          : set j, $0000             ; 43 00 00
+045F:          : add j, y                 ; 4E
+0460:          : mul j, $0028             ; 63 28 00
+0463:          : add j, x                 ; 4D
+0464:          : add j, $8000             ; 50 00 80
+0467:          : store j, a               ; 23
+0468:          : set a, $01               ; 41 01
+046A:          : rjmp $04                 ; BE 04     LBL_1134 $046E
+046C: LBL_1132 : set a, $00               ; 41 00
+046E: LBL_1134 : pop w                    ; 0E
+046F:          : pop z                    ; 0D
+0470:          : cmp a                    ; 82
+0471:          : rjmp.z $06               ; CA 06     LBL_1143 $0477
+0473:          : inc j                    ; 76
+0474:          : inc x                    ; 71
+0475:          : rjmp $D5                 ; BE D5     LBL_1098 $044A
+0477: LBL_1143 : return                   ; 34
+0478:          : pop a                    ; 0F
+0479:          : pop y                    ; 0C
+047A:          : pop x                    ; 0B
+047B: FUN_1147 : cmp a                    ; 82
+047C:          : rjmp.lt $0A              ; C8 0A     LBL_1158 $0486
+047E:          : cmp a                    ; 82
+047F:          : rjmp.lt $06              ; C8 06     LBL_1157 $0485
+0481:          : inc x                    ; 71
+0482:          : inc x                    ; 71
+0483:          : rjmp $03                 ; BE 03     LBL_1158 $0486
+0485: LBL_1157 : inc x                    ; 71
+0486: LBL_1158 : cpy z, a                 ; 3B
+0487:          : mod a, $0A               ; 6A 0A
+0489:          : add a, $30               ; 55 30(0)
+048B:          : push z                   ; 03
+048C:          : cmp x                    ; 83
+048D:          : rjmp.gt $1B              ; C6 1B     LBL_1192 $04A8
+048F:          : cmp y                    ; 84
+0490:          : rjmp.gt $18              ; C6 18     LBL_1192 $04A8
+0492:          : cmp a                    ; 82
+0493:          : rjmp.lt $15              ; C8 15     LBL_1192 $04A8
+0495:          : cmp a                    ; 82
+0496:          : rjmp.gt $12              ; C6 12     LBL_1192 $04A8
+0498:          : set j, $0000             ; 43 00 00
+049B:          : add j, y                 ; 4E
+049C:          : mul j, $0028             ; 63 28 00
+049F:          : add j, x                 ; 4D
+04A0:          : add j, $8000             ; 50 00 80
+04A3:          : store j, a               ; 23
+04A4:          : set a, $01               ; 41 01
+04A6:          : rjmp $04                 ; BE 04     LBL_1194 $04AA
+04A8: LBL_1192 : set a, $00               ; 41 00
+04AA: LBL_1194 : pop z                    ; 0D
+04AB:          : dec x                    ; 78
+04AC:          : cpy a, z                 ; 37
+04AD:          : div a, $0A               ; 65 0A
+04AF:          : cmp a                    ; 82
+04B0:          : rjmp.z $04               ; CA 04     LBL_1204 $04B4
+04B2:          : rjmp $D4                 ; BE D4     LBL_1158 $0486
+04B4: LBL_1204 : return                   ; 34
+04B5:          : pop a                    ; 0F
+04B6:          : set i, $8000             ; 42 00 80
+04B9:          : set j, $2800             ; 43 00 28
+04BC:          : call $041F               ; 2D 1F 04  LBL_1055 $041F
+04BF:          : return                   ; 34
+04C0:          : nop                      ; 00
+04C1:          : nop                      ; 00
+04C2:          : nop                      ; 00
+04C3:          : nop                      ; 00
+04C4:          : nop                      ; 00
+04C5:          : nop                      ; 00
+04C6:          : nop                      ; 00
+04C7:          : nop                      ; 00
+04C8:          : cmp a, z                 ; 80
+04C9:          : cpy z, a                 ; 3B
+04CA:          : set z, $42               ; 3F 42(B)
+04CC:          : nop                      ; FF
+04CD:          : xor a, z                 ; AA
+04CE: LBL_1230 : rjmp.nz $00              ; CC 00     LBL_1230 $04CE
 04D0:          : nop                      ; 00
 04D1:          : nop                      ; 00
-04D2:          : nop                      ; 00
-04D3:          : nop                      ; 00
-04D4:          : nop                      ; 00
-04D5:          : nop                      ; 00
-04D6:          : cmp a, x                 ; 80
-04D7:          : cpy z, a                 ; 3B
-04D8:          : set z, $42               ; 3F 42(B)
-04DA:          : nop                      ; FF
-04DB:          : not w                    ; AA
-04DC:          : jmp $0000, x             ; CC 00 00  ERROR $0000
-04DF:          : nop                      ; 00
-04E0: FUN_1248 : set i, $0511             ; 42 11 05
-04E3:          : store $0000, i           ; 2B 00 00
-04E6:          : set i, $0514             ; 42 14 05
-04E9:          : store $0002, i           ; 2B 02 00
-04EC:          : set i, $057C             ; 42 7C 05
-04EF:          : store $0004, i           ; 2B 04 00
-04F2:          : set i, $05E6             ; 42 E6 05
-04F5:          : store $0006, i           ; 2B 06 00
-04F8:          : set i, $05F2             ; 42 F2 05
-04FB:          : store $0008, i           ; 2B 08 00
-04FE:          : set i, $05FB             ; 42 FB 05
-0501:          : store $000A, i           ; 2B 0A 00
-0504:          : set i, $05FB             ; 42 FB 05
-0507:          : store $000C, i           ; 2B 0C 00
-050A:          : set i, $05F4             ; 42 F4 05
-050D:          : store $000E, i           ; 2B 0E 00
-0510:          : return                   ; 34
-0511:          : jmp $0877                ; C9 77 08  LBL_2167 $0877
-0514:          : load a, $002C            ; 1D 2C 00
-0517:          : cpy x, a                 ; 39
-0518:          : cmpi a, $E8              ; 8D E8
-051A:          : jmp.gt $0547             ; D6 47 05  LBL_1351 $0547
-051D:          : jmp.eq $0566             ; D2 66 05  LBL_1382 $0566
-0520:          : not x                    ; A7
-0521:          : and x, $E0               ; 99 E0
-0523:          : shr x, $02               ; BA 02
-0525:          : load a, $04D8            ; 1D D8 04
-0528:          : add a, x                 ; 44
-0529:          : store $001E, a           ; 2A 1E 00
-052C:          : neg a                    ; 71
-052D:          : store $0021, a           ; 2A 21 00
-0530:          : load a, $04D9            ; 1D D9 04
-0533:          : add a, x                 ; 44
-0534:          : store $001F, a           ; 2A 1F 00
-0537:          : neg a                    ; 71
-0538:          : store $0022, a           ; 2A 22 00
-053B:          : load a, $04DA            ; 1D DA 04
-053E:          : add a, x                 ; 44
-053F:          : store $0020, a           ; 2A 20 00
-0542:          : neg a                    ; 71
-0543:          : store $0023, a           ; 2A 23 00
-0546:          : resume                   ; EA
-0547: LBL_1351 : set a, $3B               ; 41 3B(;)
-0549:          : store $001D, a           ; 2A 1D 00
-054C:          : set a, $3F               ; 41 3F(?)
-054E:          : store $001E, a           ; 2A 1E 00
-0551:          : set a, $42               ; 41 42(B)
-0553:          : store $001F, a           ; 2A 1F 00
-0556:          : set a, $FE               ; 41 FE
-0558:          : store $0020, a           ; 2A 20 00
-055B:          : set a, $FE               ; 41 FE
-055D:          : store $0021, a           ; 2A 21 00
-0560:          : set a, $FE               ; 41 FE
+04D2: FUN_1234 : set i, $0503             ; 42 03 05
+04D5:          : store $0000, i           ; 2B 00 00
+04D8:          : set i, $0506             ; 42 06 05
+04DB:          : store $0002, i           ; 2B 02 00
+04DE:          : set i, $0567             ; 42 67 05
+04E1:          : store $0004, i           ; 2B 04 00
+04E4:          : set i, $05D1             ; 42 D1 05
+04E7:          : store $0006, i           ; 2B 06 00
+04EA:          : set i, $05DD             ; 42 DD 05
+04ED:          : store $0008, i           ; 2B 08 00
+04F0:          : set i, $05E6             ; 42 E6 05
+04F3:          : store $000A, i           ; 2B 0A 00
+04F6:          : set i, $05E6             ; 42 E6 05
+04F9:          : store $000C, i           ; 2B 0C 00
+04FC:          : set i, $05DF             ; 42 DF 05
+04FF:          : store $000E, i           ; 2B 0E 00
+0502:          : return                   ; 34
+0503:          : jmp $0862                ; B8 62 08  LBL_2146 $0862
+0506:          : load a, $002C            ; 1D 2C 00
+0509:          : cpy x, a                 ; 39
+050A:          : jmp.gt $0532             ; C5 32 05  LBL_1330 $0532
+050D:          : jmp.eq $0551             ; C1 51 05  LBL_1361 $0551
+0510:          : load a, $04CA            ; 1D CA 04
+0513:          : add a, x                 ; 44
+0514:          : store $001E, a           ; 2A 1E 00
+0517:          : neg a                    ; 6E
+0518:          : store $0021, a           ; 2A 21 00
+051B:          : load a, $04CB            ; 1D CB 04
+051E:          : add a, x                 ; 44
+051F:          : store $001F, a           ; 2A 1F 00
+0522:          : neg a                    ; 6E
+0523:          : store $0022, a           ; 2A 22 00
+0526:          : load a, $04CC            ; 1D CC 04
+0529:          : add a, x                 ; 44
+052A:          : store $0020, a           ; 2A 20 00
+052D:          : neg a                    ; 6E
+052E:          : store $0023, a           ; 2A 23 00
+0531:          : resume                   ; CF
+0532: LBL_1330 : set a, $3B               ; 41 3B(;)
+0534:          : store $001D, a           ; 2A 1D 00
+0537:          : set a, $3F               ; 41 3F(?)
+0539:          : store $001E, a           ; 2A 1E 00
+053C:          : set a, $42               ; 41 42(B)
+053E:          : store $001F, a           ; 2A 1F 00
+0541:          : set a, $FE               ; 41 FE
+0543:          : store $0020, a           ; 2A 20 00
+0546:          : set a, $FE               ; 41 FE
+0548:          : store $0021, a           ; 2A 21 00
+054B:          : set a, $FE               ; 41 FE
+054D:          : store $0022, a           ; 2A 22 00
+0550:          : resume                   ; CF
+0551: LBL_1361 : set a, $00               ; 41 00
+0553:          : store $001D, a           ; 2A 1D 00
+0556:          : store $001E, a           ; 2A 1E 00
+0559:          : store $001F, a           ; 2A 1F 00
+055C:          : store $0020, a           ; 2A 20 00
+055F:          : store $0021, a           ; 2A 21 00
 0562:          : store $0022, a           ; 2A 22 00
-0565:          : resume                   ; EA
-0566: LBL_1382 : set a, $00               ; 41 00
-0568:          : store $001D, a           ; 2A 1D 00
-056B:          : store $001E, a           ; 2A 1E 00
-056E:          : store $001F, a           ; 2A 1F 00
-0571:          : store $0020, a           ; 2A 20 00
-0574:          : store $0021, a           ; 2A 21 00
-0577:          : store $0022, a           ; 2A 22 00
-057A:          : resume                   ; EA
-057B:          : resume                   ; EA
-057C:          : load a, $04D7            ; 1D D7 04
-057F:          : load x, $04DA            ; 19 DA 04
-0582:          : cmp a, x                 ; 80
-0583:          : jmp.lt $0594             ; D8 94 05  LBL_1428 $0594
-0586:          : jmp.gt $059B             ; D6 9B 05  LBL_1435 $059B
-0589:          : load a, $00E1            ; 1D E1 00
-058C:          : mod a, $7F               ; 6D 7F()
-058E:          : store $04DA, a           ; 2A DA 04
-0591:          : jmp $059F                ; C9 9F 05  LBL_1439 $059F
-0594: LBL_1428 : inc a                    ; 76
-0595:          : store $04D7, a           ; 2A D7 04
-0598:          : jmp $059F                ; C9 9F 05  LBL_1439 $059F
-059B: LBL_1435 : dec a                    ; 7D
-059C:          : store $04D7, a           ; 2A D7 04
-059F: LBL_1439 : load a, $04D8            ; 1D D8 04
-05A2:          : load x, $04DB            ; 19 DB 04
-05A5:          : cmp a, x                 ; 80
-05A6:          : jmp.lt $05B7             ; D8 B7 05  LBL_1463 $05B7
-05A9:          : jmp.gt $05BE             ; D6 BE 05  LBL_1470 $05BE
-05AC:          : load a, $00E1            ; 1D E1 00
-05AF:          : mod a, $7F               ; 6D 7F()
-05B1:          : store $04DB, a           ; 2A DB 04
-05B4:          : jmp $05C2                ; C9 C2 05  LBL_1474 $05C2
-05B7: LBL_1463 : inc a                    ; 76
-05B8:          : store $04D8, a           ; 2A D8 04
-05BB:          : jmp $05C2                ; C9 C2 05  LBL_1474 $05C2
-05BE: LBL_1470 : dec a                    ; 7D
-05BF:          : store $04D8, a           ; 2A D8 04
-05C2: LBL_1474 : load a, $04D9            ; 1D D9 04
-05C5:          : load x, $04DC            ; 19 DC 04
-05C8:          : cmp a, x                 ; 80
-05C9:          : jmp.lt $05DA             ; D8 DA 05  LBL_1498 $05DA
-05CC:          : jmp.gt $05E1             ; D6 E1 05  LBL_1505 $05E1
-05CF:          : load a, $00E1            ; 1D E1 00
-05D2:          : mod a, $7F               ; 6D 7F()
-05D4:          : store $04DC, a           ; 2A DC 04
-05D7:          : jmp $05E5                ; C9 E5 05  LBL_1509 $05E5
-05DA: LBL_1498 : inc a                    ; 76
-05DB:          : store $04D9, a           ; 2A D9 04
-05DE:          : jmp $05C2                ; C9 C2 05  LBL_1474 $05C2
-05E1: LBL_1505 : dec a                    ; 7D
-05E2:          : store $04D9, a           ; 2A D9 04
-05E5: LBL_1509 : resume                   ; EA
-05E6:          : load a, $0034            ; 1D 34 00
-05E9:          : store $04CE, a           ; 2A CE 04
-05EC:          : set a, $00               ; 41 00
-05EE:          : store $0034, a           ; 2A 34 00
-05F1:          : resume                   ; EA
-05F2:          : nop                      ; 00
-05F3:          : resume                   ; EA
-05F4:          : nop                      ; 00
-05F5:          : dbn $4C48                ; F2 48 4C
-05F8:          : int $FF                  ; E9 FF
-05FA:          : resume                   ; EA
-05FB:          : dbn $4C44                ; F2 44 4C
-05FE:          : nop                      ; 00
-05FF:          : resume                   ; EA
-0600: FUN_1536 : set a, $44               ; 41 44(D)
-0602:          : store $84C1, a           ; 2A C1 84
-0605:          : set a, $58               ; 41 58(X)
-0607:          : store $84C2, a           ; 2A C2 84
-060A:          : set a, $38               ; 41 38(8)
-060C:          : store $84C3, a           ; 2A C3 84
-060F:          : set a, $2F               ; 41 2F(/)
-0611:          : store $84C5, a           ; 2A C5 84
-0614:          : set a, $2F               ; 41 2F(/)
-0616:          : store $84C6, a           ; 2A C6 84
-0619:          : set a, $2F               ; 41 2F(/)
-061B:          : store $84C7, a           ; 2A C7 84
-061E:          : return                   ; 34
-061F: FUN_1567 : load x, $002F            ; 19 2F 00
-0622:          : cmpbit x, $40            ; 90 40(@)
-0624:          : jmp.z $062A              ; DA 2A 06  LBL_1578 $062A
-0627:          : jmp $0638                ; C9 38 06  LBL_1592 $0638
-062A: LBL_1578 : set x, $20               ; 3D 20
-062C:          : store $84C5, x           ; 26 C5 84
-062F:          : store $84C6, x           ; 26 C6 84
-0632:          : store $84C7, x           ; 26 C7 84
-0635:          : jmp $0643                ; C9 43 06  LBL_1603 $0643
-0638: LBL_1592 : set x, $2F               ; 3D 2F(/)
-063A:          : store $84C5, x           ; 26 C5 84
-063D:          : store $84C6, x           ; 26 C6 84
-0640:          : store $84C7, x           ; 26 C7 84
-0643: LBL_1603 : return                   ; 34
-0644:          : sub w, $06               ; 60 06
-0646:          : div a, x                 ; 67
-0647:          : push i                   ; 06
-0648:          : jmp $1706, a             ; D0 06 17  ERROR $1706
-064B:          : push j                   ; 07
-064C:          : set j, $4F07             ; 43 07 4F
-064F:          : push j                   ; 07
-0650:          : sub a, x                 ; 56
-0651:          : push j                   ; 07
-0652:          : inc z                    ; 74
-0653:          : push j                   ; 07
-0654:          : dec z                    ; 7B
-0655:          : push j                   ; 07
-0656:          : cmp a                    ; 84
-0657:          : push j                   ; 07
-0658:          : cmpbit a, $07            ; 94 07
-065A:          : and z, $07               ; 9B 07
-065C:          : rol z                    ; C1
-065D:          : push j                   ; 07
-065E:          : rol w                    ; C2
-065F:          : push j                   ; 07
-0660:          : set a, $00               ; 41 00
-0662:          : store $04CE, a           ; 2A CE 04
-0665:          : nop                      ; 00
-0666:          : return                   ; 34
-0667:          : set a, $00               ; 41 00
-0669:          : store $04CE, a           ; 2A CE 04
-066C:          : set a, $01               ; 41 01
-066E:          : store $04CF, a           ; 2A CF 04
-0671:          : set a, $20               ; 41 20
-0673:          : store $8269, a           ; 2A 69 82
-0676:          : set a, $20               ; 41 20
-0678:          : store $826A, a           ; 2A 6A 82
-067B:          : set a, $20               ; 41 20
-067D:          : store $826B, a           ; 2A 6B 82
-0680:          : set a, $20               ; 41 20
-0682:          : store $826C, a           ; 2A 6C 82
-0685:          : set a, $20               ; 41 20
-0687:          : store $826D, a           ; 2A 6D 82
-068A:          : set a, $20               ; 41 20
-068C:          : store $826E, a           ; 2A 6E 82
-068F:          : set a, $20               ; 41 20
-0691:          : store $8291, a           ; 2A 91 82
-0694:          : set a, $20               ; 41 20
-0696:          : store $8292, a           ; 2A 92 82
-0699:          : set a, $20               ; 41 20
-069B:          : store $8293, a           ; 2A 93 82
-069E:          : set a, $20               ; 41 20
-06A0:          : store $8294, a           ; 2A 94 82
-06A3:          : set a, $20               ; 41 20
-06A5:          : store $8295, a           ; 2A 95 82
-06A8:          : set a, $20               ; 41 20
-06AA:          : store $8296, a           ; 2A 96 82
-06AD:          : set a, $00               ; 41 00
-06AF:          : store $04D0, a           ; 2A D0 04
-06B2:          : set i, $D400             ; 42 00 D4
-06B5:          : store $04D1, i           ; 2B D1 04
-06B8:          : set a, $FF               ; 41 FF
-06BA:          : store $04D3, a           ; 2A D3 04
-06BD:          : set a, $FF               ; 41 FF
-06BF:          : store $0037, a           ; 2A 37 00
-06C2:          : set i, $D400             ; 42 00 D4
-06C5:          : store $0038, i           ; 2B 38 00
-06C8:          : set a, $01               ; 41 01
-06CA:          : store $003A, a           ; 2A 3A 00
-06CD:          : int $D0                  ; E9 D0
-06CF:          : return                   ; 34
-06D0: FUN_1744 : set a, $00               ; 41 00
-06D2:          : store $04CE, a           ; 2A CE 04
-06D5:          : set a, $00               ; 41 00
-06D7:          : store $04CF, a           ; 2A CF 04
-06DA:          : set a, $49               ; 41 49(I)
-06DC:          : store $8269, a           ; 2A 69 82
-06DF:          : set a, $4E               ; 41 4E(N)
-06E1:          : store $826A, a           ; 2A 6A 82
-06E4:          : set a, $53               ; 41 53(S)
-06E6:          : store $826B, a           ; 2A 6B 82
-06E9:          : set a, $45               ; 41 45(E)
-06EB:          : store $826C, a           ; 2A 6C 82
-06EE:          : set a, $52               ; 41 52(R)
-06F0:          : store $826D, a           ; 2A 6D 82
-06F3:          : set a, $54               ; 41 54(T)
-06F5:          : store $826E, a           ; 2A 6E 82
-06F8:          : set a, $46               ; 41 46(F)
-06FA:          : store $8291, a           ; 2A 91 82
-06FD:          : set a, $4C               ; 41 4C(L)
-06FF:          : store $8292, a           ; 2A 92 82
-0702:          : set a, $4F               ; 41 4F(O)
-0704:          : store $8293, a           ; 2A 93 82
-0707:          : set a, $50               ; 41 50(P)
-0709:          : store $8294, a           ; 2A 94 82
-070C:          : set a, $50               ; 41 50(P)
-070E:          : store $8295, a           ; 2A 95 82
-0711:          : set a, $59               ; 41 59(Y)
-0713:          : store $8296, a           ; 2A 96 82
-0716:          : return                   ; 34
-0717:          : load a, $00E1            ; 1D E1 00
-071A:          : store $04D7, a           ; 2A D7 04
-071D:          : load a, $00E1            ; 1D E1 00
-0720:          : store $04D8, a           ; 2A D8 04
-0723:          : load a, $00E1            ; 1D E1 00
-0726:          : store $04D9, a           ; 2A D9 04
-0729:          : load a, $0036            ; 1D 36 00
-072C:          : set x, $02               ; 3D 02
-072E:          : set y, $02               ; 3E 02
-0730:          : call $0483               ; 2D 83 04  FUN_1155 $0483
-0733:          : load a, $0037            ; 1D 37 00
-0736:          : set x, $07               ; 3D 07
-0738:          : set y, $02               ; 3E 02
-073A:          : call $0483               ; 2D 83 04  FUN_1155 $0483
-073D:          : set a, $00               ; 41 00
-073F:          : store $04CE, a           ; 2A CE 04
-0742:          : return                   ; 34
-0743:          : set a, $00               ; 41 00
-0745:          : store $04CE, a           ; 2A CE 04
-0748:          : load a, $04D0            ; 1D D0 04
-074B:          : bcall $0654, a           ; E4 54 06
-074E:          : return                   ; 34
-074F:          : set a, $00               ; 41 00
-0751:          : store $04CE, a           ; 2A CE 04
-0754:          : nop                      ; 00
-0755:          : return                   ; 34
-0756:          : load a, $00E1            ; 1D E1 00
-0759:          : mod a, $7F               ; 6D 7F()
-075B:          : store $04D7, a           ; 2A D7 04
-075E:          : load a, $00E1            ; 1D E1 00
-0761:          : mod a, $7F               ; 6D 7F()
-0763:          : store $04D8, a           ; 2A D8 04
-0766:          : load a, $00E1            ; 1D E1 00
-0769:          : mod a, $7F               ; 6D 7F()
-076B:          : store $04D9, a           ; 2A D9 04
-076E:          : set a, $00               ; 41 00
-0770:          : store $04CE, a           ; 2A CE 04
-0773:          : return                   ; 34
-0774:          : set a, $00               ; 41 00
-0776:          : store $04CE, a           ; 2A CE 04
-0779:          : nop                      ; 00
-077A:          : return                   ; 34
-077B:          : set a, $01               ; 41 01
-077D:          : store $04D0, a           ; 2A D0 04
-0780:          : call $0788               ; 2D 88 07  FUN_1928 $0788
-0783:          : return                   ; 34
-0784:          : call $0788               ; 2D 88 07  FUN_1928 $0788
-0787:          : return                   ; 34
-0788: FUN_1928 : load i, $04D1            ; 1E D1 04
-078B:          : load a, i                ; 13
-078C:          : inc i                    ; 77
-078D:          : store $04D1, i           ; 2B D1 04
-0790:          : bcall $0658, a           ; E4 58 06
-0793:          : return                   ; 34
-0794:          : nop                      ; 00
-0795:          : set a, $03               ; 41 03
-0797:          : store $04D0, a           ; 2A D0 04
-079A:          : return                   ; 34
-079B:          : load i, $04D1            ; 1E D1 04
-079E:          : load z, i                ; 14
-079F:          : inc i                    ; 77
-07A0:          : store $0038, z           ; 28 38 00
-07A3:          : load z, i                ; 14
-07A4:          : store $0039, z           ; 28 39 00
-07A7:          : load i, $04D1            ; 1E D1 04
-07AA:          : inc i                    ; 77
-07AB:          : inc i                    ; 77
-07AC:          : store $04D1, i           ; 2B D1 04
-07AF:          : load a, $04D3            ; 1D D3 04
-07B2:          : inc a                    ; 76
-07B3:          : store $04D3, a           ; 2A D3 04
-07B6:          : store $0037, a           ; 2A 37 00
-07B9:          : set a, $01               ; 41 01
-07BB:          : store $003A, a           ; 2A 3A 00
-07BE:          : int $D0                  ; E9 D0
-07C0:          : return                   ; 34
-07C1:          : return                   ; 34
-07C2:          : set a, $03               ; 41 03
-07C4:          : store $04D0, a           ; 2A D0 04
-07C7:          : set i, $05FB             ; 42 FB 05
-07CA:          : store $0002, i           ; 2B 02 00
-07CD:          : set i, $05FB             ; 42 FB 05
-07D0:          : store $0004, i           ; 2B 04 00
-07D3:          : set i, $05FB             ; 42 FB 05
-07D6:          : store $0006, i           ; 2B 06 00
-07D9:          : set i, $05FB             ; 42 FB 05
-07DC:          : store $0008, i           ; 2B 08 00
-07DF:          : set i, $05F4             ; 42 F4 05
-07E2:          : store $000E, i           ; 2B 0E 00
-07E5:          : set i, $1400             ; 42 00 14
-07E8:          : store $0000, i           ; 2B 00 00
-07EB:          : dbn $5252                ; F2 52 52
-07EE:          : int $FF                  ; E9 FF
-07F0:          : return                   ; 34
-07F1:          : load a, $04CE            ; 1D CE 04
-07F4:          : bcall $0644, a           ; E4 44 06
-07F7:          : return                   ; 34
-07F8:          : call $04E0               ; 2D E0 04  FUN_1248 $04E0
-07FB:          : set a, $00               ; 41 00
-07FD:          : store $0080, a           ; 2A 80 00
-0800:          : set a, $01               ; 41 01
-0802:          : store $0081, a           ; 2A 81 00
-0805:          : set a, $02               ; 41 02
-0807:          : store $0082, a           ; 2A 82 00
-080A:          : set a, $03               ; 41 03
-080C:          : store $0083, a           ; 2A 83 00
-080F:          : set a, $04               ; 41 04
-0811:          : store $0084, a           ; 2A 84 00
-0814:          : set a, $05               ; 41 05
-0816:          : store $0085, a           ; 2A 85 00
-0819:          : set a, $06               ; 41 06
-081B:          : store $0086, a           ; 2A 86 00
-081E:          : set a, $07               ; 41 07
-0820:          : store $0087, a           ; 2A 87 00
-0823:          : set a, $08               ; 41 08
-0825:          : store $0088, a           ; 2A 88 00
-0828:          : set a, $35               ; 41 35(5)
-082A:          : store $00B5, a           ; 2A B5 00
-082D:          : set a, $46               ; 41 46(F)
-082F:          : store $00A0, a           ; 2A A0 00
-0832:          : set a, $47               ; 41 47(G)
-0834:          : store $00A1, a           ; 2A A1 00
-0837:          : set a, $48               ; 41 48(H)
-0839:          : store $00A2, a           ; 2A A2 00
-083C:          : set a, $49               ; 41 49(I)
-083E:          : store $00A3, a           ; 2A A3 00
-0841:          : set a, $4A               ; 41 4A(J)
-0843:          : store $00A4, a           ; 2A A4 00
-0846:          : set a, $4B               ; 41 4B(K)
-0848:          : store $00A5, a           ; 2A A5 00
-084B:          : set a, $4C               ; 41 4C(L)
-084D:          : store $00A6, a           ; 2A A6 00
-0850:          : set a, $4D               ; 41 4D(M)
-0852:          : store $00A7, a           ; 2A A7 00
-0855:          : set a, $4E               ; 41 4E(N)
-0857:          : store $00A8, a           ; 2A A8 00
-085A:          : set a, $4F               ; 41 4F(O)
-085C:          : store $00A9, a           ; 2A A9 00
-085F:          : set i, $08CD             ; 42 CD 08
-0862:          : store $0030, i           ; 2B 30 00
-0865:          : set a, $00               ; 41 00
-0867:          : store $0019, a           ; 2A 19 00
-086A:          : set a, $01               ; 41 01
-086C:          : store $0018, a           ; 2A 18 00
-086F:          : set a, $00               ; 41 00
-0871:          : store $00E0, a           ; 2A E0 00
-0874:          : rti                      ; F5
-0875:          : int $FE                  ; E9 FE
-0877: LBL_2167 : set i, $8000             ; 42 00 80
-087A:          : set j, $2800             ; 43 00 28
-087D:          : set a, $20               ; 41 20
-087F:          : call $041F               ; 2D 1F 04  LBL_1055 $041F
-0882:          : call $0411               ; 2D 11 04  LBL_1041 $0411
-0885:          : call $0600               ; 2D 00 06  FUN_1536 $0600
-0888:          : call $06D0               ; 2D D0 06  FUN_1744 $06D0
-088B:          : set i, $C000             ; 42 00 C0
-088E:          : store $04DD, i           ; 2B DD 04
-0891:          : set x, $00               ; 3D 00
-0893:          : store $04DF, x           ; 26 DF 04
-0896:          : set x, $0F               ; 3D 0F
-0898:          : store $003E, x           ; 26 3E 00
-089B:          : set x, $3C               ; 3D 3C(<)
-089D:          : store $003F, x           ; 26 3F 00
-08A0:          : set a, $48               ; 41 48(H)
-08A2:          : store $8000, a           ; 2A 00 80
-08A5:          : set a, $69               ; 41 69(i)
-08A7:          : store $8001, a           ; 2A 01 80
-08AA:          : set a, $52               ; 41 52(R)
-08AC:          : store $8032, a           ; 2A 32 80
-08AF:          : set a, $46               ; 41 46(F)
-08B1:          : store $8015, a           ; 2A 15 80
-08B4:          : set a, $4F               ; 41 4F(O)
-08B6:          : store $8016, a           ; 2A 16 80
-08B9:          : set a, $4F               ; 41 4F(O)
-08BB:          : store $8017, a           ; 2A 17 80
-08BE: LBL_2238 : call $061F               ; 2D 1F 06  FUN_1567 $061F
-08C1:          : load a, $04CE            ; 1D CE 04
-08C4:          : cmpi a, $00              ; 8D 00
-08C6:          : call.neq $07F1           ; 2F F1 07
-08C9:          : jmp $08BE                ; C9 BE 08  LBL_2238 $08BE
-08CC:          : nop                      ; 00
-08CD:          : nop                      ; 00
-08CE:          : load y, j                ; 18
-08CF:          : mul j, $186C             ; 66 6C 18
-08D2:          : add a, z                 ; 46
-08D3:          : cpy a, w                 ; 38
-08D4:          : load y, j                ; 18
-08D5:          : call.gt $360C            ; 30 0C 36
-08D8:          : nop                      ; 00
-08D9:          : nop                      ; 00
-08DA:          : nop                      ; 00
-08DB:          : nop                      ; 00
-08DC:          : set w, $3C               ; 40 3C(<)
-08DE:          : load y, j                ; 18
-08DF:          : cpy w, a                 ; 3C
+0565:          : resume                   ; CF
+0566:          : resume                   ; CF
+0567:          : load a, $04C9            ; 1D C9 04
+056A:          : load x, $04CC            ; 19 CC 04
+056D:          : cmp a, x                 ; 7E
+056E:          : jmp.lt $057F             ; C7 7F 05  LBL_1407 $057F
+0571:          : jmp.gt $0586             ; C5 86 05  LBL_1414 $0586
+0574:          : load a, $00E1            ; 1D E1 00
+0577:          : mod a, $7F               ; 6A 7F()
+0579:          : store $04CC, a           ; 2A CC 04
+057C:          : jmp $058A                ; B8 8A 05  LBL_1418 $058A
+057F: LBL_1407 : inc a                    ; 70
+0580:          : store $04C9, a           ; 2A C9 04
+0583:          : jmp $058A                ; B8 8A 05  LBL_1418 $058A
+0586: LBL_1414 : dec a                    ; 77
+0587:          : store $04C9, a           ; 2A C9 04
+058A: LBL_1418 : load a, $04CA            ; 1D CA 04
+058D:          : load x, $04CD            ; 19 CD 04
+0590:          : cmp a, x                 ; 7E
+0591:          : jmp.lt $05A2             ; C7 A2 05  LBL_1442 $05A2
+0594:          : jmp.gt $05A9             ; C5 A9 05  LBL_1449 $05A9
+0597:          : load a, $00E1            ; 1D E1 00
+059A:          : mod a, $7F               ; 6A 7F()
+059C:          : store $04CD, a           ; 2A CD 04
+059F:          : jmp $05AD                ; B8 AD 05  LBL_1453 $05AD
+05A2: LBL_1442 : inc a                    ; 70
+05A3:          : store $04CA, a           ; 2A CA 04
+05A6:          : jmp $05AD                ; B8 AD 05  LBL_1453 $05AD
+05A9: LBL_1449 : dec a                    ; 77
+05AA:          : store $04CA, a           ; 2A CA 04
+05AD: LBL_1453 : load a, $04CB            ; 1D CB 04
+05B0:          : load x, $04CE            ; 19 CE 04
+05B3:          : cmp a, x                 ; 7E
+05B4:          : jmp.lt $05C5             ; C7 C5 05  LBL_1477 $05C5
+05B7:          : jmp.gt $05CC             ; C5 CC 05  LBL_1484 $05CC
+05BA:          : load a, $00E1            ; 1D E1 00
+05BD:          : mod a, $7F               ; 6A 7F()
+05BF:          : store $04CE, a           ; 2A CE 04
+05C2:          : jmp $05D0                ; B8 D0 05  LBL_1488 $05D0
+05C5: LBL_1477 : inc a                    ; 70
+05C6:          : store $04CB, a           ; 2A CB 04
+05C9:          : jmp $05AD                ; B8 AD 05  LBL_1453 $05AD
+05CC: LBL_1484 : dec a                    ; 77
+05CD:          : store $04CB, a           ; 2A CB 04
+05D0: LBL_1488 : resume                   ; CF
+05D1:          : load a, $0034            ; 1D 34 00
+05D4:          : store $04C0, a           ; 2A C0 04
+05D7:          : set a, $00               ; 41 00
+05D9:          : store $0034, a           ; 2A 34 00
+05DC:          : resume                   ; CF
+05DD:          : nop                      ; 00
+05DE:          : resume                   ; CF
+05DF:          : nop                      ; 00
+05E0:          : dbn $4C48                ; D5 48 4C
+05E3:          : int $FF                  ; CE FF
+05E5:          : resume                   ; CF
+05E6:          : dbn $4C44                ; D5 44 4C
+05E9:          : nop                      ; 00
+05EA:          : resume                   ; CF
+05EB: FUN_1515 : set a, $44               ; 41 44(D)
+05ED:          : store $84C1, a           ; 2A C1 84
+05F0:          : set a, $58               ; 41 58(X)
+05F2:          : store $84C2, a           ; 2A C2 84
+05F5:          : set a, $38               ; 41 38(8)
+05F7:          : store $84C3, a           ; 2A C3 84
+05FA:          : set a, $2F               ; 41 2F(/)
+05FC:          : store $84C5, a           ; 2A C5 84
+05FF:          : set a, $2F               ; 41 2F(/)
+0601:          : store $84C6, a           ; 2A C6 84
+0604:          : set a, $2F               ; 41 2F(/)
+0606:          : store $84C7, a           ; 2A C7 84
+0609:          : return                   ; 34
+060A: FUN_1546 : load x, $002F            ; 19 2F 00
+060D:          : bit x, $40               ; 91 40(@)
+060F:          : jmp.z $0615              ; C9 15 06  LBL_1557 $0615
+0612:          : jmp $0623                ; B8 23 06  LBL_1571 $0623
+0615: LBL_1557 : set x, $20               ; 3D 20
+0617:          : store $84C5, x           ; 26 C5 84
+061A:          : store $84C6, x           ; 26 C6 84
+061D:          : store $84C7, x           ; 26 C7 84
+0620:          : jmp $062E                ; B8 2E 06  LBL_1582 $062E
+0623: LBL_1571 : set x, $2F               ; 3D 2F(/)
+0625:          : store $84C5, x           ; 26 C5 84
+0628:          : store $84C6, x           ; 26 C6 84
+062B:          : store $84C7, x           ; 26 C7 84
+062E: LBL_1582 : return                   ; 34
+062F:          : add i, w                 ; 4B
+0630:          : push i                   ; 06
+0631:          : add y, $06               ; 52 06
+0633:          : jmp i, a                 ; BB        ERROR $8406
+0634:          : push i                   ; 06
+0635:          : push y                   ; 02
+0636:          : push j                   ; 07
+0637:          : call.eq $3A07            ; 2E 07 3A
+063A:          : push j                   ; 07
+063B:          : set a, $07               ; 41 07
+063D:          : mul a, x                 ; 5F
+063E:          : push j                   ; 07
+063F:          : div i, j                 ; 66
+0640:          : push j                   ; 07
+0641:          : neg x                    ; 6F
+0642:          : push j                   ; 07
+0643:          : cmp a, y                 ; 7F
+0644:          : push j                   ; 07
+0645:          : cmp w                    ; 86
+0646:          : push j                   ; 07
+0647:          : xor x, $07               ; AC 07
+0649:          : xor y, $07               ; AD 07
+064B:          : set a, $00               ; 41 00
+064D:          : store $04C0, a           ; 2A C0 04
+0650:          : nop                      ; 00
+0651:          : return                   ; 34
+0652:          : set a, $00               ; 41 00
+0654:          : store $04C0, a           ; 2A C0 04
+0657:          : set a, $01               ; 41 01
+0659:          : store $04C1, a           ; 2A C1 04
+065C:          : set a, $20               ; 41 20
+065E:          : store $8269, a           ; 2A 69 82
+0661:          : set a, $20               ; 41 20
+0663:          : store $826A, a           ; 2A 6A 82
+0666:          : set a, $20               ; 41 20
+0668:          : store $826B, a           ; 2A 6B 82
+066B:          : set a, $20               ; 41 20
+066D:          : store $826C, a           ; 2A 6C 82
+0670:          : set a, $20               ; 41 20
+0672:          : store $826D, a           ; 2A 6D 82
+0675:          : set a, $20               ; 41 20
+0677:          : store $826E, a           ; 2A 6E 82
+067A:          : set a, $20               ; 41 20
+067C:          : store $8291, a           ; 2A 91 82
+067F:          : set a, $20               ; 41 20
+0681:          : store $8292, a           ; 2A 92 82
+0684:          : set a, $20               ; 41 20
+0686:          : store $8293, a           ; 2A 93 82
+0689:          : set a, $20               ; 41 20
+068B:          : store $8294, a           ; 2A 94 82
+068E:          : set a, $20               ; 41 20
+0690:          : store $8295, a           ; 2A 95 82
+0693:          : set a, $20               ; 41 20
+0695:          : store $8296, a           ; 2A 96 82
+0698:          : set a, $00               ; 41 00
+069A:          : store $04C2, a           ; 2A C2 04
+069D:          : set i, $D400             ; 42 00 D4
+06A0:          : store $04C3, i           ; 2B C3 04
+06A3:          : set a, $FF               ; 41 FF
+06A5:          : store $04C5, a           ; 2A C5 04
+06A8:          : set a, $FF               ; 41 FF
+06AA:          : store $0037, a           ; 2A 37 00
+06AD:          : set i, $D400             ; 42 00 D4
+06B0:          : store $0038, i           ; 2B 38 00
+06B3:          : set a, $01               ; 41 01
+06B5:          : store $003A, a           ; 2A 3A 00
+06B8:          : int $D0                  ; CE D0
+06BA:          : return                   ; 34
+06BB: FUN_1723 : set a, $00               ; 41 00
+06BD:          : store $04C0, a           ; 2A C0 04
+06C0:          : set a, $00               ; 41 00
+06C2:          : store $04C1, a           ; 2A C1 04
+06C5:          : set a, $49               ; 41 49(I)
+06C7:          : store $8269, a           ; 2A 69 82
+06CA:          : set a, $4E               ; 41 4E(N)
+06CC:          : store $826A, a           ; 2A 6A 82
+06CF:          : set a, $53               ; 41 53(S)
+06D1:          : store $826B, a           ; 2A 6B 82
+06D4:          : set a, $45               ; 41 45(E)
+06D6:          : store $826C, a           ; 2A 6C 82
+06D9:          : set a, $52               ; 41 52(R)
+06DB:          : store $826D, a           ; 2A 6D 82
+06DE:          : set a, $54               ; 41 54(T)
+06E0:          : store $826E, a           ; 2A 6E 82
+06E3:          : set a, $46               ; 41 46(F)
+06E5:          : store $8291, a           ; 2A 91 82
+06E8:          : set a, $4C               ; 41 4C(L)
+06EA:          : store $8292, a           ; 2A 92 82
+06ED:          : set a, $4F               ; 41 4F(O)
+06EF:          : store $8293, a           ; 2A 93 82
+06F2:          : set a, $50               ; 41 50(P)
+06F4:          : store $8294, a           ; 2A 94 82
+06F7:          : set a, $50               ; 41 50(P)
+06F9:          : store $8295, a           ; 2A 95 82
+06FC:          : set a, $59               ; 41 59(Y)
+06FE:          : store $8296, a           ; 2A 96 82
+0701:          : return                   ; 34
+0702:          : load a, $00E1            ; 1D E1 00
+0705:          : store $04C9, a           ; 2A C9 04
+0708:          : load a, $00E1            ; 1D E1 00
+070B:          : store $04CA, a           ; 2A CA 04
+070E:          : load a, $00E1            ; 1D E1 00
+0711:          : store $04CB, a           ; 2A CB 04
+0714:          : load a, $0036            ; 1D 36 00
+0717:          : set x, $02               ; 3D 02
+0719:          : set y, $02               ; 3E 02
+071B:          : call $047B               ; 2D 7B 04  FUN_1147 $047B
+071E:          : load a, $0037            ; 1D 37 00
+0721:          : set x, $07               ; 3D 07
+0723:          : set y, $02               ; 3E 02
+0725:          : call $047B               ; 2D 7B 04  FUN_1147 $047B
+0728:          : set a, $00               ; 41 00
+072A:          : store $04C0, a           ; 2A C0 04
+072D:          : return                   ; 34
+072E:          : set a, $00               ; 41 00
+0730:          : store $04C0, a           ; 2A C0 04
+0733:          : load a, $04C2            ; 1D C2 04
+0736:          : callt $063F, a           ; C0 3F 06
+0739:          : return                   ; 34
+073A:          : set a, $00               ; 41 00
+073C:          : store $04C0, a           ; 2A C0 04
+073F:          : nop                      ; 00
+0740:          : return                   ; 34
+0741:          : load a, $00E1            ; 1D E1 00
+0744:          : mod a, $7F               ; 6A 7F()
+0746:          : store $04C9, a           ; 2A C9 04
+0749:          : load a, $00E1            ; 1D E1 00
+074C:          : mod a, $7F               ; 6A 7F()
+074E:          : store $04CA, a           ; 2A CA 04
+0751:          : load a, $00E1            ; 1D E1 00
+0754:          : mod a, $7F               ; 6A 7F()
+0756:          : store $04CB, a           ; 2A CB 04
+0759:          : set a, $00               ; 41 00
+075B:          : store $04C0, a           ; 2A C0 04
+075E:          : return                   ; 34
+075F:          : set a, $00               ; 41 00
+0761:          : store $04C0, a           ; 2A C0 04
+0764:          : nop                      ; 00
+0765:          : return                   ; 34
+0766:          : set a, $01               ; 41 01
+0768:          : store $04C2, a           ; 2A C2 04
+076B:          : call $0773               ; 2D 73 07  FUN_1907 $0773
+076E:          : return                   ; 34
+076F:          : call $0773               ; 2D 73 07  FUN_1907 $0773
+0772:          : return                   ; 34
+0773: FUN_1907 : load i, $04C3            ; 1E C3 04
+0776:          : load a, i                ; 13
+0777:          : inc i                    ; 75
+0778:          : store $04C3, i           ; 2B C3 04
+077B:          : callt $0643, a           ; C0 43 06
+077E:          : return                   ; 34
+077F:          : nop                      ; 00
+0780:          : set a, $03               ; 41 03
+0782:          : store $04C2, a           ; 2A C2 04
+0785:          : return                   ; 34
+0786:          : load i, $04C3            ; 1E C3 04
+0789:          : load z, i                ; 14
+078A:          : inc i                    ; 75
+078B:          : store $0038, z           ; 28 38 00
+078E:          : load z, i                ; 14
+078F:          : store $0039, z           ; 28 39 00
+0792:          : load i, $04C3            ; 1E C3 04
+0795:          : inc i                    ; 75
+0796:          : inc i                    ; 75
+0797:          : store $04C3, i           ; 2B C3 04
+079A:          : load a, $04C5            ; 1D C5 04
+079D:          : inc a                    ; 70
+079E:          : store $04C5, a           ; 2A C5 04
+07A1:          : store $0037, a           ; 2A 37 00
+07A4:          : set a, $01               ; 41 01
+07A6:          : store $003A, a           ; 2A 3A 00
+07A9:          : int $D0                  ; CE D0
+07AB:          : return                   ; 34
+07AC:          : return                   ; 34
+07AD:          : set a, $03               ; 41 03
+07AF:          : store $04C2, a           ; 2A C2 04
+07B2:          : set i, $05E6             ; 42 E6 05
+07B5:          : store $0002, i           ; 2B 02 00
+07B8:          : set i, $05E6             ; 42 E6 05
+07BB:          : store $0004, i           ; 2B 04 00
+07BE:          : set i, $05E6             ; 42 E6 05
+07C1:          : store $0006, i           ; 2B 06 00
+07C4:          : set i, $05E6             ; 42 E6 05
+07C7:          : store $0008, i           ; 2B 08 00
+07CA:          : set i, $05DF             ; 42 DF 05
+07CD:          : store $000E, i           ; 2B 0E 00
+07D0:          : set i, $1400             ; 42 00 14
+07D3:          : store $0000, i           ; 2B 00 00
+07D6:          : dbn $5252                ; D5 52 52
+07D9:          : int $FF                  ; CE FF
+07DB:          : return                   ; 34
+07DC:          : load a, $04C0            ; 1D C0 04
+07DF:          : callt $062F, a           ; C0 2F 06
+07E2:          : return                   ; 34
+07E3:          : call $04D2               ; 2D D2 04  FUN_1234 $04D2
+07E6:          : set a, $00               ; 41 00
+07E8:          : store $0080, a           ; 2A 80 00
+07EB:          : set a, $01               ; 41 01
+07ED:          : store $0081, a           ; 2A 81 00
+07F0:          : set a, $02               ; 41 02
+07F2:          : store $0082, a           ; 2A 82 00
+07F5:          : set a, $03               ; 41 03
+07F7:          : store $0083, a           ; 2A 83 00
+07FA:          : set a, $04               ; 41 04
+07FC:          : store $0084, a           ; 2A 84 00
+07FF:          : set a, $05               ; 41 05
+0801:          : store $0085, a           ; 2A 85 00
+0804:          : set a, $06               ; 41 06
+0806:          : store $0086, a           ; 2A 86 00
+0809:          : set a, $07               ; 41 07
+080B:          : store $0087, a           ; 2A 87 00
+080E:          : set a, $08               ; 41 08
+0810:          : store $0088, a           ; 2A 88 00
+0813:          : set a, $35               ; 41 35(5)
+0815:          : store $00B5, a           ; 2A B5 00
+0818:          : set a, $46               ; 41 46(F)
+081A:          : store $00A0, a           ; 2A A0 00
+081D:          : set a, $47               ; 41 47(G)
+081F:          : store $00A1, a           ; 2A A1 00
+0822:          : set a, $48               ; 41 48(H)
+0824:          : store $00A2, a           ; 2A A2 00
+0827:          : set a, $49               ; 41 49(I)
+0829:          : store $00A3, a           ; 2A A3 00
+082C:          : set a, $4A               ; 41 4A(J)
+082E:          : store $00A4, a           ; 2A A4 00
+0831:          : set a, $4B               ; 41 4B(K)
+0833:          : store $00A5, a           ; 2A A5 00
+0836:          : set a, $4C               ; 41 4C(L)
+0838:          : store $00A6, a           ; 2A A6 00
+083B:          : set a, $4D               ; 41 4D(M)
+083D:          : store $00A7, a           ; 2A A7 00
+0840:          : set a, $4E               ; 41 4E(N)
+0842:          : store $00A8, a           ; 2A A8 00
+0845:          : set a, $4F               ; 41 4F(O)
+0847:          : store $00A9, a           ; 2A A9 00
+084A:          : set i, $08B7             ; 42 B7 08
+084D:          : store $0030, i           ; 2B 30 00
+0850:          : set a, $00               ; 41 00
+0852:          : store $0019, a           ; 2A 19 00
+0855:          : set a, $01               ; 41 01
+0857:          : store $0018, a           ; 2A 18 00
+085A:          : set a, $00               ; 41 00
+085C:          : store $00E0, a           ; 2A E0 00
+085F:          : rti                      ; D8
+0860:          : int $FE                  ; CE FE
+0862: LBL_2146 : set i, $8000             ; 42 00 80
+0865:          : set j, $2800             ; 43 00 28
+0868:          : set a, $20               ; 41 20
+086A:          : call $041F               ; 2D 1F 04  LBL_1055 $041F
+086D:          : call $0411               ; 2D 11 04  LBL_1041 $0411
+0870:          : call $05EB               ; 2D EB 05  FUN_1515 $05EB
+0873:          : call $06BB               ; 2D BB 06  FUN_1723 $06BB
+0876:          : set i, $C000             ; 42 00 C0
+0879:          : store $04CF, i           ; 2B CF 04
+087C:          : set x, $00               ; 3D 00
+087E:          : store $04D1, x           ; 26 D1 04
+0881:          : set x, $0F               ; 3D 0F
+0883:          : store $003E, x           ; 26 3E 00
+0886:          : set x, $3C               ; 3D 3C(<)
+0888:          : store $003F, x           ; 26 3F 00
+088B:          : set a, $48               ; 41 48(H)
+088D:          : store $8000, a           ; 2A 00 80
+0890:          : set a, $69               ; 41 69(i)
+0892:          : store $8001, a           ; 2A 01 80
+0895:          : set a, $52               ; 41 52(R)
+0897:          : store $8032, a           ; 2A 32 80
+089A:          : set a, $46               ; 41 46(F)
+089C:          : store $8015, a           ; 2A 15 80
+089F:          : set a, $4F               ; 41 4F(O)
+08A1:          : store $8016, a           ; 2A 16 80
+08A4:          : set a, $4F               ; 41 4F(O)
+08A6:          : store $8017, a           ; 2A 17 80
+08A9: LBL_2217 : call $060A               ; 2D 0A 06  FUN_1546 $060A
+08AC:          : load a, $04C0            ; 1D C0 04
+08AF:          : cmp a                    ; 82
+08B0:          : call.neq $07DC           ; 2F DC 07
+08B3:          : jmp $08A9                ; B8 A9 08  LBL_2217 $08A9
+08B6:          : nop                      ; 00
+08B7:          : nop                      ; 00
+08B8:          : load y, j                ; 18
+08B9:          : div i, j                 ; 66
+08BA:          : mod i, $4618             ; 6C 18 46
+08BD:          : cpy a, w                 ; 38
+08BE:          : load y, j                ; 18
+08BF:          : call.gt $360C            ; 30 0C 36
+08C2:          : nop                      ; 00
+08C3:          : nop                      ; 00
+08C4:          : nop                      ; 00
+08C5:          : nop                      ; 00
+08C6:          : set w, $3C               ; 40 3C(<)
+08C8:          : load y, j                ; 18
+08C9:          : cpy w, a                 ; 3C
+08CA:          : cpy w, a                 ; 3C
+08CB:          : cpy a, w                 ; 38
+08CC:          : cmp a, x                 ; 7E
+08CD:          : cpy w, a                 ; 3C
+08CE:          : cmp a, x                 ; 7E
+08CF:          : cpy w, a                 ; 3C
+08D0:          : cpy w, a                 ; 3C
+08D1:          : nop                      ; 00
+08D2:          : nop                      ; 00
+08D3:          : mul a, $00               ; 60 00
+08D5:          : pop y                    ; 0C
+08D6:          : cpy w, a                 ; 3C
+08D7:          : cpy w, a                 ; 3C
+08D8:          : cpy w, a                 ; 3C
+08D9:          : set y, $3C               ; 3E 3C(<)
+08DB:          : set y, $7E               ; 3E 7E(~)
+08DD:          : cmp a, x                 ; 7E
+08DE:          : cpy w, a                 ; 3C
+08DF:          : div i, j                 ; 66
 08E0:          : cpy w, a                 ; 3C
-08E1:          : cpy a, w                 ; 38
-08E2:          : dec i                    ; 7E
-08E3:          : cpy w, a                 ; 3C
-08E4:          : dec i                    ; 7E
-08E5:          : cpy w, a                 ; 3C
-08E6:          : cpy w, a                 ; 3C
-08E7:          : nop                      ; 00
-08E8:          : nop                      ; 00
-08E9:          : sub w, $00               ; 60 00
-08EB:          : pop y                    ; 0C
-08EC:          : cpy w, a                 ; 3C
-08ED:          : cpy w, a                 ; 3C
-08EE:          : cpy w, a                 ; 3C
-08EF:          : set y, $3C               ; 3E 3C(<)
-08F1:          : set y, $7E               ; 3E 7E(~)
-08F3:          : dec i                    ; 7E
+08E1:          : mul a, $66               ; 60 66(f)
+08E3:          : push i                   ; 06
+08E4:          : mul j, $3C66             ; 63 66 3C
+08E7:          : set y, $3C               ; 3E 3C(<)
+08E9:          : set y, $3C               ; 3E 3C(<)
+08EB:          : cmp a, x                 ; 7E
+08EC:          : div i, j                 ; 66
+08ED:          : div i, j                 ; 66
+08EE:          : mul j, $6666             ; 63 66 66
+08F1:          : cmp a, x                 ; 7E
+08F2:          : cpy w, a                 ; 3C
+08F3:          : push y                   ; 02
 08F4:          : cpy w, a                 ; 3C
-08F5:          : mul j, $603C             ; 66 3C 60
-08F8:          : mul j, $6306             ; 66 06 63
-08FB:          : mul j, $3E3C             ; 66 3C 3E
-08FE:          : cpy w, a                 ; 3C
-08FF:          : set y, $3C               ; 3E 3C(<)
-0901:          : dec i                    ; 7E
-0902:          : mul j, $6366             ; 66 66 63
-0905:          : mul j, $7E66             ; 66 66 7E
-0908:          : cpy w, a                 ; 3C
-0909:          : push y                   ; 02
-090A:          : cpy w, a                 ; 3C
-090B:          : pop i                    ; 10
+08F5:          : pop i                    ; 10
+08F6:          : nop                      ; 00
+08F7:          : load y, j                ; 18
+08F8:          : nop                      ; 00
+08F9:          : push i                   ; 06
+08FA:          : nop                      ; 00
+08FB:          : mul a, $00               ; 60 00
+08FD:          : inc a                    ; 70
+08FE:          : nop                      ; 00
+08FF:          : push i                   ; 06
+0900:          : load y, j                ; 18
+0901:          : mul a, $06               ; 60 06
+0903:          : cpy a, w                 ; 38
+0904:          : nop                      ; 00
+0905:          : nop                      ; 00
+0906:          : nop                      ; 00
+0907:          : nop                      ; 00
+0908:          : nop                      ; 00
+0909:          : nop                      ; 00
+090A:          : nop                      ; 00
+090B:          : load y, j                ; 18
 090C:          : nop                      ; 00
-090D:          : load y, j                ; 18
+090D:          : nop                      ; 00
 090E:          : nop                      ; 00
-090F:          : push i                   ; 06
+090F:          : nop                      ; 00
 0910:          : nop                      ; 00
-0911:          : sub w, $00               ; 60 00
-0913:          : mod j, $0600             ; 70 00 06
-0916:          : load y, j                ; 18
-0917:          : sub w, $06               ; 60 06
-0919:          : cpy a, w                 ; 38
-091A:          : nop                      ; 00
-091B:          : nop                      ; 00
-091C:          : nop                      ; 00
-091D:          : nop                      ; 00
-091E:          : nop                      ; 00
-091F:          : nop                      ; 00
-0920:          : nop                      ; 00
-0921:          : load y, j                ; 18
-0922:          : nop                      ; 00
-0923:          : nop                      ; 00
+0911:          : nop                      ; 00
+0912:          : nop                      ; 00
+0913:          : nop                      ; 00
+0914:          : nop                      ; 00
+0915:          : nop                      ; 00
+0916:          : nop                      ; 00
+0917:          : nop                      ; 00
+0918:          : load y, j                ; 18
+0919:          : div i, j                 ; 66
+091A:          : nop                      ; FE
+091B:          : dec i                    ; 7C
+091C:          : div i, j                 ; 66
+091D:          : mod i, $1818             ; 6C 18 18
+0920:          : load y, j                ; 18
+0921:          : load w, $0010            ; 1C 10 00
 0924:          : nop                      ; 00
 0925:          : nop                      ; 00
-0926:          : nop                      ; 00
-0927:          : nop                      ; 00
-0928:          : nop                      ; 00
-0929:          : nop                      ; 00
-092A:          : nop                      ; 00
-092B:          : nop                      ; 00
-092C:          : nop                      ; 00
-092D:          : nop                      ; 00
-092E:          : load y, j                ; 18
-092F:          : mul j, $7CFE             ; 66 FE 7C
-0932:          : mul j, $186C             ; 66 6C 18
-0935:          : load y, j                ; 18
-0936:          : load y, j                ; 18
-0937:          : load w, $0010            ; 1C 10 00
-093A:          : nop                      ; 00
-093B:          : nop                      ; 00
-093C:          : sub w, $66               ; 60 66(f)
-093E:          : load w, $6666            ; 1C 66 66
-0941:          : cpy w, a                 ; 3C
-0942:          : push i                   ; 06
-0943:          : mul j, $6660             ; 66 60 66
-0946:          : mul j, $1818             ; 66 18 18
-0949:          : call.gt $1800            ; 30 00 18
-094C:          : mul a, x                 ; 62
-094D:          : set i, $6666             ; 42 66 66
-0950:          : mul j, $0666             ; 66 66 06
+0926:          : mul a, $66               ; 60 66(f)
+0928:          : load w, $6666            ; 1C 66 66
+092B:          : cpy w, a                 ; 3C
+092C:          : push i                   ; 06
+092D:          : div i, j                 ; 66
+092E:          : mul a, $66               ; 60 66(f)
+0930:          : div i, j                 ; 66
+0931:          : load y, j                ; 18
+0932:          : load y, j                ; 18
+0933:          : call.gt $1800            ; 30 00 18
+0936:          : mul i, $6642             ; 62 42 66
+0939:          : div i, j                 ; 66
+093A:          : div i, j                 ; 66
+093B:          : div i, j                 ; 66
+093C:          : push i                   ; 06
+093D:          : push i                   ; 06
+093E:          : div i, j                 ; 66
+093F:          : div i, j                 ; 66
+0940:          : load y, j                ; 18
+0941:          : mul a, $36               ; 60 36(6)
+0943:          : push i                   ; 06
+0944:          : dec a                    ; 77
+0945:          : div i, j                 ; 66
+0946:          : div i, j                 ; 66
+0947:          : div i, j                 ; 66
+0948:          : div i, j                 ; 66
+0949:          : div i, j                 ; 66
+094A:          : div i, j                 ; 66
+094B:          : load y, j                ; 18
+094C:          : div i, j                 ; 66
+094D:          : div i, j                 ; 66
+094E:          : mul j, $6666             ; 63 66 66
+0951:          : mul a, $0C               ; 60 0C
 0953:          : push i                   ; 06
-0954:          : mul j, $1866             ; 66 66 18
-0957:          : sub w, $36               ; 60 36(6)
-0959:          : push i                   ; 06
-095A:          : inc i                    ; 77
-095B:          : mul j, $6666             ; 66 66 66
-095E:          : mul j, $6666             ; 66 66 66
-0961:          : load y, j                ; 18
-0962:          : mul j, $6366             ; 66 66 63
-0965:          : mul j, $6066             ; 66 66 60
-0968:          : pop y                    ; 0C
-0969:          : push i                   ; 06
-096A:          : call.gt $0038            ; 30 38 00
-096D:          : call.gt $0600            ; 30 00 06
+0954:          : call.gt $0038            ; 30 38 00
+0957:          : call.gt $0600            ; 30 00 06
+095A:          : nop                      ; 00
+095B:          : mul a, $00               ; 60 00
+095D:          : load y, j                ; 18
+095E:          : nop                      ; 00
+095F:          : push i                   ; 06
+0960:          : nop                      ; 00
+0961:          : nop                      ; 00
+0962:          : push i                   ; 06
+0963:          : call.gt $0000            ; 30 00 00
+0966:          : nop                      ; 00
+0967:          : nop                      ; 00
+0968:          : nop                      ; 00
+0969:          : nop                      ; 00
+096A:          : nop                      ; 00
+096B:          : load y, j                ; 18
+096C:          : nop                      ; 00
+096D:          : nop                      ; 00
+096E:          : nop                      ; 00
+096F:          : nop                      ; 00
 0970:          : nop                      ; 00
-0971:          : sub w, $00               ; 60 00
-0973:          : load y, j                ; 18
+0971:          : nop                      ; 00
+0972:          : nop                      ; 00
+0973:          : nop                      ; 00
 0974:          : nop                      ; 00
-0975:          : push i                   ; 06
+0975:          : nop                      ; 00
 0976:          : nop                      ; 00
 0977:          : nop                      ; 00
-0978:          : push i                   ; 06
-0979:          : call.gt $0000            ; 30 00 00
-097C:          : nop                      ; 00
-097D:          : nop                      ; 00
-097E:          : nop                      ; 00
-097F:          : nop                      ; 00
-0980:          : nop                      ; 00
-0981:          : load y, j                ; 18
-0982:          : nop                      ; 00
+0978:          : load y, j                ; 18
+0979:          : div i, j                 ; 66
+097A:          : mod i, $3006             ; 6C 06 30
+097D:          : mod i, $0C18             ; 6C 18 0C
+0980:          : call.gt $107F            ; 30 7F 10
 0983:          : nop                      ; 00
 0984:          : nop                      ; 00
 0985:          : nop                      ; 00
-0986:          : nop                      ; 00
-0987:          : nop                      ; 00
-0988:          : nop                      ; 00
-0989:          : nop                      ; 00
-098A:          : nop                      ; 00
-098B:          : nop                      ; 00
-098C:          : nop                      ; 00
-098D:          : nop                      ; 00
-098E:          : load y, j                ; 18
-098F:          : mul j, $066C             ; 66 6C 06
-0992:          : call.gt $186C            ; 30 6C 18
-0995:          : pop y                    ; 0C
-0996:          : call.gt $107F            ; 30 7F 10
-0999:          : nop                      ; 00
-099A:          : nop                      ; 00
-099B:          : nop                      ; 00
-099C:          : call.gt $1866            ; 30 66 18
-099F:          : sub w, $60               ; 60 60(`)
-09A1:          : cpy a, y                 ; 36
-09A2:          : set y, $06               ; 3E 06
-09A4:          : call.gt $6666            ; 30 66 66
-09A7:          : load y, j                ; 18
-09A8:          : load y, j                ; 18
-09A9:          : load y, j                ; 18
-09AA:          : dec i                    ; 7E
-09AB:          : call.gt $9960            ; 30 60 99
-09AE:          : mul j, $0666             ; 66 66 06
-09B1:          : mul j, $0606             ; 66 06 06
-09B4:          : push i                   ; 06
-09B5:          : mul j, $6018             ; 66 18 60
-09B8:          : load i, $7F06            ; 1E 06 7F
-09BB:          : mod i, j                 ; 6E
-09BC:          : mul j, $6666             ; 66 66 66
-09BF:          : mul j, $1806             ; 66 06 18
-09C2:          : mul j, $6366             ; 66 66 63
-09C5:          : cpy w, a                 ; 3C
-09C6:          : mul j, $0C30             ; 66 30 0C
-09C9:          : pop y                    ; 0C
-09CA:          : call.gt $006C            ; 30 6C 00
-09CD:          : nop                      ; 00
-09CE:          : cpy w, a                 ; 3C
-09CF:          : set y, $3C               ; 3E 3C(<)
-09D1:          : dec w                    ; 7C
-09D2:          : cpy w, a                 ; 3C
-09D3:          : cpy w, a                 ; 3C
-09D4:          : dec w                    ; 7C
-09D5:          : set y, $1C               ; 3E 1C
-09D7:          : mod j, $3066             ; 70 66 30
-09DA:          : cpy a, z                 ; 37
-09DB:          : set y, $3C               ; 3E 3C(<)
-09DD:          : set y, $7C               ; 3E 7C(|)
-09DF:          : inc a                    ; 76
-09E0:          : dec w                    ; 7C
-09E1:          : cpy w, a                 ; 3C
-09E2:          : mul j, $6B66             ; 66 66 6B
-09E5:          : mul j, $7E66             ; 66 66 7E
-09E8:          : nop                      ; 00
-09E9:          : nop                      ; 00
-09EA:          : nop                      ; 00
-09EB:          : nop                      ; 00
-09EC:          : nop                      ; 00
-09ED:          : nop                      ; 00
+0986:          : call.gt $1866            ; 30 66 18
+0989:          : mul a, $60               ; 60 60(`)
+098B:          : cpy a, y                 ; 36
+098C:          : set y, $06               ; 3E 06
+098E:          : call.gt $6666            ; 30 66 66
+0991:          : load y, j                ; 18
+0992:          : load y, j                ; 18
+0993:          : load y, j                ; 18
+0994:          : cmp a, x                 ; 7E
+0995:          : call.gt $9960            ; 30 60 99
+0998:          : div i, j                 ; 66
+0999:          : div i, j                 ; 66
+099A:          : push i                   ; 06
+099B:          : div i, j                 ; 66
+099C:          : push i                   ; 06
+099D:          : push i                   ; 06
+099E:          : push i                   ; 06
+099F:          : div i, j                 ; 66
+09A0:          : load y, j                ; 18
+09A1:          : mul a, $1E               ; 60 1E
+09A3:          : push i                   ; 06
+09A4:          : cmp a, y                 ; 7F
+09A5:          : neg a                    ; 6E
+09A6:          : div i, j                 ; 66
+09A7:          : div i, j                 ; 66
+09A8:          : div i, j                 ; 66
+09A9:          : div i, j                 ; 66
+09AA:          : push i                   ; 06
+09AB:          : load y, j                ; 18
+09AC:          : div i, j                 ; 66
+09AD:          : div i, j                 ; 66
+09AE:          : mul j, $663C             ; 63 3C 66
+09B1:          : call.gt $0C0C            ; 30 0C 0C
+09B4:          : call.gt $006C            ; 30 6C 00
+09B7:          : nop                      ; 00
+09B8:          : cpy w, a                 ; 3C
+09B9:          : set y, $3C               ; 3E 3C(<)
+09BB:          : dec i                    ; 7C
+09BC:          : cpy w, a                 ; 3C
+09BD:          : cpy w, a                 ; 3C
+09BE:          : dec i                    ; 7C
+09BF:          : set y, $1C               ; 3E 1C
+09C1:          : inc a                    ; 70
+09C2:          : div i, j                 ; 66
+09C3:          : call.gt $3E37            ; 30 37 3E
+09C6:          : cpy w, a                 ; 3C
+09C7:          : set y, $7C               ; 3E 7C(|)
+09C9:          : inc j                    ; 76
+09CA:          : dec i                    ; 7C
+09CB:          : cpy w, a                 ; 3C
+09CC:          : div i, j                 ; 66
+09CD:          : div i, j                 ; 66
+09CE:          : mod i, j                 ; 6B
+09CF:          : div i, j                 ; 66
+09D0:          : div i, j                 ; 66
+09D1:          : cmp a, x                 ; 7E
+09D2:          : nop                      ; 00
+09D3:          : nop                      ; 00
+09D4:          : nop                      ; 00
+09D5:          : nop                      ; 00
+09D6:          : nop                      ; 00
+09D7:          : nop                      ; 00
+09D8:          : load y, j                ; 18
+09D9:          : nop                      ; 00
+09DA:          : mod i, $183C             ; 6C 3C 18
+09DD:          : cpy a, w                 ; 38
+09DE:          : nop                      ; 00
+09DF:          : pop y                    ; 0C
+09E0:          : call.gt $7C1C            ; 30 1C 7C
+09E3:          : nop                      ; 00
+09E4:          : cmp a, x                 ; 7E
+09E5:          : nop                      ; 00
+09E6:          : load y, j                ; 18
+09E7:          : div i, j                 ; 66
+09E8:          : load y, j                ; 18
+09E9:          : cpy a, w                 ; 38
+09EA:          : cpy a, w                 ; 38
+09EB:          : cpy a, y                 ; 36
+09EC:          : mul a, $3E               ; 60 3E(>)
 09EE:          : load y, j                ; 18
-09EF:          : nop                      ; 00
-09F0:          : mod a, x                 ; 6C
-09F1:          : cpy w, a                 ; 3C
-09F2:          : load y, j                ; 18
-09F3:          : cpy a, w                 ; 38
+09EF:          : cpy w, a                 ; 3C
+09F0:          : dec i                    ; 7C
+09F1:          : nop                      ; 00
+09F2:          : nop                      ; 00
+09F3:          : pop y                    ; 0C
 09F4:          : nop                      ; 00
-09F5:          : pop y                    ; 0C
-09F6:          : call.gt $7C1C            ; 30 1C 7C
-09F9:          : nop                      ; 00
-09FA:          : dec i                    ; 7E
-09FB:          : nop                      ; 00
-09FC:          : load y, j                ; 18
-09FD:          : mul j, $3818             ; 66 18 38
-0A00:          : cpy a, w                 ; 38
-0A01:          : cpy a, y                 ; 36
-0A02:          : sub w, $3E               ; 60 3E(>)
-0A04:          : load y, j                ; 18
-0A05:          : cpy w, a                 ; 3C
-0A06:          : dec w                    ; 7C
-0A07:          : nop                      ; 00
-0A08:          : nop                      ; 00
-0A09:          : pop y                    ; 0C
-0A0A:          : nop                      ; 00
-0A0B:          : sub w, $38               ; 60 38(8)
-0A0D:          : or w, $7E                ; A5 7E(~)
-0A0F:          : set y, $06               ; 3E 06
-0A11:          : mul j, $1E1E             ; 66 1E 1E
-0A14:          : inc a                    ; 76
-0A15:          : dec i                    ; 7E
-0A16:          : load y, j                ; 18
-0A17:          : sub w, $0E               ; 60 0E
-0A19:          : push i                   ; 06
-0A1A:          : div j, $667E             ; 6B 7E 66
-0A1D:          : set y, $66               ; 3E 66(f)
-0A1F:          : set y, $3C               ; 3E 3C(<)
-0A21:          : load y, j                ; 18
-0A22:          : mul j, $6B66             ; 66 66 6B
-0A25:          : load y, j                ; 18
-0A26:          : cpy w, a                 ; 3C
-0A27:          : load y, j                ; 18
-0A28:          : pop y                    ; 0C
-0A29:          : load y, j                ; 18
-0A2A:          : call.gt $0044            ; 30 44 00
-0A2D:          : nop                      ; 00
-0A2E:          : sub w, $66               ; 60 66(f)
-0A30:          : mul j, $6666             ; 66 66 66
-0A33:          : load y, j                ; 18
-0A34:          : mul j, $1866             ; 66 66 18
-0A37:          : sub w, $36               ; 60 36(6)
-0A39:          : call.gt $667F            ; 30 7F 66
-0A3C:          : mul j, $6666             ; 66 66 66
-0A3F:          : pop w                    ; 0E
-0A40:          : push i                   ; 06
-0A41:          : load y, j                ; 18
-0A42:          : mul j, $6B66             ; 66 66 6B
-0A45:          : cpy w, a                 ; 3C
-0A46:          : mul j, $0030             ; 66 30 00
-0A49:          : nop                      ; 00
-0A4A:          : nop                      ; 00
-0A4B:          : nop                      ; 00
-0A4C:          : nop                      ; 00
-0A4D:          : nop                      ; 00
+09F5:          : mul a, $38               ; 60 38(8)
+09F7:          : or z, $7E                ; A5 7E(~)
+09F9:          : set y, $06               ; 3E 06
+09FB:          : div i, j                 ; 66
+09FC:          : load i, $761E            ; 1E 1E 76
+09FF:          : cmp a, x                 ; 7E
+0A00:          : load y, j                ; 18
+0A01:          : mul a, $0E               ; 60 0E
+0A03:          : push i                   ; 06
+0A04:          : mod i, j                 ; 6B
+0A05:          : cmp a, x                 ; 7E
+0A06:          : div i, j                 ; 66
+0A07:          : set y, $66               ; 3E 66(f)
+0A09:          : set y, $3C               ; 3E 3C(<)
+0A0B:          : load y, j                ; 18
+0A0C:          : div i, j                 ; 66
+0A0D:          : div i, j                 ; 66
+0A0E:          : mod i, j                 ; 6B
+0A0F:          : load y, j                ; 18
+0A10:          : cpy w, a                 ; 3C
+0A11:          : load y, j                ; 18
+0A12:          : pop y                    ; 0C
+0A13:          : load y, j                ; 18
+0A14:          : call.gt $0044            ; 30 44 00
+0A17:          : nop                      ; 00
+0A18:          : mul a, $66               ; 60 66(f)
+0A1A:          : div i, j                 ; 66
+0A1B:          : div i, j                 ; 66
+0A1C:          : div i, j                 ; 66
+0A1D:          : load y, j                ; 18
+0A1E:          : div i, j                 ; 66
+0A1F:          : div i, j                 ; 66
+0A20:          : load y, j                ; 18
+0A21:          : mul a, $36               ; 60 36(6)
+0A23:          : call.gt $667F            ; 30 7F 66
+0A26:          : div i, j                 ; 66
+0A27:          : div i, j                 ; 66
+0A28:          : div i, j                 ; 66
+0A29:          : pop w                    ; 0E
+0A2A:          : push i                   ; 06
+0A2B:          : load y, j                ; 18
+0A2C:          : div i, j                 ; 66
+0A2D:          : div i, j                 ; 66
+0A2E:          : mod i, j                 ; 6B
+0A2F:          : cpy w, a                 ; 3C
+0A30:          : div i, j                 ; 66
+0A31:          : call.gt $0000            ; 30 00 00
+0A34:          : nop                      ; 00
+0A35:          : nop                      ; 00
+0A36:          : nop                      ; 00
+0A37:          : nop                      ; 00
+0A38:          : load y, j                ; 18
+0A39:          : nop                      ; 00
+0A3A:          : mod i, $0C60             ; 6C 60 0C
+0A3D:          : nop                      ; EC
+0A3E:          : nop                      ; 00
+0A3F:          : pop y                    ; 0C
+0A40:          : call.gt $1036            ; 30 36 10
+0A43:          : load y, j                ; 18
+0A44:          : nop                      ; 00
+0A45:          : nop                      ; 00
+0A46:          : pop y                    ; 0C
+0A47:          : div i, j                 ; 66
+0A48:          : load y, j                ; 18
+0A49:          : pop y                    ; 0C
+0A4A:          : mul a, $7E               ; 60 7E(~)
+0A4C:          : mul a, $66               ; 60 66(f)
 0A4E:          : load y, j                ; 18
-0A4F:          : nop                      ; 00
-0A50:          : mod a, x                 ; 6C
-0A51:          : sub w, $0C               ; 60 0C
-0A53:          : clc                      ; EC
-0A54:          : nop                      ; 00
-0A55:          : pop y                    ; 0C
-0A56:          : call.gt $1036            ; 30 36 10
-0A59:          : load y, j                ; 18
-0A5A:          : nop                      ; 00
-0A5B:          : nop                      ; 00
-0A5C:          : pop y                    ; 0C
-0A5D:          : mul j, $0C18             ; 66 18 0C
-0A60:          : sub w, $7E               ; 60 7E(~)
-0A62:          : sub w, $66               ; 60 66(f)
-0A64:          : load y, j                ; 18
-0A65:          : mul j, $1860             ; 66 60 18
-0A68:          : load y, j                ; 18
-0A69:          : load y, j                ; 18
-0A6A:          : dec i                    ; 7E
-0A6B:          : call.gt $A518            ; 30 18 A5
-0A6E:          : mul j, $0666             ; 66 66 06
-0A71:          : mul j, $0606             ; 66 06 06
-0A74:          : mul j, $1866             ; 66 66 18
-0A77:          : sub w, $1E               ; 60 1E
-0A79:          : push i                   ; 06
-0A7A:          : mul a, $76               ; 63 76(v)
-0A7C:          : mul j, $6606             ; 66 06 66
-0A7F:          : load i, $1860            ; 1E 60 18
-0A82:          : mul j, $7F66             ; 66 66 7F
-0A85:          : cpy w, a                 ; 3C
-0A86:          : load y, j                ; 18
-0A87:          : pop y                    ; 0C
-0A88:          : pop y                    ; 0C
-0A89:          : call.gt $0030            ; 30 30 00
-0A8C:          : nop                      ; 00
-0A8D:          : nop                      ; 00
-0A8E:          : dec w                    ; 7C
-0A8F:          : mul j, $6606             ; 66 06 66
-0A92:          : set y, $18               ; 3E 18
-0A94:          : mul j, $1866             ; 66 66 18
-0A97:          : sub w, $1E               ; 60 1E
-0A99:          : call.gt $666B            ; 30 6B 66
-0A9C:          : mul j, $6666             ; 66 66 66
-0A9F:          : push i                   ; 06
-0AA0:          : cpy w, a                 ; 3C
-0AA1:          : load y, j                ; 18
-0AA2:          : mul j, $7F66             ; 66 66 7F
+0A4F:          : div i, j                 ; 66
+0A50:          : mul a, $18               ; 60 18
+0A52:          : load y, j                ; 18
+0A53:          : load y, j                ; 18
+0A54:          : cmp a, x                 ; 7E
+0A55:          : call.gt $A518            ; 30 18 A5
+0A58:          : div i, j                 ; 66
+0A59:          : div i, j                 ; 66
+0A5A:          : push i                   ; 06
+0A5B:          : div i, j                 ; 66
+0A5C:          : push i                   ; 06
+0A5D:          : push i                   ; 06
+0A5E:          : div i, j                 ; 66
+0A5F:          : div i, j                 ; 66
+0A60:          : load y, j                ; 18
+0A61:          : mul a, $1E               ; 60 1E
+0A63:          : push i                   ; 06
+0A64:          : mul j, $6676             ; 63 76 66
+0A67:          : push i                   ; 06
+0A68:          : div i, j                 ; 66
+0A69:          : load i, $1860            ; 1E 60 18
+0A6C:          : div i, j                 ; 66
+0A6D:          : div i, j                 ; 66
+0A6E:          : cmp a, y                 ; 7F
+0A6F:          : cpy w, a                 ; 3C
+0A70:          : load y, j                ; 18
+0A71:          : pop y                    ; 0C
+0A72:          : pop y                    ; 0C
+0A73:          : call.gt $0030            ; 30 30 00
+0A76:          : nop                      ; 00
+0A77:          : nop                      ; 00
+0A78:          : dec i                    ; 7C
+0A79:          : div i, j                 ; 66
+0A7A:          : push i                   ; 06
+0A7B:          : div i, j                 ; 66
+0A7C:          : set y, $18               ; 3E 18
+0A7E:          : div i, j                 ; 66
+0A7F:          : div i, j                 ; 66
+0A80:          : load y, j                ; 18
+0A81:          : mul a, $1E               ; 60 1E
+0A83:          : call.gt $666B            ; 30 6B 66
+0A86:          : div i, j                 ; 66
+0A87:          : div i, j                 ; 66
+0A88:          : div i, j                 ; 66
+0A89:          : push i                   ; 06
+0A8A:          : cpy w, a                 ; 3C
+0A8B:          : load y, j                ; 18
+0A8C:          : div i, j                 ; 66
+0A8D:          : div i, j                 ; 66
+0A8E:          : cmp a, y                 ; 7F
+0A8F:          : load y, j                ; 18
+0A90:          : div i, j                 ; 66
+0A91:          : load y, j                ; 18
+0A92:          : nop                      ; 00
+0A93:          : nop                      ; 00
+0A94:          : nop                      ; 00
+0A95:          : nop                      ; 00
+0A96:          : nop                      ; 00
+0A97:          : nop                      ; 00
+0A98:          : nop                      ; 00
+0A99:          : nop                      ; 00
+0A9A:          : nop                      ; FE
+0A9B:          : set y, $66               ; 3E 66(f)
+0A9D:          : div i, j                 ; 66
+0A9E:          : nop                      ; 00
+0A9F:          : load y, j                ; 18
+0AA0:          : load y, j                ; 18
+0AA1:          : nop                      ; 00
+0AA2:          : pop i                    ; 10
+0AA3:          : load y, j                ; 18
+0AA4:          : nop                      ; 00
 0AA5:          : load y, j                ; 18
-0AA6:          : mul j, $0018             ; 66 18 00
-0AA9:          : nop                      ; 00
-0AAA:          : nop                      ; 00
-0AAB:          : nop                      ; 00
-0AAC:          : nop                      ; 00
-0AAD:          : nop                      ; 00
-0AAE:          : nop                      ; 00
-0AAF:          : nop                      ; 00
-0AB0:          : nop                      ; FE
-0AB1:          : set y, $66               ; 3E 66(f)
-0AB3:          : mul j, $1800             ; 66 00 18
-0AB6:          : load y, j                ; 18
-0AB7:          : nop                      ; 00
-0AB8:          : pop i                    ; 10
-0AB9:          : load y, j                ; 18
-0ABA:          : nop                      ; 00
-0ABB:          : load y, j                ; 18
+0AA6:          : push i                   ; 06
+0AA7:          : div i, j                 ; 66
+0AA8:          : load y, j                ; 18
+0AA9:          : push i                   ; 06
+0AAA:          : div i, j                 ; 66
+0AAB:          : call.gt $6666            ; 30 66 66
+0AAE:          : load y, j                ; 18
+0AAF:          : div i, j                 ; 66
+0AB0:          : div i, j                 ; 66
+0AB1:          : load y, j                ; 18
+0AB2:          : load y, j                ; 18
+0AB3:          : call.gt $1800            ; 30 00 18
+0AB6:          : nop                      ; 00
+0AB7:          : dec y                    ; 79
+0AB8:          : div i, j                 ; 66
+0AB9:          : div i, j                 ; 66
+0ABA:          : div i, j                 ; 66
+0ABB:          : div i, j                 ; 66
 0ABC:          : push i                   ; 06
-0ABD:          : mul j, $0618             ; 66 18 06
-0AC0:          : mul j, $6630             ; 66 30 66
-0AC3:          : mul j, $6618             ; 66 18 66
-0AC6:          : mul j, $1818             ; 66 18 18
-0AC9:          : call.gt $1800            ; 30 00 18
-0ACC:          : nop                      ; 00
-0ACD:          : dec x                    ; 79
-0ACE:          : mul j, $6666             ; 66 66 66
-0AD1:          : mul j, $0606             ; 66 06 06
-0AD4:          : mul j, $1866             ; 66 66 18
-0AD7:          : mul j, $0636             ; 66 36 06
-0ADA:          : mul a, $66               ; 63 66(f)
-0ADC:          : mul j, $6606             ; 66 06 66
-0ADF:          : cpy a, y                 ; 36
-0AE0:          : mul j, $6618             ; 66 18 66
-0AE3:          : cpy w, a                 ; 3C
-0AE4:          : inc i                    ; 77
-0AE5:          : mul j, $0618             ; 66 18 06
-0AE8:          : pop y                    ; 0C
-0AE9:          : sub w, $30               ; 60 30(0)
-0AEB:          : nop                      ; 00
-0AEC:          : nop                      ; 00
-0AED:          : nop                      ; 00
-0AEE:          : mul j, $6666             ; 66 66 66
-0AF1:          : mul j, $1806             ; 66 06 18
-0AF4:          : dec w                    ; 7C
-0AF5:          : mul j, $6018             ; 66 18 60
-0AF8:          : cpy a, y                 ; 36
-0AF9:          : call.gt $666B            ; 30 6B 66
-0AFC:          : mul j, $6666             ; 66 66 66
-0AFF:          : push i                   ; 06
-0B00:          : sub w, $18               ; 60 18
-0B02:          : mul j, $3E3C             ; 66 3C 3E
-0B05:          : cpy w, a                 ; 3C
-0B06:          : dec w                    ; 7C
-0B07:          : pop y                    ; 0C
-0B08:          : nop                      ; 00
-0B09:          : nop                      ; 00
-0B0A:          : nop                      ; 00
-0B0B:          : nop                      ; 00
-0B0C:          : nop                      ; 00
-0B0D:          : nop                      ; 00
+0ABD:          : push i                   ; 06
+0ABE:          : div i, j                 ; 66
+0ABF:          : div i, j                 ; 66
+0AC0:          : load y, j                ; 18
+0AC1:          : div i, j                 ; 66
+0AC2:          : cpy a, y                 ; 36
+0AC3:          : push i                   ; 06
+0AC4:          : mul j, $6666             ; 63 66 66
+0AC7:          : push i                   ; 06
+0AC8:          : div i, j                 ; 66
+0AC9:          : cpy a, y                 ; 36
+0ACA:          : div i, j                 ; 66
+0ACB:          : load y, j                ; 18
+0ACC:          : div i, j                 ; 66
+0ACD:          : cpy w, a                 ; 3C
+0ACE:          : dec a                    ; 77
+0ACF:          : div i, j                 ; 66
+0AD0:          : load y, j                ; 18
+0AD1:          : push i                   ; 06
+0AD2:          : pop y                    ; 0C
+0AD3:          : mul a, $30               ; 60 30(0)
+0AD5:          : nop                      ; 00
+0AD6:          : nop                      ; 00
+0AD7:          : nop                      ; 00
+0AD8:          : div i, j                 ; 66
+0AD9:          : div i, j                 ; 66
+0ADA:          : div i, j                 ; 66
+0ADB:          : div i, j                 ; 66
+0ADC:          : push i                   ; 06
+0ADD:          : load y, j                ; 18
+0ADE:          : dec i                    ; 7C
+0ADF:          : div i, j                 ; 66
+0AE0:          : load y, j                ; 18
+0AE1:          : mul a, $36               ; 60 36(6)
+0AE3:          : call.gt $666B            ; 30 6B 66
+0AE6:          : div i, j                 ; 66
+0AE7:          : div i, j                 ; 66
+0AE8:          : div i, j                 ; 66
+0AE9:          : push i                   ; 06
+0AEA:          : mul a, $18               ; 60 18
+0AEC:          : div i, j                 ; 66
+0AED:          : cpy w, a                 ; 3C
+0AEE:          : set y, $3C               ; 3E 3C(<)
+0AF0:          : dec i                    ; 7C
+0AF1:          : pop y                    ; 0C
+0AF2:          : nop                      ; 00
+0AF3:          : nop                      ; 00
+0AF4:          : nop                      ; 00
+0AF5:          : nop                      ; 00
+0AF6:          : nop                      ; 00
+0AF7:          : nop                      ; 00
+0AF8:          : load y, j                ; 18
+0AF9:          : nop                      ; 00
+0AFA:          : mod i, $6218             ; 6C 18 62
+0AFD:          : nop                      ; FC
+0AFE:          : nop                      ; 00
+0AFF:          : call.gt $000C            ; 30 0C 00
+0B02:          : nop                      ; 00
+0B03:          : pop y                    ; 0C
+0B04:          : nop                      ; 00
+0B05:          : load y, j                ; 18
+0B06:          : push y                   ; 02
+0B07:          : cpy w, a                 ; 3C
+0B08:          : cmp a, x                 ; 7E
+0B09:          : cmp a, x                 ; 7E
+0B0A:          : cpy w, a                 ; 3C
+0B0B:          : dec x                    ; 78
+0B0C:          : cpy w, a                 ; 3C
+0B0D:          : cpy w, a                 ; 3C
 0B0E:          : load y, j                ; 18
-0B0F:          : nop                      ; 00
-0B10:          : mod a, x                 ; 6C
-0B11:          : load y, j                ; 18
-0B12:          : mul a, x                 ; 62
-0B13:          : nop                      ; FC
-0B14:          : nop                      ; 00
-0B15:          : call.gt $000C            ; 30 0C 00
-0B18:          : nop                      ; 00
-0B19:          : pop y                    ; 0C
-0B1A:          : nop                      ; 00
-0B1B:          : load y, j                ; 18
-0B1C:          : push y                   ; 02
-0B1D:          : cpy w, a                 ; 3C
-0B1E:          : dec i                    ; 7E
-0B1F:          : dec i                    ; 7E
+0B0F:          : cpy w, a                 ; 3C
+0B10:          : cpy w, a                 ; 3C
+0B11:          : nop                      ; 00
+0B12:          : push f                   ; 08
+0B13:          : mul a, $00               ; 60 00
+0B15:          : pop y                    ; 0C
+0B16:          : load y, j                ; 18
+0B17:          : push y                   ; 02
+0B18:          : div i, j                 ; 66
+0B19:          : set y, $3C               ; 3E 3C(<)
+0B1B:          : set y, $7E               ; 3E 7E(~)
+0B1D:          : push i                   ; 06
+0B1E:          : cpy w, a                 ; 3C
+0B1F:          : div i, j                 ; 66
 0B20:          : cpy w, a                 ; 3C
-0B21:          : inc j                    ; 78
-0B22:          : cpy w, a                 ; 3C
-0B23:          : cpy w, a                 ; 3C
-0B24:          : load y, j                ; 18
-0B25:          : cpy w, a                 ; 3C
-0B26:          : cpy w, a                 ; 3C
-0B27:          : nop                      ; 00
-0B28:          : push f                   ; 08
-0B29:          : sub w, $00               ; 60 00
-0B2B:          : pop y                    ; 0C
-0B2C:          : load y, j                ; 18
-0B2D:          : push y                   ; 02
-0B2E:          : mul j, $3C3E             ; 66 3E 3C
-0B31:          : set y, $7E               ; 3E 7E(~)
-0B33:          : push i                   ; 06
-0B34:          : cpy w, a                 ; 3C
-0B35:          : mul j, $3C3C             ; 66 3C 3C
-0B38:          : mul j, $637E             ; 66 7E 63
-0B3B:          : mul j, $063C             ; 66 3C 06
-0B3E:          : cpy w, a                 ; 3C
-0B3F:          : mul j, $183C             ; 66 3C 18
-0B42:          : cpy w, a                 ; 3C
-0B43:          : load y, j                ; 18
-0B44:          : mul a, $66               ; 63 66(f)
-0B46:          : load y, j                ; 18
-0B47:          : dec i                    ; 7E
-0B48:          : cpy w, a                 ; 3C
-0B49:          : set w, $3C               ; 40 3C(<)
-0B4B:          : nop                      ; 00
-0B4C:          : nop                      ; 00
-0B4D:          : nop                      ; 00
-0B4E:          : dec w                    ; 7C
-0B4F:          : set y, $3C               ; 3E 3C(<)
-0B51:          : dec w                    ; 7C
-0B52:          : dec w                    ; 7C
-0B53:          : load y, j                ; 18
-0B54:          : sub w, $66               ; 60 66(f)
-0B56:          : cpy w, a                 ; 3C
-0B57:          : mul j, $7866             ; 66 66 78
-0B5A:          : div j, $3C66             ; 6B 66 3C
-0B5D:          : set y, $7C               ; 3E 7C(|)
-0B5F:          : push i                   ; 06
-0B60:          : set y, $30               ; 3E 30(0)
-0B62:          : dec w                    ; 7C
-0B63:          : load y, j                ; 18
-0B64:          : cpy a, y                 ; 36
-0B65:          : mul j, $7E60             ; 66 60 7E
+0B21:          : cpy w, a                 ; 3C
+0B22:          : div i, j                 ; 66
+0B23:          : cmp a, x                 ; 7E
+0B24:          : mul j, $3C66             ; 63 66 3C
+0B27:          : push i                   ; 06
+0B28:          : cpy w, a                 ; 3C
+0B29:          : div i, j                 ; 66
+0B2A:          : cpy w, a                 ; 3C
+0B2B:          : load y, j                ; 18
+0B2C:          : cpy w, a                 ; 3C
+0B2D:          : load y, j                ; 18
+0B2E:          : mul j, $1866             ; 63 66 18
+0B31:          : cmp a, x                 ; 7E
+0B32:          : cpy w, a                 ; 3C
+0B33:          : set w, $3C               ; 40 3C(<)
+0B35:          : nop                      ; 00
+0B36:          : nop                      ; 00
+0B37:          : nop                      ; 00
+0B38:          : dec i                    ; 7C
+0B39:          : set y, $3C               ; 3E 3C(<)
+0B3B:          : dec i                    ; 7C
+0B3C:          : dec i                    ; 7C
+0B3D:          : load y, j                ; 18
+0B3E:          : mul a, $66               ; 60 66(f)
+0B40:          : cpy w, a                 ; 3C
+0B41:          : div i, j                 ; 66
+0B42:          : div i, j                 ; 66
+0B43:          : dec x                    ; 78
+0B44:          : mod i, j                 ; 6B
+0B45:          : div i, j                 ; 66
+0B46:          : cpy w, a                 ; 3C
+0B47:          : set y, $7C               ; 3E 7C(|)
+0B49:          : push i                   ; 06
+0B4A:          : set y, $30               ; 3E 30(0)
+0B4C:          : dec i                    ; 7C
+0B4D:          : load y, j                ; 18
+0B4E:          : cpy a, y                 ; 36
+0B4F:          : div i, j                 ; 66
+0B50:          : mul a, $7E               ; 60 7E(~)
+0B52:          : nop                      ; 00
+0B53:          : nop                      ; 00
+0B54:          : nop                      ; 00
+0B55:          : nop                      ; 00
+0B56:          : nop                      ; 00
+0B57:          : nop                      ; 00
+0B58:          : nop                      ; 00
+0B59:          : nop                      ; 00
+0B5A:          : nop                      ; 00
+0B5B:          : nop                      ; 00
+0B5C:          : nop                      ; 00
+0B5D:          : nop                      ; 00
+0B5E:          : nop                      ; 00
+0B5F:          : nop                      ; 00
+0B60:          : nop                      ; 00
+0B61:          : nop                      ; 00
+0B62:          : nop                      ; 00
+0B63:          : nop                      ; 00
+0B64:          : nop                      ; 00
+0B65:          : nop                      ; 00
+0B66:          : nop                      ; 00
+0B67:          : nop                      ; 00
 0B68:          : nop                      ; 00
 0B69:          : nop                      ; 00
 0B6A:          : nop                      ; 00
@@ -1008,7 +1135,7 @@
 0B74:          : nop                      ; 00
 0B75:          : nop                      ; 00
 0B76:          : nop                      ; 00
-0B77:          : nop                      ; 00
+0B77:          : cpy w, a                 ; 3C
 0B78:          : nop                      ; 00
 0B79:          : nop                      ; 00
 0B7A:          : nop                      ; 00
@@ -1025,12 +1152,11 @@
 0B85:          : nop                      ; 00
 0B86:          : nop                      ; 00
 0B87:          : nop                      ; 00
-0B88:          : nop                      ; 00
-0B89:          : nop                      ; 00
+0B88:          : mul a, $00               ; 60 00
 0B8A:          : nop                      ; 00
 0B8B:          : nop                      ; 00
 0B8C:          : nop                      ; 00
-0B8D:          : cpy w, a                 ; 3C
+0B8D:          : nop                      ; 00
 0B8E:          : nop                      ; 00
 0B8F:          : nop                      ; 00
 0B90:          : nop                      ; 00
@@ -1039,7 +1165,7 @@
 0B93:          : nop                      ; 00
 0B94:          : nop                      ; 00
 0B95:          : nop                      ; 00
-0B96:          : nop                      ; 00
+0B96:          : nop                      ; FF
 0B97:          : nop                      ; 00
 0B98:          : nop                      ; 00
 0B99:          : nop                      ; 00
@@ -1047,126 +1173,106 @@
 0B9B:          : nop                      ; 00
 0B9C:          : nop                      ; 00
 0B9D:          : nop                      ; 00
-0B9E:          : sub w, $00               ; 60 00
+0B9E:          : cpy w, a                 ; 3C
+0B9F:          : nop                      ; 00
 0BA0:          : nop                      ; 00
-0BA1:          : nop                      ; 00
+0BA1:          : cpy w, a                 ; 3C
 0BA2:          : nop                      ; 00
 0BA3:          : nop                      ; 00
 0BA4:          : nop                      ; 00
 0BA5:          : nop                      ; 00
 0BA6:          : nop                      ; 00
-0BA7:          : nop                      ; 00
-0BA8:          : nop                      ; 00
-0BA9:          : nop                      ; 00
+0BA7:          : push i                   ; 06
+0BA8:          : mul a, $00               ; 60 00
 0BAA:          : nop                      ; 00
 0BAB:          : nop                      ; 00
-0BAC:          : nop                      ; FF
+0BAC:          : nop                      ; 00
 0BAD:          : nop                      ; 00
 0BAE:          : nop                      ; 00
 0BAF:          : nop                      ; 00
-0BB0:          : nop                      ; 00
+0BB0:          : cpy w, a                 ; 3C
 0BB1:          : nop                      ; 00
 0BB2:          : nop                      ; 00
 0BB3:          : nop                      ; 00
-0BB4:          : cpy w, a                 ; 3C
+0BB4:          : nop                      ; 00
 0BB5:          : nop                      ; 00
 0BB6:          : nop                      ; 00
-0BB7:          : cpy w, a                 ; 3C
-0BB8:          : nop                      ; 00
-0BB9:          : nop                      ; 00
-0BBA:          : nop                      ; 00
-0BBB:          : nop                      ; 00
-0BBC:          : nop                      ; 00
-0BBD:          : push i                   ; 06
-0BBE:          : sub w, $00               ; 60 00
-0BC0:          : nop                      ; 00
-0BC1:          : nop                      ; 00
-0BC2:          : nop                      ; 00
-0BC3:          : nop                      ; 00
-0BC4:          : nop                      ; 00
-0BC5:          : nop                      ; 00
-0BC6:          : cpy w, a                 ; 3C
-0BC7:          : nop                      ; 00
-0BC8:          : nop                      ; 00
-0BC9:          : nop                      ; 00
-0BCA:          : nop                      ; 00
-0BCB:          : nop                      ; 00
-0BCC:          : nop                      ; 00
-0BCD:          : dec j                    ; 7F
-0BCE:          : call.gt $3231            ; 30 31 32
-0BD1:          : call.nz $3534            ; 33 34 35
-0BD4:          : cpy a, y                 ; 36
-0BD5:          : cpy a, z                 ; 37
-0BD6:          : cpy a, w                 ; 38
-0BD7:          : cpy x, a                 ; 39
-0BD8:          : sub a, $62               ; 61 62(b)
-0BDA:          : mul a, $64               ; 63 64(d)
-0BDC:          : mul i, $6766             ; 65 66 67
-0BDF:          : div a, $69               ; 68 69(i)
-0BE1:          : div i, $6C6B             ; 6A 6B 6C
-0BE4:          : mod a, $6E               ; 6D 6E(n)
-0BE6:          : mod i, $7170             ; 6F 70 71
-0BE9:          : inc x                    ; 72
-0BEA:          : inc y                    ; 73
-0BEB:          : inc z                    ; 74
-0BEC:          : inc w                    ; 75
-0BED:          : inc a                    ; 76
-0BEE:          : inc i                    ; 77
-0BEF:          : inc j                    ; 78
-0BF0:          : dec x                    ; 79
-0BF1:          : dec y                    ; 7A
-0BF2:          : set a, $42               ; 41 42(B)
-0BF4:          : set j, $4544             ; 43 44 45
-0BF7:          : add a, z                 ; 46
-0BF8:          : add a, w                 ; 47
-0BF9:          : add i, j                 ; 48
-0BFA:          : add i, a                 ; 49
-0BFB:          : add i, z                 ; 4A
-0BFC:          : add i, w                 ; 4B
-0BFD:          : add j, a                 ; 4C
-0BFE:          : add j, x                 ; 4D
-0BFF:          : add j, y                 ; 4E
-0C00:          : add i, $5150             ; 4F 50 51
-0C03:          : add y, $53               ; 52 53(S)
-0C05:          : add w, $55               ; 54 55(U)
-0C07:          : sub a, x                 ; 56
-0C08:          : sub a, y                 ; 57
-0C09:          : sub a, z                 ; 58
-0C0A:          : sub a, w                 ; 59
-0C0B:          : sub i, $5155             ; 5A
-0C0C:          : store i, a               ; 20
-0C0D:          : store i, w               ; 21
-0C0E:          : store i, z               ; 22
-0C0F:          : store j, a               ; 23
-0C10:          : store j, x               ; 24
-0C11:          : store j, y               ; 25
-0C12:          : store $2827, x           ; 26 27 28
-0C15:          : store $2B40, w           ; 29 40 2B
-0C18:          : call $3D2A               ; 2D 2A 3D  ERROR $3D2A
-0C1B:          : call.neq $2E2C           ; 2F 2C 2E
-0C1E:          : cpy z, a                 ; 3B
-0C1F:          : sub j, $2E2C             ; 5B
-0C20:          : sub x, $7B               ; 5D 7B({)
-0C22:          : dec a                    ; 7D
-0C23:          : set z, $3C               ; 3F 3C(<)
-0C25:          : set y, $3A               ; 3E 3A(:)
-0C27:          : dec j                    ; 7F
-0C28:          : dec j                    ; 7F
-0C29:          : dec j                    ; 7F
-0C2A:          : dec j                    ; 7F
-0C2B:          : dec j                    ; 7F
-0C2C:          : dec j                    ; 7F
-0C2D:          : dec j                    ; 7F
-0C2E:          : dec j                    ; 7F
-0C2F:          : dec j                    ; 7F
-0C30:          : dec j                    ; 7F
-0C31:          : dec j                    ; 7F
-0C32:          : dec j                    ; 7F
-0C33:          : dec j                    ; 7F
-0C34:          : dec j                    ; 7F
-0C35:          : dec j                    ; 7F
-0C36:          : dec j                    ; 7F
-0C37:          : dec j                    ; 7F
-0C38:          : dec j                    ; 7F
-0C39:          : dec j                    ; 7F
-0C3A:          : dec j                    ; 7F
+0BB7:          : cmp a, y                 ; 7F
+0BB8:          : call.gt $3231            ; 30 31 32
+0BBB:          : call.nz $3534            ; 33 34 35
+0BBE:          : cpy a, y                 ; 36
+0BBF:          : cpy a, z                 ; 37
+0BC0:          : cpy a, w                 ; 38
+0BC1:          : cpy x, a                 ; 39
+0BC2:          : mul i, j                 ; 61
+0BC3:          : mul i, $6463             ; 62 63 64
+0BC6:          : div a, $66               ; 65 66(f)
+0BC8:          : div i, $6968             ; 67 68 69
+0BCB:          : mod a, $6B               ; 6A 6B(k)
+0BCD:          : mod i, $6E6D             ; 6C 6D 6E
+0BD0:          : neg x                    ; 6F
+0BD1:          : inc a                    ; 70
+0BD2:          : inc x                    ; 71
+0BD3:          : inc y                    ; 72
+0BD4:          : inc z                    ; 73
+0BD5:          : inc w                    ; 74
+0BD6:          : inc i                    ; 75
+0BD7:          : inc j                    ; 76
+0BD8:          : dec a                    ; 77
+0BD9:          : dec x                    ; 78
+0BDA:          : dec y                    ; 79
+0BDB:          : dec z                    ; 7A
+0BDC:          : set a, $42               ; 41 42(B)
+0BDE:          : set j, $4544             ; 43 44 45
+0BE1:          : add a, z                 ; 46
+0BE2:          : add a, w                 ; 47
+0BE3:          : add i, j                 ; 48
+0BE4:          : add i, a                 ; 49
+0BE5:          : add i, z                 ; 4A
+0BE6:          : add i, w                 ; 4B
+0BE7:          : add j, a                 ; 4C
+0BE8:          : add j, x                 ; 4D
+0BE9:          : add j, y                 ; 4E
+0BEA:          : add i, $5150             ; 4F 50 51
+0BED:          : add y, $53               ; 52 53(S)
+0BEF:          : add w, $55               ; 54 55(U)
+0BF1:          : sub a, x                 ; 56
+0BF2:          : sub a, y                 ; 57
+0BF3:          : sub a, z                 ; 58
+0BF4:          : sub a, w                 ; 59
+0BF5:          : sub x, $20               ; 5A 20
+0BF7:          : store i, w               ; 21
+0BF8:          : store i, z               ; 22
+0BF9:          : store j, a               ; 23
+0BFA:          : store j, x               ; 24
+0BFB:          : store j, y               ; 25
+0BFC:          : store $2827, x           ; 26 27 28
+0BFF:          : store $2B40, w           ; 29 40 2B
+0C02:          : call $3D2A               ; 2D 2A 3D  ERROR $3D2A
+0C05:          : call.neq $2E2C           ; 2F 2C 2E
+0C08:          : cpy z, a                 ; 3B
+0C09:          : sub y, $5D               ; 5B 5D(])
+0C0B:          : dec w                    ; 7B
+0C0C:          : dec j                    ; 7D
+0C0D:          : set z, $3C               ; 3F 3C(<)
+0C0F:          : set y, $3A               ; 3E 3A(:)
+0C11:          : cmp a, y                 ; 7F
+0C12:          : cmp a, y                 ; 7F
+0C13:          : cmp a, y                 ; 7F
+0C14:          : cmp a, y                 ; 7F
+0C15:          : cmp a, y                 ; 7F
+0C16:          : cmp a, y                 ; 7F
+0C17:          : cmp a, y                 ; 7F
+0C18:          : cmp a, y                 ; 7F
+0C19:          : cmp a, y                 ; 7F
+0C1A:          : cmp a, y                 ; 7F
+0C1B:          : cmp a, y                 ; 7F
+0C1C:          : cmp a, y                 ; 7F
+0C1D:          : cmp a, y                 ; 7F
+0C1E:          : cmp a, y                 ; 7F
+0C1F:          : cmp a, y                 ; 7F
+0C20:          : cmp a, y                 ; 7F
+0C21:          : cmp a, y                 ; 7F
+0C22:          : cmp a, y                 ; 7F
+0C23:          : cmp a, y                 ; 7F
+0C24:          : cmp a, y                 ; 7F

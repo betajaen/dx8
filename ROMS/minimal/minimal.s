@@ -34,7 +34,7 @@ MAIN:
   set   a, $00
   store REG_GFX_PLANE0_TYPE,  a   ; Set to text mode
 
-  push.b '+'
+  push.b 'e'
   RomFunction Cls
 
   ; Set Background Colour to Black $000000

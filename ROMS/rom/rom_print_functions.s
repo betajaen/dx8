@@ -15,13 +15,13 @@ ltr_PrintChar:
         pop PrintChar_Y
         pop PrintChar_X
 Fn_PrintChar:
-        cmpi x, SCREEN_COLS
+        cmp x, SCREEN_COLS
         _rjmp.gt .CantPrint
-        cmpi y, SCREEN_ROWS
+        cmp y, SCREEN_ROWS
         _rjmp.gt .CantPrint
-        cmpi a, CHAR_Space
+        cmp a, CHAR_Space
         _rjmp.lt .CantPrint
-        cmpi a, CHAR_Hat
+        cmp a, CHAR_Hat
         _rjmp.gt .CantPrint
 
         .Print:
@@ -71,13 +71,13 @@ Fn_Print:
                 push w
 
                 ; _CallFunction PrintChar
-                        cmpi x, SCREEN_COLS
+                        cmp x, SCREEN_COLS
                         _rjmp.gt .CantPrint
-                        cmpi y, SCREEN_ROWS
+                        cmp y, SCREEN_ROWS
                         _rjmp.gt .CantPrint
-                        cmpi a, CHAR_Space
+                        cmp a, CHAR_Space
                         _rjmp.lt .CantPrint
-                        cmpi a, CHAR_Hat
+                        cmp a, CHAR_Hat
                         _rjmp.gt .CantPrint
 
                         .Print:
@@ -132,10 +132,10 @@ Fn_PrintNum:
                 ;cmp a
                 ;_rjmp.z .PrintZero
 
-                cmpi a, 10
+                cmp a, 10
                 _rjmp.lt .PrintChar
 
-                cmpi a, 100
+                cmp a, 100
                 _rjmp.lt .Two
 
                 inc x
@@ -154,13 +154,13 @@ Fn_PrintNum:
 
                 push z
 
-                        cmpi x, SCREEN_COLS
+                        cmp x, SCREEN_COLS
                         _rjmp.gt .CantPrint
-                        cmpi y, SCREEN_ROWS
+                        cmp y, SCREEN_ROWS
                         _rjmp.gt .CantPrint
-                        cmpi a, CHAR_Space
+                        cmp a, CHAR_Space
                         _rjmp.lt .CantPrint
-                        cmpi a, CHAR_Hat
+                        cmp a, CHAR_Hat
                         _rjmp.gt .CantPrint
 
                         .Print:

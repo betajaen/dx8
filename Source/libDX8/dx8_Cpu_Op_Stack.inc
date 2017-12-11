@@ -51,7 +51,7 @@ inline void Cpu_Stack_PopFlags()
   cpu.flags._data = Cpu_Stack_PopByte();
 }
 
-inline void PushRegisters()
+inline void Cpu_Stack_PushRegisters()
 {
   Cpu_Stack_PushByte(cpu.I.x);
   Cpu_Stack_PushByte(cpu.I.y);
@@ -61,7 +61,7 @@ inline void PushRegisters()
   Cpu_Stack_PushByte(cpu.flags._data);
 }
 
-inline void PopRegisters()
+inline void Cpu_Stack_PopRegisters()
 {
   cpu.flags._data = Cpu_Stack_PopByte();
   cpu.a = Cpu_Stack_PopByte();

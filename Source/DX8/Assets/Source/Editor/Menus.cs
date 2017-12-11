@@ -18,9 +18,11 @@ namespace DX8
     public static string Constants         = @"C:\dev\dx8\Source\libDX8\dx8_Constants.inc";
     public static string Interrupts        = @"C:\dev\dx8\Source\libDX8\dx8_Interrupts.inc";
     public static string Scancodes         = @"C:\dev\dx8\Source\libDX8\dx8_Scancodes.inc";
+    public static string TablesPath            = @"C:\dev\dx8\Source\libDX8\dx8_Cpu_Tables.inc";
     public static string AsmInclude        = @"C:\dev\dx8\ROMS\include\";
     public static string OpcodesCsv        = @"C:\dev\dx8\Documentation\OpcodesAsm.csv";
     public static string OpcodesInc        = @"C:\dev\dx8\ROMS\dx8.inc";
+    public static string OpcodesFunctions  = @"C:\dev\dx8\Source\libDX8\";
 
     [MenuItem("DX8/Generate CSV")]
     public static void TestOpcodes()
@@ -157,65 +159,234 @@ namespace DX8
     public static void GenerateSwitchStatement()
     {
       List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
-      System.Text.StringBuilder sb = new System.Text.StringBuilder(16384);
+      System.Text.StringBuilder opcodeSwitch = new System.Text.StringBuilder(16384);
 
-      sb.AppendLine("#include \"dx8.h\"");
-      sb.AppendLine();
+      opcodeSwitch.AppendLine("#include \"dx8.h\"");
+      opcodeSwitch.AppendLine("#include \"dx8_Cpu_Common.inc\"");
+      opcodeSwitch.AppendLine("#include \"dx8_Cpu_Tables.inc\"");
+      opcodeSwitch.AppendLine();
+      
+      string[] includes = System.IO.Directory.GetFiles(OpcodesFunctions, "dx8_Cpu_Op_*.inc");
 
-      sb.AppendLine("void Cpu_StepOnce()");
-      sb.AppendLine("{");
-      sb.AppendLine("  Byte opcode = Mmu_Get(cpu.pc.w);");
-      sb.AppendLine("  switch (opcode)");
-      sb.AppendLine("  {");
+      HashSet<string> functions = new HashSet<string>();
+
+      // 
+      foreach(var inc in includes)
+      {
+        var lines = System.IO.File.ReadAllLines(inc);
+        foreach(var line in lines)
+        {
+          Match match = Regex.Match(line, @"inline\s+(\w+)\s+(.*)", RegexOptions.IgnoreCase);
+
+          if (!match.Success)
+            continue;
+          
+          string fn = string.Format("{0} {1}", match.Groups[1], match.Groups[2].Value.Trim(new [] {';'} )).Trim();
+
+          functions.Add(fn);
+        }
+      }
+      
+      foreach(var fn in functions)
+      {
+        opcodeSwitch.AppendFormat("inline {0};", fn);
+        opcodeSwitch.AppendLine();
+      }
+
+      opcodeSwitch.AppendLine();
+
+      foreach(var inc in System.IO.Directory.GetFiles(OpcodesFunctions, "dx8_Cpu_Op_*.inc"))
+      {
+        opcodeSwitch.AppendFormat("#include \"{0}\"", System.IO.Path.GetFileName(inc));
+        opcodeSwitch.AppendLine();
+      }
+      
+      opcodeSwitch.AppendLine();
+
+      opcodeSwitch.AppendLine("void Cpu_StepOnce()");
+      opcodeSwitch.AppendLine("{");
+      opcodeSwitch.AppendLine("  Opcode opcode = Mmu_Get(cpu.pc.w);");
+      
+      opcodeSwitch.AppendLine("#if defined(DX8_DEBUG_INSTRUCTIONS) && DX8_DEBUG_INSTRUCTIONS == 1");
+      opcodeSwitch.AppendFormat("      sDebugInstruction.opcode = opcode;");
+      opcodeSwitch.AppendLine();
+      opcodeSwitch.AppendFormat("      sDebugInstruction.pc = cpu.pc.w;");
+      opcodeSwitch.AppendLine();
+      opcodeSwitch.AppendFormat("      sDebugInstruction.context1Type = 0;");
+      opcodeSwitch.AppendLine();
+      opcodeSwitch.AppendFormat("      sDebugInstruction.context2Type = 0;");
+      opcodeSwitch.AppendLine();
+      opcodeSwitch.AppendLine("      sDebugInstruction.operand.w = 0;");
+      opcodeSwitch.AppendLine("#endif");
+
+      opcodeSwitch.AppendLine("  switch (opcode)");
+      opcodeSwitch.AppendLine("  {");
 
       foreach (var op in ops)
       {
-        sb.AppendFormat("    // ");
-        op.ToAssemblerFormat(ref sb);
-        sb.AppendLine();
-        sb.AppendFormat("    case 0x{0:X2}:", op.Index);
-        sb.AppendLine();
-        sb.AppendLine("    {");
+        opcodeSwitch.AppendFormat("    // ");
+        op.ToAssemblerFormat(ref opcodeSwitch);
+        opcodeSwitch.AppendLine();
+        opcodeSwitch.AppendFormat("    case ");
+        
+        op.ToCEnumName(ref opcodeSwitch);
+        opcodeSwitch.AppendFormat(" : // 0x{0:X2}", op.Index);
+        opcodeSwitch.AppendLine();
+        opcodeSwitch.AppendLine("    {");
+        
+        // m = m.Replace(
 
-        if (op.Length == 2)
+        if (op.Opcode == OpcodeCompiler.Opcode.Nop)
         {
-          sb.AppendLine("      Byte imm  = Mmu_Get(cpu.pc.w + 1);");
+          opcodeSwitch.AppendLine("#if defined(DX8_DEBUG_INSTRUCTIONS) && DX8_DEBUG_INSTRUCTIONS == 1");
+          opcodeSwitch.AppendFormat("      sDebugInstruction.length = {0};", op.Length);
+          opcodeSwitch.AppendLine();
+          opcodeSwitch.AppendLine("#endif");
+
+          if (op.Index != 0)
+          {
+            opcodeSwitch.AppendLine("      Cpu_Halt(HALT_UNKNOWN_OPCODE);");
+          }
         }
-        else if (op.Length == 3)
+        else
         {
-          sb.AppendLine("      Word imm = Mmu_GetWord(cpu.pc.w + 1);");
+          opcodeSwitch.AppendLine("#if defined(DX8_DEBUG_INSTRUCTIONS) && DX8_DEBUG_INSTRUCTIONS == 1");
+          opcodeSwitch.AppendFormat("      sDebugInstruction.length = {0};", op.Length);
+          opcodeSwitch.AppendLine();
+
+          if (op.Length == 2)
+          {
+            opcodeSwitch.AppendLine("#endif");
+            opcodeSwitch.AppendLine("      Byte imm  = Mmu_Get(cpu.pc.w + 1);");
+            opcodeSwitch.AppendLine("#if defined(DX8_DEBUG_INSTRUCTIONS) && DX8_DEBUG_INSTRUCTIONS == 1");
+            opcodeSwitch.AppendLine("      sDebugInstruction.operand.lo = imm;");
+            opcodeSwitch.AppendLine("#endif");
+          }
+          else if (op.Length == 3)
+          {
+            opcodeSwitch.AppendLine("#endif");
+            opcodeSwitch.AppendLine("      Word imm = Mmu_GetWord(cpu.pc.w + 1);");
+            opcodeSwitch.AppendLine("#if defined(DX8_DEBUG_INSTRUCTIONS) && DX8_DEBUG_INSTRUCTIONS == 1");
+            opcodeSwitch.AppendLine("      sDebugInstruction.operand.w = imm;");
+            opcodeSwitch.AppendLine("#endif");
+          }
+          else
+          {
+            opcodeSwitch.AppendLine("#endif");
+          }
+        
+          string m = op.Code.TrimStart(new char[] { '{' });
+          m = m.TrimEnd(new char[] { '}', ')' });
+          m = m.Trim();
+
+          if (m.EndsWith(";") == false)
+            m = m + ";";
+        
+          m = m.Replace("REG_IMM",     "imm");
+          m = m.Replace("REG_BYTE",    "imm");
+          m = m.Replace("REG_WORD",    "imm");
+          m = m.Replace("REG_PC",      "cpu.pc.w");
+          m = m.Replace("REG_A",       "cpu.a");
+          m = m.Replace("REG_X",       "cpu.I.x");
+          m = m.Replace("REG_Y",       "cpu.I.y");
+          m = m.Replace("REG_I",       "cpu.I.I");
+          m = m.Replace("REG_Z",       "cpu.J.z");
+          m = m.Replace("REG_W",       "cpu.J.w");
+          m = m.Replace("REG_J",       "cpu.J.J");
+          m = m.Replace("FL_Z",        "cpu.flags.bZero");
+          m = m.Replace("FL_G",        "cpu.flags.bGreater");
+          m = m.Replace("FL_N",        "cpu.flags.bNegative");
+          m = m.Replace("FL_C",        "cpu.flags.bCarry");
+          m = m.Replace("Opf_Single",  "1");
+          m = m.Replace("Opf_Byte",    "2");
+          m = m.Replace("Opf_Word",    "3");
+          m = m.Replace("Opf_Address", "3");
+
+          opcodeSwitch.Append("      ");
+          opcodeSwitch.AppendLine(m);
         }
 
-        string m = op.Code.TrimStart(new char[] { '{' });
-        m = m.TrimEnd(new char[] { '}', ')' });
-        m = m.Trim();
+        if (op.PcMod == OpcodeCompiler.PcMod.Length)
+        {
+          opcodeSwitch.AppendFormat("      cpu.pc.w += {0};", op.Length);
+          opcodeSwitch.AppendLine();
+        }
+        
+        opcodeSwitch.AppendLine("#if defined(DX8_DEBUG_INSTRUCTIONS) && DX8_DEBUG_INSTRUCTIONS == 1");
+        opcodeSwitch.AppendLine("      Cpu_Debug_PushDebugInstruction();");
+        opcodeSwitch.AppendLine("#endif");
 
-        if (m.EndsWith(";") == false)
-          m = m + ";";
-          
-        m = m.Replace("REG_IMM",  "imm");
-        m = m.Replace("REG_BYTE", "imm");
-        m = m.Replace("REG_WORD", "imm");
-        m = m.Replace("REG_PC",   "cpu.pc.w");
-        m = m.Replace("REG_A",    "cpu.a");
-        m = m.Replace("REG_X",    "cpu.I.x");
-        m = m.Replace("REG_Y",    "cpu.I.y");
-        m = m.Replace("REG_I",    "cpu.I.I");
-        m = m.Replace("REG_Z",    "cpu.J.z");
-        m = m.Replace("REG_W",    "cpu.J.w");
-        m = m.Replace("REG_J",    "cpu.J.J");
-
-        sb.Append("      ");
-        sb.AppendLine(m);
-
-        sb.AppendLine("    }");
-        sb.AppendLine("    break;");
+        opcodeSwitch.AppendLine("    }");
+        opcodeSwitch.AppendLine("    break;");
       }
 
-      sb.AppendLine("  }");
-      sb.AppendLine("}");
+      opcodeSwitch.AppendLine("  }");
+      opcodeSwitch.AppendLine("}");
       
-      System.IO.File.WriteAllText(StepPath, sb.ToString());
+      System.IO.File.WriteAllText(StepPath, opcodeSwitch.ToString());
+
+      Debug.Log("Wrote switch file to " + StepPath);
+      
+      StringBuilder tables = new StringBuilder();
+      
+      tables.AppendLine("const char* kOpStrs[] = {");
+
+      foreach(var op in ops)
+      {
+        tables.AppendFormat("\"");
+        op.ToAssemblerFormatName(ref tables);
+        tables.AppendFormat("\",");
+        tables.AppendLine();
+      }
+
+      tables.AppendLine("};");
+      
+      tables.AppendLine();
+
+      tables.AppendLine("int Cpu_FormatInstruction(char* str, Byte opcode, Word imm)");
+      tables.AppendLine("{");
+      
+      tables.AppendLine("    switch(opcode)");
+      tables.AppendLine("    {");
+      
+      foreach(var op in ops)
+      {
+        tables.AppendFormat("      case {0}: ", op.Index);
+        if (op.Length == 1)
+        {
+          tables.AppendFormat("return sprintf(str, \"");
+          op.ToSprintfFormat(ref tables);
+          tables.AppendLine("\");");
+        }
+        else
+        {
+          tables.AppendFormat("return sprintf(str, \"");
+          op.ToSprintfFormat(ref tables);
+          tables.AppendLine("\", imm);");
+        }
+      }
+      
+      tables.AppendLine("  }");
+      tables.AppendLine("  return 0;");
+      tables.AppendLine("}");
+      
+      tables.AppendLine();
+
+      tables.AppendLine("typedef enum");
+      tables.AppendLine("{");
+
+      foreach(var op in ops)
+      {
+        tables.Append("  ");
+        op.ToCEnumName(ref tables);
+        tables.AppendFormat(" = 0x{0:X2},", op.Index);
+        tables.AppendLine();
+      }
+      tables.AppendLine("  OP_COUNT");
+      tables.AppendLine("} Opcode;");
+
+      System.IO.File.WriteAllText(TablesPath, tables.ToString());
+
     }
 
     [MenuItem("DX8/Convert PNG Image to 1-bit ROM")]
