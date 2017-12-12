@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f996448429b55d340a45dc445e2a091a, type: 3}
+  m_Name: Widgets ImportData
+  m_EditorClassIdentifier: 
+  atlasIdA: 1416947963
+  atlasIdB: 168988570
+  parts:
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: f37cf74b6e8d97e41aea448f32dd9352, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 93eb87644d59dfe46b5b33a1ffc54a31, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: d51a09f6d5a23a54b8ac905eda48940e, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 5040d546243608943bb22c17a828cead, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 8739cd89656956947b2a009b564dd7af, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: ee79d401f1dee5c4fbef556a82ebb9b4, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 338857868eeee7d4e951cc55f7d5ecbf, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 08d3dc8111ef11b4e980c2753f74d90c, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: acf0a7b30eee21e4195ef5f06c18ff1f, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: b4ca202aa9bc0f846833250c4e1868a7, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 3fc2ff7da6be57c4286e65a13c279132, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 537ad35bd76e47c47aa28c1ce93d7e70, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 3ac42d9091778aa4eabdca9f4ed95f37, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 129fd74fee3ebe14a9a6fce74707fe92, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  atlasOutOfDate: 0
+  border: 2
+  padding: 2
+  generateWhiteTexture: 1

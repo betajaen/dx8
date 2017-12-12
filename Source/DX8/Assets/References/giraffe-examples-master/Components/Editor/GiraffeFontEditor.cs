@@ -4,7 +4,7 @@ using UnityEditor;
 using UnityEngine;
 
 [CustomEditor(typeof(GiraffeFont))]
-public class GiraffeFontEditor : Editor
+public class GiraffeFontEditor : UnityEditor.Editor
 {
 
   [MenuItem("Assets/Create/Giraffe Font")]

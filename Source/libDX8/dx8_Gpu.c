@@ -47,6 +47,7 @@ Byte*    sWriteCrt, *sReadCrt;
 bool     sCrtDirty;
 Byte*    sScanLineTarget;
 Byte*    sLineCache;
+Byte*    sColourCache;
 Byte*    Ram_Get();
 Byte     Gpu_Halt;
 

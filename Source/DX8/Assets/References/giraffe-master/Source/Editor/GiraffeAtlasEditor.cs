@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using Object = UnityEngine.Object;
 
 [CustomEditor(typeof(GiraffeAtlas))]
-public class GiraffeAtlasEditor : Editor
+public class GiraffeAtlasEditor : UnityEditor.Editor
 {
 
   static void TryResolveEditorData(GiraffeAtlas atlas)

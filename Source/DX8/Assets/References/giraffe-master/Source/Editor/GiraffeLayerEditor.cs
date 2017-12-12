@@ -3,7 +3,7 @@ using UnityEngine;
 using System.Collections;
 
 [CustomEditor(typeof(GiraffeLayer))]
-public class GiraffeLayerEditor : Editor
+public class GiraffeLayerEditor : UnityEditor.Editor
 {
   public override void OnInspectorGUI()
   {

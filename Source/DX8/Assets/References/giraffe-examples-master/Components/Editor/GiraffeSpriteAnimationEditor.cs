@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections;
 
 [CustomEditor(typeof(GiraffeSpriteAnimation))]
-public class GiraffeQuadSpriteAnimationEditor : Editor
+public class GiraffeQuadSpriteAnimationEditor : UnityEditor.Editor
 {
 
   [MenuItem("Assets/Create/Giraffe Sprite Animation")]

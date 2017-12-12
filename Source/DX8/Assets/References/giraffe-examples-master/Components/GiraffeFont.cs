@@ -132,6 +132,28 @@ public class GiraffeFont : ScriptableObject
     }
     return estimation;
   }
+  
+  public int Size(String text)
+  {
+    int length = text.Length;
+
+    int p = 0;
+
+    for (int i = 0; i < length; i++)
+    {
+      char c = text[i];
+      if (c >= characterRangeMin && c <= characterRangeMax && characters.ContainsKey(c))
+      {
+        GiraffeFontGlyph glyph = characters[c];
+        p += glyph.xAdvance;
+      }
+      else if (c == ' ')
+      {
+        p += spaceAdvance;
+      }
+    }
+    return p;
+  }
 
   public void AddTo(GiraffeLayer layer, int x, int y, String text)
   {

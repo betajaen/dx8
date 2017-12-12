@@ -1,0 +1,139 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 85b61d2f31eb2464690f587d64c6eae7, type: 3}
+  m_Name: Widgets
+  m_EditorClassIdentifier: 
+  atlasIdA: 1416947963
+  atlasIdB: 168988570
+  mSprites:
+  - name: Giraffe/White
+    left: 58
+    top: 120
+    width: 4
+    height: 4
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: VictoriaBold
+    left: 2
+    top: 2
+    width: 252
+    height: 36
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widgets_UpLeft
+    left: 85
+    top: 72
+    width: 2
+    height: 16
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widgets_UpMiddle
+    left: 58
+    top: 98
+    width: 16
+    height: 16
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widgets_UpRight
+    left: 85
+    top: 94
+    width: 2
+    height: 16
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widgets_ToolUp
+    left: 2
+    top: 44
+    width: 23
+    height: 23
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widgets_ToolDown
+    left: 2
+    top: 73
+    width: 23
+    height: 23
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Clear
+    left: 2
+    top: 102
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Plus
+    left: 31
+    top: 44
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Minus
+    left: 31
+    top: 71
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Pen
+    left: 31
+    top: 98
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Load
+    left: 58
+    top: 44
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Save
+    left: 58
+    top: 71
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widgets_Up
+    left: 85
+    top: 44
+    width: 8
+    height: 8
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widgets_Down
+    left: 85
+    top: 58
+    width: 8
+    height: 8
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  texture: {fileID: 2800000, guid: 2d276eee74b831c4ea361ef84af5cecb, type: 3}
+  useCustomMaterial: 0
+  customMaterial: {fileID: 0}

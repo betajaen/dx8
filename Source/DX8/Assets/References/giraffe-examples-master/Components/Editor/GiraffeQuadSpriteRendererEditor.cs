@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Collections;
 
 [CustomEditor(typeof(GiraffeQuadSpriteRenderer))]
-public class GiraffeQuadSpriteRendererEditor : Editor
+public class GiraffeQuadSpriteRendererEditor : UnityEditor.Editor
 {
 
   private GiraffeQuadSpriteRenderer mRenderer;
