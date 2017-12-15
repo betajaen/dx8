@@ -98,6 +98,78 @@ MonoBehaviour:
     width: 32
     height: 32
     count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 400a3030056a16e46add9051052303f4, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: bcd2b32a02bbb3b4fb11c6572132f267, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 0fa4103b7fc33f04f975d43d31127e39, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 15ae60da032f50c41ab55310b7ee0f18, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 5919f5b662e58b7489c7409d484f00a9, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 25b07957f0efaa14080c5d98ef745cc5, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: cef3ef29e66a2a04a9296e01337fcab1, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: a88148437cdc622498daf7f33d0b4598, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 765dbd98efe2c7f4ab4686a146b4743b, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 530917c4e3833ab4884dd5146f70d538, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: d7dbb713ad7c9354c84d7bf256c3e286, type: 3}
+    width: 32
+    height: 32
+    count: 1
+  - type: 1
+    textAsset: {fileID: 0}
+    textureAsset: {fileID: 2800000, guid: 6197d083e8844dd4fbd51a586f86ddac, type: 3}
+    width: 32
+    height: 32
+    count: 1
   atlasOutOfDate: 0
   border: 2
   padding: 2

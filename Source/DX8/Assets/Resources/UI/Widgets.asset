@@ -15,7 +15,7 @@ MonoBehaviour:
   atlasIdB: 168988570
   mSprites:
   - name: Giraffe/White
-    left: 58
+    left: 166
     top: 120
     width: 4
     height: 4
@@ -31,15 +31,15 @@ MonoBehaviour:
     offsetX: 0
     offsetY: 0
   - name: Widgets_UpLeft
-    left: 85
-    top: 72
+    left: 193
+    top: 58
     width: 2
     height: 16
     scale: 1
     offsetX: 0
     offsetY: 0
   - name: Widgets_UpMiddle
-    left: 58
+    left: 166
     top: 98
     width: 16
     height: 16
@@ -47,8 +47,8 @@ MonoBehaviour:
     offsetX: 0
     offsetY: 0
   - name: Widgets_UpRight
-    left: 85
-    top: 94
+    left: 193
+    top: 80
     width: 2
     height: 16
     scale: 1
@@ -119,7 +119,7 @@ MonoBehaviour:
     offsetX: 0
     offsetY: 0
   - name: Widgets_Up
-    left: 85
+    left: 193
     top: 44
     width: 8
     height: 8
@@ -127,10 +127,106 @@ MonoBehaviour:
     offsetX: 0
     offsetY: 0
   - name: Widgets_Down
-    left: 85
-    top: 58
+    left: 207
+    top: 44
     width: 8
     height: 8
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Size8
+    left: 58
+    top: 98
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Size16
+    left: 85
+    top: 44
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Size24
+    left: 85
+    top: 71
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Size32
+    left: 85
+    top: 98
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_New
+    left: 112
+    top: 44
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Delete
+    left: 112
+    top: 71
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Prev
+    left: 112
+    top: 98
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Next
+    left: 139
+    top: 44
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Play6
+    left: 139
+    top: 71
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Play12
+    left: 139
+    top: 98
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Play25
+    left: 166
+    top: 44
+    width: 21
+    height: 21
+    scale: 1
+    offsetX: 0
+    offsetY: 0
+  - name: Widget_Icon_Play50
+    left: 166
+    top: 71
+    width: 21
+    height: 21
     scale: 1
     offsetX: 0
     offsetY: 0

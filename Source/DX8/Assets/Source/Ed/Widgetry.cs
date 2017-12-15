@@ -68,6 +68,22 @@ namespace Widgetry
       widgets.Add(name, panel);
       Dirty = true;
     }
+    
+    public void AddSpriteButton(int name, int x, int y, string spriteName)
+    {
+      GiraffeSprite sprite = Widget.Layer.atlas.GetSprite(spriteName);
+      SpriteButton spriteButton = new SpriteButton();
+      spriteButton.x0 = x;
+      spriteButton.y0 = y;
+      spriteButton.tw = sprite.width;
+      spriteButton.x1 = x + sprite.width;
+      spriteButton.y1 = y + sprite.height;
+      spriteButton.sprite = sprite;
+      spriteButton.estimation = spriteButton.Estimate();
+      widgets.Add(name, spriteButton);
+      Dirty = true;
+    }
+
     public void AddLabel(int name, int x, int y, string text)
     {
       Label label = new Label();
@@ -75,7 +91,7 @@ namespace Widgetry
       label.y0 = y;
       label.tw = text.Length * 8;
       label.x1 = x + label.tw;
-      label.y1 = y + Widget.Button_Left.height;
+      label.y1 = y + 8;
       label.text = text;
       label.estimation = label.Estimate();
       widgets.Add(name, label);
@@ -237,6 +253,22 @@ namespace Widgetry
       Layer.SetColour(colour);
       Layer.Add(x0, y0, x1 - x0, y1 - y0, Widget.White);
       Layer.SetColour(WhiteColour);
+    }
+
+    public override int Estimate()
+    {
+      return 1;
+    }
+  }
+
+  public class SpriteButton : Widget
+  {
+    public GiraffeSprite sprite;
+    
+    public override void Draw()
+    {
+      Layer.SetColour(WhiteColour);
+      Layer.Add(x0, y0, sprite);
     }
 
     public override int Estimate()
