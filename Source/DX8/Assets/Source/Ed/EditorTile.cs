@@ -3,26 +3,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EditorSprite : Editor
+public class EditorTile : Editor
 {
 
   int kSpriteScale = 24;
   int kUiScale = 2;
-  Byte SpriteWidth;
   List<Color32> palette = new List<Color32>();
   List<Byte> spritePalette = new List<byte>(3);
   Widgetry.Ui   Ui;
   List<byte[]> frames = new List<byte[]>();
   byte[] image;
-  Color32[] imageRgb = new Color32[24*24];
+  Color32[] imageRgb = new Color32[8*8];
   Texture2D imageTex;
-  int  FrameRate = 0;
-  int  FrameIdx  = 0;
   
   public const int Sprite_Load          = 50;
   public const int Sprite_Save          = 51;
   public const int Sprite_Clear         = 52;
-  public const int Sprite_Size          = 53;
   public const int Drawing_Pen          = 60;
   public const int Palette_Increase1    = 101;
   public const int Palette_Increase2    = 102;
@@ -34,21 +30,15 @@ public class EditorSprite : Editor
   public const int Frame_Delete         = 302;
   public const int Frame_Next           = 303;
   public const int Frame_Prev           = 304;
-  public const int Frame_Play6          = 305;
-  public const int Frame_Play12         = 306;
-  public const int Frame_Play25         = 307;
-  public const int Frame_Play50         = 308;
-
 
   public const int Palette_RGB          = 106;
 
   Byte SelectedColour = 0;
 
-  public void Awake()
+  private void Awake()
   {
-    
     SelectedColour = 1;
-    imageTex = new Texture2D(24, 24, TextureFormat.RGBA32, false, false);
+    imageTex = new Texture2D(8, 8, TextureFormat.RGBA32, false, false);
     imageTex.wrapModeU = TextureWrapMode.Clamp;
     imageTex.wrapModeV = TextureWrapMode.Repeat;
     imageTex.filterMode = FilterMode.Point;
@@ -78,12 +68,9 @@ public class EditorSprite : Editor
     spritePalette.Add(0x05);
 
     frames.Clear();
-    image = new byte[24*24];
+    image = new byte[8*8];
     frames.Add(image);
-
-    SpriteWidth = 0;
-    FrameRate   = 0;
-    FrameIdx    = 0;
+    
   }
 
   public override void Setup(Widgetry.Ui ui)
@@ -122,20 +109,6 @@ public class EditorSprite : Editor
     tx = toolP;
     ty += toolP + toolW;
     
-    if (SpriteWidth == 0)
-      Ui.AddTool(Sprite_Size, tx,     ty, "Widget_Icon_Size8");
-    else if (SpriteWidth == 1)
-      Ui.AddTool(Sprite_Size, tx,     ty, "Widget_Icon_Size16");
-    else if (SpriteWidth == 2)
-      Ui.AddTool(Sprite_Size, tx,     ty, "Widget_Icon_Size24");
-    else
-      Ui.AddTool(Sprite_Size, tx,     ty, "Giraffe/White");
-
-    tx += toolP + toolW;
-    Ui.AddTool(848348,   tx,     ty, "Giraffe/White");
-    tx = toolP;
-    ty += toolP + toolW;
-
     
     Ui.AddTool(Frame_New, tx,     ty, "Widget_Icon_New");
     tx += toolP + toolW;
@@ -148,19 +121,10 @@ public class EditorSprite : Editor
     Ui.AddTool(Frame_Next,   tx,     ty, "Widget_Icon_Next");
     tx = toolP;
     ty += toolP + toolW;
-    
-    Ui.AddTool(Frame_Play6, tx,     ty, "Widget_Icon_Play6");
-    tx += toolP + toolW;
-    Ui.AddTool(Frame_Play12,   tx,     ty, "Widget_Icon_Play12");
-    tx = toolP;
-    ty += toolP + toolW;
-    
-    Ui.AddTool(Frame_Play25, tx,     ty, "Widget_Icon_Play25");
-    tx += toolP + toolW;
-    Ui.AddTool(Frame_Play50,   tx,     ty, "Widget_Icon_Play50");
-    tx = toolP;
-    ty += toolP + toolW;
 
+    tx = toolP;
+    ty += toolP + toolW;
+    
     Ui.AddSpriteButton(Palette_Increase1, tx, ty, "Widgets_Up");
     tx += 10;
     
@@ -209,28 +173,22 @@ public class EditorSprite : Editor
     }
     
     GetComponent<EditorMain>().RefreshSharedUi();
+
   }
   
   void RefreshImage()
   {
-    
-    int mw = 8;
-    if (SpriteWidth == 1)
-      mw = 16;
-    else if (SpriteWidth == 2)
-      mw = 24;
-    
-    for(int i=0;i < 24 * 24;i++)
+    for(int i=0;i < 8 * 8;i++)
     {
       imageRgb[i] = new Color32(0,0,0,0);
     }
     
-    for(int i=0;i < mw;i++)
+    for(int i=0;i < 8;i++)
     {
-      for (int j=0;j < mw;j++)
+      for (int j=0;j < 8;j++)
       {
-        byte colour = image[i + (j * 24)];
-        imageRgb[i + (j * 24)] = palette[spritePalette[colour]];
+        byte colour = image[i + (j * 8)];
+        imageRgb[i + (j * 8)] = palette[spritePalette[colour]];
       }
     }
 
@@ -263,7 +221,7 @@ public class EditorSprite : Editor
           RefreshUi();
         break;
         case Sprite_Clear:
-          image = new byte[24 * 24];
+          image = new byte[8 * 8];
           RefreshImage();
           RefreshUi();
         break;
@@ -291,16 +249,6 @@ public class EditorSprite : Editor
             RefreshImage();
             RefreshUi();
           }
-        }
-        break;
-        case Sprite_Size:
-        {
-          if (SpriteWidth == 2)
-            SpriteWidth = 0;
-          else
-            SpriteWidth++;
-          RefreshImage();
-          RefreshUi();
         }
         break;
         case Frame_New:
@@ -364,54 +312,6 @@ public class EditorSprite : Editor
           RefreshUi();
         }
         break;
-        case Frame_Play6:
-        {
-          if (FrameRate != 0)
-          {
-            FrameRate = 0;
-          }
-          else
-          {
-            FrameRate = 6;
-          }
-        }
-        break;
-        case Frame_Play12:
-        {
-          if (FrameRate != 0)
-          {
-            FrameRate = 0;
-          }
-          else
-          {
-            FrameRate = 12;
-          }
-        }
-        break;
-        case Frame_Play25:
-        {
-          if (FrameRate != 0)
-          {
-            FrameRate = 0;
-          }
-          else
-          {
-            FrameRate = 25;
-          }
-        }
-        break;
-        case Frame_Play50:
-        {
-          if (FrameRate != 0)
-          {
-            FrameRate = 0;
-          }
-          else
-          {
-            FrameRate = 50;
-          }
-        }
-        break;
         case Sprite_Save:
           // @TODO Call EditorMain to do a SaveRequester
           //SaveFile(); // TEMP.
@@ -442,23 +342,17 @@ public class EditorSprite : Editor
         
       mx /= kSpriteScale;
       my /= kSpriteScale;
-
-      int mw = 8;
-      if (SpriteWidth == 1)
-        mw = 16;
-      else if (SpriteWidth == 2)
-        mw = 24;
-
-      if (mx >= mw)
+      
+      if (mx >= 8)
         return;
         
-      if (my >= mw)
+      if (my >= 8)
         return;
       
       if (click == 0)
-            image[mx + (my * 24)] = 0;
+            image[mx + (my * 8)] = 0;
       else
-            image[mx + (my * 24)] = (byte) SelectedColour;
+            image[mx + (my * 8)] = (byte) SelectedColour;
 
       RefreshImage();
     }
@@ -491,72 +385,20 @@ public class EditorSprite : Editor
     GUI.color = on;
     GUI.DrawTexture(new Rect(ox + (0 * w), (0 * w), w, w), Texture2D.whiteTexture);
     
-    if (SpriteWidth >= 1)
-    {
-      GUI.color = off;
-      GUI.DrawTexture(new Rect(ox + (1 * w), (0 * w), w, w), Texture2D.whiteTexture);
-    }
-
-    if (SpriteWidth == 2)
-    {
-      GUI.color = on;
-      GUI.DrawTexture(new Rect(ox + (2 * w), (0 * w), w, w), Texture2D.whiteTexture);
-    }
-
-    
-    if (SpriteWidth >= 1)
-    {
-      GUI.color = off;
-      GUI.DrawTexture(new Rect(ox + (0 * w), (1 * w), w, w), Texture2D.whiteTexture);
-    
-      GUI.color = on;
-      GUI.DrawTexture(new Rect(ox + (1 * w), (1 * w), w, w), Texture2D.whiteTexture);
-    
-    }
-    
-    if (SpriteWidth == 2)
-    {
-      GUI.color = off;
-      GUI.DrawTexture(new Rect(ox + (2 * w), (1 * w), w, w), Texture2D.whiteTexture);
-    
-      GUI.color = on;
-      GUI.DrawTexture(new Rect(ox + (0 * w), (2 * w), w, w), Texture2D.whiteTexture);
-    
-      GUI.color = off;
-      GUI.DrawTexture(new Rect(ox + (1 * w), (2 * w), w, w), Texture2D.whiteTexture);
-    
-      GUI.color = on;
-      GUI.DrawTexture(new Rect(ox + (2 * w), (2 * w), w, w), Texture2D.whiteTexture);
-    }
-    
-
     GUI.color = Color.white;
-    GUI.DrawTextureWithTexCoords(new Rect(50 * kUiScale,                     0,  24 * kSpriteScale, 24 * kSpriteScale), imageTex, new Rect(0,0,1,-1));
-    GUI.DrawTextureWithTexCoords(new Rect(50 * kUiScale + 24 * kSpriteScale, 0,  24, 24), imageTex, new Rect(0,0,1,-1));
-    GUI.DrawTextureWithTexCoords(new Rect(50 * kUiScale + 24 * kSpriteScale, 24, 24*2, 24*2), imageTex, new Rect(0,0,1,-1));
+    GUI.DrawTextureWithTexCoords(new Rect(50 * kUiScale,                     0,  8 * kSpriteScale, 8 * kSpriteScale), imageTex, new Rect(0,0,1,-1));
+    GUI.DrawTextureWithTexCoords(new Rect(50 * kUiScale + 8 * kSpriteScale, 0,  8, 8), imageTex, new Rect(0,0,1,-1));
+    GUI.DrawTextureWithTexCoords(new Rect(50 * kUiScale + 8 * kSpriteScale, 8, 8*2, 8*2), imageTex, new Rect(0,0,1,-1));
   }
 
   public string SaveToString()
   {
-    System.Text.StringBuilder sb = new System.Text.StringBuilder(1024);
+    System.Text.StringBuilder sb = new System.Text.StringBuilder(108);
 
     int w = 8;
     int lm = 1;
-
-    if (SpriteWidth == 1)
-    {
-      w = 16;
-      lm = 3;
-    }
-    else if (SpriteWidth == 2)
-    {
-      w = 24;
-      lm = 5;
-    }
-
-    sb.AppendFormat("; FRAMES {0:X1}", frames.Count);
-    sb.AppendLine();
-    sb.AppendFormat("; SIZE {0}x{0}", w);
+    
+    sb.AppendFormat("; COUNT {0:X1}", frames.Count);
     sb.AppendLine();
     sb.AppendFormat("; PAL {0:X1}{1:X1}{2:X1}", spritePalette[1] - 1, spritePalette[2] - 1, spritePalette[3] - 1);
     sb.AppendLine();
@@ -568,7 +410,7 @@ public class EditorSprite : Editor
         sb.Append(';');
         for(int i=0;i < w;i++)
         {
-          byte colour = frame[i + (j * 24)];
+          byte colour = frame[i + (j * 8)];
           sb.AppendFormat("{0:X1}", colour);
         }
         sb.AppendLine();
@@ -584,7 +426,7 @@ public class EditorSprite : Editor
             sb.Append("db ");
           }
 
-          int idx = i + (j * 24);
+          int idx = i + (j * 8);
 
           byte b0 = (byte) (frame[idx+0]);
           byte b1 = (byte) (frame[idx+1]);
@@ -642,11 +484,10 @@ public class EditorSprite : Editor
     Debug.Log("Loading file " + value);
 
     string[] lines = System.IO.File.ReadAllLines(value);
-
-    SpriteWidth = 8;
+    
     int y = 0;
     
-    byte[] frame = new byte[24*24];
+    byte[] frame = new byte[8*8];
     int numFrames = 1;
     frames.Clear();
     image = null;
@@ -658,21 +499,6 @@ public class EditorSprite : Editor
       if (line.StartsWith("; FRAMES"))
       {
         numFrames = HexToInt(line[9]);
-        continue;
-      }
-      if (line.StartsWith("; SIZE 8x8"))
-      {
-        SpriteWidth = 0;
-        continue;
-      }
-      else if (line.StartsWith("; SIZE 16x16"))
-      {
-        SpriteWidth = 1;
-        continue;
-      }
-      else if (line.StartsWith("; SIZE 24x24"))
-      {
-        SpriteWidth = 2;
         continue;
       }
       
@@ -694,7 +520,7 @@ public class EditorSprite : Editor
       if (line.StartsWith(";") == false)
         continue;
         
-      int lw = ((1 + SpriteWidth) * 8);
+      int lw = ((1 + 8) * 8);
 
       int lineLength = 1 + lw;
 
@@ -715,7 +541,7 @@ public class EditorSprite : Editor
         else if (c == '3')
           b = 3;
 
-        frame[i + (y * 24)] = b;
+        frame[i + (y * 8)] = b;
       }
 
       y++;
@@ -723,7 +549,7 @@ public class EditorSprite : Editor
       {
         image = frame;
         frames.Add(frame);
-        frame = new byte[24 * 24];
+        frame = new byte[8 * 8];
         y = 0;
       }
     }
@@ -750,25 +576,5 @@ public class EditorSprite : Editor
 
   float FrameCounter = 0.0f;
 
-  public void FixedUpdate()
-  {
-    if (FrameRate != 0)
-    {
-      FrameCounter -= Time.fixedDeltaTime;
-
-      if (FrameCounter <= 0.0f)
-      {
-        FrameIdx++;
-        if (FrameIdx >= frames.Count)
-          FrameIdx = 0;
-
-        image = frames[FrameIdx];
-          
-        RefreshImage();
-
-        FrameCounter = 1.0f / (float) FrameRate;
-      }
-    }
-  }
-
+ 
 }

@@ -170,6 +170,7 @@ GameObject:
   - component: {fileID: 1490370466}
   - component: {fileID: 1490370468}
   - component: {fileID: 1490370467}
+  - component: {fileID: 1490370469}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -257,7 +258,9 @@ MonoBehaviour:
   Font: {fileID: 11400000, guid: 403e30cc7dfeed14cb79e744b76a53dc, type: 2}
   Editors:
   - {fileID: 1490370467}
+  - {fileID: 1490370469}
   Current: {fileID: 0}
+  RequesterFileIsSaving: 0
 --- !u!114 &1490370467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -266,10 +269,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1490370461}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe0e2805ad3194041aa15f4cb3567e9b, type: 3}
+  m_Script: {fileID: 11500000, guid: 763b3a3d40e61c240b2c97dd7e4e9e79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  colours: []
 --- !u!114 &1490370468
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -279,5 +281,16 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ecf1a390e1064fc4d9850decd730674e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1490370469
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1490370461}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe0e2805ad3194041aa15f4cb3567e9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

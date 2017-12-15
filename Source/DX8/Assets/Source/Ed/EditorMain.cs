@@ -34,6 +34,12 @@ public class EditorMain : MonoBehaviour
     Widgetry.Widget.Down           = Layer.atlas.GetSprite("Widgets_Down");
     Widgetry.Widget.Font           = Font;
     Widgetry.Widget.Layer          = Layer;
+
+    foreach(var editor in Editors)
+    {
+      editor.enabled = false;
+    }
+
   }
 
   private void Start()
@@ -42,12 +48,38 @@ public class EditorMain : MonoBehaviour
     {
       Ui.Clear();
       Current = Editors[0];
+      Current.enabled = true;
       Current.Setup(Ui);
     }
   }
 
+  public void Change(System.Type type)
+  {
+    for(int i=0;i < Editors.Length;i++)
+    {
+      if (Editors[i].GetType() == type)
+      {
+        Current.Teardown();
+        Current.enabled = false;
+        Current = Editors[i];
+        Current.enabled = true;
+        Current.Setup(Ui);
+        return;
+      }
+    }
+  }
+
+  public void RefreshSharedUi()
+  {
+    Ui.AddButton(1400, Screen.width / 2 - 100, 0, 100,  "Sprite");
+    Ui.AddButton(1401, Screen.width / 2 - 100, 16, 100, "Tile");
+  }
+
   private void Update()
   {
+  
+    string inputText = Input.inputString;
+      
 
     if (Ui.Dirty)
     {
@@ -55,17 +87,32 @@ public class EditorMain : MonoBehaviour
       Ui.Draw();
       Layer.End();
     }
+    
+    int mx = (int) Input.mousePosition.x;
+    int my = Screen.height - (int) Input.mousePosition.y;
+    int buttonId = 0;
+    
+    if (Input.GetMouseButtonUp(0))
+    { 
+      buttonId = Ui.Test(mx / 2, my / 2);
+    }
+
+    if (buttonId == 1400)
+    {
+      Change(typeof(EditorSprite));
+      return;
+    }
+    else if (buttonId == 1401)
+    {
+      Change(typeof(EditorTile));
+      return;
+    }
 
     if (RequesterMode == RequesterMode.None)
       return;
     
     if (RequesterMode == RequesterMode.File)
     {
-      int mx = (int) Input.mousePosition.x;
-      int my = Screen.height - (int) Input.mousePosition.y;
-      
-      int buttonId;
-      if (Input.GetMouseButtonUp(0) && ((buttonId = Ui.Test(mx / 2, my / 2)) != 0))
       {
         if (buttonId == 6001)
         {
@@ -143,10 +190,9 @@ public class EditorMain : MonoBehaviour
     }
     else if (RequesterMode == RequesterMode.String)
     {
-      string inputText = Input.inputString;
-      
       if (string.IsNullOrEmpty(inputText) == false)
       {
+        Debug.Log(inputText);
         RequesterStringText += inputText;
         RefreshUi();
       }
@@ -163,26 +209,20 @@ public class EditorMain : MonoBehaviour
         }
       }
       
-      int mx = (int) Input.mousePosition.x;
-      int my = Screen.height - (int) Input.mousePosition.y;
-      
-      int buttonId;
-      if (Input.GetMouseButtonUp(0) && ((buttonId = Ui.Test(mx / 2, my / 2)) != 0))
+      if (buttonId == 7002)
       {
-        if (buttonId == 7002)
-        {
-          RequesterStringCallback(RequesterStringText, RequesterMode.String, false);
-          StopStringRequester();
-          return;
-        }
-
-        if (buttonId == 7003)
-        {
-          RequesterStringCallback(null, RequesterMode.String, false);
-          StopStringRequester();
-          return;
-        }
+        RequesterStringCallback(RequesterStringText, RequesterMode.String, false);
+        StopStringRequester();
+        return;
       }
+
+      if (buttonId == 7003)
+      {
+        RequesterStringCallback(null, RequesterMode.String, false);
+        StopStringRequester();
+        return;
+      }
+      
     }
   }
 
