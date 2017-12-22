@@ -38,20 +38,20 @@ BeginFunction OnFloppyInserted
         set a, $01
         store sFloppy_HasDisk, a
 
-        _putchar 0,17+0, 15, ' '
-        _putchar 0,17+1, 15, ' '
-        _putchar 0,17+2, 15, ' '
-        _putchar 0,17+3, 15, ' '
-        _putchar 0,17+4, 15, ' '
-        _putchar 0,17+5, 15, ' '
+        ;_putchar 0,17+0, 15, ' '
+        ;_putchar 0,17+1, 15, ' '
+        ;_putchar 0,17+2, 15, ' '
+        ;_putchar 0,17+3, 15, ' '
+        ;_putchar 0,17+4, 15, ' '
+        ;_putchar 0,17+5, 15, ' '
 
 
-        _putchar 0,17+0, 16, ' '
-        _putchar 0,17+1, 16, ' '
-        _putchar 0,17+2, 16, ' '
-        _putchar 0,17+3, 16, ' '
-        _putchar 0,17+4, 16, ' '
-        _putchar 0,17+5, 16, ' '
+        ;_putchar 0,17+0, 16, ' '
+        ;_putchar 0,17+1, 16, ' '
+        ;_putchar 0,17+2, 16, ' '
+        ;_putchar 0,17+3, 16, ' '
+        ;_putchar 0,17+4, 16, ' '
+        ;_putchar 0,17+5, 16, ' '
 
         ; Setup modes
         _poke sFloppy_Mode,             $00     ; Current state (0 = Reading Header, 1 = Doing Instructions, 2 = Done)
@@ -74,20 +74,20 @@ BeginFunction OnFloppyRemoved
         set a, $00
         store sFloppy_HasDisk, a
 
-        _putchar 0,17+0, 15, 'I'
-        _putchar 0,17+1, 15, 'N'
-        _putchar 0,17+2, 15, 'S'
-        _putchar 0,17+3, 15, 'E'
-        _putchar 0,17+4, 15, 'R'
-        _putchar 0,17+5, 15, 'T'
+      ;  _putchar 0,17+0, 15, 'I'
+      ;  _putchar 0,17+1, 15, 'N'
+      ;  _putchar 0,17+2, 15, 'S'
+      ;  _putchar 0,17+3, 15, 'E'
+      ;  _putchar 0,17+4, 15, 'R'
+      ;  _putchar 0,17+5, 15, 'T'
 
 
-        _putchar 0,17+0, 16, 'F'
-        _putchar 0,17+1, 16, 'L'
-        _putchar 0,17+2, 16, 'O'
-        _putchar 0,17+3, 16, 'P'
-        _putchar 0,17+4, 16, 'P'
-        _putchar 0,17+5, 16, 'Y'
+      ;  _putchar 0,17+0, 16, 'F'
+      ;  _putchar 0,17+1, 16, 'L'
+      ;  _putchar 0,17+2, 16, 'O'
+      ;  _putchar 0,17+3, 16, 'P'
+      ;  _putchar 0,17+4, 16, 'P'
+      ;  _putchar 0,17+5, 16, 'Y'
 EndFunction
 
 BeginFunction OnFloppySeek
@@ -100,15 +100,15 @@ BeginFunction OnFloppySeek
         load a, REG_RAND
         store sBackground_B, a
 
-        load a, REG_FPY_CURRENT_TRACK
-        set x, 2
-        set y, 2
-        _CallFunction PrintNum
+        ;load a, REG_FPY_CURRENT_TRACK
+        ;set x, 2
+        ;set y, 2
+        ;_CallFunction PrintNum
 
-        load a, REG_FPY_OP_TRACK
-        set x, 7
-        set y, 2
-        _CallFunction PrintNum
+        ;load a, REG_FPY_OP_TRACK
+        ;set x, 7
+        ;set y, 2
+        ;_CallFunction PrintNum
 
         set a, $00
         store sFloppy_Msg, a

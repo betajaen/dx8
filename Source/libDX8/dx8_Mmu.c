@@ -104,7 +104,7 @@ Byte Mmu_Virtual_Get(Word address)
 {
   int real = Mmu_Virtual_To_Real_Address(address);
 
-  if (real >= RAM_SIZE)
+  if (real >= DX8_RAM_SIZE)
     return 0x00;
 
   return sRam[real];
@@ -114,7 +114,7 @@ void Mmu_Virtual_Set(Word address, Byte value)
 {
   int real = Mmu_Virtual_To_Real_Address(address);
 
-  if (real < RAM_SIZE)
+  if (real < DX8_RAM_SIZE)
   {
     sRam[real] = value;
   }
@@ -131,9 +131,9 @@ void Mmu_SetDboV(bool v)
 void Mmu_Setup()
 {
   sRam_DebugMode = false;
-  sRam = malloc(RAM_SIZE);
+  sRam = malloc(DX8_RAM_SIZE);
   sFastRam = &sRam[MEM_CHIP_SIZE];
-  DX8_LOGF("Mmu Ram Ptr=%p Size=%i", sRam, RAM_SIZE);
+  DX8_LOGF("Mmu Ram Ptr=%p Size=%i", sRam, DX8_RAM_SIZE);
 }
 
 void Mmu_Teardown()
@@ -146,7 +146,7 @@ void Mmu_TurnOn()
   DX8_LOGF("MMU Turn on");
   sRam_DebugMode = false;
   sRand = 7;
-  memset(sRam, 0xFF, RAM_SIZE); // Memory is initialised with 0xFF's
+  memset(sRam, 0xFF, DX8_RAM_SIZE); // Memory is initialised with 0xFF's
   sRam[REG_MMU_PAGE_REAL_MODE] = 0xFF;
 }
 

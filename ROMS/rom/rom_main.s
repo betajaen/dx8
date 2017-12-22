@@ -20,13 +20,14 @@ macro Public Name {
 }
 
 Exports:
-        Public EntryPoint
-        Public MemCpySm
-        Public MemSet
-        Public Cls
-        Public Print
-        Public PrintChar
-        Public PrintNum
+        Public EntryPoint ; 0
+        Public MemCpySm  ; 1
+        Public MemSet ; 2
+        Public MemMap ; 3
+        ;Public Cls ; 4
+        ;Public Print ; 5
+        ;Public PrintChar ; 6
+        ;Public PrintNum ; 7
 
 ; =============================================================
 ; Exported Functions
@@ -35,7 +36,7 @@ Exports:
 kExports:
 
         include 'rom_mem_functions.s'
-        include 'rom_print_functions.s'
+        ;include 'rom_print_functions.s'
 
         ; Export_Const    Rom, Keycode2Ascii, 'Table of Keycodes to ASCII equilvents'
 
@@ -117,33 +118,33 @@ resume
 ; =============================================================
 
 BeginFunction DisplayLogo
-        _putchar 0,17+0, 30, 'D'
-        _putchar 0,17+1, 30, 'X'
-        _putchar 0,17+2, 30, '8'
-        _putchar 0,17+4, 30, '/'
-        _putchar 0,17+5, 30, '/'
-        _putchar 0,17+6, 30, '/'
+;        _putchar 0,17+0, 30, 'D'
+;        _putchar 0,17+1, 30, 'X'
+;        _putchar 0,17+2, 30, '8'
+;        _putchar 0,17+4, 30, '/'
+;        _putchar 0,17+5, 30, '/'
+;        _putchar 0,17+6, 30, '/'
 EndFunction
 
 BeginFunction DrawCursor
-                load x, REG_GFX_COUNTERS
-                bit x, GFX_FLG_COUNTERS_ODDEVEN
-                jmp.z .DrawBlank
-                jmp .DrawDot
-        .DrawBlank:
-                set x, ' '
-                _putval 0,17+4, 30, x
-                _putval 0,17+5, 30, x
-                _putval 0,17+6, 30, x
-                jmp .EndDraw
-        .DrawDot:
-                set x, '/'
-                _putval 0,17+4, 30, x
-                _putval 0,17+5, 30, x
-                _putval 0,17+6, 30, x
-
-
-        .EndDraw:
+        ;        load x, REG_GFX_COUNTERS
+        ;        bit x, GFX_FLG_COUNTERS_ODDEVEN
+        ;        jmp.z .DrawBlank
+        ;        jmp .DrawDot
+        ;.DrawBlank:
+        ;        set x, ' '
+        ;        _putval 0,17+4, 30, x
+        ;        _putval 0,17+5, 30, x
+        ;        _putval 0,17+6, 30, x
+        ;        jmp .EndDraw
+       ; .DrawDot:
+       ;         set x, '/'
+       ;         _putval 0,17+4, 30, x
+       ;         _putval 0,17+5, 30, x
+       ;         _putval 0,17+6, 30, x
+;
+;
+       ; .EndDraw:
 
         ;load x, REG_GFX_COUNTERS
         ;cmpbit x, GFX_FLG_COUNTERS_15
@@ -168,6 +169,34 @@ BeginFunction FloppyHandler
         callt tFloppyEventDispatcher, a
 EndFunction
 
+MapRomMemory:
+
+macro MEMMAP V, R {
+      _poke  REG_MMU_PAGE + V, R
+}
+
+        MEMMAP          $0, $0    ; Registers (Ignored by MMU)
+        MEMMAP          $1, $1    ; Rom and Program
+        MEMMAP          $2, $2
+        MEMMAP          $3, $3
+        MEMMAP          $4, $4
+        MEMMAP          $5, $5
+        MEMMAP          $6, $6
+        MEMMAP          $7, $7
+        ; Map Video Ram/Tile Ram/Sprite Ram $E800 to $F800
+        MEMMAP          $38, $48        ; Video Ram
+        MEMMAP          $39, $49
+        MEMMAP          $3A, $4A
+        MEMMAP          $3B, $4B
+        MEMMAP          $3C, $4C        ; Sprite Mem
+        MEMMAP          $3D, $4D        ; Sprite Mem
+        MEMMAP          $3E, $4E        ; Tile Mem
+        MEMMAP          $3F, $4F        ; Tile Mem
+
+        ; Floppy header temp
+        _poke           REG_MMU_PAGE + 53, 53
+return
+
 ; =============================================================
 ; MAIN
 ; =============================================================
@@ -175,65 +204,53 @@ ltr_EntryPoint:
         ; Setup basic IVT
         call ConfigureIVT
 
-        ; Go into virtual mode
-
-        ; Registers (Ignored)
-        _poke           REG_MMU_PAGE + 0, 0
-
-        ; Rom
-        _poke           REG_MMU_PAGE + 1, 1
-        _poke           REG_MMU_PAGE + 2, 2
-        _poke           REG_MMU_PAGE + 3, 3
-        _poke           REG_MMU_PAGE + 4, 4
-
-        ; Program Space (Around 4kb)
-
-        _poke           REG_MMU_PAGE + 5, 5     ; Use real address for now
-        _poke           REG_MMU_PAGE + 6, 6
-        _poke           REG_MMU_PAGE + 7, 7
-        _poke           REG_MMU_PAGE + 8, 8
-
-        ; Floppy header temp
-        _poke           REG_MMU_PAGE + 53, 53
-
-        ; Display 0
-        _poke           REG_MMU_PAGE + 32, 70
-        _poke           REG_MMU_PAGE + 33, 71
-        _poke           REG_MMU_PAGE + 34, 72
-        _poke           REG_MMU_PAGE + 35, 73
-        _poke           REG_MMU_PAGE + 36, 74
-        _poke           REG_MMU_PAGE + 37, 75
-        _poke           REG_MMU_PAGE + 38, 76
-        _poke           REG_MMU_PAGE + 39, 77
-        _poke           REG_MMU_PAGE + 40, 78
-        _poke           REG_MMU_PAGE + 41, 79
+        call MapRomMemory
 
         ; Turn on Paging
-       ; _poke           REG_MMU_PAGE_REAL_MODE, 0
-
-        ; Set font
-        _poke.w         REG_GFX_TILES_ADDR,         (kFontData)
-        _poke.w         REG_GFX_PALETTE_ADDR,       (kPalette)
-        _poke           REG_GFX_MODE,               $00
-
         set a, $00
         store $E0, a
+
+        ; Copy over font data to TILE_MEM
+        OFFSET = 0
+        repeat (2048 / 255)
+                push.w GFX_FAST_TILE_MEM + OFFSET
+                push.w kFontData + OFFSET
+                push.b 0xFF
+                set a, 1
+                callt $400, a
+                OFFSET = OFFSET + 0xFF
+        end repeat
+
+        ; Clear screen with 'x'
+        push.w GFX_FAST_SCREEN0
+        push.b 0
+        push.w 1280
+        set a, 2
+        callt $400, a
+
+        ; Clear colours with 0x7
+        push.w GFX_FAST_SCREEN0_COLOUR
+        push.b 0x78
+        push.w 1280 / 2
+        set a, 2
+        callt $400, a
+
 
         rti
         int INT_GPUON
 
 Setup:
         ; Clear screen
-        set MemSet_Dst, MEM_GFX_PLANE0
-        set MemSet_Len, MEM_GFX_PLANE_SIZE * 1
-        set MemSet_Val, ' '
-        _CallFunction MemSet
+        ;set MemSet_Dst, GFX_FAST_SCREEN0
+        ;set MemSet_Len, GFX_WIDTH * GFX_HEIGHT
+        ;set MemSet_Val, 'a'
+        ;_CallFunction MemSet
 
-        _CallFunction MemCpySm
-        _CallFunction DisplayLogo
+        ;_CallFunction MemCpySm
+        ;_CallFunction DisplayLogo
 
         ; dba sFloppy_Msg
-        _CallFunction OnFloppyRemoved
+        ;_CallFunction OnFloppyRemoved
 
         set i, $C000
         store sSound_Timer, i
@@ -244,18 +261,75 @@ Setup:
         set x, SND_NOTE_C5
         store REG_SND_PARM_0, x
 
-        _poke           MEM_GFX_PLANE0 + 0, 'H'
-        _poke           MEM_GFX_PLANE0 + 1, 'i'
-        ;_poke           $0, '!'
-        set a, 'R'
-        store $8000 + 50, a
+        set x, 0
+        set j, GFX_FAST_SCREEN0
+        .show:
+                store j, x
+                inc j
+                inc x
+                cmp x, 0
+                jmp.eq .endshow
+                jmp .show
+        .endshow:
+        .show2:
+                store j, x
+                inc j
+                inc x
+                cmp x, 0
+                jmp.eq .endshow2
+                jmp .show2
+        .endshow2:
+        .show3:
+                store j, x
+                inc j
+                inc x
+                cmp x, 0
+                jmp.eq .endshow3
+                jmp .show3
+        .endshow3:
 
-        _poke           MEM_GFX_PLANE0 + 21, 'F'
-        _poke           MEM_GFX_PLANE0 + 22, 'O'
-        _poke           MEM_GFX_PLANE0 + 23, 'O'
+        set x, 0
+        set j, GFX_FAST_SCREEN0_COLOUR
+        .show4:
+                load y, REG_RAND
+                store j, y
+                inc j
+                inc x
+                cmp x, 0
+                jmp.eq .endshow4
+                jmp .show4
+        .endshow4:
+
+        set x, 0
+        .show5:
+                load y, REG_RAND
+                store j, y
+                inc j
+                inc x
+                cmp x, 0
+                jmp.eq .endshow5
+                jmp .show5
+        .endshow5:
+
+        _poke           GFX_FAST_SCREEN0 + 10 + (25 * 40), 'H'
+        _poke           GFX_FAST_SCREEN0 + 11 + (25 * 40), 'e'
+        _poke           GFX_FAST_SCREEN0 + 12 + (25 * 40), 'l'
+        _poke           GFX_FAST_SCREEN0 + 13 + (25 * 40), 'l'
+        _poke           GFX_FAST_SCREEN0 + 14 + (25 * 40), 'o'
+        _poke           GFX_FAST_SCREEN0 + 15 + (25 * 40), '2'
+
+        _poke           GFX_FAST_SCREEN0_COLOUR + 0, 0x54
+
+        ;_poke           $0, '!'
+        ;set a, 'R'
+        ;store $8000 + 50, a
+
+        ;_poke           MEM_GFX_PLANE0 + 21, 'F'
+        ;_poke           MEM_GFX_PLANE0 + 22, 'O'
+        ;_poke           MEM_GFX_PLANE0 + 23, 'O'
 
 IDLE:
-        _CallFunction DrawCursor
+        ;_CallFunction DrawCursor
 
         load a, sFloppy_Msg
         cmp a, $00
@@ -298,5 +372,5 @@ kConstants:
 
 
 
-        Const_Include   FontData, "font.png.s"
+        Const_Include   FontData, "dx8_font.png.s"
         Const_Include   Keycode2Ascii, 'keycode2ascii.s'

@@ -48,3 +48,21 @@ Fn_MemSet:
                 dec MemSet_Len
                 _rjmp.nz .loop
 return
+
+
+;! MemMap
+;! Map virtual memory address to virtual address.
+;! Addresses must be divisible by 1024!!
+MemMap_Virtual equ i
+MemMap_Real    equ j
+
+; real, virtual
+ltr_MemMap:
+        pop MemMap_Virtual
+        pop MemMap_Real
+Fn_MemMap:
+        div MemMap_Virtual, 1024
+        div MemMap_Real, 1024
+        add MemMap_Virtual, REG_MMU_PAGE
+        store MemMap_Virtual, z
+return

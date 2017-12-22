@@ -24,6 +24,10 @@ namespace DX8
     public static string OpcodesInc        = @"C:\dev\dx8\ROMS\dx8.inc";
     public static string OpcodesFunctions  = @"C:\dev\dx8\Source\libDX8\";
 
+    public static string SdkCpuPath        = @"C:\dev\dx8\Sdk\include\cpu.inc";
+    public static string SdkKeyboardPath   = @"C:\dev\dx8\Sdk\include\keyboard.inc";
+    public static string SdkRegistersPath  = @"C:\dev\dx8\Sdk\include\registers.inc";
+
     [MenuItem("DX8/Generate CSV")]
     public static void TestOpcodes()
     {
@@ -31,6 +35,25 @@ namespace DX8
 
       System.IO.File.WriteAllText(OpcodesCsv, OpcodeCompiler.MakeCSV(ops));
       Debug.LogFormat("Wrote {0} opcodes to {1}", ops.Count, OpcodesCsv);
+    }
+
+    [MenuItem("DX8/Make SDK")]
+    public static void MakeSDK()
+    {
+      List<OpcodeCompiler.Op> ops = OpcodeCompiler.GenerateOpcodes(OpcodesPath);
+      Dictionary<string, int> registers = OpcodeCompiler.Generate_Registers(Config);
+      Dictionary<string, int> constants = OpcodeCompiler.Generate_Constants(Config);
+      Dictionary<string, KeyValuePair<int, string>> scancodes = OpcodeCompiler.Generate_Scancodes(Config);
+      Dictionary<string, KeyValuePair<int, string>> interrupts = OpcodeCompiler.Generate_Interrupts(Config);
+
+      System.IO.File.WriteAllText(SdkCpuPath, OpcodeCompiler.MakeMacros(ops, null, null, null, null));
+      Debug.LogFormat("Wrote {0} instructions to {1}", ops.Count, SdkCpuPath);
+      
+      System.IO.File.WriteAllText(SdkKeyboardPath, OpcodeCompiler.MakeMacros(null, null, null, null, scancodes));
+      Debug.LogFormat("Wrote {0} keyboards to {1}", scancodes.Count, SdkKeyboardPath);
+      
+      System.IO.File.WriteAllText(SdkRegistersPath, OpcodeCompiler.MakeMacros(null, registers, constants, null, null));
+      Debug.LogFormat("Wrote {0} registers/constants to {1}", registers.Count + constants.Count, SdkRegistersPath);
     }
 
     
@@ -464,6 +487,79 @@ namespace DX8
       // System.IO.File.WriteAllBytes(path + ".raw", data);
     }
     
+    [MenuItem("DX8/Convert BW PNG Image to 8-bit bytes")]
+    public static void ConvertImageBW8()
+    {
+      string path = EditorUtility.OpenFilePanel("Open PNG file", @"C:\dev\dx8\ROMS", "png");
+      Texture2D tex = new Texture2D(2,2);
+      ImageConversion.LoadImage(tex, System.IO.File.ReadAllBytes(path));
+
+      int w  = tex.width;
+      int h  = tex.height;
+
+      byte[] data = new byte[(w * h) ];
+
+      for(int i=0;i < w;i++)
+      {
+        for(int j=0;j < h;j++)
+        {
+          Color32 col = tex.GetPixel(i, tex.height - 1 - j);
+          bool set = (col.r > 0 && col.g > 0 && col.b > 0);
+          
+            int ij = (i + (j * w));
+            data[ij] = (byte) (set ? 0xFF : 0x00);
+          
+        }
+      }
+
+      string name = string.Format("IMG_{0}", System.IO.Path.GetFileNameWithoutExtension(path).ToUpper());
+
+      
+      System.Text.StringBuilder sb = new System.Text.StringBuilder(data.Length * 5 + 20);
+      sb.AppendFormat("; {0}x{1}  {2} from {3}", tex.width, tex.height, name, path); 
+      sb.AppendLine();
+      sb.AppendFormat("; Size=${0:X4} {1}", data.Length, data.Length); 
+      sb.AppendLine();
+
+      sb.AppendFormat("{0}_DATA:", name);
+      sb.AppendLine();
+      sb.Append("    db ");
+      int kk = 0;
+      for(int ii=0;ii < data.Length;ii++)
+      {
+        sb.AppendFormat("${0:X2}", data[ii]);
+        kk++;
+        if (kk == w)
+        {
+          if (ii + 1 != data.Length)
+          {
+            sb.AppendLine();
+            sb.Append("    db ");
+          }
+          kk = 0;
+        }
+        else
+        {
+          if (ii + 1 != data.Length)
+          {
+            sb.Append(", ");
+          }
+        }
+      }
+      
+      sb.AppendLine();
+      sb.AppendLine();
+      
+      sb.AppendFormat("{0}_ADDR = {0}_DATA", name);
+      sb.AppendLine();
+      
+      sb.AppendFormat("{0}_SIZE = ${1:X4}", name, data.Length);
+      sb.AppendLine();
+
+      System.IO.File.WriteAllText(path + ".s", sb.ToString());
+      // System.IO.File.WriteAllBytes(path + ".raw", data);
+    }
+
     [MenuItem("DX8/Convert PNG Image to 1-bit ROM (RLE Compressed)")]
     public static void ConvertImageRLE()
     {
@@ -642,6 +738,67 @@ namespace DX8
       // System.IO.File.WriteAllBytes(path + ".raw", data);
     }
 
+    
+    [MenuItem("DX8/Convert BW 128x128px image to 8x8 tile format (FASM include)")]
+    public static void ConvertTiles()
+    {
+      string path = EditorUtility.OpenFilePanel("Open PNG file", @"C:\dev\dx8\ROMS", "png");
+      Texture2D tex = new Texture2D(2,2);
+      ImageConversion.LoadImage(tex, System.IO.File.ReadAllBytes(path));
+      
+      List<byte> bytes = new List<byte>(2048);
+
+      for(int offset=0;offset < 8;offset++)
+      {
+        for (int y=0;y < 16;y++)
+        {
+          for(int x=0;x < 16;x++)
+          {
+            int line = 0;
+            line |= (tex.GetPixel(x * 8 + 0, (tex.height - 1) - (offset + y * 8)).r > 0.0) ? 1   : 0;
+            line |= (tex.GetPixel(x * 8 + 1, (tex.height - 1) - (offset + y * 8)).r > 0.0) ? 2   : 0;
+            line |= (tex.GetPixel(x * 8 + 2, (tex.height - 1) - (offset + y * 8)).r > 0.0) ? 4   : 0;
+            line |= (tex.GetPixel(x * 8 + 3, (tex.height - 1) - (offset + y * 8)).r > 0.0) ? 8   : 0;
+            line |= (tex.GetPixel(x * 8 + 4, (tex.height - 1) - (offset + y * 8)).r > 0.0) ? 16  : 0;
+            line |= (tex.GetPixel(x * 8 + 5, (tex.height - 1) - (offset + y * 8)).r > 0.0) ? 32  : 0;
+            line |= (tex.GetPixel(x * 8 + 6, (tex.height - 1) - (offset + y * 8)).r > 0.0) ? 64  : 0;
+            line |= (tex.GetPixel(x * 8 + 7, (tex.height - 1) - (offset + y * 8)).r > 0.0) ? 128 : 0;
+            bytes.Add((byte) line);
+          }
+        }
+      }
+
+      string name = string.Format("TILES_{0}", System.IO.Path.GetFileNameWithoutExtension(path).ToUpper());
+      
+      System.Text.StringBuilder sb = new System.Text.StringBuilder(4096);
+      
+      sb.AppendFormat("{0}_DATA:", name);
+      sb.AppendLine();
+      int kk = 0;
+      
+      sb.Append("    db");
+      for(int ii=0;ii < bytes.Count;ii++)
+      {
+        byte d = bytes[ii];
+        sb.AppendFormat(" ${0:X2}", d);
+        if (ii < bytes.Count - 1)
+          sb.Append(',');
+      }
+      sb.AppendLine();
+
+      
+      sb.AppendLine();
+
+      int length = bytes.Count;
+      
+      sb.AppendFormat("{0}_SIZE = ${1:X4}", name, length);
+      sb.AppendLine();
+
+      System.IO.File.WriteAllText(path + ".s", sb.ToString());
+      System.IO.File.WriteAllBytes(path + ".s.bin", bytes.ToArray());
+      
+      // System.IO.File.WriteAllBytes(path + ".raw", data);
+    }
     
     [MenuItem("DX8/Create Program Disk from ROM")]
     public static void CreateProgramDiskFromRom()

@@ -9,8 +9,7 @@
 //!    Cyfrifiadur y Ddraig X8
 //! 
 //! Copyright (c) 2017 Robin Southern   :: https://github.com/betajaen
-//! Made in Wales -- For the FC Dev Jam :: https://itch.io/jam/fc-dev-jam
-//! 
+//!                    Gardek           :: https://github.com/gardrek/
 //! Permission is hereby granted, free of charge, to any person obtaining a copy
 //! of this software and associated documentation files (the "Software"), to deal
 //! in the Software without restriction, including without limitation the rights
@@ -29,76 +28,43 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#if DX8_TEST
 
-#if defined(_WIN32)
-#define _CRT_SECURE_NO_WARNINGS
-#define IMPORT extern __declspec(dllimport)
-#else
-#error Platform not supported :(
-#endif
+// The Colour alette kindly made by Gardek based of the original 3 DX8 brand colours
 
-#include "dx8.h"
-#include <stdio.h>
-#include <malloc.h>
+Byte kPalette[3 * 32] = {
+  // Colour palette
+  34, 34, 34,
+  85, 68, 170,
+  34, 153, 68,
+  85, 187, 204,
+  255, 68, 34,
+  255, 102, 170,
+  255, 187, 68,
+  255, 221, 204,
+  102, 68, 85,
+  153, 102, 221,
+  102, 187, 119,
+  153, 221, 255,
+  255, 102, 85,
+  255, 136, 221,
+  255, 221, 119,
+  255, 255, 255,
 
-
-IMPORT int Initialise();
-IMPORT int Shutdown();
-IMPORT int GetValue(int name);
-IMPORT int GetRam(int name, int addr);
-IMPORT int SetValue(int name, int value);
-IMPORT int SetData(int name, void* data, int length);
-IMPORT int GetData(int name, void* data, int length);
-IMPORT int Call(int name, int value);
-
-
-enum ApiName
-{
-#define API_NAME(NAME, VALUE) Api_##NAME = VALUE,
-#include "dx8_Api.inc"
-#undef API_NAME
+  // Greyscale palette
+  0x00, 0x00, 0x00,
+  0x11, 0x11, 0x11,
+  0x22, 0x22, 0x22,
+  0x33, 0x33, 0x33,
+  0x44, 0x44, 0x44,
+  0x55, 0x55, 0x55,
+  0x66, 0x66, 0x66,
+  0x77, 0x77, 0x77,
+  0x88, 0x88, 0x88,
+  0x99, 0x99, 0x99,
+  0xAA, 0xAA, 0xAA,
+  0xBB, 0xBB, 0xBB,
+  0xCC, 0xCC, 0xCC,
+  0xDD, 0xDD, 0xDD,
+  0xEE, 0xEE, 0xEE,
+  0xFF, 0xFF, 0xFF,
 };
-
-int main()
-{
-  const char* romPath = "C:\\dev\\dx8\\ROMS\\rom\\rom.bin";
-  const char* fdPath  = "C:\\dev\\dx8\\ROMS\\minimal\\minimal_fd.bin";
-
-  FILE* f;
-  Byte* rom = malloc(4096);
-  Byte* fd = malloc(160 * 1024);
-
-  f = fopen(romPath, "rb");
-  fread(rom, 4096, 1, f);
-  fclose(f);
-
-  f = fopen(fdPath, "rb");
-  fread(fd, 160 * 1024, 1, f);
-  fclose(f);
-
-
-  Initialise();
-  SetData(Api_Rom, rom, 4096);
-  Call(Api_HardReset, 0);
-
-  for(int i=0;i < 7;i++)
-  {
-    Call(Api_CycleFn, 15 * 1000);
-  }
-
-  /*
-    SetData(Api_FloppyDisk, fd, 160 * 1024);
-    Call(Api_InsertDisk, 0);
-
-    for (int i = 0; i < (1 * 1); i++)
-    {
-      Call(Api_CycleFn, 15 * 1000);
-    }
-  */
-
-  Shutdown();
-
-}
-
-#endif

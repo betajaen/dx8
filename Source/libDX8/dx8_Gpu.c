@@ -30,9 +30,12 @@
 //! THE SOFTWARE.
 
 #include "dx8.h"
+
 #include <malloc.h>
 #include <string.h>
 #include <stdlib.h>
+
+#include "dx8_Gpu_OSD.inc"
 
 #define TEXT_TEST
 
@@ -42,312 +45,166 @@
 #error Platform not supported :(
 #endif
 
-Byte*    sCrtBuffers[2];
-Byte*    sWriteCrt, *sReadCrt;
-bool     sCrtDirty;
-Byte*    sScanLineTarget;
-Byte*    sLineCache;
-Byte*    sColourCache;
-Byte*    Ram_Get();
-Byte     Gpu_Halt;
+void Gpu_Scanline_Setup();
+void Gpu_Clock_Scanline(Byte* writeBuffer);
+void Gpu_Scanline_EndFrame();
 
-int      GpuFrame = 0;  //
-int      GpuTimer = 0;  //
-Word     frame, currentFrame;
-Byte     lineR[16], lineG[16], lineB[16];
-Byte     planeModes[4];
-int      scanpos, scanline;
-int      numPlanes;
-Word     tilesAddr;
-int      charRow;
-Byte     paletteR[16];
-Byte     paletteG[16];
-Byte     paletteB[16];
+Byte*    sGfxBuffers[2];
+bool     sGfxBufferDirty;
+Byte*    sGfxWriteBuffer, *sGfxReadBuffer;
+Byte     sGfxHalt;
+int      sGfxCycle;
+Byte     sGfxWaitFrame;
 
 void Gpu_Setup()
 {
-  sCrtBuffers[0] = malloc(CRT_W * CRT_H * CRT_DEPTH);
-  sCrtBuffers[1] = malloc(CRT_W * CRT_H * CRT_DEPTH);
-  sWriteCrt = sCrtBuffers[0];
-  sReadCrt = sCrtBuffers[1];
+  sGfxBuffers[0] = malloc(DX8_GFX_BUFFER_SIZE);
+  sGfxBuffers[1] = malloc(DX8_GFX_BUFFER_SIZE);
 
-  sScanLineTarget = malloc(CRT_W * 3);
-  sLineCache = malloc((CRT_W * 4) / 8);
+  for(int i=0;i < DX8_GFX_BUFFER_SIZE - 3;i += 3)
+  {
+    sGfxBuffers[0][i+0] = 0xFF;
+    sGfxBuffers[0][i+1] = 0x00;
+    sGfxBuffers[0][i+2] = 0x00;
   
-  sCrtDirty = true;
+    sGfxBuffers[1][i+0] = 0x00;
+    sGfxBuffers[1][i+1] = 0x00;
+    sGfxBuffers[1][i+2] = 0xFF;
+  }
+
+
+  sGfxWriteBuffer = sGfxBuffers[0];
+  sGfxReadBuffer = sGfxBuffers[1];
+  
+  sGfxBufferDirty = true;
+
+  Gpu_Scanline_Setup();
+
+  DX8_LOGF("DX8_GFX_RESOLUTION = %i Px"                     , DX8_GFX_RESOLUTION              );
+  DX8_LOGF("DX8_GFX_SCANLINES = %i Scanlines"               , DX8_GFX_SCANLINES               );
+  DX8_LOGF("DX8_GFX_WIDTH = %i Px"                          , DX8_GFX_WIDTH                   );
+  DX8_LOGF("DX8_GFX_HEIGHT = %i Px"                         , DX8_GFX_HEIGHT                  );
+  DX8_LOGF("DX8_GFX_BYTES_PER_PIXEL = %i Bytes"             , DX8_GFX_BYTES_PER_PIXEL         );
+  DX8_LOGF("DX8_GFX_PIXELS_PER_GFX_CYCLE = %i Px"           , DX8_GFX_PIXELS_PER_GFX_CYCLE    );
+  DX8_LOGF("DX8_GFX_BUFFER_SIZE = %i Bytes"                 , DX8_GFX_BUFFER_SIZE             );
+  DX8_LOGF("DX8_GFX_CYCLES_PER_SCANLINE = %i Cycles"        , DX8_GFX_CYCLES_PER_SCANLINE     );
+  DX8_LOGF("DX8_GFX_CYCLES_PER_FRAME = %i Cycles"           , DX8_GFX_CYCLES_PER_FRAME        );
+  DX8_LOGF("DX8_GFX_HBLANK_PX = %i Px"                      , DX8_GFX_HBLANK_PX               );
+  DX8_LOGF("DX8_GFX_HBLANK_LEFT_PX = %i Px"                 , DX8_GFX_HBLANK_LEFT_PX          );
+  DX8_LOGF("DX8_GFX_HBLANK_RIGHT_PX = %i Px"                , DX8_GFX_HBLANK_RIGHT_PX         );
+  DX8_LOGF("DX8_GFX_HBLANK_START = %i Cycles"               , DX8_GFX_HBLANK_START            );
+  DX8_LOGF("DX8_GFX_HBLANK_CYCLES = %i Cycles"              , DX8_GFX_HBLANK_CYCLES           );
+  DX8_LOGF("DX8_GFX_VBLANK_SCANLINES = %i Scanlines"        , DX8_GFX_VBLANK_SCANLINES        );
+  DX8_LOGF("DX8_GFX_VBLANK_CYCLES = %i Cycles"              , DX8_GFX_VBLANK_CYCLES           );
+  DX8_LOGF("DX8_GFX_VBLANK_TOP_SCANLINES = %i Scanlines"    , DX8_GFX_VBLANK_TOP_SCANLINES    );
+  DX8_LOGF("DX8_GFX_VBLANK_BOTTOM_SCANLINES = %i Scanlines" , DX8_GFX_VBLANK_BOTTOM_SCANLINES );
+  DX8_LOGF("DX8_GFX_VBLANK_START = %i Cycles"               , DX8_GFX_VBLANK_START            );
+  DX8_LOGF("DX8_GFX_VBLANK_TOP_CYCLES = %i Cycles"          , DX8_GFX_VBLANK_TOP_CYCLES       );
+  DX8_LOGF("DX8_GFX_VBLANK_BOTTOM_CYCLES = %i Cycles"       , DX8_GFX_VBLANK_BOTTOM_CYCLES    );
+  DX8_LOGF("DX8_PAL_HZ = %f Hz"                             , DX8_PAL_HZ                      );
+  DX8_LOGF("DX8_CLOCK_GPU = %i Cycles"                      , DX8_CLOCK_GPU                   );
+  DX8_LOGF("DX8_CLOCK_CPU_MZ = %f MHz"                      , DX8_CLOCK_CPU_MZ                );
+  DX8_LOGF("DX8_CLOCK_GPU = %i Cycles"                      , DX8_CLOCK_CPU                   );
+  DX8_LOGF("DX8_CLOCK_GPU_MZ = %f MHz"                      , DX8_CLOCK_GPU_MZ                );
 }
 
 void Gpu_Teardown()
 {
-  free(sLineCache);
-  free(sScanLineTarget);
-  free(sCrtBuffers[0]);
-  free(sCrtBuffers[1]);
+  free(sGfxBuffers[0]);
+  free(sGfxBuffers[1]);
 }
 
 void Gpu_TurnOn()
 {
-  Gpu_Halt = true;
+  sGfxHalt = true;
 
-  memset(sScanLineTarget, 0, CRT_W * 3);
-  memset(sCrtBuffers[0], 0x00, CRT_W * CRT_H * CRT_DEPTH);
-  memset(sCrtBuffers[1], 0x00, CRT_W * CRT_H * CRT_DEPTH);
+  //memset(sGfxBuffers[0], 0x00, DX8_GFX_BUFFER_SIZE);
+ // memset(sGfxBuffers[1], 0x00, DX8_GFX_BUFFER_SIZE);
 
-  DX8_LOGF("GPU Pre-init");
-
-  Mmu_Set(REG_GFX_MODE, 0x00);
-
-  // @TODO - Reset GPU state here.
+  // TODO: Registers here.
 
   DX8_LOGF("GPU Turn On.");
 }
 
-Byte activity = 0;
+EXPORT void* GetCrt()
+{
+  sGfxBufferDirty = false;
+  return sGfxReadBuffer;
+}
 
 bool Crt_IsDirty()
 {
-  return sCrtDirty;
+  return sGfxBufferDirty;
 }
 
-EXPORT void* GetCrt()
+void Crt_MarkDirty()
 {
-  sCrtDirty = false;
-  return sReadCrt;
+  sGfxBufferDirty = true;
 }
 
-void SwapBuffers()
+void Crt_SwapBuffers()
 {
-  if (sReadCrt == sCrtBuffers[0])
+  if (sGfxReadBuffer == sGfxBuffers[0])
   {
-    sReadCrt = sCrtBuffers[1];
-    sWriteCrt = sCrtBuffers[0];
+    sGfxReadBuffer = sGfxBuffers[1];
+    sGfxWriteBuffer = sGfxBuffers[0];
   }
   else
   {
-    sReadCrt = sCrtBuffers[0];
-    sWriteCrt = sCrtBuffers[1];
+    sGfxReadBuffer = sGfxBuffers[0];
+    sGfxWriteBuffer = sGfxBuffers[1];
   }
+  memset(sGfxWriteBuffer, 0, DX8_GFX_BUFFER_SIZE);
 }
-
-void Gpu_DecodePalette(Word address)
-{
-  // 12 34 56
-  // RG BR GB
-
-  Byte b[3];
-  for(Word i=0;i < 16;i+=2)
-  {
-    b[0] = Mmu_Get(address + (i*3) + 0);
-    b[1] = Mmu_Get(address + (i*3) + 1);
-    b[2] = Mmu_Get(address + (i*3) + 2);
-
-    paletteR[i + 0] = 16 * ((b[0] & 0xF0) >> 4);
-    paletteG[i + 0] = 16 * (b[0] & 0x0F);
-
-    paletteB[i + 0] = 16 * ((b[1] & 0xF0) >> 4);
-    paletteR[i + 1] = 16 * (b[1] & 0x0F);
-
-    paletteG[i + 1] = 16 * ((b[2] & 0xF0) >> 4);
-    paletteB[i + 1] = 16 * ((b[2] & 0x0F));
-  }
-}
-
-void Gpu_FrameStart()
-{
-  tilesAddr = Mmu_GetWord(REG_GFX_TILES_ADDR);
-
-  int  numFrames = Mmu_Get(REG_GFX_FRAME_NUM);
-  int  seconds   = Mmu_Get(REG_GFX_SECOND_NUM);
-  Byte counters = 0;
-  numFrames++;
-
-  if (numFrames == 60)
-  {
-    numFrames = 0;
-    seconds++;
-    counters |= GFX_FLG_COUNTERS_NEWFRAME;
-  }
-
-  if ((seconds & 1) == 0)
-  {
-    counters |= GFX_FLG_COUNTERS_ODDEVEN;
-  }
-
-  if ((numFrames & 2) == 2)
-    counters |= GFX_FLG_COUNTERS_2;
-
-  if ((numFrames & 4) == 4)
-    counters |= GFX_FLG_COUNTERS_4;
-
-  if ((numFrames & 8) == 8)
-    counters |= GFX_FLG_COUNTERS_8;
-
-  if (numFrames == 15)
-    counters |= GFX_FLG_COUNTERS_15;
-
-  if (numFrames == 30)
-    counters |= GFX_FLG_COUNTERS_30;
-
-  // DX8_LOGF("Counters= $%2X Seconds = $%2X Frames = $%2X", counters, seconds, numFrames);
-
-  Mmu_Set(REG_GFX_COUNTERS, counters);
-  Mmu_Set(REG_GFX_SECOND_NUM, seconds & 0xFF);
-  Mmu_Set(REG_GFX_FRAME_NUM, numFrames);
-
-}
-
-void Gpu_FrameEnd()
-{
-  sCrtDirty = true;
-  SwapBuffers();
-}
-
-void SubmitLine(int line)
-{
-  int offset = (CRT_W * 3 * line);
-  memcpy(sWriteCrt + offset, sScanLineTarget, CRT_W * 3);
-  memset(sScanLineTarget, 0, CRT_W * 3);
-}
-
-#define GPU_BUFFER_W (CRT_W / 8)
-
-inline bool Gpu_Coroutine_Common()
-{
-  if (GpuTimer == 0)
-  {
-    Gpu_FrameStart();
-    return false;
-  }
-
-  if (GpuTimer >= (CRT_SCAN_TOTAL_TIME - (CRT_V_BLANK_TIME)))
-  {
-    if (GpuTimer == (CRT_SCAN_TOTAL_TIME - (CRT_V_BLANK_TIME)))
-    {
-      Cpu_Interrupt(INTVEC_VBLANK);
-      // Copy previous scanline to CRT.
-      SubmitLine(CRT_H - 1);
-      Gpu_FrameEnd();
-    }
-
-    // Otherwise Wait.
-    return false;
-  }
-
-  scanline = GpuTimer / CRT_SCAN_W; // Y-pos in CRT.
-  scanpos = GpuTimer % CRT_SCAN_W; // X-pos in CRT.
-
-  if (scanpos == 0)
-  {
-    // Copy previous Scanline to CRT if scanline + 1.
-    if (scanline > 0)
-    {
-      SubmitLine(scanline - 1);
-    }
-
-    Mmu_Set(REG_GFX_SCANLINE_NUM, scanline);
-    Cpu_Interrupt(INTVEC_HBLANK);
-    
-    charRow = (scanline % 8) * 96;
-
-    int y = scanline;
-    int rows = y / 8;
-    int copyStride = rows;
-
-    // Fetch current Graphics mem, and cache it.
-    // Graphics and Text mode stuff here, so we don't have to do it per coroutine.
-
-    copyStride = rows;
-    if (y % 8 == 0)
-    {
-      memcpy(sLineCache + (0 * GPU_BUFFER_W), sFastRam + MEM_GFX_PLANE0_FAST + (copyStride * GPU_BUFFER_W), GPU_BUFFER_W);
-    }
-  }
-
-  if (scanpos < CRT_H_BLANK)
-  {
-    // Wait. Cpu can be doing things here.
-    return false;
-  }
-
-  return true;
-}
-
-void Gpu_ElectronBeam()
-{
-  if (Gpu_Halt)
-    return;
-
-  if (Gpu_Coroutine_Common() == false)
-    return;
-
-  // Okay draw.
-  int x = scanpos - CRT_H_BLANK;
-  int y = scanline;
-
-  int cols = x / 8;
-  int rows = y / 8;
-
-  if (x == 0)
-  {
-    Gpu_DecodePalette(Mmu_GetWord(REG_GFX_PALETTE_ADDR));
-
-    Byte lineR1 = 0xFF;
-    Byte lineG1 = 0xFF;
-    Byte lineB1 = 0xFF;
-    Byte backR  = 0x00;
-    Byte backG  = 0x00;
-    Byte backB  = 0x00;
-
-    #define COLOUR_MASK(IDX, R, G, B) \
-      lineR[IDX] = R; \
-      lineG[IDX] = G; \
-      lineB[IDX] = B;
-    
-    COLOUR_MASK(0,  paletteR[0], paletteG[0], paletteB[0]);   // 0000
-    COLOUR_MASK(1,  paletteR[1], paletteG[1], paletteB[1]);  // 0001
-  }
-
-  int offset   = (x >> 3);
-  int bitShift = (1 << (x & 7));
-  
-  int col = 0;
-  Byte character, pixelRow;
-
-  character = sLineCache[(GPU_BUFFER_W * 0) + offset] - ' ';
-  pixelRow = Mmu_Get(tilesAddr + character + charRow);
-  
-  col |= !!(pixelRow & bitShift);
-
-  sScanLineTarget[(x * 3) + 0] = lineR[col];
-  sScanLineTarget[(x * 3) + 1] = lineG[col];
-  sScanLineTarget[(x * 3) + 2] = lineB[col];
-}
-
-
-bool IsInterrupt();
 
 void Gpu_On()
 {
-  Gpu_Halt = false;
+  sGfxHalt = false;
 }
+
+int frame = 0;
 
 void Gpu_Clock()
 {
-  if (Gpu_Halt == false)
+  
+  if (sGfxHalt == 1)
+    return;
+  
+  if (sGfxCycle < DX8_GFX_VBLANK_TOP_CYCLES)
   {
-    Gpu_ElectronBeam();
+    // VBlank top Period
+    //rand();
+  }
+  else if (sGfxCycle > DX8_GFX_VBLANK_BOTTOM_CYCLES)
+  {
+    // VBlank bottom Period
+    //rand();
+  }
+  else // if (sGfxWaitFrame == false)
+  {
+    // HBlank or visible period
+    Gpu_Clock_Scanline(sGfxWriteBuffer);
   }
 
-  GpuTimer++;
-  
-  if (GpuTimer == CRT_SCAN_TOTAL_TIME)
+  sGfxCycle++;
+
+  if (sGfxCycle == DX8_GFX_CYCLES_PER_FRAME)
   {
-    GpuTimer = 0;
     frame++;
+    // End of Frame.
+    Gpu_Scanline_EndFrame();
+
+    Gpu_OSD_PastDecimal(sGfxWriteBuffer, frame, 40, 40);
+    Gpu_OSD_PastDecimal(sGfxWriteBuffer, frame % 50, 40, 46);
+
+    Crt_SwapBuffers();
+    Crt_MarkDirty();
+    sGfxCycle = 0;
+    sGfxWaitFrame = 0;
   }
 }
 
 int Gpu_GetTimer()
 {
-  return GpuTimer;
+  return sGfxCycle;
 }

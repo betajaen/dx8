@@ -78,27 +78,10 @@ macro _poke.w addr, value {
       store addr, i
 }
 
-macro _putchar plane, x, y, char {
-      ADDR = x + (y * 40) + plane * MEM_GFX_PLANE_SIZE + MEM_SHARED_ADDR
-      _poke ADDR, char
-}
-macro _putval P, X, Y, x {
-      store ((MEM_SHARED_ADDR + (MEM_GFX_PLANE_SIZE * P)) + X + (Y * 40)), x
-}
-
 macro _load_indirect Reg, AddressContainingAddress {
       load x, AddressContainingAddress
       load y, AddressContainingAddress + 1
       load Reg, i
-}
-
-macro _poke.rgb COL, R, G, B {
-      set a, R
-      store COL, a
-      set a, G
-      store COL+1, a
-      set a, B
-      store COL+2, a
 }
 
 ; =============================================================

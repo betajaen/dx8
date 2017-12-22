@@ -583,140 +583,151 @@ namespace DX8
     {
       System.Text.StringBuilder sb = new System.Text.StringBuilder(4096);
       
-      sb.AppendLine("; DX8 FASM Instruction Set and Common Constants");
-
-      // Registers
-      sb.AppendLine("; Registers");
-
-      foreach(var register in registers)
+      if (registers != null)
       {
-        sb.AppendFormat("REG_{0} = ${1:X4}", register.Key, register.Value);
-        sb.AppendLine();
-      }
-      
-      sb.AppendLine();
-      
-      // Constants
-      sb.AppendLine("; Macros");
-      
-      // Constants
-      sb.AppendLine("; Constants");
+        // Registers
+        sb.AppendLine("; Registers");
 
-      foreach(var constant in constants)
-      {
-        sb.AppendFormat("{0} = ${1:X4}", constant.Key, constant.Value);
-        sb.AppendLine();
-      }
-      
-      sb.AppendLine();
-      
-      // Interrupts
-      sb.AppendLine("; Interrupts");
-
-      foreach(var interrupt in interrupts)
-      {
-        sb.AppendFormat("{0} = ${1:X4} ; {2} ", interrupt.Key, interrupt.Value.Key, interrupt.Value.Value);
-        sb.AppendLine();
-      }
-      
-      sb.AppendLine();
-      
-      // Interrupts
-      sb.AppendLine("; Keys");
-
-      foreach(var scancode in scancodes)
-      {
-        sb.AppendFormat("KEY_{0} = ${1:X2}", scancode.Key, scancode.Value.Key);
-        sb.AppendLine();
-      }
-      
-      sb.AppendLine();
-      // Macros
-      
-      sb.AppendLine("; Instructions");
-      
-      List<string> done = new List<string>(256);
-
-      String lastName = string.Empty;
-
-      Opcode[] allOpcodes = (Opcode[]) Enum.GetValues(typeof(Opcode));
-
-      for(int ii=0;ii < (int) Opcode.COUNT;ii++)
-      {
-        List<Op> ops = new List<Op>(256);
-        Opcode opcode = allOpcodes[ii];
-        for(int jj=0;jj < opcodes.Count;jj++)
+        foreach(var register in registers)
         {
-          Op op = opcodes[jj];
-          if (op.Opcode == opcode)
-          {
-            ops.Add(op);
-          }
+          sb.AppendFormat("REG_{0} = ${1:X4}", register.Key, register.Value);
+          sb.AppendLine();
         }
-
-        string name = OpcodeAsm[(int) opcode];
-
-        if (ops.Count == 0)
-          continue;
-        
-        sb.AppendFormat("macro {0} [A, B] {{", name);
+      
         sb.AppendLine();
-        
-        if (ops.Count == 1 || opcode == Opcode.Nop)
+      }
+
+      if (constants != null)
+      {
+        // Constants
+        sb.AppendLine("; Constants");
+
+        foreach(var constant in constants)
         {
-          DbForOpCode(ref sb, ops[0], 1);
+          sb.AppendFormat("{0} = ${1:X4}", constant.Key, constant.Value);
+          sb.AppendLine();
         }
-        else
+      
+        sb.AppendLine();
+      }
+
+      if (interrupts != null)
+      {
+        // Interrupts
+        sb.AppendLine("; Interrupts");
+
+        foreach(var interrupt in interrupts)
         {
-          Op elseOp = new Op(0);
-          int kk=0;
-          for(int jj=0;jj < ops.Count;jj++)
+          sb.AppendFormat("{0} = ${1:X4} ; {2} ", interrupt.Key, interrupt.Value.Key, interrupt.Value.Value);
+          sb.AppendLine();
+        }
+      
+        sb.AppendLine();
+      }
+
+      if (scancodes != null)
+      {
+        // Keys
+        sb.AppendLine("; Keys");
+
+        foreach(var scancode in scancodes)
+        {
+          sb.AppendFormat("KEY_{0} = ${1:X2}", scancode.Key, scancode.Value.Key);
+          sb.AppendLine();
+        }
+      
+        sb.AppendLine();
+      }
+
+      if (opcodes != null)
+      {
+        // Macros
+      
+        sb.AppendLine("; Instructions");
+      
+        List<string> done = new List<string>(256);
+
+        String lastName = string.Empty;
+
+        Opcode[] allOpcodes = (Opcode[]) Enum.GetValues(typeof(Opcode));
+
+        for(int ii=0;ii < (int) Opcode.COUNT;ii++)
+        {
+          List<Op> ops = new List<Op>(256);
+          Opcode opcode = allOpcodes[ii];
+          for(int jj=0;jj < opcodes.Count;jj++)
           {
-            Op op = ops[jj];
-            
-            if (op.Operand1 == Operand.Address && op.Operand2 == Operand.None)
+            Op op = opcodes[jj];
+            if (op.Opcode == opcode)
             {
-              elseOp = op;
-              continue;
+              ops.Add(op);
             }
-
-            if (op.Operand1 == Operand.Pc && op.Operand2 == Operand.Byte)
-            {
-              elseOp = op;
-              continue;
-            }
-
-            if (kk == 0)
-              sb.Append("  if ");
-            else 
-              sb.Append("  else if ");
-            kk++;
-
-            // Condition here.
-            ConditionForOpcode(ref sb, op);
-            sb.AppendLine();
-            DbForOpCode(ref sb, ops[jj], 2);
           }
 
-          if (elseOp.Opcode != Opcode.Nop)
+          string name = OpcodeAsm[(int) opcode];
+
+          if (ops.Count == 0)
+            continue;
+        
+          sb.AppendFormat("macro {0} [A, B] {{", name);
+          sb.AppendLine();
+        
+          if (ops.Count == 1 || opcode == Opcode.Nop)
           {
-            sb.Append("  else");
-            sb.AppendLine();
-            DbForOpCode(ref sb, elseOp, 2);
+            DbForOpCode(ref sb, ops[0], 1);
           }
           else
           {
-            sb.Append("  else");
-            sb.AppendLine();
-            sb.Append("    error SyntaxError");
-            sb.AppendLine();
-          }
+            Op elseOp = new Op(0);
+            int kk=0;
+            for(int jj=0;jj < ops.Count;jj++)
+            {
+              Op op = ops[jj];
+            
+              if (op.Operand1 == Operand.Address && op.Operand2 == Operand.None)
+              {
+                elseOp = op;
+                continue;
+              }
 
-          sb.AppendLine("  end if");
+              if (op.Operand1 == Operand.Pc && op.Operand2 == Operand.Byte)
+              {
+                elseOp = op;
+                continue;
+              }
+
+              if (kk == 0)
+                sb.Append("  if ");
+              else 
+                sb.Append("  else if ");
+              kk++;
+
+              // Condition here.
+              ConditionForOpcode(ref sb, op);
+              sb.AppendLine();
+              DbForOpCode(ref sb, ops[jj], 2);
+            }
+
+            if (elseOp.Opcode != Opcode.Nop)
+            {
+              sb.Append("  else");
+              sb.AppendLine();
+              DbForOpCode(ref sb, elseOp, 2);
+            }
+            else
+            {
+              sb.Append("  else");
+              sb.AppendLine();
+              sb.Append("    error SyntaxError");
+              sb.AppendLine();
+            }
+
+            sb.AppendLine("  end if");
+          }
+        
+          sb.AppendLine("}");
+        
         }
-        
-        sb.AppendLine("}");
-        
       }
       
       // Opcodes

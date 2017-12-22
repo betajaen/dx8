@@ -37,8 +37,8 @@ Byte* sRom;
 
 void Rom_Setup()
 {
-  sRom = malloc(ROM_SIZE);
-  memset(sRom, 0xFF, ROM_SIZE);
+  sRom = malloc(DX8_ROM_SIZE);
+  memset(sRom, 0xFF, DX8_ROM_SIZE);
 }
 
 void Rom_Teardown()
@@ -48,7 +48,7 @@ void Rom_Teardown()
 
 Byte Rom_Get(Word address)
 {
-  int actual = address & (ROM_SIZE - 1);
+  int actual = address & (DX8_ROM_SIZE - 1);
   Byte value = sRom[actual];
   //DX8_LOGF("Get Rom $%X:%i $%X:%i => $%2X", address, address, actual, actual, value);
   return value;

@@ -44,19 +44,41 @@
 #define DX8_DEBUG_INSTRUCTIONS      1
 #define DX8_DEBUG_INSTRUCTIONS_HISTORY 512
 
-#define CRT_W 320
-#define CRT_H 256
-#define CRT_DEPTH 3
+#define DX8_GFX_RESOLUTION              (512)
+#define DX8_GFX_SCANLINES               (312)
+#define DX8_GFX_WIDTH                   (320)
+#define DX8_GFX_HEIGHT                  (256)
+#define DX8_GFX_BYTES_PER_PIXEL         (3)
+#define DX8_GFX_PIXELS_PER_GFX_CYCLE    (8)
+#define DX8_GFX_BUFFER_SIZE             (DX8_GFX_WIDTH * DX8_GFX_HEIGHT * DX8_GFX_BYTES_PER_PIXEL)
+#define DX8_GFX_CYCLES_PER_SCANLINE     (DX8_GFX_RESOLUTION / DX8_GFX_PIXELS_PER_GFX_CYCLE)
+#define DX8_GFX_CYCLES_PER_FRAME        (DX8_GFX_SCANLINES * DX8_GFX_CYCLES_PER_SCANLINE)
+#define DX8_GFX_HBLANK_PX               (DX8_GFX_RESOLUTION - DX8_GFX_WIDTH)
+#define DX8_GFX_HBLANK_LEFT_PX          (DX8_GFX_HBLANK_PX / 2)
+#define DX8_GFX_HBLANK_RIGHT_PX         (DX8_GFX_HBLANK_PX / 2)
+#define DX8_GFX_HBLANK_LEFT             (DX8_GFX_HBLANK_LEFT_PX / 8)
+#define DX8_GFX_HBLANK_RIGHT            (DX8_GFX_HBLANK_RIGHT_PX / 8)
+#define DX8_GFX_HBLANK_START            ((DX8_GFX_HBLANK_LEFT_PX + DX8_GFX_WIDTH) / DX8_GFX_PIXELS_PER_GFX_CYCLE)
+#define DX8_GFX_HBLANK_CYCLES           (DX8_GFX_HBLANK_PX / DX8_GFX_PIXELS_PER_GFX_CYCLE)
+#define DX8_GFX_VBLANK_SCANLINES        (DX8_GFX_SCANLINES - DX8_GFX_HEIGHT)
+#define DX8_GFX_VBLANK_TOP_SCANLINES    (DX8_GFX_VBLANK_SCANLINES / 2)
+#define DX8_GFX_VBLANK_BOTTOM_SCANLINES (DX8_GFX_VBLANK_SCANLINES / 2)
 
-#define CRT_H_BLANK 20  // 'Pixels/Cycles'
-#define CRT_V_BLANK 5  // 'Lines'
-#define CRT_V_BLANK_TIME (CRT_V_BLANK * CRT_W)
+#define DX8_GFX_VBLANK_START            \
+  (((DX8_GFX_SCANLINES-DX8_GFX_VBLANK_TOP_SCANLINES-1)*DX8_GFX_CYCLES_PER_SCANLINE)+(DX8_GFX_RESOLUTION-DX8_GFX_HBLANK_LEFT_PX)/DX8_GFX_PIXELS_PER_GFX_CYCLE)
+#define DX8_GFX_VBLANK_TOP_CYCLES       (DX8_GFX_CYCLES_PER_FRAME - DX8_GFX_VBLANK_START)
+#define DX8_GFX_VBLANK_BOTTOM_CYCLES    (DX8_GFX_VBLANK_TOP_CYCLES + DX8_GFX_CYCLES_PER_SCANLINE * DX8_GFX_HEIGHT)
+#define DX8_GFX_VBLANK_CYCLES           (DX8_GFX_VBLANK_TOP_CYCLES + DX8_GFX_VBLANK_BOTTOM_CYCLES)
 
-#define CRT_SCAN_W (CRT_H_BLANK + CRT_W)
-#define CRT_SCAN_H (CRT_H)
-#define CRT_SCAN_TOTAL_TIME ((CRT_SCAN_W * CRT_SCAN_H) + CRT_V_BLANK_TIME)
+#define DX8_CLOCK_GPU                   (DX8_GFX_CYCLES_PER_FRAME)
+#define DX8_CLOCK_CPU                   (DX8_GFX_CYCLES_PER_FRAME * 8)
+#define DX8_PAL_HZ                      (50.125)
 
-#define GPU_PLANE_SIZE ((CRT_W * CRT_H) / 8)
+#define DX8_CLOCK_GPU_MZ                ((DX8_CLOCK_GPU * DX8_PAL_HZ) / 1000000.0)
+#define DX8_CLOCK_CPU_MZ                ((DX8_CLOCK_CPU * DX8_PAL_HZ) / 1000000.0)
+
+
+#define DX8_KILOBYTES(BYTES)            ((BYTES) * 1024)
 
 #define LO_BYTE(WORD)  ((Byte)(WORD & 0xFF))
 #define HI_BYTE(WORD)  ((Byte)((WORD >> 8) & 0xFF))
@@ -144,6 +166,8 @@ extern Cpu   cpu;
 extern Byte* sRam;
 extern Byte* sFastRam;
 extern DebuggedInstruction sDebugInstruction;
+extern Word sAddressBus;
+extern Word sDataBus;
 
 int Clock(int ms);
 
@@ -253,7 +277,24 @@ void Log_Format(const char* text, ...);
 #define DX8_INFOF(TEXT, ...) Log_Format("INF " TEXT, __VA_ARGS__)
 #define DX8_DEBUGF(TEXT, ...) Log_Format("DBG " TEXT, __VA_ARGS__)
 
-#define RAM_SIZE      ((16 + 64) * 1024) // Chip + Shared >> 0x4000 + 0xFFFF)
-#define ROM_SIZE      (4  * 1024) // Chip + Shared >> (0x800)
+#define  DX8_RAM0_SIZE DX8_KILOBYTES(16)    // Chip
+#define  DX8_RAM1_SIZE DX8_KILOBYTES(16)    // Fast #0
+#define  DX8_RAM2_SIZE DX8_KILOBYTES(16)    // Fast #1
+#define  DX8_RAM3_SIZE DX8_KILOBYTES(16)    // Fast #2
+#define  DX8_RAM4_SIZE DX8_KILOBYTES(16)    // Fast #3
+#define  DX8_RAM5_SIZE DX8_KILOBYTES(4)     // Video
+#define  DX8_RAM6_SIZE DX8_KILOBYTES(2)     // Tile
+#define  DX8_RAM7_SIZE DX8_KILOBYTES(2)     // Sprite
+
+#define DX8_RAM_SIZE      (DX8_RAM0_SIZE + \
+                       DX8_RAM1_SIZE + \
+                       DX8_RAM2_SIZE + \
+                       DX8_RAM3_SIZE + \
+                       DX8_RAM4_SIZE + \
+                       DX8_RAM5_SIZE + \
+                       DX8_RAM6_SIZE + \
+                       DX8_RAM7_SIZE)
+
+#define DX8_ROM_SIZE      (DX8_KILOBYTES(4))
 
 #endif
