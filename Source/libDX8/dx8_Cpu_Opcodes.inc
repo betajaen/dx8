@@ -23,6 +23,24 @@ OP(Pop,      i,     Opf_Single,     Pcm_Length, 3, { REG_I = Cpu_Stack_PopWord()
 OP(Pop,      j,     Opf_Single,     Pcm_Length, 3, { REG_J = Cpu_Stack_PopWord();  })
 OP(Pop,      F,     Opf_Single,     Pcm_Length, 3, { Cpu_Stack_PopFlags();         })
 
+// Stack to J
+OP(stj,      None,  Opf_Single,     Pcm_Length, 1, { REG_J = REG_STACK;            })
+
+// J to Stack
+OP(jst,      None,  Opf_Single,     Pcm_Length, 1, { REG_STACK = REG_J;            })
+
+// PcStack to J
+OP(pcj,      None,  Opf_Single,     Pcm_Length, 1, { REG_J = REG_PC_STACK;         })
+
+// J to PcStack
+OP(jpc,      None,  Opf_Single,     Pcm_Length, 1, { REG_PC_STACK = REG_J;         })
+
+// Flags to z
+OP(flz,      None,  Opf_Single,     Pcm_Length, 1, { REG_Z = REG_FLAGS;            })
+
+// Z to Flags
+OP(zfl,      None,  Opf_Single,     Pcm_Length, 1, { REG_FLAGS = REG_Z;            })
+
 // Load
 OP(Load,     ai,    Opf_Single,     Pcm_Length, 6, { REG_A = FlagsOpB(Cpu_Memory_LoadByte(REG_I));    })
 OP(Load,     zi,    Opf_Single,     Pcm_Length, 6, { REG_Z = FlagsOpB(Cpu_Memory_LoadByte(REG_I));    })
@@ -290,7 +308,14 @@ OP(dbn,       W,    Opf_Address,   Pcm_Length, 1,  { Cpu_Debug_Note(REG_WORD);  
 OP(dbo,       B,    Opf_Byte,      Pcm_Length, 1,  { Cpu_Debug_Option(REG_IMM); })
 
 // Sti
-OP(sti,       None, Opf_Single,   Pcm_Length, 1,   { Cpu_Interrupt_SetEnabled(false); })
+OP(sti,       None, Opf_Single,    Pcm_Length, 1,  { Cpu_Interrupt_SetEnabled(false); })
 
 // Rti
-OP(rti,       None, Opf_Single,   Pcm_Length, 1,   { Cpu_Interrupt_SetEnabled(true); })
+OP(rti,       None, Opf_Single,    Pcm_Length, 1,  { Cpu_Interrupt_SetEnabled(true);  })
+
+// io - raise/lowers the 2 two IO pins, effectively controlling the MMU (set page, clear page, reset, etc.)
+//      Only first two bits are used.
+OP(io,        None, Opf_Byte,      Pcm_Length, 1,  { Cpu_Io(REG_IMM);                 })
+
+// ivt - set's the address to the first entry of the vector interrupt table
+OP(ivt,       None, Opf_Address,   Pcm_Length, 1,  { Cpu_SetVectorTableAddress(REG_WORD); })

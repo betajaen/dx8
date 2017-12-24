@@ -107,14 +107,14 @@ typedef struct {
   union
   {
     struct {
-      Byte  bZero : 1;
-      Byte  bNegative : 1;
-      Byte  bCarry : 1;
+      Byte  bZero      : 1;
+      Byte  bNegative  : 1;
+      Byte  bCarry     : 1;
       Byte  bGreater   : 1;
-      Byte  flag  : 1;
-      Byte  flag6 : 1;
-      Byte  flag7 : 1;
-      Byte  flag8 : 1;
+      Byte  flag       : 1;
+      Byte  flag6      : 1;
+      Byte  io0        : 1;
+      Byte  io1        : 1;
     };
     Byte _data;
   }
@@ -282,18 +282,18 @@ void Log_Format(const char* text, ...);
 #define  DX8_RAM2_SIZE DX8_KILOBYTES(16)    // Fast #1
 #define  DX8_RAM3_SIZE DX8_KILOBYTES(16)    // Fast #2
 #define  DX8_RAM4_SIZE DX8_KILOBYTES(16)    // Fast #3
-#define  DX8_RAM5_SIZE DX8_KILOBYTES(4)     // Video
-#define  DX8_RAM6_SIZE DX8_KILOBYTES(2)     // Tile
-#define  DX8_RAM7_SIZE DX8_KILOBYTES(2)     // Sprite
+#define  DX8_RAM5_SIZE DX8_KILOBYTES(6)     // Video
+#define  DX8_RAM6_SIZE DX8_KILOBYTES(4)     // Tile
+#define  DX8_RAM7_SIZE DX8_KILOBYTES(4)     // Sprite
 
 #define DX8_RAM_SIZE      (DX8_RAM0_SIZE + \
-                       DX8_RAM1_SIZE + \
-                       DX8_RAM2_SIZE + \
-                       DX8_RAM3_SIZE + \
-                       DX8_RAM4_SIZE + \
-                       DX8_RAM5_SIZE + \
-                       DX8_RAM6_SIZE + \
-                       DX8_RAM7_SIZE)
+                           DX8_RAM1_SIZE + \
+                           DX8_RAM2_SIZE + \
+                           DX8_RAM3_SIZE + \
+                           DX8_RAM4_SIZE + \
+                           DX8_RAM5_SIZE + \
+                           DX8_RAM6_SIZE + \
+                           DX8_RAM7_SIZE)
 
 #define DX8_ROM_SIZE      (DX8_KILOBYTES(4))
 
