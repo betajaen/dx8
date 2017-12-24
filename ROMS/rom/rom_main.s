@@ -223,7 +223,7 @@ ltr_EntryPoint:
 
         ; Clear screen with 'x'
         push.w GFX_FAST_SCREEN0
-        push.b 0
+        push.b $FF
         push.w 1280
         set a, 2
         callt $400, a
@@ -310,6 +310,17 @@ Setup:
                 jmp.eq .endshow5
                 jmp .show5
         .endshow5:
+
+        set x, 130
+        .show6:
+                load y, REG_RAND
+                store j, y
+                inc j
+                inc x
+                cmp x, 0
+                jmp.eq .endshow6
+                jmp .show6
+        .endshow6:
 
         _poke           GFX_FAST_SCREEN0 + 10 + (25 * 40), 'H'
         _poke           GFX_FAST_SCREEN0 + 11 + (25 * 40), 'e'
