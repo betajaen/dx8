@@ -54,8 +54,7 @@ int Clock(int ms)
   ClockMilliseconds += ms;
 
   // Temp: Take milliseconds into account.
-  count = (DX8_CLOCK_GPU / SLOWDOWN_RATE);
-  for (int ii = 0; ii < count; ii++)
+  for (int ii = 0; ii < DX8_CLOCK_GPU; ii++)
   {
     Cpu_Step();
     Cpu_Step();

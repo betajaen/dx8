@@ -72,7 +72,6 @@ void Gpu_Setup()
     sGfxBuffers[1][i+2] = 0xFF;
   }
 
-
   sGfxWriteBuffer = sGfxBuffers[0];
   sGfxReadBuffer = sGfxBuffers[1];
   
@@ -173,12 +172,10 @@ void Gpu_Clock()
   if (sGfxCycle < DX8_GFX_VBLANK_TOP_CYCLES)
   {
     // VBlank top Period
-    //rand();
   }
   else if (sGfxCycle > DX8_GFX_VBLANK_BOTTOM_CYCLES)
   {
     // VBlank bottom Period
-    //rand();
   }
   else // if (sGfxWaitFrame == false)
   {
@@ -193,9 +190,9 @@ void Gpu_Clock()
     frame++;
     // End of Frame.
     Gpu_Scanline_EndFrame();
-
-    Gpu_OSD_PastDecimal(sGfxWriteBuffer, frame, 40, 40);
-    Gpu_OSD_PastDecimal(sGfxWriteBuffer, frame % 50, 40, 46);
+    
+    //Gpu_OSD_PastDecimal(sGfxWriteBuffer, frame, 40, 40);
+    //Gpu_OSD_PastDecimal(sGfxWriteBuffer, frame % 50, 40, 46);
 
     Crt_SwapBuffers();
     Crt_MarkDirty();

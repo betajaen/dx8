@@ -96,7 +96,7 @@ typedef struct
 } GpuScanlineRegisters;
 
 GpuScanlineRegisters  sGpu;
-Byte              sGpu_Scanline[DX8_GFX_BYTES_PER_PIXEL * DX8_GFX_WIDTH];
+Byte                  sGpu_Scanline[DX8_GFX_BYTES_PER_PIXEL * DX8_GFX_WIDTH];
 
 void Gpu_Scanline_Setup()
 {
@@ -156,23 +156,10 @@ void Gpu_Colourise_Sc(Word picture, Byte colour, RowRegister* row)
   {
     Byte pixel = picture & 1;
 
-    switch(pixel)
-    {
-      case 0:
-      {
-        row->visible[i]         = false;
-      }
-      break;
-
-      case 1:
-      {
-        row->colour[(i*3) + 0] = kPalette[(colour * 3) + 0];
-        row->colour[(i*3) + 1] = kPalette[(colour * 3) + 1];
-        row->colour[(i*3) + 2] = kPalette[(colour * 3) + 2];
-        row->visible[i]    = true;
-      }
-      break;
-    }
+    row->visible[i] = pixel;
+    row->colour[(i*3) + 0] = kPalette[(colour * 3) + 0];
+    row->colour[(i*3) + 1] = kPalette[(colour * 3) + 1];
+    row->colour[(i*3) + 2] = kPalette[(colour * 3) + 2];
 
     picture >>= 1;
   }
@@ -186,7 +173,6 @@ void Gpu_Fetch_Sprite(int index)
   sprite->y     = FastRam_Get(GFX_FAST_SPRITES + (index * 4) + 1);
   sprite->flags = FastRam_Get(GFX_FAST_SPRITES + (index * 4) + 2);
   sprite->addr  = FastRam_Get(GFX_FAST_SPRITES + (index * 4) + 3);
-
 }
 
 void Gpu_Fetch_SpriteImage(int index)
@@ -254,13 +240,13 @@ inline void Gpu_Emit(int col, int quarterCycle)
   {
     if (sGpu.TileRowRegister.visible[i])
     {
-      sGpu_Scanline[sGpu.ScanlineX + 0] = sGpu.TileRowRegister.colour[(i * 3) + 0];
-      sGpu_Scanline[sGpu.ScanlineX + 1] = sGpu.TileRowRegister.colour[(i * 3) + 1];
-      sGpu_Scanline[sGpu.ScanlineX + 2] = sGpu.TileRowRegister.colour[(i * 3) + 2];
+     sGpu_Scanline[sGpu.ScanlineX + 0] = sGpu.TileRowRegister.colour[(i * 3) + 0];
+     sGpu_Scanline[sGpu.ScanlineX + 1] = sGpu.TileRowRegister.colour[(i * 3) + 1];
+     sGpu_Scanline[sGpu.ScanlineX + 2] = sGpu.TileRowRegister.colour[(i * 3) + 2];
     }
     else
     {
-      sGpu_Scanline[sGpu.ScanlineX + 0] = kPalette[0];
+      sGpu_Scanline[sGpu.ScanlineX + 0] = kPalette[0]; // Colour: 0
       sGpu_Scanline[sGpu.ScanlineX + 1] = kPalette[1];
       sGpu_Scanline[sGpu.ScanlineX + 2] = kPalette[2];
     }
@@ -268,7 +254,6 @@ inline void Gpu_Emit(int col, int quarterCycle)
     sGpu.ScanlineX += 3;
   }
   
-
 }
 
 void Gpu_Scanline_Begin()
@@ -283,15 +268,17 @@ void Gpu_Scanline_End(Byte* writeBuffer)
 
 void Gpu_Scanline_EndFrame()
 {
-  // Reset, Y and Row are on. With additionally CTS - indicating to Tile Decoder and Sprite coprocessor it is the end of the frame.
-  sGpu.Y   = 0;
-  sGpu.YRow = 0;
-  sGpu.TileRow = 0;
+  // Reset everything in the Gpu - It is inactive in this phase.
+  memset(&sGpu, 0, sizeof(sGpu));
+  memset(sGpu_Scanline, 0, sizeof(sGpu_Scanline));
 }
 
 void Gpu_Clock_Scanline(Byte* writeBuffer)
 {
-  assert(sGpu.Y < DX8_GFX_HEIGHT);
+  if (sGpu.Y >= DX8_GFX_HEIGHT)
+  {
+    sGpu.Y = DX8_GFX_HEIGHT - 1;
+  }
 
   switch(sGpu.ScanlineCycle)
   {
