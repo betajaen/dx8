@@ -33,13 +33,83 @@
 
 struct Cpu16 cpu16;
 
+#define CPU cpu16
+
+#define OPERAND_dst LO_NIBBLE(operand)
+#define OPERAND_src HI_NIBBLE(operand)
+
+//#define MAKE_WORD(LO, HI) (LO + ((HI) * 256))
+
+#define PC_FETCH() imm = 0
+
 void Cpu16_Reset()
 {
   for(int ii=0;ii < Reg_COUNT;ii++)
-    cpu16.reg.registers[ii] = 0;
+    CPU.registers[ii] = 0;
 }
+
+void Cpu_PushW(Word v)
+{
+}
+
+void Cpu_PushB(Byte v)
+{
+}
+
+Word Cpu_PopW()
+{
+  return 0;
+}
+
+Byte Cpu_PopB()
+{
+  return 0;
+}
+
+void Cpu_PushPc_Reg()
+{
+}
+
+void Cpu_PushPc_Imm(Word value)
+{
+}
+
+void Cpu_PopPc()
+{
+}
+
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Stack.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Memory.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Assignment.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Math.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_BCD.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Logic.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Jump.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Compare.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Branch.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Io.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Interrupt.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Op_Breakpoint.inc>
+
+#include <dx8/Core/Cpu16/dx8_Cpu16_Opcodes.inc>
+#include <dx8/Core/Cpu16/dx8_Cpu16_Cycles.inc>
 
 void Cpu16_Clock(unsigned int cycles)
 {
+  if (cycles <= CPU.cycles)
+    return;
   
+  if (CPU.halt)
+  {
+    CPU.cycles = cycles;
+    return;
+  }
+  
+  while(cpu.cycle < cycles)
+  {
+    // Fetch
+    // Decode
+    // Run
+    // Add to cycles
+  }
 }

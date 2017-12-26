@@ -51,14 +51,17 @@ enum RegisterName
   Reg_COUNT
 };
 
-union Cpu16Registers{
+union Cpu16Registers
+{
   Word registers[Reg_COUNT];
   Word x, y, z, w, a, ir, pc, stack, pcStack, cf;
 };
 
 struct Cpu16
 {
-  union Cpu16Registers reg;
+  union Cpu16Registers;
+  u32   cycles;
+  bool  halt;
 };
 
 void Cpu16_Reset();

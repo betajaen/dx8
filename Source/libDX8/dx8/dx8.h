@@ -80,8 +80,12 @@
 
 #define DX8_KILOBYTES(BYTES)            ((BYTES) * 1024)
 
-#define LO_BYTE(WORD)  ((Byte)(WORD & 0xFF))
-#define HI_BYTE(WORD)  ((Byte)((WORD >> 8) & 0xFF))
+#define LO_WORD(WORD)    ((WORD) & 0xFF)
+#define HI_WORD(WORD)    ((WORD >> 8) & 0xFF)
+#define LO_BYTE(WORD)    ((Byte)(WORD & 0xFF))
+#define HI_BYTE(WORD)    ((Byte)((WORD >> 8) & 0xFF))
+#define LO_NIBBLE(BYTE)  ((BYTE) & 0xF)
+#define HI_NIBBLE(BYTE)  ((BYTE >> 4) & 0xF)
 
 #define MAKE_WORD(LO, HI) ((LO) + (HI) * 256)
 #define MAKE_LOHI(W, LO, HI) LO = (W & 0xFF);  HI = (W >> 8) & 0xFF;
