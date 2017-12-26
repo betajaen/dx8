@@ -1,9 +1,7 @@
 // Instructions
 
-static void Cpu_DecodeAndRun(Word instruction)
+static void Cpu_DecodeAndRun(Byte opcode, Byte operand)
 {
-  Byte opcode  = ( (instruction >> 8) & 0xFF);
-  Byte operand = ( (instruction) & 0xFF );
   Word imm = 0;
 
   switch(opcode)

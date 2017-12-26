@@ -29,44 +29,31 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_CPU_H
-#define DX8_CPU_H
+#include <dx8/Core/Mmu160128/dx8_Mmu160128.h>
+#include <malloc.h>
+#include <string.h>
 
-#include <dx8/dx8.h>
-
-typedef Word CpuRegister;
-
-enum RegisterName
-{
-  Reg_X,
-  Reg_Y,
-  Reg_Z,
-  Reg_W,
-  Reg_A,
-  Reg_Instruction,
-  Reg_ProgramCounter,
-  Reg_Stack,
-  Reg_ProgramCounterStack,
-  Reg_ConditionFlags,
-  Reg_COUNT
+u8 sMmu160128_PageTable[256] = {
+// 0     1     2     3     4     5     6     7
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 0
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 1
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 2
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 3
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 4
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 5
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 6
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 7
 };
 
-union Cpu16Registers
+Byte* sRam;
+
+void Mmu1600128_Setup()
 {
-  Word registers[Reg_COUNT];
-  Word x, y, z, w, a, ir, pc, stack, pcStack, cf;
-};
+  sRam = malloc(DX8_KILOBYTES(128));
+  memset(sRam, 0, DX8_KILOBYTES(128));
+}
 
-struct Cpu16
+void Mmu1600128_Teardown()
 {
-  union Cpu16Registers;
-  u64   cycles;
-  bool  halt;
-  bool  io[2];
-};
-
-void Cpu16_Reset();
-
-void Cpu16_Clock(u64 cycles);
-
-#endif
+  free(sRam);
+}

@@ -30,6 +30,7 @@
 //! THE SOFTWARE.
 
 #include <dx8/Core/Cpu16/dx8_Cpu16.h>
+#include <dx8/Core/Mmu160128/dx8_Mmu160128.h>
 
 struct Cpu16 cpu16;
 
@@ -44,37 +45,48 @@ struct Cpu16 cpu16;
 
 void Cpu16_Reset()
 {
+  cpu.cycle = 0;
   for(int ii=0;ii < Reg_COUNT;ii++)
     CPU.registers[ii] = 0;
 }
 
-void Cpu_PushW(Word v)
+static void Cpu_Write(Word address, Word value)
+{
+  Mmu_Write(address, value, CPU.io[0]);
+}
+
+static Word Cpu_Read(Word address)
+{
+  return Mmu_Read(address);
+}
+
+static void Cpu_PushW(Word v)
 {
 }
 
-void Cpu_PushB(Byte v)
+static void Cpu_PushB(Byte v)
 {
 }
 
-Word Cpu_PopW()
+static Word Cpu_PopW()
 {
   return 0;
 }
 
-Byte Cpu_PopB()
+static Byte Cpu_PopB()
 {
   return 0;
 }
 
-void Cpu_PushPc_Reg()
+static void Cpu_PushPc_Reg()
 {
 }
 
-void Cpu_PushPc_Imm(Word value)
+static void Cpu_PushPc_Imm(Word value)
 {
 }
 
-void Cpu_PopPc()
+static void Cpu_PopPc()
 {
 }
 
@@ -94,7 +106,7 @@ void Cpu_PopPc()
 #include <dx8/Core/Cpu16/dx8_Cpu16_Opcodes.inc>
 #include <dx8/Core/Cpu16/dx8_Cpu16_Cycles.inc>
 
-void Cpu16_Clock(unsigned int cycles)
+void Cpu16_Clock(u64 cycles)
 {
   if (cycles <= CPU.cycles)
     return;
@@ -107,9 +119,12 @@ void Cpu16_Clock(unsigned int cycles)
   
   while(cpu.cycle < cycles)
   {
-    // Fetch
-    // Decode
-    // Run
-    // Add to cycles
+    Word imm;
+    PC_FETCH();
+    Byte opcode  = ( (imm >> 8) & 0xFF);
+    Byte operand = ( (imm) & 0xFF );
+
+    Cpu_DecodeAndRun(opcode, operand);
+    cpu.cycle += kCycles[opcode];
   }
 }
