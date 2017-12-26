@@ -20,13 +20,12 @@ solution "DX8"
     objdir          ".Obj"
     flags           { "FatalWarnings" }
     defines         { "_CRT_SECURE_NO_WARNINGS" }
+    includedirs     { "./"}
     files           {
-      "*.c",
-      "*.h",
-      "*.inc",
-      "genie.lua",
-      "log_c/src/log.c",
-      "log_c/src/log.h"
+      "**.c",
+      "**.h",
+      "**.inc",
+      "genie.lua"
   }
 
   project "libDX8-DevKit"
