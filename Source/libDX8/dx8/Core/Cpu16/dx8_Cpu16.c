@@ -30,7 +30,7 @@
 //! THE SOFTWARE.
 
 #include <dx8/Core/Cpu16/dx8_Cpu16.h>
-#include <dx8/Core/Mmu160128/dx8_Mmu160128.h>
+#include <dx8/Core/Mmu160512/dx8_Mmu160512.h>
 
 struct Cpu16 cpu16;
 
@@ -106,7 +106,7 @@ static void Cpu_PopPc()
 #include <dx8/Core/Cpu16/dx8_Cpu16_Opcodes.inc>
 #include <dx8/Core/Cpu16/dx8_Cpu16_Cycles.inc>
 
-void Cpu16_Clock(u64 cycles)
+void Cpu16_Clock(u32 cycles)
 {
   if (cycles <= CPU.cycles)
     return;
@@ -117,7 +117,7 @@ void Cpu16_Clock(u64 cycles)
     return;
   }
   
-  while(cpu.cycle < cycles)
+  while(CPU.cycles < cycles)
   {
     Word imm;
     PC_FETCH();
@@ -125,6 +125,15 @@ void Cpu16_Clock(u64 cycles)
     Byte operand = ( (imm) & 0xFF );
 
     Cpu_DecodeAndRun(opcode, operand);
-    cpu.cycle += kCycles[opcode];
+    CPU.cycles += kCycles[opcode];
   }
+}
+
+void Cpu16_StartOfFrame()
+{
+}
+
+void Cpu16_EndOfFrame(u32 remainingCycles)
+{
+  CPU.cycles -= remainingCycles;
 }

@@ -442,7 +442,7 @@ void Gpu_Clock_Scanline(Byte* writeBuffer, u32 subCycle)
         case 0: Gpu_Clock_Visible_K();               break; \
         case 1: Gpu_Clock_Visible_T_Odd();           break; \
         case 2: Gpu_Clock_Visible_S();               break; \
-        case 3: Gpu_Emit(SCANLINE_COLUMN, 0); break; \
+        case 3: Gpu_Emit(SCANLINE_COLUMN, 0);        break; \
       }
 
     #define CYCLE_B \
@@ -451,7 +451,7 @@ void Gpu_Clock_Scanline(Byte* writeBuffer, u32 subCycle)
         case 0: Gpu_Clock_Visible_T_Even();          break; \
         case 1: Gpu_Clock_Visible_C();               break; \
         case 2: Gpu_Clock_Visible_S();               break; \
-        case 3: Gpu_Emit(SCANLINE_COLUMN, 1); break; \
+        case 3: Gpu_Emit(SCANLINE_COLUMN, 1);        break; \
       }\
 
     #define CYCLE_C \
@@ -469,7 +469,7 @@ void Gpu_Clock_Scanline(Byte* writeBuffer, u32 subCycle)
         case 0: Gpu_Clock_Visible_T_Even();          break; \
         case 1: Gpu_Clock_Visible_C();               break; \
         case 2: Gpu_Clock_Visible_S();               break; \
-        case 3: Gpu_Emit(SCANLINE_COLUMN, 3); break; \
+        case 3: Gpu_Emit(SCANLINE_COLUMN, 3);        break; \
       }
 
     case 11:
