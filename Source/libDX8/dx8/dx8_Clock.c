@@ -36,7 +36,8 @@
 
 #define SLOWDOWN_RATE 1
 
-void Gpu_Clock();
+void Cpu_StepOnce();
+void Gpu_Clock(u32 subCycle);
 void Keyboard_Tick();
 void Floppy_Clock();
 void Sound_Clock();
@@ -56,16 +57,38 @@ int Clock(int ms)
   // Temp: Take milliseconds into account.
   for (int ii = 0; ii < DX8_CLOCK_GPU; ii++)
   {
-    Cpu_Step();
-    Cpu_Step();
-    Cpu_Step();
-    Cpu_Step();
-    Cpu_Step();
-    Cpu_Step();
-    Cpu_Step();
-    Cpu_Step();
-    Gpu_Clock();
+    for(u32 jj=0;jj < 16;jj++)
+    {
+      #define GRAPHICS(SUBCYCLE)  Gpu_Clock(SUBCYCLE)
+      #define PROCESSOR Cpu_StepOnce()
+      #define IO  
+      #define EXPANSION
+        switch(jj)
+        {
+          case  0: GRAPHICS(0) ; break;
+          case  1: PROCESSOR   ; break;
+          case  2: IO          ; break;
+          case  3: PROCESSOR   ; break;
+          case  4: GRAPHICS(1) ; break;
+          case  5: PROCESSOR   ; break;
+          case  6: IO          ; break;
+          case  7: PROCESSOR   ; break;
+          case  8: GRAPHICS(2) ; break;
+          case  9: PROCESSOR   ; break;
+          case 10: EXPANSION   ; break;
+          case 11: PROCESSOR   ; break;
+          case 12: GRAPHICS(3) ; break;
+          case 13: PROCESSOR   ; break;
+          case 14: EXPANSION   ; break;
+          case 15: PROCESSOR   ; break;
+        }
+      #undef GRAPHICS
+      #undef PROCESSOR
+      #undef IO
+      #undef EXPANSION
+    }
 
+    // Temp.
     ioClock++;
       
     if (ioClock == 256)

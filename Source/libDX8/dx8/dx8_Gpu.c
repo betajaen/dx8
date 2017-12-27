@@ -46,18 +46,21 @@
 #endif
 
 void Gpu_Scanline_Setup();
-void Gpu_Clock_Scanline(Byte* writeBuffer);
+void Gpu_Clock_Scanline(Byte* writeBuffer, u32 subCycle);
 void Gpu_Scanline_EndFrame();
 
 Byte*    sGfxBuffers[2];
 bool     sGfxBufferDirty;
 Byte*    sGfxWriteBuffer, *sGfxReadBuffer;
 Byte     sGfxHalt;
-int      sGfxCycle;
-Byte     sGfxWaitFrame;
+u32      sGfxCycle;
+u32      sGfxFrame;
+bool     sGfxWaitFrame;
 
 void Gpu_Setup()
 {
+  sGfxFrame = 0;
+  sGfxCycle = 0;
   sGfxBuffers[0] = malloc(DX8_GFX_BUFFER_SIZE);
   sGfxBuffers[1] = malloc(DX8_GFX_BUFFER_SIZE);
 
@@ -161,9 +164,7 @@ void Gpu_On()
   sGfxHalt = false;
 }
 
-int frame = 0;
-
-void Gpu_Clock()
+void Gpu_Clock(u32 subCycle)
 {
   
   if (sGfxHalt == 1)
@@ -180,24 +181,27 @@ void Gpu_Clock()
   else // if (sGfxWaitFrame == false)
   {
     // HBlank or visible period
-    Gpu_Clock_Scanline(sGfxWriteBuffer);
+    Gpu_Clock_Scanline(sGfxWriteBuffer, subCycle);
   }
 
-  sGfxCycle++;
-
-  if (sGfxCycle == DX8_GFX_CYCLES_PER_FRAME)
+  if (subCycle == 3)
   {
-    frame++;
-    // End of Frame.
-    Gpu_Scanline_EndFrame();
+    sGfxCycle++;
+  
+    if (sGfxCycle == DX8_GFX_CYCLES_PER_FRAME)
+    {
+      sGfxFrame++;
+      // End of Frame.
+      Gpu_Scanline_EndFrame();
     
-    //Gpu_OSD_PastDecimal(sGfxWriteBuffer, frame, 40, 40);
-    //Gpu_OSD_PastDecimal(sGfxWriteBuffer, frame % 50, 40, 46);
+      Gpu_OSD_PastDecimal(sGfxWriteBuffer, sGfxFrame, 40, 40);
+      Gpu_OSD_PastDecimal(sGfxWriteBuffer, sGfxFrame % 50, 40, 46);
 
-    Crt_SwapBuffers();
-    Crt_MarkDirty();
-    sGfxCycle = 0;
-    sGfxWaitFrame = 0;
+      Crt_SwapBuffers();
+      Crt_MarkDirty();
+      sGfxCycle = 0;
+      sGfxWaitFrame = 0;
+    }
   }
 }
 

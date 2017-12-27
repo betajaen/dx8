@@ -227,10 +227,11 @@ inline void Gpu_Clock_Visible_S()
  // @TODO
 }
 
-inline void Gpu_Emit(int col, int quarterCycle)
+inline void Gpu_Emit(int col, int subCycle)
 {
-  //Gpu_Colourise_Mc(sGpu.T, sGpu.MultiColour[0], sGpu.MultiColour[1], sGpu.K.colour[quarterCycle], &sGpu.TileRowRegister);
-  Gpu_Colourise_Sc(sGpu.T, sGpu.K.colour[quarterCycle], &sGpu.TileRowRegister);
+  //////////////Gpu_Colourise_Mc(sGpu.T, sGpu.MultiColour[0], sGpu.MultiColour[1], sGpu.K.colour[quarterCycle], &sGpu.TileRowRegister);
+  
+  Gpu_Colourise_Sc(sGpu.T, sGpu.K.colour[subCycle], &sGpu.TileRowRegister);
 
   // @TODO - Sprite
   // @TODO - Depth sorting
@@ -273,7 +274,7 @@ void Gpu_Scanline_EndFrame()
   memset(sGpu_Scanline, 0, sizeof(sGpu_Scanline));
 }
 
-void Gpu_Clock_Scanline(Byte* writeBuffer)
+void Gpu_Clock_Scanline(Byte* writeBuffer, u32 subCycle)
 {
   if (sGpu.Y >= DX8_GFX_HEIGHT)
   {
@@ -288,96 +289,123 @@ void Gpu_Clock_Scanline(Byte* writeBuffer)
     // H-Blank Front Porch ---------------------------------------------------------------------------
     case 0:
     {
-      // Gfx
-      Gpu_Scanline_Begin();
-      sGpu.DMA = 0;
-      sGpu.Reset = 0;
+      if (subCycle == 3)
+      {
+        // Gfx
+        Gpu_Scanline_Begin();
+        sGpu.DMA = 0;
+        sGpu.Reset = 0;
       
-      // Video
-      Gpu_Fetch_Sprite(0);
+        // Video
+        Gpu_Fetch_Sprite(0);
+      }
     }
     break;
     case 1:
     {
-      // Video
-      Gpu_Fetch_Sprite(1);
-      Gpu_Fetch_Sprite(2);
+      if (subCycle == 3)
+      {
+        // Video
+        Gpu_Fetch_Sprite(1);
+        Gpu_Fetch_Sprite(2);
 
-      // Sprite
-      Gpu_Fetch_SpriteImage(0);
+        // Sprite
+        Gpu_Fetch_SpriteImage(0);
+      }
     }
     break;
     case 2:
     {
-      // Video
-      Gpu_Fetch_Sprite(3);
-      Gpu_Fetch_Sprite(4);
+      if (subCycle == 3)
+      {
+        // Video
+        Gpu_Fetch_Sprite(3);
+        Gpu_Fetch_Sprite(4);
       
-      // Sprite
-      Gpu_Fetch_SpriteImage(1);
+        // Sprite
+        Gpu_Fetch_SpriteImage(1);
+      }
     }
     break;
     case 3:
     {
-      // Video
-      Gpu_Fetch_Sprite(5);
-      Gpu_Fetch_Sprite(6);
+      if (subCycle == 3)
+      {
+        // Video
+        Gpu_Fetch_Sprite(5);
+        Gpu_Fetch_Sprite(6);
       
-      // Sprite
-      Gpu_Fetch_SpriteImage(2);
+        // Sprite
+        Gpu_Fetch_SpriteImage(2);
+      }
     }
     break;
     case 4:
     {
-      // Video
-      Gpu_Fetch_Sprite(7);
+      if (subCycle == 3)
+      {
+        // Video
+        Gpu_Fetch_Sprite(7);
       
-      // Sprite
-      Gpu_Fetch_SpriteImage(3);
+        // Sprite
+        Gpu_Fetch_SpriteImage(3);
+      }
     }
     break;
     case 5:
     {
-      // Video
-      sGpu.Reg_Flags           = FastRam_Get(GFX_FAST_FLAGS);
-      sGpu.Reg_Screen0_Flags   = FastRam_Get(GFX_FAST_SCREEN0_FLAGS);
+      if (subCycle == 3)
+      {
+        // Video
+        sGpu.Reg_Flags           = FastRam_Get(GFX_FAST_FLAGS);
+        sGpu.Reg_Screen0_Flags   = FastRam_Get(GFX_FAST_SCREEN0_FLAGS);
 
-      sGpu.Reg_Screen0_Scroll  = FastRam_Get(GFX_FAST_SCREEN0_SCROLL);
-      sGpu.Reg_Screen0_Palette = FastRam_Get(GFX_FAST_SCREEN0_PALETTE);
+        sGpu.Reg_Screen0_Scroll  = FastRam_Get(GFX_FAST_SCREEN0_SCROLL);
+        sGpu.Reg_Screen0_Palette = FastRam_Get(GFX_FAST_SCREEN0_PALETTE);
       
-      sGpu.Reg_Screen1_Flags   = FastRam_Get(GFX_FAST_SCREEN1_FLAGS);
-      sGpu.Reg_Screen1_Scroll  = FastRam_Get(GFX_FAST_SCREEN1_SCROLL);
+        sGpu.Reg_Screen1_Flags   = FastRam_Get(GFX_FAST_SCREEN1_FLAGS);
+        sGpu.Reg_Screen1_Scroll  = FastRam_Get(GFX_FAST_SCREEN1_SCROLL);
 
-      sGpu.Reg_Screen1_Palette = FastRam_Get(GFX_FAST_SCREEN1_PALETTE);
-      FastRam_Get(GFX_FAST_SCREEN1_PALETTE + 1); // Garbage byte
+        sGpu.Reg_Screen1_Palette = FastRam_Get(GFX_FAST_SCREEN1_PALETTE);
+        FastRam_Get(GFX_FAST_SCREEN1_PALETTE + 1); // Garbage byte
 
-      // Sprite
-      Gpu_Fetch_SpriteImage(4);
+        // Sprite
+        Gpu_Fetch_SpriteImage(4);
+      }
     }
     break;
     case 6:
     {
-      // Video
+      if (subCycle == 3)
+      {
+        // Video
 
-      // Sprite
-      Gpu_Fetch_SpriteImage(5);
+        // Sprite
+        Gpu_Fetch_SpriteImage(5);
+      }
     }
     break;
     case 7:
     {
-      // Video
+      if (subCycle == 3)
+      {
+        // Video
 
-      // Sprite
-      Gpu_Fetch_SpriteImage(6);
+        // Sprite
+        Gpu_Fetch_SpriteImage(6);
+      }
     }
     break;
     case 8:
     {
-      // Video
+      if (subCycle == 3)
+      {
+        // Video
 
 
-      // Sprite
-      Gpu_Fetch_SpriteImage(7);
+        // Sprite
+        Gpu_Fetch_SpriteImage(7);
+      }
     }
     break;
     case 9:
@@ -386,59 +414,79 @@ void Gpu_Clock_Scanline(Byte* writeBuffer)
     break;
     case 10:
     {
-      Byte flags = FastRam_Get(GFX_FAST_FLAGS);
+      if (subCycle == 3)
+      {
+        Byte flags = FastRam_Get(GFX_FAST_FLAGS);
       
-      sGpu.ScrollY = sGpu.Y; // For now, but need to implement Y scrolling.
+        sGpu.ScrollY = sGpu.Y; // For now, but need to implement Y scrolling.
       
-      if ((flags & GFX_FLAGS_SCREEN) != 0)
-        sGpu.CCounter = GFX_FAST_SCREEN0 + (sGpu.TileRow * GFX_COLUMNS);
-      else
-        sGpu.CCounter = GFX_FAST_SCREEN1 + (sGpu.TileRow * GFX_COLUMNS);
-
+        if ((flags & GFX_FLAGS_SCREEN) != 0)
+          sGpu.CCounter = GFX_FAST_SCREEN0 + (sGpu.TileRow * GFX_COLUMNS);
+        else
+          sGpu.CCounter = GFX_FAST_SCREEN1 + (sGpu.TileRow * GFX_COLUMNS);
+      }
     }
     break;
 
     #define SCANLINE_COLUMN (sGpu.ScanlineCycle - 12)
     
     #define CYCLE_P \
-      Gpu_Clock_Visible_C();
-      
+      if (subCycle == 2)\
+      {\
+        Gpu_Clock_Visible_C();\
+      }
+
     #define CYCLE_A \
-      Gpu_Clock_Visible_K();\
-      Gpu_Clock_Visible_T_Odd();\
-      Gpu_Clock_Visible_S();\
-      Gpu_Emit(SCANLINE_COLUMN, 0);   \
+      switch(subCycle)\
+      {\
+        case 0: Gpu_Clock_Visible_K();               break; \
+        case 1: Gpu_Clock_Visible_T_Odd();           break; \
+        case 2: Gpu_Clock_Visible_S();               break; \
+        case 3: Gpu_Emit(SCANLINE_COLUMN, 0); break; \
+      }
 
     #define CYCLE_B \
-      Gpu_Clock_Visible_T_Even();\
-      Gpu_Clock_Visible_C();\
-      Gpu_Clock_Visible_S();\
-      Gpu_Emit(SCANLINE_COLUMN, 1);
+      switch(subCycle)\
+      {\
+        case 0: Gpu_Clock_Visible_T_Even();          break; \
+        case 1: Gpu_Clock_Visible_C();               break; \
+        case 2: Gpu_Clock_Visible_S();               break; \
+        case 3: Gpu_Emit(SCANLINE_COLUMN, 1); break; \
+      }\
 
     #define CYCLE_C \
-      Gpu_Clock_Visible_T_Odd();\
-      Gpu_Clock_Visible_S();\
-      Gpu_Emit(SCANLINE_COLUMN, 2);\
-      
-    #define CYCLE_D \
-      Gpu_Clock_Visible_T_Even();\
-      Gpu_Clock_Visible_C();\
-      Gpu_Clock_Visible_S();\
-      Gpu_Emit(SCANLINE_COLUMN, 3);
+      switch(subCycle)\
+      {\
+        case 0:                                      break; \
+        case 1: Gpu_Clock_Visible_T_Odd();           break; \
+        case 2: Gpu_Clock_Visible_S();               break; \
+        case 3: Gpu_Emit(SCANLINE_COLUMN, 2); break; \
+      }
 
+    #define CYCLE_D \
+      switch(subCycle)\
+      {\
+        case 0: Gpu_Clock_Visible_T_Even();          break; \
+        case 1: Gpu_Clock_Visible_C();               break; \
+        case 2: Gpu_Clock_Visible_S();               break; \
+        case 3: Gpu_Emit(SCANLINE_COLUMN, 3); break; \
+      }
 
     case 11:
     {
-      Byte flags = FastRam_Get(GFX_FAST_FLAGS);
+      if (subCycle == 3)
+      {
+        Byte flags = FastRam_Get(GFX_FAST_FLAGS);
       
-      sGpu.ScrollY = sGpu.Y; // For now, but need to implement Y scrolling.
+        sGpu.ScrollY = sGpu.Y; // For now, but need to implement Y scrolling.
       
-      if ((flags & GFX_FLAGS_SCREEN) != 0)
-        sGpu.KCounter = GFX_FAST_SCREEN0_COLOUR + (sGpu.TileRow * GFX_COLUMNS_COLOUR);
-      else
-        sGpu.KCounter = GFX_FAST_SCREEN1_COLOUR + (sGpu.TileRow * GFX_COLUMNS_COLOUR);
+        if ((flags & GFX_FLAGS_SCREEN) != 0)
+          sGpu.KCounter = GFX_FAST_SCREEN0_COLOUR + (sGpu.TileRow * GFX_COLUMNS_COLOUR);
+        else
+          sGpu.KCounter = GFX_FAST_SCREEN1_COLOUR + (sGpu.TileRow * GFX_COLUMNS_COLOUR);
       
-      CYCLE_P;
+        CYCLE_P;
+      }
     }
     break;
     // Start of Visible ---------------------------------------------------------------------------
@@ -585,23 +633,26 @@ void Gpu_Clock_Scanline(Byte* writeBuffer)
     // H-Blank Back Porch ---------------------------------------------------------------------------
     case 52:
     {
-      sGpu.DMA = 0;
-      // @TODO H-BLANK Interrupt.
+      if (subCycle == 3)
+      {
+        sGpu.DMA = 0;
+        // @TODO H-BLANK Interrupt.
       
-      Gpu_Scanline_End(writeBuffer);
+        Gpu_Scanline_End(writeBuffer);
 
-      sGpu.Y++;
-      if (sGpu.YRow == 7)
-      {
-        sGpu.YRow = 0;
-        sGpu.TileRow++;
-      }
-      else
-      {
-        sGpu.YRow++;
-      }
+        sGpu.Y++;
+        if (sGpu.YRow == 7)
+        {
+          sGpu.YRow = 0;
+          sGpu.TileRow++;
+        }
+        else
+        {
+          sGpu.YRow++;
+        }
 
-      sGpu.ScanlineX = 0;
+        sGpu.ScanlineX = 0;
+      }
     }
     break;
     case 53:
@@ -661,10 +712,14 @@ void Gpu_Clock_Scanline(Byte* writeBuffer)
     break;
   }
 
-  sGpu.ScanlineCycle++;
-
-  if (sGpu.ScanlineCycle == 64)
+  if (subCycle == 3)
   {
-    sGpu.ScanlineCycle = 0;
+    sGpu.ScanlineCycle++;
+  
+    if (sGpu.ScanlineCycle == 64)
+    {
+      sGpu.ScanlineCycle = 0;
+    }
+    
   }
 }
