@@ -1,437 +1,510 @@
-Number,Opcode,Mnemonic,Assembly,Instruction,0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,Code,Comment,Type,Memory Fetches,Cycles,Size
-,,,,,32,16,8,4,2,1,Sub Instruction,,Param A,,,,Param B,,,,,,,,,
-0,,push,,Push,0,0,0,0,0,0,,,,,,,,,,,,,,,,
-,$00,,push r,,,,,,,,0,0,,,,,SRC,,,,Cpu_PushW_Reg(SRC);,Push Register,W,1,,2
-,$40,,push.b r,,,,,,,,0,1,,,,,SRC,,,,Cpu_PushB_Reg(SRC);,Push Register (Byte),B,1,,2
-,$80,,push $1000,,,,,,,,1,0,,,,,,,,,Cpu_PushW_Imm(IMM);,Push Immeditate Word,W,2,,4
-,$C0,,push $10,,,,,,,,1,1,,,,,,,,,Cpu_PushB_Imm(IMM);,Push Immeditate Byte,B,2,,4
-1,,pop,,Pop,0,0,0,0,0,1,,,,,,,,,,,,,,,,
-,$01,,pop r,,,,,,,,0,0,DST,,,,,,,,Cpu_PopW_Reg(DST);,Pop Word into Register,W,1,,2
-,$41,,pop.b r,,,,,,,,0,1,DST,,,,,,,,Cpu_PopB_Reg(DST);,Pop Byte into Register,B,1,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-2,,load,,Load,0,0,0,0,1,0,,,,,,,,,,,,,,,,
-,$02,,"load r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_LoadW_Reg(DST, SRC);",Load Word  into Dst  of Address in Src,W,1,,2
-,$42,,"load r1, $1000",,,,,,,,0,1,DST,,,,,,,,"Cpu_LoadW_Imm(DST, IMM);",Load Word into Dst from Imm Word,W,2,,4
-,$82,,"load.b r1, r2",,,,,,,,1,0,DST,,,,SRC,,,,"Cpu_LoadB_Reg(DST, SRC);",Load Byte  into Dst  of Address in Src,B,1,,2
-,$C2,,"load.b r1, $1000",,,,,,,,1,1,DST,,,,,,,,"Cpu_LoadB_Imm(DST, IMM);",Load Byte  into Dst from Imm Word,B,1,,4
-3,,store,,Store,0,0,0,0,1,1,,,,,,,,,,,,,,,,
-,$03,,"store r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_StoreW_Reg(DST, SRC);",Store Word  into Dst Register of Address in Src,W,1,,2
-,$43,,"store $1000, r2",,,,,,,,0,1,,,,,SRC,,,,"Cpu_StoreW_Imm(IMM, SRC);",Store Word into Dst Register from Imm Word,W,2,,4
-,$83,,"store.b r1, r2",,,,,,,,1,0,DST,,,,SRC,,,,"Cpu_StoreB_Reg(DST, SRC);",Store Byte  into Dst Register of Address in Src,B,1,,2
-,$C3,,"store.b $1000, r2",,,,,,,,1,1,,,,,SRC,,,,"Cpu_StoreB_Imm(IMM, DST);",Store Byte  into Dst Register from Imm Word,B,1,,4
-4,,copy,,Copy,0,0,0,1,0,0,,,,,,,,,,,,,,,,
-,$04,,"copy r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_CopyW_Reg(DST, SRC);",Copy Word from Src to Dst Registers,W,0,,2
-,$44,,"copy.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_CopyB_Reg(DST, SRC);",Copy Byte from Src to Dst Registers,B,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-5,,set,,Set,0,0,0,1,0,1,,,,,,,,,,,,,,,,
-,$05,,"set r, $1000",,,,,,,,0,0,DST,,,,,,,,"Cpu_SetW_Imm(DST, IMM);",Set Immeditate Word,W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-6,,swap,,Swap,0,0,0,1,1,0,,,,,,,,,,,,,,,,
-,$06,,"swap r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_SwapW_Reg(DST, SRC);",A <=> B,W,0,,2
-,$46,,swap r,,,,,,,,0,1,DST,,,,,,,,Cpu_SwapB_Reg(DST);,A.lo <=> A.hi,W,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-7,,setq,,Set Quick,0,0,0,1,1,1,,,,,,,,,,,,,,,,
-,$07,,"setq r, $04",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_SetQuickW_Imm(DST, SRC);",Dst = Imm (SRC),W,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-8,,add,,Add,0,0,1,0,0,0,,,,,,,,,,,,,,,,
-,$08,,"add r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_AddW_Reg(DST, SRC);",Src += Dst,W,1,,2
-,$48,,"add.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_AddB_Reg(DST, SRC);",Src += Dst (Byte),B,1,,2
-,$88,,"add r1, $1000",,,,,,,,1,0,DST,,,,,,,,"Cpu_AddW_Imm(DST, IMM);",Src += Imm,W,2,,4
-,$C8,,"add.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_AddB_Imm(DST, IMM);",Src += Imm (Byte),B,2,,4
-9,,sub,,Sub,0,0,1,0,0,1,,,,,,,,,,,,,,,,
-,$09,,"sub r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_SubW_Reg(DST, SRC);",Src -= Dst,W,1,,2
-,$49,,"sub.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_SubB_Reg(DST, SRC);",Src -= Dst (Byte),B,1,,2
-,$89,,"sub r1, $1000",,,,,,,,1,0,DST,,,,,,,,"Cpu_SubW_Imm(DST, IMM);",Src -= Imm,W,2,,4
-,$C9,,"sub.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_SubB_Imm(DST, IMM);",Src -= Imm (Byte),B,2,,4
-10,,adc,,Add Carry,0,0,1,0,1,0,,,,,,,,,,,,,,,,
-,$0A,,"adc r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_AddCarryW_Reg(DST, SRC);",Src += Dst + C,W,1,,2
-,$4A,,"adc.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_AddCarryB_Reg(DST, SRC);",Src += Dst + C (Byte),B,1,,2
-,$8A,,"adc r1, $1000",,,,,,,,1,0,DST,,,,,,,,"Cpu_AddCarryW_Imm(DST, IMM);",Src += Imm + C,W,2,,4
-,$CA,,"adc.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_AddCarryB_Imm(DST, IMM);",Src += Imm + C (Byte),B,2,,4
-11,,sbc,,Sub Carry,0,0,1,0,1,1,,,,,,,,,,,,,,,,
-,$0B,,"sbc r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_SubCarryW_Reg(DST, SRC);",Src -= Dst - X,W,1,,2
-,$4B,,"sbc.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_SubCarryB_Reg(DST, SRC);",Src -= Dst - X (Byte),B,1,,2
-,$8B,,"sbc r1, $1000",,,,,,,,1,0,DST,,,,,,,,"Cpu_SubCarryW_Imm(DST, IMM);",Src -= Imm - X,W,2,,4
-,$CB,,"sbc.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_SubCarryB_Imm(DST, IMM);",Src -= Imm - X (Byte),B,2,,4
-12,,adq,,Add Quick,0,0,1,1,0,0,,,,,,,,,,,,,,,,
-,$0C,,"adq r, $04",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_AddQuickW_Imm(DST, SRC);",Dst += Imm (SRC),W,0,,2
-,$4C,,"adq.b r, $04",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_AddQuickB_Imm(DST, SRC);",Dst += Imm (SRC) (Byte),B,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-13,,sbq,,Sub Quick,0,0,1,1,0,1,,,,,,,,,,,,,,,,
-,$0D,,"sbq r, $04",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_SubQuickW_Imm(DST, SRC);",Dst -= Imm (SRC),W,0,,2
-,$4D,,"sbq.b r, $04",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_SubQuickB_Imm(DST, SRC);",Dst -= Imm (SRC) (Byte),B,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-14,,inc,,Increase,0,0,1,1,1,0,,,,,,,,,,,,,,,,
-,$0E,,inc r,,,,,,,,0,0,DST,,,,,,,,Cpu_IncW_Imm(DST);,Dst++,W,0,,2
-,$4E,,inc.b r,,,,,,,,0,1,DST,,,,,,,,Cpu_IncB_Imm(DST);,Dst++ (Byte),B,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-15,,dec,,Decrease,0,0,1,1,1,1,,,,,,,,,,,,,,,,
-,$0F,,dec r,,,,,,,,0,0,DST,,,,,,,,Cpu_DecW_Imm(DST);,Dst--,W,0,,2
-,$4F,,dec.b r,,,,,,,,0,1,DST,,,,,,,,Cpu_DecB_Imm(DST);,Dst-- (Byte),B,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-16,,mul,,Mul,0,1,0,0,0,0,,,,,,,,,,,,,,,,
-,$10,,"mul r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_MulW_Reg(DST, SRC);",Src *= Dst,W,1,,2
-,$50,,"mul.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_MulB_Reg(DST, SRC);",Src *= Dst (Byte),B,1,,2
-,$90,,"mul r1, $1000",,,,,,,,1,0,DST,,,,,,,,"Cpu_MulW_Imm(DST, IMM);",Src *= Imm,W,2,,4
-,$D0,,"mul.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_MulB_Imm(DST, IMM);",Src *= Imm (Byte),B,2,,4
-17,,div,,Div,0,1,0,0,0,1,,,,,,,,,,,,,,,,
-,$11,,"div r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_DivW_Reg(DST, SRC);",Src /= Dst,W,1,,2
-,$51,,"div.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_DivB_Reg(DST, SRC);",Src /= Dst (Byte),B,1,,2
-,$91,,"div r1, $1000",,,,,,,,1,0,DST,,,,,,,,"Cpu_DivW_Imm(DST, IMM);",Src /= Imm,W,2,,4
-,$D1,,"div.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_DivB_Imm(DST, IMM);",Src /= Imm (Byte),B,2,,4
-18,,mod,,Mod,0,1,0,0,1,0,,,,,,,,,,,,,,,,
-,$12,,"mod r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_ModW_Reg(DST, SRC);",Src %= Dst,W,1,,2
-,$52,,"mod.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_ModB_Reg(DST, SRC);",Src %= Dst (Byte),B,1,,2
-,$92,,"mod r1, $1000",,,,,,,,1,0,DST,,,,,,,,"Cpu_ModW_Imm(DST, IMM);",Src %= Imm,W,2,,4
-,$D2,,"mod.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_ModB_Imm(DST, IMM);",Src %= Imm (Byte),B,2,,4
-19,,neg,,Neg,0,1,0,0,1,1,,,,,,,,,,,,,,,,
-,$13,,neg r,,,,,,,,0,0,DST,,,,,,,,Cpu_NegW_Reg(DST);,Dst = -Dst,W,0,,2
-,$53,,neg.b r,,,,,,,,0,1,DST,,,,,,,,Cpu_NegB_Reg(DST);,Dst = -Dst (Byte),B,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-20,,abcd,,ABCD,0,1,0,1,0,0,,,,,,,,,,,,,,,,
-,$14,,"abcd r1, r2",,,,,,,,0,0,DST,,,,,,,,"Cpu_AddBCD_Reg(DST, SRC);",Add binary coded decimal 16-bit,W/BCD,0,,2
-,$54,,"abcd r1, $1000",,,,,,,,0,1,DST,,,,,,,,"Cpu_AddBCD_Imm(DST, IMM);",Add binary coded decimal 16-bit (Imm),W/BCD,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-21,,sbcd,,SBCD,0,1,0,1,0,1,,,,,,,,,,,,,,,,
-,$15,,"sbcd r1, r2",,,,,,,,0,0,DST,,,,,,,,"Cpu_SubBCD_Reg(DST, SRC);",Sub binary coded decimal 16-bit,W/BCD,0,,2
-,$55,,"sbcd r1, $1000",,,,,,,,0,1,DST,,,,,,,,"Cpu_SubBCD_Imm(DST, IMM);",Sub binary coded decimal 16-bit (Imm),W/BCD,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-22,,nbcd,,NBCD,0,1,0,1,1,0,,,,,,,,,,,,,,,,
-,$16,,nbcd r,,,,,,,,0,0,DST,,,,,,,,Cpu_NegBCD_Reg(DST);,Negate binary coded decimal 16-bit,W/BCD,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-23,,i23,,?,0,1,0,1,1,1,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-24,,and,,And,0,1,1,0,0,0,,,,,,,,,,,,,,,,
-,$18,,"and r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_AndW_Reg(DST, SRC);",Src &= Dst,W,0,,2
-,$58,,"and.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_AndB_Reg(DST, SRC);",Src &= Dst (Byte),B,0,,2
-,$98,,"and r1, $1000",,,,,,,,1,0,DST,,,,,,,,"Cpu_AndW_Imm(DST, IMM);",Src &= Imm,W,1,,4
-,$D8,,"and.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_AndB_Imm(DST, IMM);",Src &= Imm (Byte),B,1,,4
-25,,or,,Or,0,1,1,0,0,1,,,,,,,,,,,,,,,,
-,$19,,"or r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_OrW_Reg(DST, SRC);",Src |= Dst,W,0,,2
-,$59,,"or.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_OrB_Reg(DST, SRC);",Src |= Dst (Byte),B,0,,2
-,$99,,"or r1, $1000",,,,,,,,1,0,DST,,,,,,,,"Cpu_OrW_Imm(DST, IMM);",Src |= Imm,W,1,,4
-,$D9,,"or.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_OrB_Imm(DST, IMM);",Src |= Imm (Byte),B,1,,4
-26,,xor,,Xor,0,1,1,0,1,0,,,,,,,,,,,,,,,,
-,$1A,,"xor r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_XorW_Reg(DST, SRC);",Src ^= Dst,W,0,,2
-,$5A,,"xor.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_XorB_Reg(DST, SRC);",Src ^= Dst (Byte),B,0,,2
-,$9A,,"xor r1, $1000",,,,,,,,1,0,DST,,,,,,,,"Cpu_XorW_Imm(DST, IMM);",Src ^= Imm,W,1,,4
-,$DA,,"xor.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_XorB_Imm(DST, IMM);",Src ^= Imm (Byte),B,1,,4
-27,,not,,Not,0,1,1,0,1,1,,,,,,,,,,,,,,,,
-,$1B,,not r,,,,,,,,0,0,DST,,,,,,,,Cpu_NotW_Reg(DST);,Dst = ~Dst,W,0,,2
-,$5B,,not.b r,,,,,,,,0,1,DST,,,,,,,,Cpu_NotB_Reg(DST);,Dst = ~Dst (Byte),B,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-28,,shl,,ShiftLeft,0,1,1,1,0,0,,,,,,,,,,,,,,,,
-,$1C,,"shl r, $04",,,,,,,,0,0,DST,,,,SHIFT,,,,"Cpu_ShiftLeftW_Reg(DST, SRC);",R = R << SHIFT,,,,
-,$5C,,"shl.b r, $04",,,,,,,,0,1,DST,,,,SHIFT,,,,"Cpu_ShiftLeftB_Reg(DST, SRC);",R = R << SHIFT (Byte),,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-29,,shr,,ShiftRight,0,1,1,1,0,1,,,,,,,,,,,,,,,,
-,$1D,,"shr r, $04",,,,,,,,0,0,DST,,,,SHIFT,,,,"Cpu_ShiftRightW_Reg(DST, SRC);",R = R >> SHIFT,,,,
-,$5D,,"shr.b r, $04",,,,,,,,0,1,DST,,,,SHIFT,,,,"Cpu_ShiftRightB_Reg(DST, SRC);",R = R >> SHIFT (Byte),,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-30,,rol,,RollLeft,0,1,1,1,1,0,,,,,,,,,,,,,,,,
-,$1E,,"rol r, $04",,,,,,,,0,0,DST,,,,SHIFT,,,,"Cpu_RollLeftW_Reg(DST, SRC);",R = R ROLLL SHIFT,,,,
-,$5E,,"rol.b r, $04",,,,,,,,0,1,DST,,,,SHIFT,,,,"Cpu_RollLeftB_Reg(DST, SRC);",R = R ROLLL SHIFT (Byte),,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-31,,ror,,RollRight,0,1,1,1,1,1,,,,,,,,,,,,,,,,
-,$1F,,"ror r, $04",,,,,,,,0,0,DST,,,,SHIFT,,,,"Cpu_RollRightW_Reg(DST, SRC);",R = R ROLLR SHIFT,,,,
-,$5F,,"ror.b r, $04",,,,,,,,0,1,DST,,,,SHIFT,,,,"Cpu_RollRightB_Reg(DST, SRC);",R = R ROLLR SHIFT (Byte),,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-32,,jmp,,Jump,1,0,0,0,0,0,,,,,,,,,,,,,,,,
-,$20,,jmp r,,,,,,,,0,0,DST,,,,,,,,Cpu_JumpW_Reg(DST);,PC = Register,W,0,,2
-,$60,,jmp $1000,,,,,,,,0,1,,,,,,,,,Cpu_JumpW_Imm(IMM);,PC = Imm,W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-33,,jta,,JumpTable,1,0,0,0,0,1,,,,,,,,,,,,,,,,
-,$21,,"jta $1000, r",,,,,,,,0,0,DST,,,,,,,,"Cpu_JumpTableW_RegImm(DST, IMM);",PC = Load(Imm + Reg * 2) (Byte),W,1,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-34,,jsr,,Jump Subroutine,1,0,0,0,1,0,,,,,,,,,,,,,,,,
-,$22,,jsr r,,,,,,,,0,0,DST,,,,,,,,Cpu_JumpSubroutine_Reg(DST);,"Push PC + 2, PC = Register",W,0,,2
-,$62,,jsr $1000,,,,,,,,0,1,,,,,,,,,Cpu_JumpSubroutine_Imm(IMM);,"Push PC + 2, PC = Imm",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-35,,ret,,Return Subroutine,1,0,0,0,1,1,,,,,,,,,,,,,,,,
-,$23,,ret,,,,,,,,0,0,,,,,,,,,Cpu_Return();,PC = Pop PC,W,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-36,,cmp,,Cmp,1,0,0,1,0,0,,,,,,,,,,,,,,,,
-,$24,,"cmp r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_CompareW_Reg(DST, SRC);","A == B, -> Z, GT, N, etc.",W,0,,2
-,$64,,"cmp.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"Cpu_CompareB_Reg(DST, SRC);","A == B  (Byte), -> Z, GT, N, etc.",B,0,,2
-,$A4,,"cmp r1, $1000",,,,,,,,1,0,DST,,,, ,,,,"Cpu_CompareW_Imm(DST, IMM);","A == Imm, -> Z, GT, N, etc.",W,1,,4
-,$E4,,"cmp.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"Cpu_CompareB_Imm(DST, IMM);","A == Imm (Byte), -> Z, GT, N, etc.",B,1,,4
-37,,cmpb,,CmpBit,1,0,0,1,0,1,,,,,,,,,,,,,,,,
-,$25,,"cmpb r1, $4",,,,,,,,0,0,DST,,,,SRC,,,,"Cpu_CompareBitW_RegImm(DST, SRC);",0 == B[bit] -> Z,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-38,,scf,,Set Conditions Flags,1,0,0,1,1,0,,,,,,,,,,,,,,,,
-,$26,,scf.or $04,,,,,,,,0,0,,,,,SRC,,,,Cpu_SetCF_Or_Imm(SRC);,CF = CF | Mask  (Or operation),,,,
-,$66,,scf.and $04,,,,,,,,0,1,,,,,SRC,,,,Cpu_SetCF_And_Imm(SRC);,CF = CF & Mask (And operation),,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-39,,i39,,???,1,0,0,1,1,1,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-40,,bra,,Branch Always,1,0,1,0,0,0,,,,,,,,,,,,,,,,
-,$28,,bra r,,,,,,,,0,0,DST,,,,,,,,Cpu_BranchAlwaysW_Reg(DST);,PC += Register (Signed),W,0,,2
-,$68,,bra.b $10,,,,,,,,0,1,PARAM,,,,,,,,Cpu_BranchAlwaysB_Imm(PARAM);,PC += Imm (Byte) (Signed),B,0,,2
-,$A8,,bra $1000,,,,,,,,1,0,,,,,,,,,Cpu_BranchAlwaysW_Imm(IMM);,PC += Imm (Signed),W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-41,,i41,,???,1,0,1,0,0,1,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,W,1,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-42,,bsr,,Branch Subroutine,1,0,1,0,1,0,,,,,,,,,,,,,,,,
-,$2A,,bsr r,,,,,,,,0,0,DST,,,,,,,,Cpu_BranchSubroutineW_Reg(DST);,"Push PC + 2, PC += Register (Signed)",W,1,,2
-,$6A,,bsr.b $10,,,,,,,,0,1,PARAM,,,,,,,,Cpu_BranchSubroutineB_Imm(PARAM);,"Push PC + 2, PC += Imm (Byte) (Signed)",B,1,,2
-,$AA,,bsr $1000,,,,,,,,1,0,,,,,,,,,Cpu_BranchSubroutineW_Imm(IMM);,"Push PC + 4, PC += Imm (Signed)",W,2,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-43,,i43,,???,1,0,1,0,1,1,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,B,3,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-44,,beq,,Branch Eq,1,0,1,1,0,0,,,,,,,,,,,,,,,,
-,$6C,,beq $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_EQ, PARAM);","IF (Z == 1)
+Number,Opcode,Mnemonic,Assembly,Instruction,0,1,2,3,4,5,6,7,8,9,A,B,C,D,E,F,Comment,Name (Again),Specialised Function,Bus-Cycle-1,Bus-Cycle-2,Bus-Cycle-3,Bus-Cycle-4,Cycles,Flush,Max Bus Cycles,Clock Cycles,Size
+,,,,,32,16,8,4,2,1,Sub Instruction,,Param A,,,,Param B,,,,,,,,,,,,,,,
+0,,push,,Push,0,0,0,0,0,0,,,,,,,,,,,,,,,,,,,,,,
+,$00,,push r,,,,,,,,0,0,,,,,SRC,,,,Push Register,push r,,"SETMEMADDR.RDSP
+SETMEMDATA.RSRC
+WRITEW",ADDW.RDSP.TWO,,,2,0,2,4,2
+,$40,,push.b r,,,,,,,,0,1,,,,,SRC,,,,Push Register (Byte),push.b r,,"SETMEMADDR.RDSP
+SETMEMDATA.RSRC
+WRITEB",ADDW.RDSP.ONE,,,2,0,2,4,2
+,$80,,push $1000,,,,,,,,1,0,,,,,,,,,Push Immeditate Word,push $1000,,PCREAD.RMDR,"SETMEMADDR.RDSP
+SETMEMDATA.RSRC
+WRITEW",ADDW.RDSP.TWO,,3,0,3,6,4
+,$C0,,push $10,,,,,,,,1,1,,,,,,,,,Push Immeditate Byte,push $10,,PCREAD.RMDR,"SETMEMADDR.RDSP
+SETMEMDATA.RSRC
+WRITEB",ADDW.RDSP.ONE,,3,0,3,6,4
+1,,pop,,Pop,0,0,0,0,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$01,,pop r,,,,,,,,0,0,DST,,,,,,,,Pop Word into Register,pop r,,"DEC.RDSP
+SETMEMDATA.RDSP
+READW","COPYW.RDST.RMDR
+SUBW.RDSP.TWO",,,2,0,2,4,2
+,$41,,pop.b r,,,,,,,,0,1,DST,,,,,,,,Pop Byte into Register,pop.b r,,"DEC.RDSP
+SETMEMDATA.RDSP
+READB","COPYW.RDST.RMDR
+SUBW.RDSP.ONE",,,2,0,2,4,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+2,,load,,Load,0,0,0,0,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$02,,"load r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Load Word  into Dst  of Address in Src,"load r1, r2",,"SETMEMADDR.RSRC
+READW",COPYW.RDST.RMDR,,,2,0,2,4,2
+,$42,,"load r1, $1000",,,,,,,,0,1,DST,,,,,,,,Load Word into Dst from Imm Word,"load r1, $1000",,PCREAD.RMDR,"SETMEMADDR.RMDR
+READW",COPYW.RDST.RMDR,,3,0,3,6,4
+,$82,,"load.b r1, r2",,,,,,,,1,0,DST,,,,SRC,,,,Load Byte  into Dst  of Address in Src,"load.b r1, r2",,"SETMEMADDR.RSRC
+READB",COPYW.RDST.RMDR,,,2,0,2,4,2
+,$C2,,"load.b r1, $1000",,,,,,,,1,1,DST,,,,,,,,Load Byte  into Dst from Imm Word,"load.b r1, $1000",,PCREAD.RMDR,"SETMEMADDR.RMDR
+READB",COPYW.RDST.RMDR,,3,0,3,6,4
+3,,store,,Store,0,0,0,0,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$03,,"store r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Store Word  into Dst Register of Address in Src,"store r1, r2",,"SETMEMADDR.RDST
+SETMEMDATA.RSRC
+WRITEW",,,,1,0,1,2,2
+,$43,,"store $1000, r2",,,,,,,,0,1,,,,,SRC,,,,Store Word into Dst Register from Imm Word,"store $1000, r2",,PCREAD.RMDR,"SETMEMADDR.RDST
+SETMEMDATA.RMDR
+WRITEW",,,2,0,2,4,4
+,$83,,"store.b r1, r2",,,,,,,,1,0,DST,,,,SRC,,,,Store Byte  into Dst Register of Address in Src,"store.b r1, r2",,"SETMEMADDR.RDST
+SETMEMDATA.RSRC
+WRITEB",,,,1,0,1,2,2
+,$C3,,"store.b $1000, r2",,,,,,,,1,1,,,,,SRC,,,,Store Byte  into Dst Register from Imm Word,"store.b $1000, r2",,PCREAD.RMDR,"SETMEMADDR.RDST
+SETMEMDATA.RMDR
+WRITEB",,,2,0,2,4,4
+4,,copy,,Copy,0,0,0,1,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$04,,"copy r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Copy Word from Src to Dst Registers,"copy r1, r2",,COPYW.RDST.RSRC,,,,1,0,1,2,2
+,$44,,"copy.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Copy Byte from Src to Dst Registers,"copy.b r1, r2",,COPYB.RDST.RSRC,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+5,,set,,Set,0,0,0,1,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$05,,"set r, $1000",,,,,,,,0,0,DST,,,,,,,,Set Immeditate Word,"set r, $1000",,PCREAD.RMDR,COPYW.RDST.RMDR,,,2,0,2,4,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+6,,move,,Move,0,0,0,1,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$06,,"move r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Moves one word in memory to another,"move r1, r2",,"SETMEMADDR.RSRC
+READW","SETMEMADDR.RDST
+WRITEW",,,2,0,2,4,2
+,$46,,"move $1000, r2",,,,,,,,0,1,,,,,SRC,,,,Moves one word in memory to another,"move $1000, r2",,PCREAD.RMDR,"COPYW.RTEMP.RMDR
+SETMEMADDR.RSRC
+READW","SETMEMADDR.RTEMP
+WRITEW",,3,0,3,6,4
+,$86,,"move r1, $1000",,,,,,,,1,0,DST,,,,,,,,Moves one word in memory to another,"move r1, $1000",,PCREAD.RMDR,"SETMEMADDR.RMDR
+READW","SETMEMADDR.RDST
+WRITEW",,3,0,3,6,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+7,,setq,,Set Quick,0,0,0,1,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$07,,"setq r, $04",,,,,,,,0,0,DST,,,,SRC,,,,Dst = Imm (SRC),"setq r, $04",,COPYW.RDST.VSRC,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+8,,add,,Add,0,0,1,0,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$08,,"add r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Src += Dst,"add r1, r2",,ADDW.RDST.RSRC,,,,1,0,1,2,2
+,$48,,"add.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Src += Dst (Byte),"add.b r1, r2",,ADDB.RDST.RSRC,,,,1,0,1,2,2
+,$88,,"add r1, $1000",,,,,,,,1,0,DST,,,,,,,,Src += Imm,"add r1, $1000",,PCREAD.RMDR,ADDW.RDST.RMDR,,,2,0,2,4,4
+,$C8,,"add.b r1, $10",,,,,,,,1,1,DST,,,,,,,,Src += Imm (Byte),"add.b r1, $10",,PCREAD.RMDR,ADDB.RDST.RMDR,,,2,0,2,4,4
+9,,sub,,Sub,0,0,1,0,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$09,,"sub r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Src -= Dst,"sub r1, r2",,SUBW.RDST.RSRC,,,,1,0,1,2,2
+,$49,,"sub.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Src -= Dst (Byte),"sub.b r1, r2",,SUBB.RDST.RSRC,,,,1,0,1,2,2
+,$89,,"sub r1, $1000",,,,,,,,1,0,DST,,,,,,,,Src -= Imm,"sub r1, $1000",,PCREAD.RMDR,SUBW.RDST.RMDR,,,2,0,2,4,4
+,$C9,,"sub.b r1, $10",,,,,,,,1,1,DST,,,,,,,,Src -= Imm (Byte),"sub.b r1, $10",,PCREAD.RMDR,SUBB.RDST.RMDR,,,2,0,2,4,4
+10,,adc,,Add Carry,0,0,1,0,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$0A,,"adc r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Src += Dst + C,"adc r1, r2",,ADCW.RDST.RSRC,,,,1,0,1,2,2
+,$4A,,"adc.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Src += Dst + C (Byte),"adc.b r1, r2",,ADCB.RDST.RSRC,,,,1,0,1,2,2
+,$8A,,"adc r1, $1000",,,,,,,,1,0,DST,,,,,,,,Src += Imm + C,"adc r1, $1000",,PCREAD.RMDR,ADCW.RDST.RMDR,,,2,0,2,4,4
+,$CA,,"adc.b r1, $10",,,,,,,,1,1,DST,,,,,,,,Src += Imm + C (Byte),"adc.b r1, $10",,PCREAD.RMDR,ADCB.RDST.RMDR,,,2,0,2,4,4
+11,,sbc,,Sub Carry,0,0,1,0,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$0B,,"sbc r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Src -= Dst - X,"sbc r1, r2",,SBCW.RDST.RSRC,,,,1,0,1,2,2
+,$4B,,"sbc.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Src -= Dst - X (Byte),"sbc.b r1, r2",,SBCB.RDST.RSRC,,,,1,0,1,2,2
+,$8B,,"sbc r1, $1000",,,,,,,,1,0,DST,,,,,,,,Src -= Imm - X,"sbc r1, $1000",,PCREAD.RMDR,SBCW.RDST.RMDR,,,2,0,2,4,4
+,$CB,,"sbc.b r1, $10",,,,,,,,1,1,DST,,,,,,,,Src -= Imm - X (Byte),"sbc.b r1, $10",,PCREAD.RMDR,SBCB.RDST.RMDR,,,2,0,2,4,4
+12,,adq,,Add Quick,0,0,1,1,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$0C,,"adq r, $04",,,,,,,,0,0,DST,,,,SRC,,,,Dst += Imm (SRC),"adq r, $04",,ADDW.RDST.VSRC,,,,1,0,1,2,2
+,$4C,,"adq.b r, $04",,,,,,,,0,1,DST,,,,SRC,,,,Dst += Imm (SRC) (Byte),"adq.b r, $04",,ADDB.RDST.VSRC,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+13,,sbq,,Sub Quick,0,0,1,1,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$0D,,"sbq r, $04",,,,,,,,0,0,DST,,,,SRC,,,,Dst -= Imm (SRC),"sbq r, $04",,SUBW.RDST.VSRC,,,,1,0,1,2,2
+,$4D,,"sbq.b r, $04",,,,,,,,0,1,DST,,,,SRC,,,,Dst -= Imm (SRC) (Byte),"sbq.b r, $04",,SUBB.RDST.VSRC,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+14,,inc,,Increase,0,0,1,1,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$0E,,inc r,,,,,,,,0,0,DST,,,,,,,,Dst++,inc r,,ADDW.RDST.ONE,,,,1,0,1,2,2
+,$4E,,inc.b r,,,,,,,,0,1,DST,,,,,,,,Dst++ (Byte),inc.b r,,ADDB.RDST.ONE,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+15,,dec,,Decrease,0,0,1,1,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$0F,,dec r,,,,,,,,0,0,DST,,,,,,,,Dst--,dec r,,SUBW.RDST.ONE,,,,1,0,1,2,2
+,$4F,,dec.b r,,,,,,,,0,1,DST,,,,,,,,Dst-- (Byte),dec.b r,,SUBB.RDST.ONE,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+16,,mul,,Mul,0,1,0,0,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$10,,"mul r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Src *= Dst,"mul r1, r2","Cpu_MulW_Reg(DST, SRC);",,,,,0,0,0,0,2
+,$50,,"mul.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Src *= Dst (Byte),"mul.b r1, r2","Cpu_MulB_Reg(DST, SRC);",,,,,0,0,0,0,2
+,$90,,"mul r1, $1000",,,,,,,,1,0,DST,,,,,,,,Src *= Imm,"mul r1, $1000","Cpu_MulW_Imm(DST, IMM);",,,,,0,0,0,0,2
+,$D0,,"mul.b r1, $10",,,,,,,,1,1,DST,,,,,,,,Src *= Imm (Byte),"mul.b r1, $10","Cpu_MulB_Imm(DST, IMM);",,,,,0,0,0,0,2
+17,,div,,Div,0,1,0,0,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$11,,"div r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Src /= Dst,"div r1, r2","Cpu_DivW_Reg(DST, SRC);",,,,,0,0,0,0,2
+,$51,,"div.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Src /= Dst (Byte),"div.b r1, r2","Cpu_DivB_Reg(DST, SRC);",,,,,0,0,0,0,2
+,$91,,"div r1, $1000",,,,,,,,1,0,DST,,,,,,,,Src /= Imm,"div r1, $1000","Cpu_DivW_Imm(DST, IMM);",,,,,0,0,0,0,2
+,$D1,,"div.b r1, $10",,,,,,,,1,1,DST,,,,,,,,Src /= Imm (Byte),"div.b r1, $10","Cpu_DivB_Imm(DST, IMM);",,,,,0,0,0,0,2
+18,,mod,,Mod,0,1,0,0,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$12,,"mod r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Src %= Dst,"mod r1, r2","Cpu_ModW_Reg(DST, SRC);",,,,,0,0,0,0,2
+,$52,,"mod.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Src %= Dst (Byte),"mod.b r1, r2","Cpu_ModB_Reg(DST, SRC);",,,,,0,0,0,0,2
+,$92,,"mod r1, $1000",,,,,,,,1,0,DST,,,,,,,,Src %= Imm,"mod r1, $1000","Cpu_ModW_Imm(DST, IMM);",,,,,0,0,0,0,2
+,$D2,,"mod.b r1, $10",,,,,,,,1,1,DST,,,,,,,,Src %= Imm (Byte),"mod.b r1, $10","Cpu_ModB_Imm(DST, IMM);",,,,,0,0,0,0,2
+19,,neg,,Neg,0,1,0,0,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$13,,neg r,,,,,,,,0,0,DST,,,,,,,,Dst = -Dst,neg r,Cpu_NegW_Reg(DST);,,,,,0,0,0,0,2
+,$53,,neg.b r,,,,,,,,0,1,DST,,,,,,,,Dst = -Dst (Byte),neg.b r,Cpu_NegB_Reg(DST);,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+20,,abcd,,ABCD,0,1,0,1,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$14,,"abcd r1, r2",,,,,,,,0,0,DST,,,,,,,,Add binary coded decimal 16-bit,"abcd r1, r2","Cpu_AddBCD_Reg(DST, SRC);",,,,,0,0,0,0,2
+,$54,,"abcd r1, $1000",,,,,,,,0,1,DST,,,,,,,,Add binary coded decimal 16-bit (Imm),"abcd r1, $1000","Cpu_AddBCD_Imm(DST, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+21,,sbcd,,SBCD,0,1,0,1,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$15,,"sbcd r1, r2",,,,,,,,0,0,DST,,,,,,,,Sub binary coded decimal 16-bit,"sbcd r1, r2","Cpu_SubBCD_Reg(DST, SRC);",,,,,0,0,0,0,2
+,$55,,"sbcd r1, $1000",,,,,,,,0,1,DST,,,,,,,,Sub binary coded decimal 16-bit (Imm),"sbcd r1, $1000","Cpu_SubBCD_Imm(DST, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+22,,nbcd,,NBCD,0,1,0,1,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$16,,nbcd r,,,,,,,,0,0,DST,,,,,,,,Negate binary coded decimal 16-bit,nbcd r,Cpu_NegBCD_Reg(DST);,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+23,,i23,,?,0,1,0,1,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+24,,and,,And,0,1,1,0,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$18,,"and r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Src &= Dst,"and r1, r2",,ANDW.RDST.RSRC,,,,1,0,1,2,2
+,$58,,"and.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Src &= Dst (Byte),"and.b r1, r2",,ANDB.RDST.RSRC,,,,1,0,1,2,2
+,$98,,"and r1, $1000",,,,,,,,1,0,DST,,,,,,,,Src &= Imm,"and r1, $1000",,PCREAD.RMDR,ANDW.RDST.RMDR,,,2,0,2,4,4
+,$D8,,"and.b r1, $10",,,,,,,,1,1,DST,,,,,,,,Src &= Imm (Byte),"and.b r1, $10",,PCREAD.RMDR,ANDB.RDST.RMDR,,,2,0,2,4,4
+25,,or,,Or,0,1,1,0,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$19,,"or r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Src |= Dst,"or r1, r2",,ORW.RDST.RSRC,,,,1,0,1,2,2
+,$59,,"or.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Src |= Dst (Byte),"or.b r1, r2",,ORB.RDST.RSRC,,,,1,0,1,2,2
+,$99,,"or r1, $1000",,,,,,,,1,0,DST,,,,,,,,Src |= Imm,"or r1, $1000",,PCREAD.RMDR,ORW.RDST.RMDR,,,2,0,2,4,4
+,$D9,,"or.b r1, $10",,,,,,,,1,1,DST,,,,,,,,Src |= Imm (Byte),"or.b r1, $10",,PCREAD.RMDR,ORB.RDST.RMDR,,,2,0,2,4,4
+26,,xor,,Xor,0,1,1,0,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$1A,,"xor r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,Src ^= Dst,"xor r1, r2",,XORW.RDST.RSRC,,,,1,0,1,2,2
+,$5A,,"xor.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,Src ^= Dst (Byte),"xor.b r1, r2",,XORB.RDST.RSRC,,,,1,0,1,2,2
+,$9A,,"xor r1, $1000",,,,,,,,1,0,DST,,,,,,,,Src ^= Imm,"xor r1, $1000",,PCREAD.RMDR,XORW.RDST.RMDR,,,2,0,2,4,4
+,$DA,,"xor.b r1, $10",,,,,,,,1,1,DST,,,,,,,,Src ^= Imm (Byte),"xor.b r1, $10",,PCREAD.RMDR,XORB.RDST.RMDR,,,2,0,2,4,4
+27,,not,,Not,0,1,1,0,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$1B,,not r,,,,,,,,0,0,DST,,,,,,,,Dst = ~Dst,not r,,NOTW.RDST.RDST,,,,1,0,1,2,2
+,$5B,,not.b r,,,,,,,,0,1,DST,,,,,,,,Dst = ~Dst (Byte),not.b r,,NOTB.RDST.RDST,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+28,,shl,,ShiftLeft,0,1,1,1,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$1C,,"shl r, $04",,,,,,,,0,0,DST,,,,SHIFT,,,,R = R << SHIFT,"shl r, $04",,SHLW.RDST.VSRC,,,,1,0,1,2,2
+,$5C,,"shl.b r, $04",,,,,,,,0,1,DST,,,,SHIFT,,,,R = R << SHIFT (Byte),"shl.b r, $04",,SHLB.RDST.VSRC,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+29,,shr,,ShiftRight,0,1,1,1,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$1D,,"shr r, $04",,,,,,,,0,0,DST,,,,SHIFT,,,,R = R >> SHIFT,"shr r, $04",,SHRW.RDST.VSRC,,,,1,0,1,2,2
+,$5D,,"shr.b r, $04",,,,,,,,0,1,DST,,,,SHIFT,,,,R = R >> SHIFT (Byte),"shr.b r, $04",,SHRB.RDST.VSRC,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+30,,rol,,RollLeft,0,1,1,1,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$1E,,"rol r, $04",,,,,,,,0,0,DST,,,,SHIFT,,,,R = R ROLLL SHIFT,"rol r, $04",,ROLW.RDST.VSRC,,,,1,0,1,2,2
+,$5E,,"rol.b r, $04",,,,,,,,0,1,DST,,,,SHIFT,,,,R = R ROLLL SHIFT (Byte),"rol.b r, $04",,ROLB.RDST.VSRC,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+31,,ror,,RollRight,0,1,1,1,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$1F,,"ror r, $04",,,,,,,,0,0,DST,,,,SHIFT,,,,R = R ROLLR SHIFT,"ror r, $04",,RORW.RDST.VSRC,,,,1,0,1,2,2
+,$5F,,"ror.b r, $04",,,,,,,,0,1,DST,,,,SHIFT,,,,R = R ROLLR SHIFT (Byte),"ror.b r, $04",,RORB.RDST.VSRC,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+32,,jmp,,Jump,1,0,0,0,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$20,,jmp r,,,,,,,,0,0,DST,,,,,,,,PC = Register,jmp r,Cpu_JumpW_Reg(DST);,"COPYW.RPC.RDST
+FLUSH",,,,1,1,5,10,2
+,$60,,jmp $1000,,,,,,,,0,1,,,,,,,,,PC = Imm,jmp $1000,Cpu_JumpW_Imm(IMM);,PCREAD.RMDR,"COPYW.RPC.RMDR
+FLUSH",,,2,1,6,12,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+33,,jta,,JumpTable,1,0,0,0,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$21,,"jta $1000, r",,,,,,,,0,0,DST,,,,,,,,PC = Load(Imm + Reg * 2) (Byte),"jta $1000, r",,PCREAD.RMDR,READW.RMDR.RMDR,"COPYW.RTEMP.RDST
+SHLW.RTEMP.TWO
+ADDW.RMDR.RTEMP","COPYW.RPC.RMDR
+FLUSH",4,1,8,16,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+34,,jsr,,Jump Subroutine,1,0,0,0,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$22,,jsr r,,,,,,,,0,0,DST,,,,,,,,"Push PC + 2, PC = Register",jsr r,,"WRITEW.RPSP.RPCNEXT
+INC.RPSP","COPYW.RPC.RDST
+FLUSH",,,2,1,6,12,2
+,$62,,jsr $1000,,,,,,,,0,1,,,,,,,,,"Push PC + 2, PC = Imm",jsr $1000,,PCREAD.RMDR,"WRITEW.RPSP.RPCNEXT
+INC.RPSP","COPYW.RPC.RMDR
+FLUSH",,3,1,7,14,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+35,,ret,,Return Subroutine,1,0,0,0,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$23,,ret,,,,,,,,0,0,,,,,,,,,PC = Pop PC,ret,,"DEC.RPSP
+READW.RMDR.RPSP","COPYW.RPC.RMDR
+FLUSH",,,2,1,6,12,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+36,,cmp,,Cmp,1,0,0,1,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$24,,"cmp r1, r2",,,,,,,,0,0,DST,,,,SRC,,,,"A == B, -> Z, GT, N, etc.","cmp r1, r2",,CMPW.RDST.RSRC,,,,1,0,1,2,2
+,$64,,"cmp.b r1, r2",,,,,,,,0,1,DST,,,,SRC,,,,"A == B  (Byte), -> Z, GT, N, etc.","cmp.b r1, r2",,CMPB.RDST.RSRC,,,,1,0,1,2,2
+,$A4,,"cmp r1, $1000",,,,,,,,1,0,DST,,,, ,,,,"A == Imm, -> Z, GT, N, etc.","cmp r1, $1000",,CMPW.RDST.VSRC,,,,1,0,1,2,2
+,$E4,,"cmp.b r1, $10",,,,,,,,1,1,DST,,,,,,,,"A == Imm (Byte), -> Z, GT, N, etc.","cmp.b r1, $10",,CMPB.RDST.VSRC,,,,1,0,1,2,2
+37,,cmpb,,CmpBit,1,0,0,1,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$25,,"cmpb r1, $4",,,,,,,,0,0,DST,,,,SRC,,,,0 == B[bit] -> Z,"cmpb r1, $4",,CMPBIT.RDST.VSRC,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+38,,scf,,Set Conditions Flags,1,0,0,1,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$26,,scf.or $04,,,,,,,,0,0,,,,,SRC,,,,CF = CF | Mask  (Or operation),scf.or $04,Cpu_SetCF_Or_Imm(SRC);,ORCF.VSRC,,,,1,0,1,2,2
+,$66,,scf.and $04,,,,,,,,0,1,,,,,SRC,,,,CF = CF & Mask (And operation),scf.and $04,Cpu_SetCF_And_Imm(SRC);,ANDCF.VSRC,,,,1,0,1,2,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+39,,i39,,???,1,0,0,1,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+40,,bra,,Branch Always,1,0,1,0,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$28,,bra r,,,,,,,,0,0,DST,,,,,,,,PC += Register (Signed),bra r,,"PCADDW.RDST
+FLUSH",,,,1,1,5,10,2
+,$68,,bra.b $10,,,,,,,,0,1,PARAM,,,,,,,,PC += Imm (Byte) (Signed),bra.b $10,,"PCADDB.RPARAM
+FLUSH",,,,1,1,5,10,2
+,$A8,,bra $1000,,,,,,,,1,0,,,,,,,,,PC += Imm (Signed),bra $1000,,PCREAD.RMDR,"PCADDW.RMDR
+FLUSH",,,2,1,6,12,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+41,,i41,,???,1,0,1,0,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+42,,bsr,,Branch Subroutine,1,0,1,0,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$2A,,bsr r,,,,,,,,0,0,DST,,,,,,,,"Push PC + 2, PC += Register (Signed)",bsr r,,"WRITEW.RPSP.RPCNEXT
+INC.RPSP","PCADDW.RDST
+FLUSH",,,2,1,6,12,2
+,$6A,,bsr.b $10,,,,,,,,0,1,PARAM,,,,,,,,"Push PC + 2, PC += Imm (Byte) (Signed)",bsr.b $10,,"WRITEW.RPSP.RPCNEXT
+INC.RPSP","PCADDB.RPARAM
+FLUSH",,,2,1,6,12,2
+,$AA,,bsr $1000,,,,,,,,1,0,,,,,,,,,"Push PC + 4, PC += Imm (Signed)",bsr $1000,,PCREAD.RMDR,"WRITEW.RPSP.RPCNEXT
+INC.RPSP","PCADDB.RMDR
+FLUSH",,3,1,7,14,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+43,,i43,,???,1,0,1,0,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+44,,beq,,Branch Eq,1,0,1,1,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$6C,,beq $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (Z == 1)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$AC,,beq $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_EQ, IMM);","IF (Z == 1)
+   PC += 2",beq $10,,"COPYW.RTEMP.RPC
+ADDW.RTEMP.RPARAM",NEXTCYCLEIF.COND_EQ,"COPYW.RPC.RTEMP
+FLUSH",,3,1,7,14,2
+,$AC,,beq $1000,,,,,,,,1,0,,,,,,,,,"IF (Z == 1)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-45,,bne,,Branch Neq,1,0,1,1,0,1,,,,,,,,,,,,,,,,
-,$6D,,bne $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_NEQ, PARAM);","IF (Z == 0)
+   PC += 4",beq $1000,,PCREAD.RMDR,"COPYW.RTEMP.RPC
+ADDW.RTEMP.RPARAM",NEXTCYCLEIF.COND_EQ,"COPYW.RPC.RTEMP
+FLUSH",4,1,8,16,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+45,,bne,,Branch Neq,1,0,1,1,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$6D,,bne $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (Z == 0)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$AD,,bne $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_NEQ, IMM);","IF (Z == 0)
+   PC += 2",bne $10,,"COPYW.RTEMP.RPC
+ADDW.RTEMP.RPARAM",NEXTCYCLEIF.COND_NEQ,"COPYW.RPC.RTEMP
+FLUSH",,3,1,7,14,2
+,$AD,,bne $1000,,,,,,,,1,0,,,,,,,,,"IF (Z == 0)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-46,,bro,,Branch Overflow,1,0,1,1,1,0,,,,,,,,,,,,,,,,
-,$6E,,bro $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_OVERFLOW, PARAM);","IF (???)
+   PC += 4",bne $1000,,PCREAD.RMDR,"COPYW.RTEMP.RPC
+ADDW.RTEMP.RPARAM",NEXTCYCLEIF.COND_NEQ,"COPYW.RPC.RTEMP
+FLUSH",4,1,8,16,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+46,,bro,,Branch Overflow,1,0,1,1,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$6E,,bro $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$AE,,bro $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_OVERFLOW, IMM);","IF (???)
+   PC += 2",bro $10,,"COPYW.RTEMP.RPC
+ADDW.RTEMP.RPARAM",NEXTCYCLEIF.COND_OF,"COPYW.RPC.RTEMP
+FLUSH",,3,1,7,14,2
+,$AE,,bro $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-47,,brc,,Branch Carry,1,0,1,1,1,1,,,,,,,,,,,,,,,,
-,$6F,,brc $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_CARRY, PARAM);","IF (???)
+   PC += 4",bro $1000,,PCREAD.RMDR,"COPYW.RTEMP.RPC
+ADDW.RTEMP.RPARAM",NEXTCYCLEIF.COND_OF,"COPYW.RPC.RTEMP
+FLUSH",4,1,8,16,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+47,,brc,,Branch Carry,1,0,1,1,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$6F,,brc $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$AF,,brc $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_CARRY, IMM);","IF (???)
+   PC += 2",brc $10,,"COPYW.RTEMP.RPC
+ADDW.RTEMP.RPARAM",NEXTCYCLEIF.COND_CARRY,"COPYW.RPC.RTEMP
+FLUSH",,3,1,7,14,2
+,$AF,,brc $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-48,,blt,,Branch Lt,1,1,0,0,0,0,,,,,,,,,,,,,,,,
-,$70,,blt $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_LT, PARAM);","IF (???)
+   PC += 4",brc $1000,,PCREAD.RMDR,"COPYW.RTEMP.RPC
+ADDW.RTEMP.RPARAM",NEXTCYCLEIF.COND_CARRY,"COPYW.RPC.RTEMP
+FLUSH",4,1,8,16,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+48,,blt,,Branch Lt,1,1,0,0,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$70,,blt $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$B0,,blt $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_LT, IMM);","IF (???)
+   PC += 2",blt $10,,"COPYW.RTEMP.RPC
+ADDW.RTEMP.RPARAM",NEXTCYCLEIF.COND_LT,"COPYW.RPC.RTEMP
+FLUSH",,3,1,7,14,2
+,$B0,,blt $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-49,,bgt,,Branch Gt,1,1,0,0,0,1,,,,,,,,,,,,,,,,
-,$71,,bgt $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_GT, PARAM);","IF (???)
+   PC += 4",blt $1000,,PCREAD.RMDR,"COPYW.RTEMP.RPC
+ADDW.RTEMP.RPARAM",NEXTCYCLEIF.COND_LT,"COPYW.RPC.RTEMP
+FLUSH",4,1,8,16,4
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+49,,bgt,,Branch Gt,1,1,0,0,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$71,,bgt $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$B1,,bgt $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_GT, IMM);","IF (???)
+   PC += 2",bgt $10,"Cpu_BranchCondW(COND_GT, PARAM);",,,,,0,0,0,0,2
+,$B1,,bgt $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-50,,ble,,Branch Lt Eq,1,1,0,0,1,0,,,,,,,,,,,,,,,,
-,$72,,ble $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_LT_EQ, PARAM);","IF (???)
+   PC += 4",bgt $1000,"Cpu_BranchCondB(COND_GT, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+50,,ble,,Branch Lt Eq,1,1,0,0,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$72,,ble $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$B2,,ble $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_LT_EQ, IMM);","IF (???)
+   PC += 2",ble $10,"Cpu_BranchCondW(COND_LT_EQ, PARAM);",,,,,0,0,0,0,2
+,$B2,,ble $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-51,,bge,,Branch Gt Eq,1,1,0,0,1,1,,,,,,,,,,,,,,,,
-,$73,,bge $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_GT_EQ, PARAM);","IF (???)
+   PC += 4",ble $1000,"Cpu_BranchCondB(COND_LT_EQ, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+51,,bge,,Branch Gt Eq,1,1,0,0,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$73,,bge $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$B3,,bge $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_GT_EQ, IMM);","IF (???)
+   PC += 2",bge $10,"Cpu_BranchCondW(COND_GT_EQ, PARAM);",,,,,0,0,0,0,2
+,$B3,,bge $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-52,,brm,,Branch More Than,1,1,0,1,0,0,,,,,,,,,,,,,,,,
-,$74,,brm $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_MORE, PARAM);","IF (???)
+   PC += 4",bge $1000,"Cpu_BranchCondB(COND_GT_EQ, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+52,,brm,,Branch More Than,1,1,0,1,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$74,,brm $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$B4,,brm $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_MORE, IMM);","IF (???)
+   PC += 2",brm $10,"Cpu_BranchCondW(COND_MORE, PARAM);",,,,,0,0,0,0,2
+,$B4,,brm $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-53,,brl,,Branch Lower Than,1,1,0,1,0,1,,,,,,,,,,,,,,,,
-,$75,,brl $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_LOWER, PARAM);","IF (???)
+   PC += 4",brm $1000,"Cpu_BranchCondB(COND_MORE, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+53,,brl,,Branch Lower Than,1,1,0,1,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$75,,brl $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$B5,,brl $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_LOWER, IMM);","IF (???)
+   PC += 2",brl $10,"Cpu_BranchCondW(COND_LOWER, PARAM);",,,,,0,0,0,0,2
+,$B5,,brl $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-54,,bme,,Branch More Than Eq,1,1,0,1,1,0,,,,,,,,,,,,,,,,
-,$76,,bme $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_MORE_EQ, PARAM);","IF (???)
+   PC += 4",brl $1000,"Cpu_BranchCondB(COND_LOWER, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+54,,bme,,Branch More Than Eq,1,1,0,1,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$76,,bme $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$B6,,bme $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_MORE_EQ, IMM);","IF (???)
+   PC += 2",bme $10,"Cpu_BranchCondW(COND_MORE_EQ, PARAM);",,,,,0,0,0,0,2
+,$B6,,bme $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-55,,ble,,Branch Lower Than Eq,1,1,0,1,1,1,,,,,,,,,,,,,,,,
-,$77,,ble $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_LOWER_EQ, PARAM);","IF (???)
+   PC += 4",bme $1000,"Cpu_BranchCondB(COND_MORE_EQ, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+55,,ble,,Branch Lower Than Eq,1,1,0,1,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$77,,ble $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$B7,,ble $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_LOWER_EQ, IMM);","IF (???)
+   PC += 2",ble $10,"Cpu_BranchCondW(COND_LOWER_EQ, PARAM);",,,,,0,0,0,0,2
+,$B7,,ble $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-56,,brz,,Branch Zero,1,1,1,0,0,0,,,,,,,,,,,,,,,,
-,$78,,brz $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_ZERO, PARAM);","IF (???)
+   PC += 4",ble $1000,"Cpu_BranchCondB(COND_LOWER_EQ, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+56,,brz,,Branch Zero,1,1,1,0,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$78,,brz $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$B8,,brz $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_ZERO, IMM);","IF (???)
+   PC += 2",brz $10,"Cpu_BranchCondW(COND_ZERO, PARAM);",,,,,0,0,0,0,2
+,$B8,,brz $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-57,,bnz,,Branch Not Zero,1,1,1,0,0,1,,,,,,,,,,,,,,,,
-,$79,,bnz $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_NOT_ZERO, PARAM);","IF (???)
+   PC += 4",brz $1000,"Cpu_BranchCondB(COND_ZERO, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+57,,bnz,,Branch Not Zero,1,1,1,0,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$79,,bnz $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$B9,,bnz $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_NOT_ZERO, IMM);","IF (???)
+   PC += 2",bnz $10,"Cpu_BranchCondW(COND_NOT_ZERO, PARAM);",,,,,0,0,0,0,2
+,$B9,,bnz $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-58,,brp,,Branch Positive,1,1,1,0,1,0,,,,,,,,,,,,,,,,
-,$7A,,brp $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_POSITIVE, PARAM);","IF (???)
+   PC += 4",bnz $1000,"Cpu_BranchCondB(COND_NOT_ZERO, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+58,,brp,,Branch Positive,1,1,1,0,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$7A,,brp $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$BA,,brp $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_POSITIVE, IMM);","IF (???)
+   PC += 2",brp $10,"Cpu_BranchCondW(COND_POSITIVE, PARAM);",,,,,0,0,0,0,2
+,$BA,,brp $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-59,,brn,,Branch Negative,1,1,1,0,1,1,,,,,,,,,,,,,,,,
-,$7B,,brn $10,,,,,,,,0,1,PARAM,,,,,,,,"Cpu_BranchCondW(COND_NEGATIVE, PARAM);","IF (???)
+   PC += 4",brp $1000,"Cpu_BranchCondB(COND_POSITIVE, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+59,,brn,,Branch Negative,1,1,1,0,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$7B,,brn $10,,,,,,,,0,1,PARAM,,,,,,,,"IF (???)
    PC += Imm (Byte) (Signed)
 ELSE
-   PC += 2",B,0,,2
-,$BB,,brn $1000,,,,,,,,1,0,,,,,,,,,"Cpu_BranchCondB(COND_NOT_ZERO, IMM);","IF (???)
+   PC += 2",brn $10,"Cpu_BranchCondW(COND_NEGATIVE, PARAM);",,,,,0,0,0,0,2
+,$BB,,brn $1000,,,,,,,,1,0,,,,,,,,,"IF (???)
    PC += Imm (Signed)
 ELSE
-   PC += 4",W,1,,4
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-60,,io,,IO,1,1,1,1,0,0,,,,,,,,,,,,,,,,
-,$3C,,io $01,,,,,,,,0,0,,,,,SRC,,,,Cpu_Io_Imm(SRC);,Set IO Pin Mask (2-bit),,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-61,,int,,Interrupt,1,1,1,1,0,1,,,,,,,,,,,,,,,,
-,$3D,,int.set $10,,,,,,,,0,0,,,,,SRC,,,,Cpu_Interrupt_SetMask(SRC);,Set interrupt mask (1 << SRC),,,,2
-,$7D,,int.clear $10,,,,,,,,0,1,,,,,SRC,,,,Cpu_Interrupt_ClearMask(SRC);,Clear interrupt mask (1 << SRC),,,,2
-,$BD,,int $10,,,,,,,,1,0,,,,,SRC,,,,Cpu_Interrupt_Call(SRC);,Call interrupt,,,,2
-,$FD,,int.ivt $1000,,,,,,,,1,1,,,,,,,,,Cpu_Interrupt_SetTableAddress(IMM);,Set IVT address,W,1,,4
-62,,rti,,Return from Interrupt,1,1,1,1,1,0,,,,,,,,,,,,,,,,
-,$3E,,rti,,,,,,,,0,0,,,,,,,,,Cpu_ReturnFromInterrupt();,"PC = Pop Pc, Pop CCR, Pop Registers, etc.",,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-63,,brk,,Breakpoint,1,1,1,1,1,1,,,,,,,,,,,,,,,,
-,$3F,,brk.r $01,,,,,,,,0,0,,,,,SRC,,,,Cpu_Breakpoint_Register(SRC);,"IO=2, STATUS=2, Data = Register (Debug Register)",,0,,2
-,$7F,,brk.m $1000,,,,,,,,0,1,,,,,,,,,Cpu_Breakpoint_Memory(IMM);,"Load(IMM), IO=2, STATUS=2, Data = Memory (Debug Memory)",,1,,4
-,$BF,,brk.c $1000,,,,,,,,1,0,,,,,,,,,Cpu_Breakpoint_Comment(IMM);,"IO=2, STATUS=2, Data = IMM (Debug Constant)",,1,,4
-,$FF,,brk.halt,,,,,,,,1,1,,,,,,,,,Cpu_Halt();,HALT=1 (Halt),,0,,2
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
-,,,,,,,,,,,,,,,,,,,,,,,,,,
+   PC += 4",brn $1000,"Cpu_BranchCondB(COND_NOT_ZERO, IMM);",,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+60,,io,,IO,1,1,1,1,0,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$3C,,io $01,,,,,,,,0,0,,,,,SRC,,,,Set IO Pin Mask (2-bit),io $01,Cpu_Io_Imm(SRC);,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+61,,int,,Interrupt,1,1,1,1,0,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$3D,,int.set $10,,,,,,,,0,0,,,,,SRC,,,,Set interrupt mask (1 << SRC),int.set $10,Cpu_Interrupt_SetMask(SRC);,,,,,0,0,0,0,2
+,$7D,,int.clear $10,,,,,,,,0,1,,,,,SRC,,,,Clear interrupt mask (1 << SRC),int.clear $10,Cpu_Interrupt_ClearMask(SRC);,,,,,0,0,0,0,2
+,$BD,,int $10,,,,,,,,1,0,,,,,SRC,,,,Call interrupt,int $10,Cpu_Interrupt_Call(SRC);,,,,,0,0,0,0,2
+,$FD,,int.ivt $1000,,,,,,,,1,1,,,,,,,,,Set IVT address,int.ivt $1000,Cpu_Interrupt_SetTableAddress(IMM);,,,,,0,0,0,0,2
+62,,rti,,Return from Interrupt,1,1,1,1,1,0,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$3E,,rti,,,,,,,,0,0,,,,,,,,,"PC = Pop Pc, Pop CCR, Pop Registers, etc.",rti,Cpu_ReturnFromInterrupt();,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+63,,brk,,Breakpoint,1,1,1,1,1,1,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,$3F,,brk.r $01,,,,,,,,0,0,,,,,SRC,,,,"IO=2, STATUS=2, Data = Register (Debug Register)",brk.r $01,Cpu_Breakpoint_Register(SRC);,,,,,0,0,0,0,2
+,$7F,,brk.m $1000,,,,,,,,0,1,,,,,,,,,"Load(IMM), IO=2, STATUS=2, Data = Memory (Debug Memory)",brk.m $1000,Cpu_Breakpoint_Memory(IMM);,,,,,0,0,0,0,2
+,$BF,,brk.c $1000,,,,,,,,1,0,,,,,,,,,"IO=2, STATUS=2, Data = IMM (Debug Constant)",brk.c $1000,Cpu_Breakpoint_Comment(IMM);,,,,,0,0,0,0,2
+,$FF,,brk.halt,,,,,,,,1,1,,,,,,,,,HALT=1 (Halt),brk.halt,Cpu_Halt();,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,0,,,,,,0,0,0,0,2
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

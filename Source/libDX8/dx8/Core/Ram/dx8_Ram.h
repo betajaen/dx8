@@ -29,72 +29,29 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_CPU_H
-#define DX8_CPU_H
+#ifndef DX8_RAM_H
+#define DX8_RAM_H
 
 #include <dx8/dx8.h>
 
-#define CPU16_MAX_INSTRUCTION_CACHE 8
+#define DX8_RAM_1_SIZE      DX8_KILOBYTES(32)
+#define DX8_RAM_2_SIZE      DX8_KILOBYTES(32)
+#define DX8_RAM_3_SIZE      DX8_KILOBYTES(32)
+#define DX8_RAM_4_SIZE      DX8_KILOBYTES(32)
 
-typedef Word CpuRegister;
+#define DX8_RAM_12_SIZE     (DX8_RAM_1_SIZE + DX8_RAM_2_SIZE)
+#define DX8_RAM_34_SIZE     (DX8_RAM_3_SIZE + DX8_RAM_4_SIZE)
 
-enum RegisterName
-{
-  Reg_X,
-  Reg_Y,
-  Reg_Z,
-  Reg_W,
-  Reg_A,
-  Reg_Instruction,
-  Reg_ProgramCounter,
-  Reg_Stack,
-  Reg_ProgramCounterStack,
-  Reg_ConditionFlags,
-  Reg_COUNT
-};
+#define DX8_RAM_TILE_SIZE   DX8_KILOBYTES(4)
+#define DX8_RAM_SPRITE_SIZE DX8_KILOBYTES(4)
 
-union Cpu16Registers
-{
-  Word registers[Reg_COUNT];
-  Word x, y, z, w, a, ir, pc, stack, pcStack, cf, mdr, mar;
-};
+extern Byte* sRam12; //[DX8_KILOBYTES(64)];
+extern Byte* sRam34; //[DX8_KILOBYTES(64)];
+extern Byte* sTileRam; //[DX8_KILOBYTES(4)];
+extern Byte* sSpriteRam; //[DX8_KILOBYTES(4)];
 
-struct Cpu16PrefetchRegister
-{
-  Word pc, data;
-};
+void Ram_Setup();
 
-struct Cpu16ExecuteRegister
-{
-  Byte                    opcode;
-  Byte                    operand;
-  Byte                    subCycle;
-  Word                    imm;
-  Word                    pc;     // PC where this from.
-  Word                    pcNext; // Next address (after PC). Increases by 2 when reading opcode/operand, and then later an imm value
-  Word                    mar, mdr, temp;
-  bool                    pcNextCached;
-};
-
-struct Cpu16
-{
-  union   Cpu16Registers;
-  u32     busCycles;
-  bool    halt;
-  u8      io;
-  u32     memoryCyclePenalty;
-  struct  Cpu16PrefetchRegister      cr[CPU16_MAX_INSTRUCTION_CACHE];
-  struct  Cpu16ExecuteRegister       er;
-  u32                                prCacheNextIdx;
-  bool                               memoryAccessThisCycle;
-};
-
-void Cpu16_Reset();
-
-void Cpu16_BusClock(u32 cycles);
-
-void Cpu16_StartOfFrame();
-
-void Cpu16_EndOfFrame(u32 cycles);
+void Ram_Shutdown();
 
 #endif

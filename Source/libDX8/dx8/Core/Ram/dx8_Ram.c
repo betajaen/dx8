@@ -29,72 +29,34 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_CPU_H
-#define DX8_CPU_H
-
 #include <dx8/dx8.h>
+#include <dx8/Core/Ram/dx8_Ram.h>
 
-#define CPU16_MAX_INSTRUCTION_CACHE 8
+#include "malloc.h"
+#include "string.h"
 
-typedef Word CpuRegister;
+Byte* sRam12;     
+Byte* sRam34;     
+Byte* sTileRam;   
+Byte* sSpriteRam; 
 
-enum RegisterName
+void Ram_Setup()
 {
-  Reg_X,
-  Reg_Y,
-  Reg_Z,
-  Reg_W,
-  Reg_A,
-  Reg_Instruction,
-  Reg_ProgramCounter,
-  Reg_Stack,
-  Reg_ProgramCounterStack,
-  Reg_ConditionFlags,
-  Reg_COUNT
-};
+  sRam12 = malloc(DX8_RAM_12_SIZE);
+  sRam34 = malloc(DX8_RAM_34_SIZE);
+  sTileRam = malloc(DX8_RAM_TILE_SIZE);
+  sSpriteRam = malloc(DX8_RAM_SPRITE_SIZE);
 
-union Cpu16Registers
+  memset(sRam12,     0, DX8_RAM_12_SIZE);
+  memset(sRam34,     0, DX8_RAM_12_SIZE);
+  memset(sTileRam,   0, DX8_RAM_TILE_SIZE);
+  memset(sSpriteRam, 0, DX8_RAM_SPRITE_SIZE);
+}
+
+void Ram_Shutdown()
 {
-  Word registers[Reg_COUNT];
-  Word x, y, z, w, a, ir, pc, stack, pcStack, cf, mdr, mar;
-};
-
-struct Cpu16PrefetchRegister
-{
-  Word pc, data;
-};
-
-struct Cpu16ExecuteRegister
-{
-  Byte                    opcode;
-  Byte                    operand;
-  Byte                    subCycle;
-  Word                    imm;
-  Word                    pc;     // PC where this from.
-  Word                    pcNext; // Next address (after PC). Increases by 2 when reading opcode/operand, and then later an imm value
-  Word                    mar, mdr, temp;
-  bool                    pcNextCached;
-};
-
-struct Cpu16
-{
-  union   Cpu16Registers;
-  u32     busCycles;
-  bool    halt;
-  u8      io;
-  u32     memoryCyclePenalty;
-  struct  Cpu16PrefetchRegister      cr[CPU16_MAX_INSTRUCTION_CACHE];
-  struct  Cpu16ExecuteRegister       er;
-  u32                                prCacheNextIdx;
-  bool                               memoryAccessThisCycle;
-};
-
-void Cpu16_Reset();
-
-void Cpu16_BusClock(u32 cycles);
-
-void Cpu16_StartOfFrame();
-
-void Cpu16_EndOfFrame(u32 cycles);
-
-#endif
+  free(sSpriteRam);
+  free(sTileRam);
+  free(sRam34);
+  free(sRam12);
+}

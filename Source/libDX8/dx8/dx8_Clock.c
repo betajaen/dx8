@@ -47,6 +47,8 @@ int ClockMilliseconds;
 int ClockCycle;
 int ClockNumFrames;
 
+#define PROCESSOR_BUS_CYCLES (DX8_CLOCK_CPU / 4)
+
 int Clock(int ms)
 {
   int count = 0;

@@ -40,19 +40,19 @@
 #define MMU1600512_COMMAND_SET_PAGE  1
 
 extern u8*    sRam;
-extern u16    sMmu160128_Command;
-extern u8     sMmu160128_PageTable[256];
-extern u8     sMmu160128_DmaTable[256];
+extern u16    sMmu160512_Command;
+extern u8     sMmu160512_PageTable[256];
+extern u8     sMmu160512_DmaTable[256];
 
 
 inline void Mmu1600512_GetPageAndDma(Word address, Word* realAddress, Byte* realDma)
 {
   u32 page       = address & MMU1600512_PAGE_SIZE;
   u32 pageOffset = address & ~MMU1600512_PAGE_SIZE;
-  u32 realPage   = sMmu160128_PageTable[page];
+  u32 realPage   = sMmu160512_PageTable[page];
 
   (*realAddress) = realPage * MMU1600512_PAGE_SIZE;
-  (*realDma)     = sMmu160128_DmaTable[page];
+  (*realDma)     = sMmu160512_DmaTable[page];
 }
 
 Byte Rom_Get(Word address);
@@ -96,14 +96,14 @@ inline void Mmu1600512_WriteW(Word address, Word data, bool commandLine)
   // Unlikey!
   if (commandLine && address > MMU1600512_COMMAND_WRITE)
   {
-    switch(sMmu160128_Command)
+    switch(sMmu160512_Command)
     {
       case MMU1600512_COMMAND_SET_PAGE:
       {
         u8 dst, src;
         dst = LO_BYTE(data);
         src = HI_BYTE(data);
-        sMmu160128_PageTable[src] = dst;
+        sMmu160512_PageTable[src] = dst;
       }
       return;
     }
@@ -114,30 +114,6 @@ inline void Mmu1600512_WriteW(Word address, Word data, bool commandLine)
     if ((address & 1) == 1)
     {
     
-      Word real1, real2;
-      Byte dma1, dma2;
-      
-      // Oh boy! You've done it now.
-      // Not only we have have problematic page boundaries, we have to preserve the aligned
-      // memory around this unaligned write. So we have to fetch four bytes, and replace
-      // our bytes with the new ones, and then do the write.
-      // 
-      // It'll also take up four extra cycles to do so. Serious, align your memory.
-      
-      
-
-      Mmu1600512_GetPageAndDma(address - 1, &real1, &dma1);
-      Word cacheLo = Bus_Read(real1, dma1);    // lower part in hi
-
-      Mmu1600512_GetPageAndDma(address  + 1, &real2, &dma2);
-      Word cacheHi = Bus_Read(real2, dma2);        // upper part in lo
-    
-      Word lo = ((data & 0xFF) << 8)  | (cacheLo & 0xFF);   // (opposite because higher numbers are more left shifted, regardless of endian)
-      Word hi = ((data >> 8) & 0xFF)  | (cacheHi & 0xFF00); // 
-
-      Bus_Write(real1, dma1, lo);
-
-      Bus_Write(real2, dma2, hi);
     }
     else
     {
