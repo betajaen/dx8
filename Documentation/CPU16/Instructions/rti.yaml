@@ -4,5 +4,6 @@ operations:
   :word: []
   :byte: []
   :none: []
-comment: Instruction for rti
-description: Decription Text
+comment: Return from Interrupt
+description: |
+  Return from interrupt

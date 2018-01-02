@@ -3,11 +3,22 @@ name: :sbq
 operations:
   :word:
     - p = p - q
-    - NZVC_WORD(p)
+    - NVZC_WORD(p)
   :byte:
     - p = p - q
     - NVZC_BYTE(p)
     - p = FORCE_BYTE(p)
   :none: []
-comment: Subtract Signed
-description: Description Text
+operands:
+  - p
+  - q
+comment: Subtract Quick
+description: |
+  Subtract two unsigned values together and place the result the `p` register.
+  `p = p + q`
+  This is a quicker version of `add` but the range of the andem `q` can only be between $0 and $F.
+flags:
+  N: :set
+  V: :set
+  Z: :set
+  C: :set

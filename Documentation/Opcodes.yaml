@@ -1,0 +1,31 @@
+- push
+  - push.w r:src
+  - push.b r:src
+  - push.w u16:literal
+  - push.b u8:literal
+- pop
+  - pop.w r:dst
+  - pop.b r:dst
+- load
+  - load.w r:dst, (r):src
+  - load.w r:dst, u16:address
+  - load.b r:dst, (r):src
+  - load.b r:dst, u16:address
+- store
+  - store.w (r):dst, r:src
+  - store.w u16:dst, r:src
+  - store.b (r):dst, r:src
+  - store.b u16:dst, r:src
+- copy
+  - copy.w r:dst, r:src
+  - copy.b r:dst, r:src
+- set quick and clear
+  - setq.w r:p, u4:literal
+  - setq.b r:p, u4:literal
+  - clr.w r:p
+  - clr.b r:p
+- add
+  - add.w r:p, r:q
+  - add.b r:p, r:q
+  - add.w r:p, u16:q
+  - add.b r:p, u8:q

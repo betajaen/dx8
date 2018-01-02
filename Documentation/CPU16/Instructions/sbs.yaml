@@ -3,11 +3,21 @@ name: :sbs
 operations:
   :word:
     - p = p - q
-    - NZVC_WORD(p)
+    - NVZC_WORD(p)
   :byte:
     - p = p - q
     - NVZC_BYTE(p)
     - p = FORCE_BYTE(p)
   :none: []
+operands:
+  - p
+  - q
 comment: Subtract Signed
-description: Description Text
+description: |
+  Subtract two signed values together and place the result the `p` register.
+  `p = p - q`
+flags:
+  N: :set
+  V: :set
+  Z: :set
+  C: :set

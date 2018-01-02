@@ -4,5 +4,6 @@ operations:
   :word: []
   :byte: []
   :none: []
-comment: Instruction for ror
-description: Decription Text
+comment: Roll Right
+description: |
+  Roll Right

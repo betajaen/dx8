@@ -9,5 +9,6 @@ operations:
     - p = !((Byte)p)
     - NZ00_BYTE(p)
   :none: []
-comment: Negate register
-description: Description Text
+comment: Negate
+description: |
+  Negate value `p = -p`

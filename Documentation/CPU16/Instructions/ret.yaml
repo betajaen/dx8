@@ -8,4 +8,5 @@ operations:
     - PC = BUS_READ_WORD(PC_STACK)
     - FLUSH_PREFETCH
   comment: Return from subroutine
-  description: Decription Text
+  description: |
+    Return from a subroutine by setting the Program Counter from the address popped from the PC Stack.

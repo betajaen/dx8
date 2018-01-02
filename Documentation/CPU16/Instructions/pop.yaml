@@ -10,5 +10,6 @@ operations:
     - p = BUS_READ_BYTE(STACK)
     - NV00(p)
   :none: []
-comment: Pop value from Stack
-description: Decription Text
+comment: Pop
+description: |
+  Pop value from stack into a register

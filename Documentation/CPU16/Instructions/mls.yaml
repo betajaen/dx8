@@ -1,8 +1,24 @@
 --- !ruby/object:InstructionDefinition
 name: :mls
 operations:
-  :word: []
-  :byte: []
+  :word:
+    - p = p * q
+    - NVZC_WORD(p)
+  :byte:
+    - p = (p * q) & 0xFF
+    - NVZC_BYTE(p)
+    - p = FORCE_BYTE(p)
   :none: []
-comment: Instruction for mls
-description: Decription Text
+operands:
+  - p
+  - q
+comment: Multiply Signed
+description: |
+  Multiply two signed values together and place the result the `p` register.
+  `p = p * q`
+flags:
+  N: :set
+  V: :set
+  Z: :set
+  C: :set
+
