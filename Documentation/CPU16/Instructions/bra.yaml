@@ -1,0 +1,9 @@
+--- !ruby/object:InstructionDefinition
+name: :bra
+operations:
+  :word: []
+  :byte: []
+  :none: []
+operands:
+  - address
+comment: BRanch Always

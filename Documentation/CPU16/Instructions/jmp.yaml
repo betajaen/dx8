@@ -1,0 +1,11 @@
+--- !ruby/object:InstructionDefinition
+name: :jmp
+operations:
+  :word:
+    - PC = address
+  :byte: []
+  :none: []
+comment: Jump
+description: |
+  Set the Program Counter to the given address
+

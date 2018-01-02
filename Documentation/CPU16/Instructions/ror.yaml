@@ -1,0 +1,8 @@
+--- !ruby/object:InstructionDefinition
+name: :ror
+operations:
+  :word: []
+  :byte: []
+  :none: []
+comment: Instruction for ror
+description: Decription Text

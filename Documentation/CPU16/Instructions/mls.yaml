@@ -1,0 +1,8 @@
+--- !ruby/object:InstructionDefinition
+name: :mls
+operations:
+  :word: []
+  :byte: []
+  :none: []
+comment: Instruction for mls
+description: Decription Text

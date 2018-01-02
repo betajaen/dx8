@@ -1,0 +1,13 @@
+--- !ruby/object:InstructionDefinition
+name: :sub
+operations:
+  :word:
+    - p = p - q
+    - NZVC_WORD(p)
+  :byte:
+    - p = p - q
+    - NVZC_BYTE(p)
+    - p = FORCE_BYTE(p)
+  :none: []
+comment: Add
+description: Description Text

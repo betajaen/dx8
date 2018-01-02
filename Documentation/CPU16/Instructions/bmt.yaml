@@ -1,0 +1,9 @@
+--- !ruby/object:InstructionDefinition
+name: :bmt
+operations:
+  :word: []
+  :byte: []
+  :none: []
+operands:
+  - address
+comment: Branch if More Than (unsigned)

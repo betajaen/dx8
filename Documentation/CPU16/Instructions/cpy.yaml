@@ -1,0 +1,20 @@
+--- !ruby/object:InstructionDefinition
+name: :cpy
+operations:
+  :word:
+    - p = q
+    - NV00(p)
+  :byte:
+    - p = q & 0xFF
+    - NV00(p)
+  :none: []
+comment: Copy
+description: |
+  Copy the value of `q` into `p`.
+flags:
+  N: :set
+  V: :false
+  Z: :set
+  C: :false
+
+

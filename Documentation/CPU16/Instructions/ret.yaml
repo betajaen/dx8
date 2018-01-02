@@ -1,0 +1,11 @@
+--- !ruby/object:InstructionDefinition
+name: :ret
+operations:
+  :word: []
+  :byte: []
+  :none:
+    - PC_STACK++
+    - PC = BUS_READ_WORD(PC_STACK)
+    - FLUSH_PREFETCH
+  comment: Return from subroutine
+  description: Decription Text

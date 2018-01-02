@@ -1,0 +1,12 @@
+--- !ruby/object:InstructionDefinition
+name: :psh
+operations:
+  :word:
+    - BUS_WRITE_WORD(STACK, q)
+    - STACK--
+  :byte:
+    - BUS_WRITE_BYTE(STACK, q)
+    - STACK--
+  :none: []
+comment: Push value to stack
+description: Decription Text

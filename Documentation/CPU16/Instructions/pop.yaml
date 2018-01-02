@@ -1,0 +1,14 @@
+--- !ruby/object:InstructionDefinition
+name: :pop
+operations:
+  :word:
+    - STACK++
+    - p = BUS_READ_WORD(STACK)
+    - NV00(p)
+  :byte:
+    - STACK++
+    - p = BUS_READ_BYTE(STACK)
+    - NV00(p)
+  :none: []
+comment: Pop value from Stack
+description: Decription Text

@@ -1,0 +1,8 @@
+--- !ruby/object:InstructionDefinition
+name: :mul
+operations:
+  :word: []
+  :byte: []
+  :none: []
+comment: Instruction for mul
+description: Decription Text

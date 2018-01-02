@@ -1,0 +1,20 @@
+--- !ruby/object:InstructionDefinition
+name: :xor
+operations:
+  :word:
+    - p = ~p`
+    - N0Z0(p)
+  :byte:
+    - p = (~p) & 0xFF
+    - N0Z0(p)
+  :none: []
+operands:
+  - p
+comment: Not
+description: |
+  Performs a logical Not on p. `p = ¬p`
+flags:
+  N: :set
+  V: :false
+  Z: :set
+  C: :false

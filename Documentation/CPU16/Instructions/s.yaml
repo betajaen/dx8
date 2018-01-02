@@ -1,0 +1,14 @@
+--- !ruby/object:InstructionDefinition
+name: :s
+operations:
+  :word:
+    - BUS_WRITE_WORD(q, address)
+  :byte:
+    - BUS_WRITE_BYTE(q, address)
+  :none: []
+comment: Store
+operands:
+  - address
+  - q
+description: |
+  Store a value from a register and put it in a register

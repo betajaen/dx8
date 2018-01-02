@@ -1,0 +1,10 @@
+--- !ruby/object:InstructionDefinition
+name: :io
+operations:
+  :word: []
+  :byte: []
+  :none: []
+comment: IO
+description: |
+  Set the IO pins to a given 2-bit value
+protected: false

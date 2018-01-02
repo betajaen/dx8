@@ -1,0 +1,17 @@
+--- !ruby/object:InstructionDefinition
+name: :swp
+operations:
+  :word:
+    - Byte lo = LO_BYTE(p)
+    - Byte hi = HI_BYTE(p)
+    - p = LOHI_WORD(hi, lo)
+  :byte:
+    - Byte lo = LO_NIBBLE(p)
+    - Byte hi = HI_NIBBLE(p)
+    - p = LOHI_BYTE(hi, lo)
+  :none: []
+comment: Instruction for swp
+operands:
+  - p
+description: |
+  Swaps the upper and lower halves of the value

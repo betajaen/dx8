@@ -1,0 +1,8 @@
+--- !ruby/object:InstructionDefinition
+name: :dvs
+operations:
+  :word: []
+  :byte: []
+  :none: []
+comment: Instruction for dvs
+description: Decription Text

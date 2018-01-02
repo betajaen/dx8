@@ -1,0 +1,20 @@
+--- !ruby/object:InstructionDefinition
+name: :exc
+operations:
+  :word:
+    - Word t = p
+    - p = q
+    - q = t
+  :byte:
+    - Byte t = p
+    - p = q
+    - q = t
+  :none: []
+comment: Exchange
+description: |
+  Swap two values around
+flags:
+  N: :false
+  V: :false
+  Z: :false
+  C: :false

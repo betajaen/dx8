@@ -1,0 +1,9 @@
+--- !ruby/object:InstructionDefinition
+name: :brc
+operations:
+  :word: []
+  :byte: []
+  :none: []
+operands:
+  - address
+comment: BRanch if Carry

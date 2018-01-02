@@ -1,0 +1,18 @@
+--- !ruby/object:InstructionDefinition
+name: :shr
+operations:
+  :word:
+    - p = p >> shift
+    - NZ00(p)
+  :byte:
+    - p = (p >> shift) & 0xFF
+    - NZ00(p)
+  :none: []
+comment: Shift Right
+operands:
+  - p
+  - shift
+description: |
+  Shifts the bits of the value `p` left by `shift` amount. For any underflowing bits, the C flag is set
+flags:
+  C: :set

@@ -1,0 +1,9 @@
+--- !ruby/object:InstructionDefinition
+name: :bat
+operations:
+  :word: []
+  :byte: []
+  :none: []
+operands:
+  - address
+comment: Branch if Above Than (signed)

@@ -1,0 +1,13 @@
+--- !ruby/object:InstructionDefinition
+name: :neg
+name: :add
+operations:
+  :word:
+    - p = !p
+    - NZ00_WORD(p)
+  :byte:
+    - p = !((Byte)p)
+    - NZ00_BYTE(p)
+  :none: []
+comment: Negate register
+description: Description Text

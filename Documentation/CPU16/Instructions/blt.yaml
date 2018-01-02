@@ -1,0 +1,9 @@
+--- !ruby/object:InstructionDefinition
+name: :blt
+operations:
+  :word: []
+  :byte: []
+  :none: []
+operands:
+  - address
+comment: Branch if Less Than (unsigned)

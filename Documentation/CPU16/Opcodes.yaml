@@ -1,0 +1,196 @@
+-
+  - psh.w ur:q                # push value to stack
+  - psh.b ur:q                # push value to stack
+  - psh.w u16:q               # push value to stack
+  - psh.b u8:q                # push value to stack
+-
+  - pop.w ur:p                # pop value from stack into register
+  - pop.b ur:p                # pop value from stack into register
+-
+  - l.w ur:p, pr:address      # load from memory into register
+  - l.w ur:p, u16:address     # load from memory into register
+  - l.b ur:p, pr:address      # load from memory into register
+  - l.b ur:p, u16:address     # load from memory into register
+-
+  - s.w pr:address, ur:q      # store register to memory
+  - s.w u16:address, ur:q     # store register to memory
+  - s.b pr:address, ur:q      # store register to memory
+  - s.b u16:address, ur:q     # store register to memory
+-
+  - cpy.w ur:p, ur:q          # copy register to other register
+  - cpy.b ur:p, ur:q          # copy register to other register
+  - clr.w ur:p                # clear register
+  - clr.b ur:p                # clear register
+-
+  - exc.w ur:p, ur:p          # swap registers with themselves
+  - exc.b ur:q, ur:q          # swap registers with themselves
+  - swp.w ur:p                # swap bytes with itself
+  - swp.b ur:q                # swap nibbles with itself
+-
+  - stq.w ur:p, u4:q          # set quick
+  - stq.b ur:p, u4:q          # set quick
+-
+  - add.w ur:p, ur:q          # add (unsigned)
+  - add.b ur:p, ur:q          # add (unsigned)
+  - add.w ur:p, u16:q         # add (unsigned)
+  - add.b ur:p, u8:q          # add (unsigned)
+-
+  - ads.w sr:p, sr:q          # add (signed)
+  - ads.b sr:p, sr:q          # add (signed)
+  - ads.w sr:p, s16:q         # add (signed)
+  - ads.b sr:p, s8:q          # add (signed)
+-
+  - adc.w ur:p, ur:q          # add carry
+  - adc.b ur:p, ur:q          # add carry
+  - adc.w ur:p, u16:q         # add carry
+  - adc.b ur:p, u8:q          # add carry
+-
+  - adq.w ur:p, u4:q          # add quick (unsigned)
+  - adq.b ur:p, u4:q          # add quick (unsigned)
+  - adq.w ur:p, s4:q          # add quick (unsigned)
+  - adq.b ur:p, s4:q          # add quick (unsigned)
+-
+  - sub.w ur:p, ur:q          # subtract (unsigned)
+  - sub.b ur:p, ur:q          # subtract (unsigned)
+  - sub.w ur:p, u16:q         # subtract (unsigned)
+  - sub.b ur:p, u8:q          # subtract (unsigned)
+-
+  - sbs.w sr:p, sr:q          # subtract (unsigned)
+  - sbs.b sr:p, sr:q          # subtract (unsigned)
+  - sbs.w sr:p, s16:q         # subtract (signed)
+  - sbs.b sr:p, s8:q          # subtract (signed)
+-
+  - sbc.w ur:p, ur:q          # subtract carry
+  - sbc.b ur:p, ur:q          # subtract carry
+  - sbc.w ur:p, u16:q         # subtract carry
+  - sbc.b ur:p, u8:q          # subtract carry
+-
+  - sbq.w ur:p, u4:q          # subtract quick (unsigned)
+  - sbq.b ur:p, u4:q          # subtract quick (unsigned)
+  - sbq.w sr:p, s4:q          # subtract quick (signed)
+  - sbq.b sr:p, s4:q          # subtract quick (signed)
+-
+  - mul.w ur:p, ur:q          # multiply (unsigned)
+  - mul.b ur:p, ur:q          # multiply (unsigned)
+  - mul.w ur:p, u16:q         # multiply (unsigned)
+  - mul.b ur:p, u8:q          # multiply (unsigned)
+-
+  - mls.w sr:p, sr:q          # multiply (signed)
+  - mls.b sr:p, sr:q          # multiply (signed)
+  - mls.w sr:p, s16:q         # multiply (signed)
+  - mls.b sr:p, s8:q          # multiply (signed)
+-
+  - div.w ur:p, ur:q          # divide (unsigned)
+  - div.b ur:p, ur:q          # divide (unsigned)
+  - div.w ur:p, u16:q         # divide (unsigned)
+  - div.b ur:p, u8:q          # divide (unsigned)
+-
+  - dvs.w sr:p, sr:q          # divide (signed)
+  - dvs.b sr:p, sr:q          # divide (signed)
+  - dvs.w sr:p, s16:q         # divide (signed)
+  - dvs.b sr:p, s8:q          # divide (signed)
+-
+  - and.w ur:p, ur:q          # and
+  - and.b ur:p, ur:q          # and
+  - and.w ur:p, u16:q         # and
+  - and.b ur:p, u8:q          # and
+-
+  - or.w ur:p, ur:q           # or
+  - or.b ur:p, ur:q           # or
+  - or.w ur:p, u16:q          # or
+  - or.b ur:p, u8:q           # or
+-
+  - xor.w ur:p, ur:q          # xor
+  - xor.b ur:p, ur:q          # xor
+  - xor.w ur:p, u16:q         # xor
+  - xor.b ur:p, u8:q          # xor
+-
+  - not.w ur:p                # not
+  - not.b ur:p                # not
+  - neg.w sr:p                # negate
+  - neg.b sr:p                # negate
+-
+  - shl.w ur:p, u4:shift      # shift left
+  - shl.b ur:b, u4:shift      # shift left
+  - shr.w ur:p, u4:shift      # shift right
+  - shr.b ur:p, u4:shift      # shift right
+-
+  - rol.w ur:p, u4:shift      # roll left
+  - rol.b ur:b, u4:shift      # roll left
+  - ror.w ur:p, u4:shift      # roll right
+  - ror.b ur:p, u4:shift      # roll right
+-
+  - jmp pr:address            # jump to address
+  - jmp u16:address           # jump to address
+  - jsr pr:address            # push pc + 4 to stack and jump to address
+  - jsr u16:address           # push pc + 4 to stack and jump to address
+-
+  - bra prr:address           # branch always - (relative jump to address)
+  - bra prrw:address          # branch always - (relative jump to address)
+  - bra prrb:address          # branch always - (relative jump to address)
+  - ret                       # return from subroutine
+-
+  - cmp.w ur:p, ur:q          # compare to register
+  - cmp.b ur:p, ur:q          # compare to register
+  - cmp.w ur:p, u16:q         # compare to word
+  - cmp.b ur:p, u8:q          # compare to byte
+-
+  - cmp.w ur:p, u4:q          # compare to nibble
+  - cmp.b ur:p, u4:q          # compare to nibble
+  - zcp.w ur:p                # compare to zero
+  - zcp.b ur:p                # compare to zero
+-
+  - dcp.w ur:p, u16:q         # decrease p and compare to q
+  - dcp.b ur:p, u8:q          # decrease p and compare to q
+  - dcp.w ur:p, ur:q          # decrease p and compare to q
+  - dcp.b ur:p, ur:q          # decrease p and compare to q
+-
+  - beq prrw:address          # branch equals
+  - beq prrb:address          # branch equals
+  - bne prrw:address          # branch not equals
+  - bne prrb:address          # branch not equals
+-
+  - bmt prrw:address          # branch more than (unsigned)
+  - bmt prrb:address          # branch more than (unsigned)
+  - blt prrw:address          # branch less than (unsigned)
+  - blt prrb:address          # branch less than (unsigned)
+-
+  - bat prrw:address          # branch above than (signed)
+  - bat prrb:address          # branch above than (signed)
+  - bbt prrw:address          # branch below than (signed)
+  - bbt prrb:address          # branch below than (signed)
+-
+  - bme prrw:address          # branch more than or equals (unsigned)
+  - bme prrb:address          # branch more than or equals (unsigned)
+  - ble prrw:address          # branch less than or equals (unsigned)
+  - ble prrb:address          # branch less than or equals (unsigned)
+-
+  - bae prrw:address          # branch above or equals (signed)
+  - bae prrb:address          # branch above or equals (signed)
+  - bbe prrw:address          # branch below or equals (signed)
+  - bbe prrb:address          # branch below or equals (signed)
+-
+  - bz  prrw:address          # branch zero
+  - bz  prrb:address          # branch zero
+  - bnz prrw:address          # branch not zero
+  - bnz prrb:address          # branch not zero
+-
+  - brc prrw:address          # branch carry
+  - brc prrb:address          # branch carry
+  - bro prrw:address          # branch overflow
+  - bro prrb:address          # branch overflow
+-
+  - brp prrw:address          # branch positive
+  - brp prrb:address          # branch positive
+  - brn prrw:address          # branch negative
+  - brn prrb:address          # branch negative
+-
+  - tsr ur:address            # transfer stack pointer to register
+  - trs ur:address            # transfer register to stack pointer
+  - tpr ur:address            # transfer program stack pointer to register
+  - trp ur:address            # transfer register to program stack pointer
+-
+  - rti                       # return from interrupt
+  - ent                       # enter protected mode
+  - lve                       # leave protected mode
+  - io u4:data                # set io pins to given data

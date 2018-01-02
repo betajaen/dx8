@@ -1,0 +1,18 @@
+--- !ruby/object:InstructionDefinition
+name: :l
+operations:
+  :word:
+    - p = BUS_READ_WORD(address)
+    - N0Z0(p)
+  :byte:
+    - p = BUS_READ_BYTE(address)
+    - N0Z0(p)
+  :none: []
+comment: Load Memory into register
+description: |
+  Load a value from memory and put it in a register
+flags:
+  N: :set
+  V: :false
+  Z: :set
+  C: :false

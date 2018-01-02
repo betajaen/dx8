@@ -1,0 +1,24 @@
+--- !ruby/object:InstructionDefinition
+name: :adq
+operations:
+  :word:
+    - p = p + q
+    - NVZC_WORD(p)
+  :byte:
+    - p = p + q
+    - NVZC_BYTE(p)
+    - p = FORCE_BYTE(p)
+  :none: []
+operands:
+  - p
+  - q
+comment: Add Quick
+description: |
+  Add two unsigned values together and place the result the `p` register.
+  `p = p + q`
+  This is a quicker version of `add` but the range of the andem `q` can only be between $0 and $F.
+flags:
+  N: :set
+  V: :set
+  Z: :set
+  C: :set

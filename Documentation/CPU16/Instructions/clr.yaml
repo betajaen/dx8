@@ -1,0 +1,17 @@
+--- !ruby/object:InstructionDefinition
+name: :clr
+operations:
+  :word:
+    - p = 0
+    - N0Z0(p)
+  :byte:
+    - p = 0
+    - N0Z0(p)
+  :none: []
+comment: Clear
+description: Sets the `p` to zero.
+flags:
+  N: :false
+  V: :false
+  Z: :true
+  C: :false

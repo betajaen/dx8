@@ -1,0 +1,18 @@
+--- !ruby/object:InstructionDefinition
+name: :stq
+operations:
+  :word:
+    - p = q
+    - NZ00(p)
+  :byte:
+    - p = q & 0xFF
+    - NZ00(p)
+  :none: []
+operands:
+  - p
+  - q
+comment: Set Quick
+description: |
+  Sets a value of a register to a value, the value can only be between $0 and $F in range. `p = q`.
+flags:
+  Z: :set

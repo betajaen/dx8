@@ -1,0 +1,9 @@
+--- !ruby/object:InstructionDefinition
+name: :bme
+operations:
+  :word: []
+  :byte: []
+  :none: []
+operands:
+  - address
+comment: Branch if More than or Equals (unsigned)

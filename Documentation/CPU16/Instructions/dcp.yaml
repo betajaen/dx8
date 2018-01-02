@@ -1,0 +1,20 @@
+--- !ruby/object:InstructionDefinition
+name: :dcp
+operations:
+  :word:
+    - --p
+    - Word t = q - p
+    - NZVC(t)
+  :byte:
+    - --p
+    - Byte t = q - p
+    - NZVC(t)
+  :none: []
+comment: Decrease and Compare
+description: |
+  Decrease p, and then compare it against another values, and set the NZVC registers based on their differences
+flags:
+  N: :set
+  V: :set
+  Z: :set
+  C: :set

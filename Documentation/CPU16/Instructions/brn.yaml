@@ -1,0 +1,9 @@
+--- !ruby/object:InstructionDefinition
+name: :brn
+operations:
+  :word: []
+  :byte: []
+  :none: []
+operands:
+  - address
+comment: BRanch if Negative

@@ -1,0 +1,8 @@
+--- !ruby/object:InstructionDefinition
+name: :rti
+operations:
+  :word: []
+  :byte: []
+  :none: []
+comment: Instruction for rti
+description: Decription Text

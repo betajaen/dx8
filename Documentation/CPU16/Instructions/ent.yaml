@@ -1,0 +1,20 @@
+--- !ruby/object:InstructionDefinition
+name: :ent
+operations:
+  :word: []
+  :byte: []
+  :none:
+    - FLAG_PROTECTED = 1
+    - PC_STACKS[0] = PC_STACKS
+    - STACKS[0] = STACK
+    - PC_STACK = PC_STACK[1]
+    - STACK = STACKS[1]
+    - CallInterrupt(INTERRUPT_TYPE_ENTER_PROTECTION)
+comment: Leave protected mode
+description: |
+  Enter protected mode, and denying access to the opcodes; enter, io. The 'enter protection' interrupt is also called.
+flags:
+  N: :false
+  V: :false
+  Z: :false
+  C: :false

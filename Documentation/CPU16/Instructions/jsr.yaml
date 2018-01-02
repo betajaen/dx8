@@ -1,0 +1,9 @@
+--- !ruby/object:InstructionDefinition
+name: :jsr
+operations:
+  :word: []
+  :byte: []
+  :none: []
+comment: Jump Subroutine
+description: |
+  Push `(Program Counter + 4)` to the PC Stack, and then to Set the PC the given address

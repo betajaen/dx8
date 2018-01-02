@@ -1,0 +1,9 @@
+--- !ruby/object:InstructionDefinition
+name: :bnz
+operations:
+  :word: []
+  :byte: []
+  :none: []
+operands:
+  - address
+comment: Branch if Not Zero

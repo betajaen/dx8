@@ -1,0 +1,12 @@
+--- !ruby/object:InstructionDefinition
+name: :trs
+operations:
+  :word: []
+  :byte: []
+  :none:
+    - STACK = p
+operands:
+  - p
+comment: Transfer Register to Stack
+description: |
+  Copies an all purpose register to the stack register

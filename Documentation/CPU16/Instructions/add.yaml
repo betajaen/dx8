@@ -1,0 +1,23 @@
+--- !ruby/object:InstructionDefinition
+name: :add
+operations:
+  :word:
+    - p = p + q
+    - NVZC_WORD(p)
+  :byte:
+    - p = p + q
+    - NVZC_BYTE(p)
+    - p = FORCE_BYTE(p)
+  :none: []
+operands:
+  - p
+  - q
+comment: Add
+description: |
+  Add two unsigned values together and place the result the `p` register.
+  `p = p + q`
+flags:
+  N: :set
+  V: :set
+  Z: :set
+  C: :set

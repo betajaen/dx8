@@ -1,0 +1,21 @@
+--- !ruby/object:InstructionDefinition
+name: :xor
+operations:
+  :word:
+    - p = p ^ q
+    - N0Z0(p)
+  :byte:
+    - p = (p ^ q) & 0xFF
+    - N0Z0(p)
+  :none: []
+operands:
+  - p
+  - q
+comment: Xor
+description: |
+  Performs a logical Exclusive-Or on p and q. `p = p ⊕ q`
+flags:
+  N: :set
+  V: :false
+  Z: :set
+  C: :false

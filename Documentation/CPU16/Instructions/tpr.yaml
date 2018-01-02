@@ -1,0 +1,12 @@
+--- !ruby/object:InstructionDefinition
+name: :tpr
+operations:
+  :word: []
+  :byte: []
+  :none:
+    - p = PC_STACK
+operands:
+  - p
+comment: Transfer Program counter stack to Register
+description: |
+  Copies an the Program Counter Register to an all purpose register

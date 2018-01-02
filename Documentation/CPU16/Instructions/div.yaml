@@ -1,0 +1,8 @@
+--- !ruby/object:InstructionDefinition
+name: :div
+operations:
+  :word: []
+  :byte: []
+  :none: []
+comment: Instruction for div
+description: Decription Text

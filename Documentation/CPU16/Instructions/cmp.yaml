@@ -1,0 +1,18 @@
+--- !ruby/object:InstructionDefinition
+name: :cmp
+operations:
+  :word:
+    - Word t = q - p
+    - NZVC(t)
+  :byte:
+    - Byte t = q - p
+    - NZVC(t)
+  :none: []
+comment: Compare
+description: |
+  Compare two values, and set the NZVC registers based on their differences
+flags:
+  N: :set
+  V: :set
+  Z: :set
+  C: :set

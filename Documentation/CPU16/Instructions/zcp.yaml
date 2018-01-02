@@ -1,0 +1,13 @@
+--- !ruby/object:InstructionDefinition
+name: :zcp
+operations:
+  :word: []
+  :byte: []
+  :none: []
+operands:
+  - p
+comment: Zero Compare
+description: |
+  Compares a value to zero.
+flags:
+  Z: :set
