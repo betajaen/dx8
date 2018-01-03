@@ -6,4 +6,5 @@ operations:
   :none: []
 operands:
   - address
-comment: Branch if More than or Equals (unsigned)
+branch:
+comment: Branch if More than or Equals (signed)

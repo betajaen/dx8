@@ -140,28 +140,28 @@
   - bne prrw:address          # branch not equals
   - bne prrb:address          # branch not equals
 -
-  - bmt prrw:address          # branch more than (unsigned)
-  - bmt prrb:address          # branch more than (unsigned)
+  - bgt prrw:address          # branch greater than (unsigned)
+  - bgt prrb:address          # branch greater than (unsigned)
   - blt prrw:address          # branch less than (unsigned)
   - blt prrb:address          # branch less than (unsigned)
 -
-  - bat prrw:address          # branch above than (signed)
-  - bat prrb:address          # branch above than (signed)
-  - bbt prrw:address          # branch below than (signed)
-  - bbt prrb:address          # branch below than (signed)
+  - bmt prrw:address          # branch more than (signed)
+  - bmt prrb:address          # branch more than (signed)
+  - bft prrw:address          # branch fewer than (signed)
+  - bft prrb:address          # branch fewer than (signed)
 -
-  - bme prrw:address          # branch more than or equals (unsigned)
-  - bme prrb:address          # branch more than or equals (unsigned)
+  - bge prrw:address          # branch greater or equals (unsigned)
+  - bge prrb:address          # branch greater or equals (unsigned)
   - ble prrw:address          # branch less than or equals (unsigned)
   - ble prrb:address          # branch less than or equals (unsigned)
 -
-  - bae prrw:address          # branch above or equals (signed)
-  - bae prrb:address          # branch above or equals (signed)
-  - bbe prrw:address          # branch below or equals (signed)
-  - bbe prrb:address          # branch below or equals (signed)
+  - bme prrw:address          # branch more than or equals (signed)
+  - bme prrb:address          # branch more than or equals (signed)
+  - bfe prrw:address          # branch fewer than or equals (signed)
+  - bfe prrb:address          # branch fewer than or equals (signed)
 -
-  - bz  prrw:address          # branch zero
-  - bz  prrb:address          # branch zero
+  - brz  prrw:address         # branch zero
+  - brz  prrb:address         # branch zero
   - bnz prrw:address          # branch not zero
   - bnz prrb:address          # branch not zero
 -

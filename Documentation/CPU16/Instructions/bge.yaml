@@ -1,5 +1,5 @@
 --- !ruby/object:InstructionDefinition
-name: :brp
+name: :bge
 operations:
   :word: []
   :byte: []
@@ -8,5 +8,10 @@ operands:
   - address
 branch:
   -
+    N: true
+  -
+    V: true
+  -
     N: false
-comment: BRanch if Positive
+    V: false
+comment: Branch if Greater than or Equals (unsigned)

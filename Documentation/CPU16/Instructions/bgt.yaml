@@ -1,5 +1,5 @@
 --- !ruby/object:InstructionDefinition
-name: :bmt
+name: :bgt
 operations:
   :word: []
   :byte: []
@@ -8,6 +8,11 @@ operands:
   - address
 branch:
   -
-    C: false
+    N: true
+    V: true
     Z: false
-comment: Branch if More Than (signed)
+  -
+    N: false
+    V: false
+    Z: false
+comment: Branch if Greater Than (unsigned)

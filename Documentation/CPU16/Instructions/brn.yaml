@@ -6,4 +6,7 @@ operations:
   :none: []
 operands:
   - address
+branch:
+  -
+    N: true
 comment: BRanch if Negative

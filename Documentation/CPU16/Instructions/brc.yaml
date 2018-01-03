@@ -6,4 +6,7 @@ operations:
   :none: []
 operands:
   - address
+branch:
+  -
+    C: true
 comment: BRanch if Carry

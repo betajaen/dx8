@@ -1,10 +1,12 @@
 --- !ruby/object:InstructionDefinition
-name: :bbe
+name: :brz
 operations:
   :word: []
   :byte: []
   :none: []
 operands:
   - address
-comment: Branch if Below or Equals (signed)
-
+branch:
+  -
+    Z: true
+comment: BRanch if Zero

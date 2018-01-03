@@ -15,7 +15,7 @@ operands:
 comment: Divide Signed
 description: |
   Divide two signed values together and place the result the `p` register.
-  `p = p / q`
+  `p = p ÷ q`
 flags:
   N: :set
   V: :set

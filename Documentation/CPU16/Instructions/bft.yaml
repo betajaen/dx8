@@ -1,9 +1,14 @@
 --- !ruby/object:InstructionDefinition
-name: :bae
+name: :bft
 operations:
   :word: []
   :byte: []
   :none: []
 operands:
   - address
-comment: Branch if Above or Equals (signed)
+branch:
+  -
+    C: true
+    Z: true
+comment: Branch if Fewer than (signed)
+

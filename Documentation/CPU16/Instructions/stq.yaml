@@ -3,10 +3,10 @@ name: :stq
 operations:
   :word:
     - p = q
-    - NZ00(p)
+    - N0Z0(p)
   :byte:
     - p = q & 0xFF
-    - NZ00(p)
+    - N0Z0(p)
   :none: []
 operands:
   - p
@@ -15,4 +15,7 @@ comment: Set Quick
 description: |
   Sets a value of a register to a value, the value can only be between $0 and $F in range. `p = q`.
 flags:
+  N: 0
+  V: 0
   Z: :set
+  C: 0

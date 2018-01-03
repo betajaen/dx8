@@ -6,4 +6,7 @@ operations:
   :none: []
 operands:
   - address
+branch:
+  -
+    O: true
 comment: BRanch if Overflow

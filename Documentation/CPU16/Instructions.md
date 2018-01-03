@@ -13,15 +13,16 @@ Add two unsigned values together and place the result the `p` register.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $07  | word  | r → p | r → q | `0000 0111 REG. REG. `
-| $47  | byte  | r → p | r → q | `0100 0111 REG. REG. `
-| $87  | word  | r → p | $FFFFu → q | `1000 0111 REG. 0000 0000 0000 0000 0000 `
-| $C7  | byte  | r → p | $FFu → q | `1100 0111 REG. 0000 0000 0000 0000 0000 `
+| $07  | word  | r → p | r → q | `0000 0111 RGTR RGTR `
+| $47  | byte  | r → p | r → q | `0100 0111 RGTR RGTR `
+| $87  | word  | r → p | $FFFFu → q | `1000 0111 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $C7  | byte  | r → p | $FFu → q | `1100 0111 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Add Quick
 
@@ -37,15 +38,16 @@ This is a quicker version of `add` but the range of the andem `q` can only be be
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $09  | word  | r → p | $Fu → q | `0000 1001 REG.  `
-| $49  | byte  | r → p | $Fu → q | `0100 1001 REG.  `
-| $89  | word  | r → p | $Fs → q | `1000 1001 REG.  `
-| $C9  | byte  | r → p | $Fs → q | `1100 1001 REG.  `
+| $09  | word  | r → p | $Fu → q | `0000 1001 RGTR NNNN `
+| $49  | byte  | r → p | $Fu → q | `0100 1001 RGTR NNNN `
+| $89  | word  | r → p | $Fs → q | `1000 1001 RGTR NNNN `
+| $C9  | byte  | r → p | $Fs → q | `1100 1001 RGTR NNNN `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Add Signed
 
@@ -60,15 +62,16 @@ Add two signed values together and place the result the `p` register.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $08  | word  | r → p | r → q | `0000 1000 REG. REG. `
-| $48  | byte  | r → p | r → q | `0100 1000 REG. REG. `
-| $88  | word  | r → p | $FFFFs → q | `1000 1000 REG. 0000 0000 0000 0000 0000 `
-| $C8  | byte  | r → p | $FFs → q | `1100 1000 REG. 0000 0000 0000 0000 0000 `
+| $08  | word  | r → p | r → q | `0000 1000 RGTR RGTR `
+| $48  | byte  | r → p | r → q | `0100 1000 RGTR RGTR `
+| $88  | word  | r → p | $FFFFs → q | `1000 1000 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $C8  | byte  | r → p | $FFs → q | `1100 1000 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # And
 
@@ -82,71 +85,16 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $11  | word  | r → p | r → q | `0001 0001 REG. REG. `
-| $51  | byte  | r → p | r → q | `0101 0001 REG. REG. `
-| $91  | word  | r → p | $FFFFu → q | `1001 0001 REG. 0000 0000 0000 0000 0000 `
-| $D1  | byte  | r → p | $FFu → q | `1101 0001 REG. 0000 0000 0000 0000 0000 `
+| $11  | word  | r → p | r → q | `0001 0001 RGTR RGTR `
+| $51  | byte  | r → p | r → q | `0101 0001 RGTR RGTR `
+| $91  | word  | r → p | $FFFFu → q | `1001 0001 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $D1  | byte  | r → p | $FFu → q | `1101 0001 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | 0 | * | 0
-
-# Branch if Above or Equals (signed)
-
-`bae <address>`
-
-
-
-
-
-#### Opcodes:
-|Opcode| Type     | Operand 1     | Operand 2     | Encoding
-|:----:|:--------:| --------------|---------------|---------
-| $20  | none  | (PC + $FFFFs) → address |  → none | `0010 0000 0000 0000 0000 0000 0000 0000 `
-| $60  | none  | (PC + $FFs) → address |  → none | `0110 0000 IMM. BYTE 0000 `
-
-# Branch if Above Than (signed)
-
-`bat <address>`
-
-
-
-
-
-#### Opcodes:
-|Opcode| Type     | Operand 1     | Operand 2     | Encoding
-|:----:|:--------:| --------------|---------------|---------
-| $1E  | none  | (PC + $FFFFs) → address |  → none | `0001 1110 0000 0000 0000 0000 0000 0000 `
-| $5E  | none  | (PC + $FFs) → address |  → none | `0101 1110 IMM. BYTE 0000 `
-
-# Branch if Below or Equals (signed)
-
-`bbe <address>`
-
-
-
-
-
-#### Opcodes:
-|Opcode| Type     | Operand 1     | Operand 2     | Encoding
-|:----:|:--------:| --------------|---------------|---------
-| $A0  | none  | (PC + $FFFFs) → address |  → none | `1010 0000 0000 0000 0000 0000 0000 0000 `
-| $E0  | none  | (PC + $FFs) → address |  → none | `1110 0000 IMM. BYTE 0000 `
-
-# Branch if Below Than (signed)
-
-`bbt <address>`
-
-
-
-
-
-#### Opcodes:
-|Opcode| Type     | Operand 1     | Operand 2     | Encoding
-|:----:|:--------:| --------------|---------------|---------
-| $9E  | none  | (PC + $FFFFs) → address |  → none | `1001 1110 0000 0000 0000 0000 0000 0000 `
-| $DE  | none  | (PC + $FFs) → address |  → none | `1101 1110 IMM. BYTE 0000 `
+| ✱ | 0 | ✱ | 0
 
 # Branch if EQuals
 
@@ -159,8 +107,89 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $1C  | none  | (PC + $FFFFs) → address |  → none | `0001 1100 0000 0000 0000 0000 0000 0000 `
-| $5C  | none  | (PC + $FFs) → address |  → none | `0101 1100 IMM. BYTE 0000 `
+| $1C  | none  | (PC + $FFFFs) → address |  → none | `0001 1100 0000 0000  WWWW WWWW WWWW WWWW `
+| $5C  | none  | (PC + $FFs) → address |  → none | `0101 1100 BBBB BBBB 0000 `
+
+        Z => true
+  [{"Z"=>true}]
+
+# Branch if Fewer or Equals (signed)
+
+`bfe <address>`
+
+
+
+
+
+#### Opcodes:
+|Opcode| Type     | Operand 1     | Operand 2     | Encoding
+|:----:|:--------:| --------------|---------------|---------
+| $A0  | none  | (PC + $FFFFs) → address |  → none | `1010 0000 0000 0000  WWWW WWWW WWWW WWWW `
+| $E0  | none  | (PC + $FFs) → address |  → none | `1110 0000 BBBB BBBB 0000 `
+
+        C => true
+        Z => true
+  [{"C"=>true, "Z"=>true}]
+
+# Branch if Fewer than (signed)
+
+`bft <address>`
+
+
+
+
+
+#### Opcodes:
+|Opcode| Type     | Operand 1     | Operand 2     | Encoding
+|:----:|:--------:| --------------|---------------|---------
+| $9E  | none  | (PC + $FFFFs) → address |  → none | `1001 1110 0000 0000  WWWW WWWW WWWW WWWW `
+| $DE  | none  | (PC + $FFs) → address |  → none | `1101 1110 BBBB BBBB 0000 `
+
+        C => true
+        Z => true
+  [{"C"=>true, "Z"=>true}]
+
+# Branch if Greater than or Equals (unsigned)
+
+`bge <address>`
+
+
+
+
+
+#### Opcodes:
+|Opcode| Type     | Operand 1     | Operand 2     | Encoding
+|:----:|:--------:| --------------|---------------|---------
+| $1F  | none  | (PC + $FFFFs) → address |  → none | `0001 1111 0000 0000  WWWW WWWW WWWW WWWW `
+| $5F  | none  | (PC + $FFs) → address |  → none | `0101 1111 BBBB BBBB 0000 `
+
+        N => true
+        V => true
+        N => false
+        V => false
+  [{"N"=>true}, {"V"=>true}, {"N"=>false, "V"=>false}]
+
+# Branch if Greater Than (unsigned)
+
+`bgt <address>`
+
+
+
+
+
+#### Opcodes:
+|Opcode| Type     | Operand 1     | Operand 2     | Encoding
+|:----:|:--------:| --------------|---------------|---------
+| $1D  | none  | (PC + $FFFFs) → address |  → none | `0001 1101 0000 0000  WWWW WWWW WWWW WWWW `
+| $5D  | none  | (PC + $FFs) → address |  → none | `0101 1101 BBBB BBBB 0000 `
+
+        N => true
+        V => true
+        Z => false
+        N => false
+        V => false
+        Z => false
+  [{"N"=>true, "V"=>true, "Z"=>false}, {"N"=>false, "V"=>false, "Z"=>false}]
 
 # Branch if Less than or Equals (unsigned)
 
@@ -173,8 +202,15 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $9F  | none  | (PC + $FFFFs) → address |  → none | `1001 1111 0000 0000 0000 0000 0000 0000 `
-| $DF  | none  | (PC + $FFs) → address |  → none | `1101 1111 IMM. BYTE 0000 `
+| $9F  | none  | (PC + $FFFFs) → address |  → none | `1001 1111 0000 0000  WWWW WWWW WWWW WWWW `
+| $DF  | none  | (PC + $FFs) → address |  → none | `1101 1111 BBBB BBBB 0000 `
+
+        Z => true
+        N => true
+        V => false
+        N => false
+        V => true
+  [{"Z"=>true}, {"N"=>true, "V"=>false}, {"N"=>false, "V"=>true}]
 
 # Branch if Less Than (unsigned)
 
@@ -187,10 +223,16 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $9D  | none  | (PC + $FFFFs) → address |  → none | `1001 1101 0000 0000 0000 0000 0000 0000 `
-| $DD  | none  | (PC + $FFs) → address |  → none | `1101 1101 IMM. BYTE 0000 `
+| $9D  | none  | (PC + $FFFFs) → address |  → none | `1001 1101 0000 0000  WWWW WWWW WWWW WWWW `
+| $DD  | none  | (PC + $FFs) → address |  → none | `1101 1101 BBBB BBBB 0000 `
 
-# Branch if More than or Equals (unsigned)
+        N => true
+        V => false
+        N => false
+        V => true
+  [{"N"=>true, "V"=>false}, {"N"=>false, "V"=>true}]
+
+# Branch if More than or Equals (signed)
 
 `bme <address>`
 
@@ -201,10 +243,11 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $1F  | none  | (PC + $FFFFs) → address |  → none | `0001 1111 0000 0000 0000 0000 0000 0000 `
-| $5F  | none  | (PC + $FFs) → address |  → none | `0101 1111 IMM. BYTE 0000 `
+| $20  | none  | (PC + $FFFFs) → address |  → none | `0010 0000 0000 0000  WWWW WWWW WWWW WWWW `
+| $60  | none  | (PC + $FFs) → address |  → none | `0110 0000 BBBB BBBB 0000 `
 
-# Branch if More Than (unsigned)
+
+# Branch if More Than (signed)
 
 `bmt <address>`
 
@@ -215,8 +258,12 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $1D  | none  | (PC + $FFFFs) → address |  → none | `0001 1101 0000 0000 0000 0000 0000 0000 `
-| $5D  | none  | (PC + $FFs) → address |  → none | `0101 1101 IMM. BYTE 0000 `
+| $1E  | none  | (PC + $FFFFs) → address |  → none | `0001 1110 0000 0000  WWWW WWWW WWWW WWWW `
+| $5E  | none  | (PC + $FFs) → address |  → none | `0101 1110 BBBB BBBB 0000 `
+
+        C => false
+        Z => false
+  [{"C"=>false, "Z"=>false}]
 
 # Branch if Not Equals
 
@@ -229,8 +276,11 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $9C  | none  | (PC + $FFFFs) → address |  → none | `1001 1100 0000 0000 0000 0000 0000 0000 `
-| $DC  | none  | (PC + $FFs) → address |  → none | `1101 1100 IMM. BYTE 0000 `
+| $9C  | none  | (PC + $FFFFs) → address |  → none | `1001 1100 0000 0000  WWWW WWWW WWWW WWWW `
+| $DC  | none  | (PC + $FFs) → address |  → none | `1101 1100 BBBB BBBB 0000 `
+
+        Z => false
+  [{"Z"=>false}]
 
 # Branch if Not Zero
 
@@ -243,8 +293,11 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $A1  | none  | (PC + $FFFFs) → address |  → none | `1010 0001 0000 0000 0000 0000 0000 0000 `
-| $E1  | none  | (PC + $FFs) → address |  → none | `1110 0001 IMM. BYTE 0000 `
+| $A1  | none  | (PC + $FFFFs) → address |  → none | `1010 0001 0000 0000  WWWW WWWW WWWW WWWW `
+| $E1  | none  | (PC + $FFs) → address |  → none | `1110 0001 BBBB BBBB 0000 `
+
+        Z => false
+  [{"Z"=>false}]
 
 # BRanch Always
 
@@ -257,9 +310,10 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $18  | none  | (PC + r) → address |  → none | `0001 1000 0000 `
-| $58  | none  | (PC + $FFFFs) → address |  → none | `0101 1000 0000 0000 0000 0000 0000 0000 `
-| $98  | none  | (PC + $FFs) → address |  → none | `1001 1000 IMM. BYTE 0000 `
+| $18  | none  | (PC + r) → address |  → none | `0001 1000 0000 0000 `
+| $58  | none  | (PC + $FFFFs) → address |  → none | `0101 1000 0000 0000  WWWW WWWW WWWW WWWW `
+| $98  | none  | (PC + $FFs) → address |  → none | `1001 1000 BBBB BBBB 0000 `
+
 
 # BRanch if Carry
 
@@ -272,8 +326,11 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $22  | none  | (PC + $FFFFs) → address |  → none | `0010 0010 0000 0000 0000 0000 0000 0000 `
-| $62  | none  | (PC + $FFs) → address |  → none | `0110 0010 IMM. BYTE 0000 `
+| $22  | none  | (PC + $FFFFs) → address |  → none | `0010 0010 0000 0000  WWWW WWWW WWWW WWWW `
+| $62  | none  | (PC + $FFs) → address |  → none | `0110 0010 BBBB BBBB 0000 `
+
+        C => true
+  [{"C"=>true}]
 
 # BRanch if Negative
 
@@ -286,8 +343,11 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $A3  | none  | (PC + $FFFFs) → address |  → none | `1010 0011 0000 0000 0000 0000 0000 0000 `
-| $E3  | none  | (PC + $FFs) → address |  → none | `1110 0011 IMM. BYTE 0000 `
+| $A3  | none  | (PC + $FFFFs) → address |  → none | `1010 0011 0000 0000  WWWW WWWW WWWW WWWW `
+| $E3  | none  | (PC + $FFs) → address |  → none | `1110 0011 BBBB BBBB 0000 `
+
+        N => true
+  [{"N"=>true}]
 
 # BRanch if Overflow
 
@@ -300,8 +360,11 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $A2  | none  | (PC + $FFFFs) → address |  → none | `1010 0010 0000 0000 0000 0000 0000 0000 `
-| $E2  | none  | (PC + $FFs) → address |  → none | `1110 0010 IMM. BYTE 0000 `
+| $A2  | none  | (PC + $FFFFs) → address |  → none | `1010 0010 0000 0000  WWWW WWWW WWWW WWWW `
+| $E2  | none  | (PC + $FFs) → address |  → none | `1110 0010 BBBB BBBB 0000 `
+
+        O => true
+  [{"O"=>true}]
 
 # BRanch if Positive
 
@@ -314,12 +377,15 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $23  | none  | (PC + $FFFFs) → address |  → none | `0010 0011 0000 0000 0000 0000 0000 0000 `
-| $63  | none  | (PC + $FFs) → address |  → none | `0110 0011 IMM. BYTE 0000 `
+| $23  | none  | (PC + $FFFFs) → address |  → none | `0010 0011 0000 0000  WWWW WWWW WWWW WWWW `
+| $63  | none  | (PC + $FFs) → address |  → none | `0110 0011 BBBB BBBB 0000 `
 
-# Branch if Zero
+        N => false
+  [{"N"=>false}]
 
-`bz <address>`
+# BRanch if Zero
+
+`brz <address>`
 
 
 
@@ -328,8 +394,11 @@ Performs a logical And on p and q. `p = p ∧ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $21  | none  | (PC + $FFFFs) → address |  → none | `0010 0001 0000 0000 0000 0000 0000 0000 `
-| $61  | none  | (PC + $FFs) → address |  → none | `0110 0001 IMM. BYTE 0000 `
+| $21  | none  | (PC + $FFFFs) → address |  → none | `0010 0001 0000 0000  WWWW WWWW WWWW WWWW `
+| $61  | none  | (PC + $FFs) → address |  → none | `0110 0001 BBBB BBBB 0000 `
+
+        Z => true
+  [{"Z"=>true}]
 
 # Clear
 
@@ -342,8 +411,9 @@ Sets the `p` to zero.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $84  | word  | r → p |  → none | `1000 0100 REG. 0000 `
-| $C4  | byte  | r → p |  → none | `1100 0100 REG. 0000 `
+| $84  | word  | r → p |  → none | `1000 0100 RGTR 0000 `
+| $C4  | byte  | r → p |  → none | `1100 0100 RGTR 0000 `
+
 #### Flags:
 
 | N | V | Z | C
@@ -362,17 +432,18 @@ Compare two values, and set the NZVC registers based on their differences
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $19  | word  | r → p | r → q | `0001 1001 REG. REG. `
-| $59  | byte  | r → p | r → q | `0101 1001 REG. REG. `
-| $99  | word  | r → p | $FFFFu → q | `1001 1001 REG. 0000 0000 0000 0000 0000 `
-| $D9  | byte  | r → p | $FFu → q | `1101 1001 REG. 0000 0000 0000 0000 0000 `
-| $1A  | word  | r → p | $Fu → q | `0001 1010 REG.  `
-| $5A  | byte  | r → p | $Fu → q | `0101 1010 REG.  `
+| $19  | word  | r → p | r → q | `0001 1001 RGTR RGTR `
+| $59  | byte  | r → p | r → q | `0101 1001 RGTR RGTR `
+| $99  | word  | r → p | $FFFFu → q | `1001 1001 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $D9  | byte  | r → p | $FFu → q | `1101 1001 RGTR 0000 BBBB BBBB 0000 0000 `
+| $1A  | word  | r → p | $Fu → q | `0001 1010 RGTR NNNN `
+| $5A  | byte  | r → p | $Fu → q | `0101 1010 RGTR NNNN `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Copy
 
@@ -386,13 +457,14 @@ Copy the value of `q` into `p`.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $04  | word  | r → p | r → q | `0000 0100 REG. REG. `
-| $44  | byte  | r → p | r → q | `0100 0100 REG. REG. `
+| $04  | word  | r → p | r → q | `0000 0100 RGTR RGTR `
+| $44  | byte  | r → p | r → q | `0100 0100 RGTR RGTR `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | 0 | * | 0
+| ✱ | 0 | ✱ | 0
 
 # Decrease and Compare
 
@@ -406,22 +478,23 @@ Decrease p, and then compare it against another values, and set the NZVC registe
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $1B  | word  | r → p | $FFFFu → q | `0001 1011 REG. 0000 0000 0000 0000 0000 `
-| $5B  | byte  | r → p | $FFu → q | `0101 1011 REG. 0000 0000 0000 0000 0000 `
-| $9B  | word  | r → p | r → q | `1001 1011 REG. REG. `
-| $DB  | byte  | r → p | r → q | `1101 1011 REG. REG. `
+| $1B  | word  | r → p | $FFFFu → q | `0001 1011 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $5B  | byte  | r → p | $FFu → q | `0101 1011 RGTR 0000 BBBB BBBB 0000 0000 `
+| $9B  | word  | r → p | r → q | `1001 1011 RGTR RGTR `
+| $DB  | byte  | r → p | r → q | `1101 1011 RGTR RGTR `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Divide
 
 `div <p, q>`
 
 Divide two unsigned values together and place the result the `p` register.
-`p = p / q`
+`p = p ÷ q`
 
 
 
@@ -429,22 +502,23 @@ Divide two unsigned values together and place the result the `p` register.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $0F  | word  | r → p | r → q | `0000 1111 REG. REG. `
-| $4F  | byte  | r → p | r → q | `0100 1111 REG. REG. `
-| $8F  | word  | r → p | $FFFFu → q | `1000 1111 REG. 0000 0000 0000 0000 0000 `
-| $CF  | byte  | r → p | $FFu → q | `1100 1111 REG. 0000 0000 0000 0000 0000 `
+| $0F  | word  | r → p | r → q | `0000 1111 RGTR RGTR `
+| $4F  | byte  | r → p | r → q | `0100 1111 RGTR RGTR `
+| $8F  | word  | r → p | $FFFFu → q | `1000 1111 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $CF  | byte  | r → p | $FFu → q | `1100 1111 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Divide Signed
 
 `dvs <p, q>`
 
 Divide two signed values together and place the result the `p` register.
-`p = p / q`
+`p = p ÷ q`
 
 
 
@@ -452,15 +526,16 @@ Divide two signed values together and place the result the `p` register.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $10  | word  | r → p | r → q | `0001 0000 REG. REG. `
-| $50  | byte  | r → p | r → q | `0101 0000 REG. REG. `
-| $90  | word  | r → p | $FFFFs → q | `1001 0000 REG. 0000 0000 0000 0000 0000 `
-| $D0  | byte  | r → p | $FFs → q | `1101 0000 REG. 0000 0000 0000 0000 0000 `
+| $10  | word  | r → p | r → q | `0001 0000 RGTR RGTR `
+| $50  | byte  | r → p | r → q | `0101 0000 RGTR RGTR `
+| $90  | word  | r → p | $FFFFs → q | `1001 0000 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $D0  | byte  | r → p | $FFs → q | `1101 0000 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Leave protected mode
 
@@ -475,6 +550,7 @@ Enter protected mode, and denying access to the opcodes; enter, io. The 'enter p
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $65  | none  |  → none |  → none | `0110 0101 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
@@ -493,8 +569,9 @@ Swap two values around
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $05  | word  | r → p | r → p | `0000 0101 REG. REG. `
-| $45  | byte  | r → q | r → q | `0100 0101 REG. REG. `
+| $05  | word  | r → p | r → p | `0000 0101 RGTR RGTR `
+| $45  | byte  | r → q | r → q | `0100 0101 RGTR RGTR `
+
 #### Flags:
 
 | N | V | Z | C
@@ -513,7 +590,8 @@ Forbidden in Protected Mode!
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $E5  | none  | $Fu → data |  → none | `1110 0101  0000 `
+| $E5  | none  | $Fu → data |  → none | `1110 0101 NNNN 0000 `
+
 
 # Jump
 
@@ -527,8 +605,9 @@ Set the Program Counter to the given address
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $17  | none  | (r) → address |  → none | `0001 0111 0000 0000 0000 0000 0000 0000 `
-| $57  | none  | $FFFFu → address |  → none | `0101 0111 0000 0000 0000 0000 0000 0000 `
+| $17  | none  | (r) → address |  → none | `0001 0111 0000 0000  WWWW WWWW WWWW WWWW `
+| $57  | none  | $FFFFu → address |  → none | `0101 0111 0000 0000  WWWW WWWW WWWW WWWW `
+
 
 # Jump Subroutine
 
@@ -542,8 +621,9 @@ Push `(Program Counter + 4)` to the PC Stack, and then to Set the PC the given a
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $97  | none  | (r) → address |  → none | `1001 0111 0000 0000 0000 0000 0000 0000 `
-| $D7  | none  | $FFFFu → address |  → none | `1101 0111 0000 0000 0000 0000 0000 0000 `
+| $97  | none  | (r) → address |  → none | `1001 0111 0000 0000  WWWW WWWW WWWW WWWW `
+| $D7  | none  | $FFFFu → address |  → none | `1101 0111 0000 0000  WWWW WWWW WWWW WWWW `
+
 
 # Load Memory into register
 
@@ -557,15 +637,16 @@ Load a value from memory and put it in a register
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $02  | word  | r → p | (r) → address | `0000 0010 REG. 0000 0000 0000 0000 0000 `
-| $42  | word  | r → p | $FFFFu → address | `0100 0010 REG. 0000 0000 0000 0000 0000 `
-| $82  | byte  | r → p | (r) → address | `1000 0010 REG. 0000 0000 0000 0000 0000 `
-| $C2  | byte  | r → p | $FFFFu → address | `1100 0010 REG. 0000 0000 0000 0000 0000 `
+| $02  | word  | r → p | (r) → address | `0000 0010 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $42  | word  | r → p | $FFFFu → address | `0100 0010 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $82  | byte  | r → p | (r) → address | `1000 0010 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $C2  | byte  | r → p | $FFFFu → address | `1100 0010 RGTR 0000  WWWW WWWW WWWW WWWW `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | 0 | * | 0
+| ✱ | 0 | ✱ | 0
 
 # Leave protected mode
 
@@ -580,6 +661,7 @@ Leave protected mode, and allowing access to the opcodes; enter, io. The 'leave 
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $A5  | none  |  → none |  → none | `1010 0101 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
@@ -591,7 +673,7 @@ Leave protected mode, and allowing access to the opcodes; enter, io. The 'leave 
 `mls <p, q>`
 
 Multiply two signed values together and place the result the `p` register.
-`p = p * q`
+`p = p × q`
 
 
 
@@ -599,22 +681,23 @@ Multiply two signed values together and place the result the `p` register.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $0E  | word  | r → p | r → q | `0000 1110 REG. REG. `
-| $4E  | byte  | r → p | r → q | `0100 1110 REG. REG. `
-| $8E  | word  | r → p | $FFFFs → q | `1000 1110 REG. 0000 0000 0000 0000 0000 `
-| $CE  | byte  | r → p | $FFs → q | `1100 1110 REG. 0000 0000 0000 0000 0000 `
+| $0E  | word  | r → p | r → q | `0000 1110 RGTR RGTR `
+| $4E  | byte  | r → p | r → q | `0100 1110 RGTR RGTR `
+| $8E  | word  | r → p | $FFFFs → q | `1000 1110 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $CE  | byte  | r → p | $FFs → q | `1100 1110 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Multiply
 
 `mul <p, q>`
 
 Multiply two unsigned values together and place the result the `p` register.
-`p = p * q`
+`p = p × q`
 
 
 
@@ -622,15 +705,16 @@ Multiply two unsigned values together and place the result the `p` register.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $0D  | word  | r → p | r → q | `0000 1101 REG. REG. `
-| $4D  | byte  | r → p | r → q | `0100 1101 REG. REG. `
-| $8D  | word  | r → p | $FFFFu → q | `1000 1101 REG. 0000 0000 0000 0000 0000 `
-| $CD  | byte  | r → p | $FFu → q | `1100 1101 REG. 0000 0000 0000 0000 0000 `
+| $0D  | word  | r → p | r → q | `0000 1101 RGTR RGTR `
+| $4D  | byte  | r → p | r → q | `0100 1101 RGTR RGTR `
+| $8D  | word  | r → p | $FFFFu → q | `1000 1101 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $CD  | byte  | r → p | $FFu → q | `1100 1101 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Negate
 
@@ -644,8 +728,9 @@ Negate value `p = -p`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $94  | word  | r → p |  → none | `1001 0100 REG. 0000 `
-| $D4  | byte  | r → p |  → none | `1101 0100 REG. 0000 `
+| $94  | word  | r → p |  → none | `1001 0100 RGTR 0000 `
+| $D4  | byte  | r → p |  → none | `1101 0100 RGTR 0000 `
+
 
 # Not
 
@@ -659,13 +744,14 @@ Performs a logical Not on p. `p = ¬p`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $14  | word  | r → p |  → none | `0001 0100 REG. 0000 `
-| $54  | byte  | r → p |  → none | `0101 0100 REG. 0000 `
+| $14  | word  | r → p |  → none | `0001 0100 RGTR 0000 `
+| $54  | byte  | r → p |  → none | `0101 0100 RGTR 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | 0 | * | 0
+| ✱ | 0 | ✱ | 0
 
 # Or
 
@@ -679,15 +765,16 @@ Performs a logical Or on p and q. `p = p ∨ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $12  | word  | r → p | r → q | `0001 0010 REG. REG. `
-| $52  | byte  | r → p | r → q | `0101 0010 REG. REG. `
-| $92  | word  | r → p | $FFFFu → q | `1001 0010 REG. 0000 0000 0000 0000 0000 `
-| $D2  | byte  | r → p | $FFu → q | `1101 0010 REG. 0000 0000 0000 0000 0000 `
+| $12  | word  | r → p | r → q | `0001 0010 RGTR RGTR `
+| $52  | byte  | r → p | r → q | `0101 0010 RGTR RGTR `
+| $92  | word  | r → p | $FFFFu → q | `1001 0010 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $D2  | byte  | r → p | $FFu → q | `1101 0010 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | 0 | * | 0
+| ✱ | 0 | ✱ | 0
 
 # Pop
 
@@ -701,8 +788,9 @@ Pop value from stack into a register
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $01  | word  | r → p |  → none | `0000 0001 REG. 0000 `
-| $41  | byte  | r → p |  → none | `0100 0001 REG. 0000 `
+| $01  | word  | r → p |  → none | `0000 0001 RGTR 0000 `
+| $41  | byte  | r → p |  → none | `0100 0001 RGTR 0000 `
+
 
 # Push
 
@@ -716,10 +804,11 @@ Push value to stack
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $00  | word  | r → q |  → none | `0000 0000 REG. 0000 `
-| $40  | byte  | r → q |  → none | `0100 0000 REG. 0000 `
-| $80  | word  | $FFFFu → q |  → none | `1000 0000 0000 0000 0000 0000 0000 0000 `
-| $C0  | byte  | $FFu → q |  → none | `1100 0000 IMM. BYTE 0000 `
+| $00  | word  | r → q |  → none | `0000 0000 RGTR 0000 `
+| $40  | byte  | r → q |  → none | `0100 0000 RGTR 0000 `
+| $80  | word  | $FFFFu → q |  → none | `1000 0000 0000 0000  WWWW WWWW WWWW WWWW `
+| $C0  | byte  | $FFu → q |  → none | `1100 0000 BBBB BBBB 0000 `
+
 
 # 
 
@@ -734,6 +823,7 @@ Push value to stack
 |:----:|:--------:| --------------|---------------|---------
 | $D8  | none  |  → none |  → none | `1101 1000 0000 0000 `
 
+
 # Roll Left
 
 `rol `
@@ -746,8 +836,9 @@ Roll Left
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $16  | word  | r → p | $Fu → shift | `0001 0110 REG.  `
-| $56  | byte  | r → b | $Fu → shift | `0101 0110 REG.  `
+| $16  | word  | r → p | $Fu → shift | `0001 0110 RGTR NNNN `
+| $56  | byte  | r → b | $Fu → shift | `0101 0110 RGTR NNNN `
+
 
 # Roll Right
 
@@ -761,8 +852,9 @@ Roll Right
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $96  | word  | r → p | $Fu → shift | `1001 0110 REG.  `
-| $D6  | byte  | r → p | $Fu → shift | `1101 0110 REG.  `
+| $96  | word  | r → p | $Fu → shift | `1001 0110 RGTR NNNN `
+| $D6  | byte  | r → p | $Fu → shift | `1101 0110 RGTR NNNN `
+
 
 # Return from Interrupt
 
@@ -778,6 +870,7 @@ Return from interrupt
 |:----:|:--------:| --------------|---------------|---------
 | $25  | none  |  → none |  → none | `0010 0101 0000 0000 `
 
+
 # Store
 
 `s <address, q>`
@@ -790,10 +883,11 @@ Store a value from a register and put it in a register
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $03  | word  | (r) → address | r → q | `0000 0011 0000 REG. 0000 0000 0000 0000 `
-| $43  | word  | $FFFFu → address | r → q | `0100 0011 0000 REG. 0000 0000 0000 0000 `
-| $83  | byte  | (r) → address | r → q | `1000 0011 0000 REG. 0000 0000 0000 0000 `
-| $C3  | byte  | $FFFFu → address | r → q | `1100 0011 0000 REG. 0000 0000 0000 0000 `
+| $03  | word  | (r) → address | r → q | `0000 0011 0000 RGTR  WWWW WWWW WWWW WWWW `
+| $43  | word  | $FFFFu → address | r → q | `0100 0011 0000 RGTR  WWWW WWWW WWWW WWWW `
+| $83  | byte  | (r) → address | r → q | `1000 0011 0000 RGTR  WWWW WWWW WWWW WWWW `
+| $C3  | byte  | $FFFFu → address | r → q | `1100 0011 0000 RGTR  WWWW WWWW WWWW WWWW `
+
 
 # Subtract Quick
 
@@ -809,15 +903,16 @@ This is a quicker version of `add` but the range of the andem `q` can only be be
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $0C  | word  | r → p | $Fu → q | `0000 1100 REG.  `
-| $4C  | byte  | r → p | $Fu → q | `0100 1100 REG.  `
-| $8C  | word  | r → p | $Fs → q | `1000 1100 REG.  `
-| $CC  | byte  | r → p | $Fs → q | `1100 1100 REG.  `
+| $0C  | word  | r → p | $Fu → q | `0000 1100 RGTR NNNN `
+| $4C  | byte  | r → p | $Fu → q | `0100 1100 RGTR NNNN `
+| $8C  | word  | r → p | $Fs → q | `1000 1100 RGTR NNNN `
+| $CC  | byte  | r → p | $Fs → q | `1100 1100 RGTR NNNN `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Subtract Signed
 
@@ -832,15 +927,16 @@ Subtract two signed values together and place the result the `p` register.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $0B  | word  | r → p | r → q | `0000 1011 REG. REG. `
-| $4B  | byte  | r → p | r → q | `0100 1011 REG. REG. `
-| $8B  | word  | r → p | $FFFFs → q | `1000 1011 REG. 0000 0000 0000 0000 0000 `
-| $CB  | byte  | r → p | $FFs → q | `1100 1011 REG. 0000 0000 0000 0000 0000 `
+| $0B  | word  | r → p | r → q | `0000 1011 RGTR RGTR `
+| $4B  | byte  | r → p | r → q | `0100 1011 RGTR RGTR `
+| $8B  | word  | r → p | $FFFFs → q | `1000 1011 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $CB  | byte  | r → p | $FFs → q | `1100 1011 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Shift Left
 
@@ -854,13 +950,14 @@ Shifts the bits of the value `p` left by `shift` amount. For any overflowing bit
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $15  | word  | r → p | $Fu → shift | `0001 0101 REG.  `
-| $55  | byte  | r → b | $Fu → shift | `0101 0101 REG.  `
+| $15  | word  | r → p | $Fu → shift | `0001 0101 RGTR NNNN `
+| $55  | byte  | r → b | $Fu → shift | `0101 0101 RGTR NNNN `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-|   |   |   | *
+|   |   |   | ✱
 
 # Shift Right
 
@@ -874,13 +971,14 @@ Shifts the bits of the value `p` left by `shift` amount. For any underflowing bi
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $95  | word  | r → p | $Fu → shift | `1001 0101 REG.  `
-| $D5  | byte  | r → p | $Fu → shift | `1101 0101 REG.  `
+| $95  | word  | r → p | $Fu → shift | `1001 0101 RGTR NNNN `
+| $D5  | byte  | r → p | $Fu → shift | `1101 0101 RGTR NNNN `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-|   |   |   | *
+|   |   |   | ✱
 
 # Set Quick
 
@@ -894,13 +992,14 @@ Sets a value of a register to a value, the value can only be between $0 and $F i
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $06  | word  | r → p | $Fu → q | `0000 0110 REG.  `
-| $46  | byte  | r → p | $Fu → q | `0100 0110 REG.  `
+| $06  | word  | r → p | $Fu → q | `0000 0110 RGTR NNNN `
+| $46  | byte  | r → p | $Fu → q | `0100 0110 RGTR NNNN `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-|   |   | * |  
+| ◇ | ◇ | ✱ | ◇
 
 # Subtract
 
@@ -915,15 +1014,16 @@ Subtract two unsigned values together and place the result the `p` register.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $0A  | word  | r → p | r → q | `0000 1010 REG. REG. `
-| $4A  | byte  | r → p | r → q | `0100 1010 REG. REG. `
-| $8A  | word  | r → p | $FFFFu → q | `1000 1010 REG. 0000 0000 0000 0000 0000 `
-| $CA  | byte  | r → p | $FFu → q | `1100 1010 REG. 0000 0000 0000 0000 0000 `
+| $0A  | word  | r → p | r → q | `0000 1010 RGTR RGTR `
+| $4A  | byte  | r → p | r → q | `0100 1010 RGTR RGTR `
+| $8A  | word  | r → p | $FFFFu → q | `1000 1010 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $CA  | byte  | r → p | $FFu → q | `1100 1010 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | * | * | *
+| ✱ | ✱ | ✱ | ✱
 
 # Instruction for swp
 
@@ -937,8 +1037,9 @@ Swaps the upper and lower halves of the value
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $85  | word  | r → p |  → none | `1000 0101 REG. 0000 `
-| $C5  | byte  | r → q |  → none | `1100 0101 REG. 0000 `
+| $85  | word  | r → p |  → none | `1000 0101 RGTR 0000 `
+| $C5  | byte  | r → q |  → none | `1100 0101 RGTR 0000 `
+
 
 # Transfer Program counter stack to Register
 
@@ -952,7 +1053,8 @@ Copies an the Program Counter Register to an all purpose register
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $A4  | none  | r → address |  → none | `1010 0100 REG. 0000 `
+| $A4  | none  | r → address |  → none | `1010 0100 RGTR 0000 `
+
 
 # Transfer Register to Program stack register
 
@@ -966,7 +1068,8 @@ Copies an all purpose register to the Program stack register
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $E4  | none  | r → address |  → none | `1110 0100 REG. 0000 `
+| $E4  | none  | r → address |  → none | `1110 0100 RGTR 0000 `
+
 
 # Transfer Register to Stack
 
@@ -980,7 +1083,8 @@ Copies an all purpose register to the stack register
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $64  | none  | r → address |  → none | `0110 0100 REG. 0000 `
+| $64  | none  | r → address |  → none | `0110 0100 RGTR 0000 `
+
 
 # Transfer Stack to Register
 
@@ -994,7 +1098,8 @@ Copies the stack register to a given all purpose register
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $24  | none  | r → address |  → none | `0010 0100 REG. 0000 `
+| $24  | none  | r → address |  → none | `0010 0100 RGTR 0000 `
+
 
 # Xor
 
@@ -1008,15 +1113,16 @@ Performs a logical Exclusive-Or on p and q. `p = p ⊕ q`
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $13  | word  | r → p | r → q | `0001 0011 REG. REG. `
-| $53  | byte  | r → p | r → q | `0101 0011 REG. REG. `
-| $93  | word  | r → p | $FFFFu → q | `1001 0011 REG. 0000 0000 0000 0000 0000 `
-| $D3  | byte  | r → p | $FFu → q | `1101 0011 REG. 0000 0000 0000 0000 0000 `
+| $13  | word  | r → p | r → q | `0001 0011 RGTR RGTR `
+| $53  | byte  | r → p | r → q | `0101 0011 RGTR RGTR `
+| $93  | word  | r → p | $FFFFu → q | `1001 0011 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $D3  | byte  | r → p | $FFu → q | `1101 0011 RGTR 0000 BBBB BBBB 0000 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-| * | 0 | * | 0
+| ✱ | 0 | ✱ | 0
 
 # Zero Compare
 
@@ -1030,11 +1136,12 @@ Compares a value to zero.
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $9A  | word  | r → p |  → none | `1001 1010 REG. 0000 `
-| $DA  | byte  | r → p |  → none | `1101 1010 REG. 0000 `
+| $9A  | word  | r → p |  → none | `1001 1010 RGTR 0000 `
+| $DA  | byte  | r → p |  → none | `1101 1010 RGTR 0000 `
+
 #### Flags:
 
 | N | V | Z | C
 |---|---|---|---
-|   |   | * |  
+|   |   | ✱ |  
 

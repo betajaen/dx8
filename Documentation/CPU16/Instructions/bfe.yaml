@@ -1,9 +1,14 @@
 --- !ruby/object:InstructionDefinition
-name: :bat
+name: :bfe
 operations:
   :word: []
   :byte: []
   :none: []
 operands:
   - address
-comment: Branch if Above Than (signed)
+branch:
+  -
+    C: true
+    Z: true
+comment: Branch if Fewer or Equals (signed)
+

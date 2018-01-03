@@ -6,4 +6,13 @@ operations:
   :none: []
 operands:
   - address
+branch:
+  -
+    Z: true
+  -
+    N: true
+    V: false
+  -
+    N: false
+    V: true
 comment: Branch if Less than or Equals (unsigned)

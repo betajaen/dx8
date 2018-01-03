@@ -6,4 +6,7 @@ operations:
   :none: []
 operands:
   - address
+branch:
+  -
+    Z: true
 comment: Branch if EQuals
