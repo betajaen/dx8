@@ -8,5 +8,5 @@ operands:
   - address
 branch:
   -
-    O: true
+    V: true
 comment: BRanch if Overflow

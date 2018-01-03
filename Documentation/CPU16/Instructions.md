@@ -108,10 +108,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $1C  | none  | (PC + $FFFFs) → address |  → none | `0001 1100 0000 0000  WWWW WWWW WWWW WWWW `
-| $5C  | none  | (PC + $FFs) → address |  → none | `0101 1100 BBBB BBBB 0000 `
+| $5C  | none  | (PC + $FFs) → address |  → none | `0101 1100 BBBB BBBB `
 
-        Z => true
-  [{"Z"=>true}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | | |T| 
+
 
 # Branch if Fewer or Equals (signed)
 
@@ -125,11 +128,14 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $A0  | none  | (PC + $FFFFs) → address |  → none | `1010 0000 0000 0000  WWWW WWWW WWWW WWWW `
-| $E0  | none  | (PC + $FFs) → address |  → none | `1110 0000 BBBB BBBB 0000 `
+| $E0  | none  | (PC + $FFs) → address |  → none | `1110 0000 BBBB BBBB `
 
-        C => true
-        Z => true
-  [{"C"=>true, "Z"=>true}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | | |T| 
+| Or | | |T|T
+
 
 # Branch if Fewer than (signed)
 
@@ -143,11 +149,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $9E  | none  | (PC + $FFFFs) → address |  → none | `1001 1110 0000 0000  WWWW WWWW WWWW WWWW `
-| $DE  | none  | (PC + $FFs) → address |  → none | `1101 1110 BBBB BBBB 0000 `
+| $DE  | none  | (PC + $FFs) → address |  → none | `1101 1110 BBBB BBBB `
 
-        C => true
-        Z => true
-  [{"C"=>true, "Z"=>true}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | | |T|T
+
 
 # Branch if Greater than or Equals (unsigned)
 
@@ -161,13 +169,15 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $1F  | none  | (PC + $FFFFs) → address |  → none | `0001 1111 0000 0000  WWWW WWWW WWWW WWWW `
-| $5F  | none  | (PC + $FFs) → address |  → none | `0101 1111 BBBB BBBB 0000 `
+| $5F  | none  | (PC + $FFs) → address |  → none | `0101 1111 BBBB BBBB `
 
-        N => true
-        V => true
-        N => false
-        V => false
-  [{"N"=>true}, {"V"=>true}, {"N"=>false, "V"=>false}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If |T| | | 
+| Or | |T| | 
+| Or |F|F| | 
+
 
 # Branch if Greater Than (unsigned)
 
@@ -181,15 +191,14 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $1D  | none  | (PC + $FFFFs) → address |  → none | `0001 1101 0000 0000  WWWW WWWW WWWW WWWW `
-| $5D  | none  | (PC + $FFs) → address |  → none | `0101 1101 BBBB BBBB 0000 `
+| $5D  | none  | (PC + $FFs) → address |  → none | `0101 1101 BBBB BBBB `
 
-        N => true
-        V => true
-        Z => false
-        N => false
-        V => false
-        Z => false
-  [{"N"=>true, "V"=>true, "Z"=>false}, {"N"=>false, "V"=>false, "Z"=>false}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If |T|T|F| 
+| Or |F|F|F| 
+
 
 # Branch if Less than or Equals (unsigned)
 
@@ -203,14 +212,15 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $9F  | none  | (PC + $FFFFs) → address |  → none | `1001 1111 0000 0000  WWWW WWWW WWWW WWWW `
-| $DF  | none  | (PC + $FFs) → address |  → none | `1101 1111 BBBB BBBB 0000 `
+| $DF  | none  | (PC + $FFs) → address |  → none | `1101 1111 BBBB BBBB `
 
-        Z => true
-        N => true
-        V => false
-        N => false
-        V => true
-  [{"Z"=>true}, {"N"=>true, "V"=>false}, {"N"=>false, "V"=>true}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | | |T| 
+| Or |T|F| | 
+| Or |F|T| | 
+
 
 # Branch if Less Than (unsigned)
 
@@ -224,13 +234,14 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $9D  | none  | (PC + $FFFFs) → address |  → none | `1001 1101 0000 0000  WWWW WWWW WWWW WWWW `
-| $DD  | none  | (PC + $FFs) → address |  → none | `1101 1101 BBBB BBBB 0000 `
+| $DD  | none  | (PC + $FFs) → address |  → none | `1101 1101 BBBB BBBB `
 
-        N => true
-        V => false
-        N => false
-        V => true
-  [{"N"=>true, "V"=>false}, {"N"=>false, "V"=>true}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If |T|F| | 
+| Or |F|T| | 
+
 
 # Branch if More than or Equals (signed)
 
@@ -244,7 +255,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $20  | none  | (PC + $FFFFs) → address |  → none | `0010 0000 0000 0000  WWWW WWWW WWWW WWWW `
-| $60  | none  | (PC + $FFs) → address |  → none | `0110 0000 BBBB BBBB 0000 `
+| $60  | none  | (PC + $FFs) → address |  → none | `0110 0000 BBBB BBBB `
+
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | | |T| 
+| Or | | |F|F
 
 
 # Branch if More Than (signed)
@@ -259,11 +276,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $1E  | none  | (PC + $FFFFs) → address |  → none | `0001 1110 0000 0000  WWWW WWWW WWWW WWWW `
-| $5E  | none  | (PC + $FFs) → address |  → none | `0101 1110 BBBB BBBB 0000 `
+| $5E  | none  | (PC + $FFs) → address |  → none | `0101 1110 BBBB BBBB `
 
-        C => false
-        Z => false
-  [{"C"=>false, "Z"=>false}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | | |F|F
+
 
 # Branch if Not Equals
 
@@ -277,10 +296,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $9C  | none  | (PC + $FFFFs) → address |  → none | `1001 1100 0000 0000  WWWW WWWW WWWW WWWW `
-| $DC  | none  | (PC + $FFs) → address |  → none | `1101 1100 BBBB BBBB 0000 `
+| $DC  | none  | (PC + $FFs) → address |  → none | `1101 1100 BBBB BBBB `
 
-        Z => false
-  [{"Z"=>false}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | | |F| 
+
 
 # Branch if Not Zero
 
@@ -294,10 +316,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $A1  | none  | (PC + $FFFFs) → address |  → none | `1010 0001 0000 0000  WWWW WWWW WWWW WWWW `
-| $E1  | none  | (PC + $FFs) → address |  → none | `1110 0001 BBBB BBBB 0000 `
+| $E1  | none  | (PC + $FFs) → address |  → none | `1110 0001 BBBB BBBB `
 
-        Z => false
-  [{"Z"=>false}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | | |F| 
+
 
 # BRanch Always
 
@@ -312,7 +337,7 @@ Performs a logical And on p and q. `p = p ∧ q`
 |:----:|:--------:| --------------|---------------|---------
 | $18  | none  | (PC + r) → address |  → none | `0001 1000 0000 0000 `
 | $58  | none  | (PC + $FFFFs) → address |  → none | `0101 1000 0000 0000  WWWW WWWW WWWW WWWW `
-| $98  | none  | (PC + $FFs) → address |  → none | `1001 1000 BBBB BBBB 0000 `
+| $98  | none  | (PC + $FFs) → address |  → none | `1001 1000 BBBB BBBB `
 
 
 # BRanch if Carry
@@ -327,10 +352,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $22  | none  | (PC + $FFFFs) → address |  → none | `0010 0010 0000 0000  WWWW WWWW WWWW WWWW `
-| $62  | none  | (PC + $FFs) → address |  → none | `0110 0010 BBBB BBBB 0000 `
+| $62  | none  | (PC + $FFs) → address |  → none | `0110 0010 BBBB BBBB `
 
-        C => true
-  [{"C"=>true}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | | | |T
+
 
 # BRanch if Negative
 
@@ -344,10 +372,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $A3  | none  | (PC + $FFFFs) → address |  → none | `1010 0011 0000 0000  WWWW WWWW WWWW WWWW `
-| $E3  | none  | (PC + $FFs) → address |  → none | `1110 0011 BBBB BBBB 0000 `
+| $E3  | none  | (PC + $FFs) → address |  → none | `1110 0011 BBBB BBBB `
 
-        N => true
-  [{"N"=>true}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If |T| | | 
+
 
 # BRanch if Overflow
 
@@ -361,10 +392,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $A2  | none  | (PC + $FFFFs) → address |  → none | `1010 0010 0000 0000  WWWW WWWW WWWW WWWW `
-| $E2  | none  | (PC + $FFs) → address |  → none | `1110 0010 BBBB BBBB 0000 `
+| $E2  | none  | (PC + $FFs) → address |  → none | `1110 0010 BBBB BBBB `
 
-        O => true
-  [{"O"=>true}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | |T| | 
+
 
 # BRanch if Positive
 
@@ -378,10 +412,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $23  | none  | (PC + $FFFFs) → address |  → none | `0010 0011 0000 0000  WWWW WWWW WWWW WWWW `
-| $63  | none  | (PC + $FFs) → address |  → none | `0110 0011 BBBB BBBB 0000 `
+| $63  | none  | (PC + $FFs) → address |  → none | `0110 0011 BBBB BBBB `
 
-        N => false
-  [{"N"=>false}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If |F| | | 
+
 
 # BRanch if Zero
 
@@ -395,10 +432,13 @@ Performs a logical And on p and q. `p = p ∧ q`
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
 | $21  | none  | (PC + $FFFFs) → address |  → none | `0010 0001 0000 0000  WWWW WWWW WWWW WWWW `
-| $61  | none  | (PC + $FFs) → address |  → none | `0110 0001 BBBB BBBB 0000 `
+| $61  | none  | (PC + $FFs) → address |  → none | `0110 0001 BBBB BBBB `
 
-        Z => true
-  [{"Z"=>true}]
+#### Branch if:
+| Cond | N | V | Z | C
+|:----:|:-:|:-:|:-:|:-:
+| If | | |T| 
+
 
 # Clear
 
@@ -605,7 +645,7 @@ Set the Program Counter to the given address
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $17  | none  | (r) → address |  → none | `0001 0111 0000 0000  WWWW WWWW WWWW WWWW `
+| $17  | none  | (r) → address |  → none | `0001 0111 RGTR 0000 `
 | $57  | none  | $FFFFu → address |  → none | `0101 0111 0000 0000  WWWW WWWW WWWW WWWW `
 
 
@@ -621,7 +661,7 @@ Push `(Program Counter + 4)` to the PC Stack, and then to Set the PC the given a
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $97  | none  | (r) → address |  → none | `1001 0111 0000 0000  WWWW WWWW WWWW WWWW `
+| $97  | none  | (r) → address |  → none | `1001 0111 RGTR 0000 `
 | $D7  | none  | $FFFFu → address |  → none | `1101 0111 0000 0000  WWWW WWWW WWWW WWWW `
 
 
@@ -637,9 +677,9 @@ Load a value from memory and put it in a register
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $02  | word  | r → p | (r) → address | `0000 0010 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $02  | word  | r → p | (r) → address | `0000 0010 RGTR RGTR `
 | $42  | word  | r → p | $FFFFu → address | `0100 0010 RGTR 0000  WWWW WWWW WWWW WWWW `
-| $82  | byte  | r → p | (r) → address | `1000 0010 RGTR 0000  WWWW WWWW WWWW WWWW `
+| $82  | byte  | r → p | (r) → address | `1000 0010 RGTR RGTR `
 | $C2  | byte  | r → p | $FFFFu → address | `1100 0010 RGTR 0000  WWWW WWWW WWWW WWWW `
 
 #### Flags:
@@ -807,7 +847,7 @@ Push value to stack
 | $00  | word  | r → q |  → none | `0000 0000 RGTR 0000 `
 | $40  | byte  | r → q |  → none | `0100 0000 RGTR 0000 `
 | $80  | word  | $FFFFu → q |  → none | `1000 0000 0000 0000  WWWW WWWW WWWW WWWW `
-| $C0  | byte  | $FFu → q |  → none | `1100 0000 BBBB BBBB 0000 `
+| $C0  | byte  | $FFu → q |  → none | `1100 0000 BBBB BBBB `
 
 
 # 
@@ -883,9 +923,9 @@ Store a value from a register and put it in a register
 #### Opcodes:
 |Opcode| Type     | Operand 1     | Operand 2     | Encoding
 |:----:|:--------:| --------------|---------------|---------
-| $03  | word  | (r) → address | r → q | `0000 0011 0000 RGTR  WWWW WWWW WWWW WWWW `
+| $03  | word  | (r) → address | r → q | `0000 0011 RGTR RGTR `
 | $43  | word  | $FFFFu → address | r → q | `0100 0011 0000 RGTR  WWWW WWWW WWWW WWWW `
-| $83  | byte  | (r) → address | r → q | `1000 0011 0000 RGTR  WWWW WWWW WWWW WWWW `
+| $83  | byte  | (r) → address | r → q | `1000 0011 RGTR RGTR `
 | $C3  | byte  | $FFFFu → address | r → q | `1100 0011 0000 RGTR  WWWW WWWW WWWW WWWW `
 
 
