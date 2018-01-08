@@ -29,34 +29,18 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include <dx8/dx8.h>
-#include <dx8/Core/Ram/dx8_Ram.h>
+#ifndef DX8_VIDEO168256_H
+#define DX8_VIDEO168256_H
 
-#include "malloc.h"
-#include "string.h"
+#include <dx8a/dx8a.h>
 
-Byte* sRam12;     
-Byte* sRam34;     
-Byte* sTileRam;   
-Byte* sSpriteRam; 
 
-void Ram_Setup()
-{
-  sRam12 = malloc(DX8_RAM_12_SIZE);
-  sRam34 = malloc(DX8_RAM_34_SIZE);
-  sTileRam = malloc(DX8_RAM_TILE_SIZE);
-  sSpriteRam = malloc(DX8_RAM_SPRITE_SIZE);
+void Crt_Setup();
 
-  memset(sRam12,     0, DX8_RAM_12_SIZE);
-  memset(sRam34,     0, DX8_RAM_12_SIZE);
-  memset(sTileRam,   0, DX8_RAM_TILE_SIZE);
-  memset(sSpriteRam, 0, DX8_RAM_SPRITE_SIZE);
-}
+void Crt_Teardown();
 
-void Ram_Shutdown()
-{
-  free(sSpriteRam);
-  free(sTileRam);
-  free(sRam34);
-  free(sRam12);
-}
+void Crt_StartFrame();
+
+void Crt_EndFrame();
+
+#endif

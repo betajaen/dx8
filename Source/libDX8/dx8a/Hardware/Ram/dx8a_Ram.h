@@ -29,17 +29,29 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_CLOCK_H
-#define DX8_CLOCK_H
+#ifndef DX8_RAM_H
+#define DX8_RAM_H
 
-#include <dx8/dx8.h>
+#include <dx8a/dx8a.h>
 
-enum ClockAccuracy
-{
-  CLK_Accurate = 0,
-  CLK_Fast     = 1,
-};
+#define DX8_RAM_1_SIZE      DX8_KILOBYTES(32)
+#define DX8_RAM_2_SIZE      DX8_KILOBYTES(32)
+#define DX8_RAM_3_SIZE      DX8_KILOBYTES(32)
+#define DX8_RAM_4_SIZE      DX8_KILOBYTES(32)
 
-void Clock_Frame(u32 numFrames, u32 clockAccuracy);
+#define DX8_RAM_12_SIZE     (DX8_RAM_1_SIZE + DX8_RAM_2_SIZE)
+#define DX8_RAM_34_SIZE     (DX8_RAM_3_SIZE + DX8_RAM_4_SIZE)
+
+#define DX8_RAM_TILE_SIZE   DX8_KILOBYTES(4)
+#define DX8_RAM_SPRITE_SIZE DX8_KILOBYTES(4)
+
+extern Byte* sRam12; //[DX8_KILOBYTES(64)];
+extern Byte* sRam34; //[DX8_KILOBYTES(64)];
+extern Byte* sTileRam; //[DX8_KILOBYTES(4)];
+extern Byte* sSpriteRam; //[DX8_KILOBYTES(4)];
+
+void Ram_Setup();
+
+void Ram_Shutdown();
 
 #endif

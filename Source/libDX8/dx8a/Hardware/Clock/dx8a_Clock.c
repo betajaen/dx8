@@ -29,9 +29,9 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include <dx8/dx8.h>
-#include <dx8/Core/Clock/dx8_Clock.h>
-#include <dx8/Core/Cpu160000/dx8_Cpu160000.h>
+#include <dx8a/dx8a.h>
+#include <dx8a/Hardware/Clock/dx8a_Clock.h>
+#include <dx8a/Hardware/Cpu160000/dx8a_Cpu160000.h>
 
 #define BUS_CLOCKS_PER_TOP_VBLANK       28864
 #define BUS_CLOCKS_PER_BOTTOM_VBLANK    28480
@@ -75,7 +75,7 @@ static void Clock_Frames_Accurate(u32 numFrames)
 
     // Visible Area
     // Video is Enabled
-    for (u32 ii = 0; ii < BUS_CLOCKS_PER_BOTTOM_VBLANK; ii++)
+    for (u32 ii = 0; ii < BUS_CLOCKS_VISIBLE; ii++)
     {
       Gpu_Clock(0);
       Cpu16_BusClock(1);
@@ -129,7 +129,7 @@ static void Clock_Frames_Fast(u32 numFrames)
 
     // Visible Area
     // Video is Enabled
-    for (u32 ii = 0; ii < BUS_CLOCKS_PER_BOTTOM_VBLANK; ii++)
+    for (u32 ii = 0; ii < BUS_CLOCKS_VISIBLE; ii++)
     {
       Gpu_Clock(0);
       Gpu_Clock(1);

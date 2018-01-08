@@ -29,11 +29,12 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include <dx8/dx8.h>
-#include <dx8/Core/Crt/dx8_Crt.h>
-#include <dx8/Core/Crt/dx8_Crt_OSD.inc>
+#include <dx8a/dx8a.h>
+#include <dx8a/Hardware/Crt/dx8a_Crt.h>
+#include <dx8a/Hardware/Crt/dx8a_Crt_OSD.inc>
 
 #include <stdlib.h>
+#include <string.h>
 
 #if defined(_WIN32)
 #define EXPORT extern __declspec(dllexport)

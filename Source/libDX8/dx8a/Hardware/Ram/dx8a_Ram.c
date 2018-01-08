@@ -29,26 +29,34 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include <dx8/Core/Video168256/dx8_Video168256.h>
+#include <dx8a/dx8a.h>
+#include <dx8a/Hardware/Ram/dx8a_Ram.h>
 
-// The Colour Palette kindly made by Gardek based of the original 3 DX8 brand colours
+#include "malloc.h"
+#include "string.h"
 
-Byte kPalette[3 * 32] = {
-  // Colour palette
-  34, 34, 34,
-  85, 68, 170,
-  34, 153, 68,
-  85, 187, 204,
-  255, 68, 34,
-  255, 102, 170,
-  255, 187, 68,
-  255, 221, 204,
-  102, 68, 85,
-  153, 102, 221,
-  102, 187, 119,
-  153, 221, 255,
-  255, 102, 85,
-  255, 136, 221,
-  255, 221, 119,
-  255, 255, 255,
-};
+Byte* sRam12;     
+Byte* sRam34;     
+Byte* sTileRam;   
+Byte* sSpriteRam;
+
+void Ram_Setup()
+{
+  sRam12 = malloc(DX8_RAM_12_SIZE);
+  sRam34 = malloc(DX8_RAM_34_SIZE);
+  sTileRam = malloc(DX8_RAM_TILE_SIZE);
+  sSpriteRam = malloc(DX8_RAM_SPRITE_SIZE);
+
+  memset(sRam12,     0, DX8_RAM_12_SIZE);
+  memset(sRam34,     0, DX8_RAM_34_SIZE);
+  memset(sTileRam,   0, DX8_RAM_TILE_SIZE);
+  memset(sSpriteRam, 0, DX8_RAM_SPRITE_SIZE);
+}
+
+void Ram_Shutdown()
+{
+  free(sSpriteRam);
+  free(sTileRam);
+  free(sRam34);
+  free(sRam12);
+}

@@ -31,8 +31,8 @@
 
 //! This is an auto-generated file! Please do not edit.
 
-#include <dx8/Core/Cpu160000/dx8_Cpu160000.h>
-#include <dx8/Core/Mmu164512/dx8_Mmu164512.h>
+#include <dx8a/Hardware/Cpu160000/dx8a_Cpu160000.h>
+#include <dx8a/Hardware/Mmu164512/dx8a_Mmu164512.h>
 
 extern struct Cpu16 CPU;
 

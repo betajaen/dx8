@@ -29,7 +29,15 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include <dx8/Core/Bus/dx8_Bus.h>
+#include <dx8a/Hardware/Bus/dx8a_Bus.h>
+#include <dx8a/Hardware/Ram/dx8a_Ram.h>
+#include <dx8a/dx8a_Configuration.h>
+
+#define ROM_MASK     (DX8_ROM_SIZE - 1)
+#define RAM12_MASK   (DX8_RAM_12_SIZE - 1)
+#define RAM34_MASK   (DX8_RAM_34_SIZE - 1)
+#define TILE_MASK    (DX8_RAM_TILE_SIZE - 1)
+#define SPRITE_MASK  (DX8_RAM_SPRITE_SIZE - 1)
 
 extern Byte* sRom; //[DX8_ROM_SIZE]
 extern Byte* sRam12; //[DX8_KILOBYTES(64)];
@@ -39,58 +47,70 @@ extern Byte* sSpriteRam; //[DX8_KILOBYTES(4)];
 
 Word Bus_Read(Word address, Byte dma)
 {
+  Word addressLo, addressHi;
   Word w;
   switch(dma)
   {
     // 0 Rom
-    case 0:
+    case DMA_Rom:
     {
-      address = address & (DX8_ROM_SIZE-1);
-      return sRom[address] + sRom[address + 1] * 256;
+      addressLo = (address + 0) & ROM_MASK;
+      addressHi = (address + 1) & ROM_MASK;
+      return MAKE_WORD(sRom[addressLo], sRom[addressHi]);
     }
     // Ram 1 and Ram 2
-    case 1:
+    case DMA_Ram12:
     {
-      return sRam12[address];
+      addressLo = (address + 0) & RAM12_MASK;
+      addressHi = (address + 1) & RAM12_MASK;
+      return MAKE_WORD(sRam12[addressLo], sRam12[addressHi]);
     }
     return w;
     // Ram 3 and Ram 4
-    case 2:
+    case DMA_Ram34:
     {
-      return sRam34[address];
+      addressLo = (address + 0) & RAM34_MASK;
+      addressHi = (address + 1) & RAM34_MASK;
+      return MAKE_WORD(sRam34[addressLo], sRam34[addressHi]);
     }
     return w;
     // Tile and Sprite Ram
-    case 3:
+    case DMA_TileSprite:
     {
-      address = address & ((DX8_KILOBYTES(8) - 1));
-
-      if (address < 4096)
-        return sTileRam[address];
+      if (address < DX8_RAM_TILE_SIZE)
+      {
+        addressLo = (address + 0) & TILE_MASK;
+        addressHi = (address + 1) & TILE_MASK;
+        return MAKE_WORD(sTileRam[addressLo], sTileRam[addressHi]);
+      }
       else
-        return sTileRam[address - 4096];
+      {
+        addressLo = (address - DX8_RAM_TILE_SIZE + 0) & SPRITE_MASK;
+        addressHi = (address - DX8_RAM_TILE_SIZE + 1) & SPRITE_MASK;
+        return MAKE_WORD(sSpriteRam[addressLo], sSpriteRam[addressHi]);
+      }
     }
     return w;
-    // Graphics Registers
-    case 4:
+    // Video Registers
+    case DMA_Video168256:
     {
       // @TODO
     }
     return 0;
     // IO
-    case 5:
+    case DMA_IO:
     {
       // @TODO
     }
     return 0;
     // Reserved
-    case 6:
+    case DMA_Reserved6:
     { 
       // @TODO
     }
     return 0;
     // Expansion
-    case 7:
+    case DMA_Expansion:
     {
       // @TODO
     }
@@ -104,24 +124,24 @@ void Bus_Write(Word address, Byte dma, Word value)
   switch(dma)
   {
     // 0 Rom
-    case 0:
+    case DMA_Rom:
       return;
     // Ram 1 and Ram 2
-    case 1:
+    case DMA_Ram12:
     {
       sRam12[((address + 0) & (0xFFFF - 1))] = (value & 0xFF);
       sRam12[((address + 1) & (0xFFFF - 1))] = (value >> 8) & 0xFF;
     }
     return;
     // Ram 3 and Ram 4
-    case 2:
+    case DMA_Ram34:
     {
       sRam34[((address + 0) & (0xFFFF - 1))] = (value & 0xFF);
       sRam34[((address + 1) & (0xFFFF - 1))] = (value >> 8) & 0xFF;
     }
     return;
     // Tile and Sprite Ram
-    case 3:
+    case DMA_TileSprite:
     {
       address = address & ((DX8_KILOBYTES(8) - 1));
 
@@ -139,25 +159,25 @@ void Bus_Write(Word address, Byte dma, Word value)
     }
     return;
     // Graphics Registers
-    case 4:
+    case DMA_Video168256:
     {
       // @TODO
     }
     return;
     // IO
-    case 5:
+    case DMA_IO:
     {
       // @TODO
     }
     return;
     // Reserved
-    case 6:
+    case DMA_Reserved6:
     {
       // @TODO
     }
     return;
     // Expansion
-    case 7:
+    case DMA_Expansion:
     {
       // @TODO
     }

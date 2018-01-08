@@ -44,12 +44,12 @@ enum ApiName
 #undef API_NAME
 };
 
-void Cpu_Setup();
-void Cpu_Teardown();
+void Cpu16_Setup();
+void Cpu16_Teardown();
 void Mmu_Setup();
 void Mmu_Teardown();
-void Gpu_Setup();
-void Gpu_Teardown();
+void Gpu16_Setup();
+void Gpu16_Teardown();
 
 void Rom_Setup();
 void Rom_Teardown();
@@ -100,6 +100,7 @@ EXPORT int Shutdown()
 
 EXPORT int GetValue(int name)
 {
+#if 0
   switch(name)
   {
     case Api_A:
@@ -131,6 +132,7 @@ EXPORT int GetValue(int name)
     case Api_FloppyBusy:
       return Fpy_Busy();
   }
+#endif
   return 0;
 }
 
@@ -141,6 +143,7 @@ EXPORT int GetRam(int name, int addr)
 
 EXPORT int SetValue(int name, int value)
 {
+#if 0
   switch (name)
   {
   case Api_A:
@@ -171,7 +174,7 @@ EXPORT int SetValue(int name, int value)
     Cpu_SetHalt(value);
     return 0;
   }
-  
+#endif
   return -1;
 }
 

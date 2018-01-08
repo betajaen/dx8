@@ -29,10 +29,15 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include <dx8/Core/Video168256/dx8_Video168256.h>
-#include <dx8/Core/Video168256/dx8_Video168256_Palette.inc>
-
+#include <dx8a/Hardware/Video168256/dx8a_Video168256.h>
+#include <dx8a/Hardware/Bus/dx8a_Bus.h>
+#include <dx8a/dx8a_Configuration.h>
+#include <dx8a/dx8a_Log.h>
 #include <assert.h>
+#include <string.h>
+
+#include <dx8a/Hardware/Video168256/dx8a_Video168256_Palette.inc>
+
 
 Byte y, row;
 
@@ -160,26 +165,26 @@ void Gpu_Fetch_Sprite(int index)
 {
   SpriteRegister* sprite = &sGpu.Sprites[index];
   
-  sprite->x     = FastRam_Get(GFX_FAST_SPRITES + (index * 4) + 0);
-  sprite->y     = FastRam_Get(GFX_FAST_SPRITES + (index * 4) + 1);
-  sprite->flags = FastRam_Get(GFX_FAST_SPRITES + (index * 4) + 2);
-  sprite->addr  = FastRam_Get(GFX_FAST_SPRITES + (index * 4) + 3);
+  sprite->x     = Bus_Read(GFX_FAST_SPRITES + (index * 4) + 0, DMA_Video168256);
+  sprite->y     = Bus_Read(GFX_FAST_SPRITES + (index * 4) + 1, DMA_Video168256);
+  sprite->flags = Bus_Read(GFX_FAST_SPRITES + (index * 4) + 2, DMA_Video168256);
+  sprite->addr  = Bus_Read(GFX_FAST_SPRITES + (index * 4) + 3, DMA_Video168256);
 }
 
 void Gpu_Fetch_SpriteImage(int index)
 {
   SpriteRegister* sprite = &sGpu.Sprites[index];
   
-  sprite->image[0] = FastRam_Get(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 0);  // Just get the first row for now.
-  sprite->image[1] = FastRam_Get(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 1);
-  sprite->image[2] = FastRam_Get(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 2);
-  sprite->image[3] = FastRam_Get(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 3);
+  sprite->image[0] = Bus_Read(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 0, DMA_TileSprite);  // Just get the first row for now.
+  sprite->image[1] = Bus_Read(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 1, DMA_TileSprite);
+  sprite->image[2] = Bus_Read(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 2, DMA_TileSprite);
+  sprite->image[3] = Bus_Read(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 3, DMA_TileSprite);
 }
 
 inline void Gpu_Clock_Visible_C()
 {
-  sGpu.C.lo = FastRam_Get(sGpu.CCounter + 0);
-  sGpu.C.hi = FastRam_Get(sGpu.CCounter + 1);
+  sGpu.C.lo = Bus_Read(sGpu.CCounter + 0, DMA_Ram34);
+  sGpu.C.hi = Bus_Read(sGpu.CCounter + 1, DMA_Ram34);
   sGpu.CCounter += 2;
 }
 
@@ -191,8 +196,8 @@ inline void Gpu_ByteToK2(Byte m, Byte* k)
 
 inline void Gpu_Clock_Visible_K()
 {
-  Byte colour_lo = FastRam_Get(sGpu.KCounter + 0);
-  Byte colour_hi = FastRam_Get(sGpu.KCounter + 1);
+  Byte colour_lo = Bus_Read(sGpu.KCounter + 0, DMA_Ram34);
+  Byte colour_hi = Bus_Read(sGpu.KCounter + 1, DMA_Ram34);
   
   Gpu_ByteToK2(colour_lo, &sGpu.K.colour[0]);
   Gpu_ByteToK2(colour_hi, &sGpu.K.colour[2]);
@@ -204,13 +209,13 @@ inline void Gpu_Clock_Visible_K()
 inline void Gpu_Clock_Visible_T_Odd()
 {
   Word address = GFX_FAST_TILE_MEM + (((Word)sGpu.YRow) * T_STRIDE) + (Word) sGpu.C.lo;
-  sGpu.T = FastRam_GetWord(address);
+  sGpu.T = Bus_Read(address, DMA_TileSprite);
 }
 
 inline void Gpu_Clock_Visible_T_Even()
 {
   Word address = GFX_FAST_TILE_MEM + (((Word)sGpu.YRow) * T_STRIDE) + (Word)sGpu.C.hi;
-  sGpu.T = FastRam_GetWord(address);
+  sGpu.T = Bus_Read(address, DMA_TileSprite);
 }
 
 inline void Gpu_Clock_Visible_S()

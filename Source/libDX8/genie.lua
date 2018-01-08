@@ -22,9 +22,23 @@ solution "DX8"
     defines         { "_CRT_SECURE_NO_WARNINGS" }
     includedirs     { "./"}
     files           {
-      "dx8/**.c",
-      "dx8/**.h",
-      "dx8/**.inc",
+      "dx8/*.c",
+      "dx8/*.h",
+      "dx8/*.inc",
+      "genie.lua"
+  }
+
+  project "libDX8A"
+    kind            "SharedLib"
+    language        "C"
+    objdir          ".Obj"
+    flags           { "FatalWarnings" }
+    defines         { "_CRT_SECURE_NO_WARNINGS" }
+    includedirs     { "./"}
+    files           {
+      "dx8A/**.c",
+      "dx8A/**.h",
+      "dx8A/**.inc",
       "genie.lua"
   }
 
@@ -62,7 +76,7 @@ solution "DX8"
 
     flags           { "FatalWarnings", "NoExceptions", "NoRTTI", "WinMain" }
     defines         { }
-    links           { "libDX8", "SDL2", "SDL2main" }
+    links           { "libDX8A", "SDL2", "SDL2main" }
     includedirs     { "./", "./Player/References/", "./Player/References/SDL2/include" }
     libdirs         { "./Player/References/SDL2/lib/x86/" }
 

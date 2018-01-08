@@ -30,6 +30,8 @@
 
 #include <limits.h>
 
+#include <dx8a/dx8a_Configuration.h>
+
 #define KOSD_WIDTH       (48)
 #define KOSD_HEIGHT      (5)
 #define KOSD_CHAR_WIDTH  (3)

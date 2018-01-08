@@ -32,7 +32,7 @@
 #ifndef DX8_CPU_H
 #define DX8_CPU_H
 
-#include <dx8/dx8.h>
+#include <dx8a/dx8a.h>
 
 #define CPU16_MAX_PROGRAM_CACHE 8
 

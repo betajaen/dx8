@@ -29,10 +29,10 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include <dx8/Core/Cpu160000/dx8_Cpu160000.h>
-#include <dx8/Core/Mmu164512/dx8_Mmu164512.h>
+#include <dx8a/Hardware/Cpu160000/dx8a_Cpu160000.h>
+#include <dx8a/Hardware/Mmu164512/dx8a_Mmu164512.h>
 
-#include "string.h"
+#include <string.h>
 
 #define DX8_CYCLES_PER_MEMORY 4
 

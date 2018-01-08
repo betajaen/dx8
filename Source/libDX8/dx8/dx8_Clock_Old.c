@@ -49,7 +49,7 @@ int ClockNumFrames;
 
 #define PROCESSOR_BUS_CYCLES (DX8_CLOCK_CPU / 4)
 
-int Clock(int ms)
+int Clock_Old(int ms)
 {
   int count = 0;
   int ioClock = 0;

@@ -29,20 +29,26 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_VIDEO168256_H
-#define DX8_VIDEO168256_H
+#include <dx8a/Hardware/Video168256/dx8a_Video168256.h>
 
-#include <dx8/dx8.h>
+// The Colour Palette kindly made by Gardek based of the original 3 DX8 brand colours
 
-
-void Video_Setup();
-
-void Video_Teardown();
-
-void Video_Clock(u32 subCycle);
-
-void Video_StartFrame();
-
-void Video_EndFrame();
-
-#endif
+Byte kPalette[3 * 32] = {
+  // Colour palette
+  34, 34, 34,
+  85, 68, 170,
+  34, 153, 68,
+  85, 187, 204,
+  255, 68, 34,
+  255, 102, 170,
+  255, 187, 68,
+  255, 221, 204,
+  102, 68, 85,
+  153, 102, 221,
+  102, 187, 119,
+  153, 221, 255,
+  255, 102, 85,
+  255, 136, 221,
+  255, 221, 119,
+  255, 255, 255,
+};

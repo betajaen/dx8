@@ -32,7 +32,7 @@
 #ifndef DX8_MMU164512_H
 #define DX8_MMU164512_H
 
-#include <dx8/dx8.h>
+#include <dx8a/dx8a.h>
 
 
 #define MMU164512_PAGE_SIZE         2048

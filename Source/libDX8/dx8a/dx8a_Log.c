@@ -29,18 +29,44 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_VIDEO168256_H
-#define DX8_VIDEO168256_H
+#include <dx8a/dx8a.h>
 
-#include <dx8/dx8.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdarg.h>
 
+FILE* sLogFp = NULL;
 
-void Crt_Setup();
+void Log_Setup(const char* path)
+{
+  sLogFp = fopen(path, "w");
+}
 
-void Crt_Teardown();
+void Log_Teardown()
+{
+  if (sLogFp != NULL)
+  {
+    fclose(sLogFp);
+  }
+}
 
-void Crt_StartFrame();
+int Clock_GetCycle();
+int Clock_GetMilliseconds();
+int Clock_GetFrame();
 
-void Crt_EndFrame();
+void Log_Format(const char* text, ...)
+{
+  if (sLogFp != NULL)
+  {
+    va_list args;
 
-#endif
+    fprintf(sLogFp, "[f%05i.c%05i] ", Clock_GetFrame(), Clock_GetCycle());
+
+    va_start(args, text);
+    vfprintf(sLogFp, text, args);
+    va_end(args);
+
+    fprintf(sLogFp, "\n");
+    fflush(sLogFp);
+  }
+}
