@@ -10,4 +10,7 @@ comment: Zero Compare
 description: |
   Compares a value to zero.
 flags:
+  N: :set
+  V: :clear
   Z: :set
+  C: :clear

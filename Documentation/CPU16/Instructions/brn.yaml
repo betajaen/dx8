@@ -1,9 +1,5 @@
 --- !ruby/object:InstructionDefinition
 name: :brn
-operations:
-  :word: []
-  :byte: []
-  :none: []
 operands:
   - address
 branch:

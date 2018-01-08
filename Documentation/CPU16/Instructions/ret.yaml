@@ -4,9 +4,9 @@ operations:
   :word: []
   :byte: []
   :none:
-    - PC_STACK++
-    - PC = BUS_READ_WORD(PC_STACK)
-    - FLUSH_PREFETCH
+    - PC_STACK++;
+    - PC = BUS_READ_WORD(PC_STACK);
+    - Cpu16_FlushPrefetch();
   comment: Return from subroutine
   description: |
     Return from a subroutine by setting the Program Counter from the address popped from the PC Stack.

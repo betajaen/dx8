@@ -2,13 +2,13 @@
 name: :swp
 operations:
   :word:
-    - Byte lo = LO_BYTE(p)
-    - Byte hi = HI_BYTE(p)
-    - p = LOHI_WORD(hi, lo)
+    - Byte lo = LO_BYTE(p);
+    - Byte hi = HI_BYTE(p);
+    - p = hi + (lo * 256);
   :byte:
-    - Byte lo = LO_NIBBLE(p)
-    - Byte hi = HI_NIBBLE(p)
-    - p = LOHI_BYTE(hi, lo)
+    - Byte lo = LO_NIBBLE(p);
+    - Byte hi = HI_NIBBLE(p);
+    - p = hi + (lo * 16);
   :none: []
 comment: Instruction for swp
 operands:

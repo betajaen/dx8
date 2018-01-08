@@ -1,12 +1,10 @@
 --- !ruby/object:InstructionDefinition
 name: :bfe
-operations:
-  :word: []
-  :byte: []
-  :none: []
 operands:
   - address
 branch:
+  -
+    Z: true
   -
     C: true
     Z: true

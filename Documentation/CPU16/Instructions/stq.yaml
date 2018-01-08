@@ -2,11 +2,11 @@
 name: :stq
 operations:
   :word:
-    - p = q
-    - N0Z0(p)
+    - p = q;
+    - CCR(p);
   :byte:
-    - p = q & 0xFF
-    - N0Z0(p)
+    - p = q & 0xFF;
+    - CCR(p);
   :none: []
 operands:
   - p

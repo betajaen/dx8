@@ -29,30 +29,33 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_MMU1600512_H
-#define DX8_MMU1600512_H
+#ifndef DX8_MMU164512_H
+#define DX8_MMU164512_H
 
 #include <dx8/dx8.h>
-#include <dx8/Core/Bus/dx8_Bus.h>
 
-#define MMU1600512_PAGE_SIZE         2048
-#define MMU1600512_COMMAND_WRITE     0
-#define MMU1600512_COMMAND_SET_PAGE  1
+
+#define MMU164512_PAGE_SIZE         2048
+#define MMU164512_COMMAND_WRITE     0
+#define MMU164512_COMMAND_SET_PAGE  1
 
 extern u8*    sRam;
-extern u16    sMmu160512_Command;
-extern u8     sMmu160512_PageTable[256];
-extern u8     sMmu160512_DmaTable[256];
+extern u16    sMmu164512_Command;
+extern u8     sMmu164512_PageTable[256];
+extern u8     sMmu164512_DmaTable[256];
 
+Word Bus_Read(Word address, Byte dma);
+
+void Bus_Write(Word address, Byte dma, Word value);
 
 inline void Mmu1600512_GetPageAndDma(Word address, Word* realAddress, Byte* realDma)
 {
-  u32 page       = address & MMU1600512_PAGE_SIZE;
-  u32 pageOffset = address & ~MMU1600512_PAGE_SIZE;
-  u32 realPage   = sMmu160512_PageTable[page];
+  u32 page       = address & MMU164512_PAGE_SIZE;
+  u32 pageOffset = address & ~MMU164512_PAGE_SIZE;
+  u32 realPage   = sMmu164512_PageTable[page];
 
-  (*realAddress) = realPage * MMU1600512_PAGE_SIZE;
-  (*realDma)     = sMmu160512_DmaTable[page];
+  (*realAddress) = realPage * MMU164512_PAGE_SIZE;
+  (*realDma)     = sMmu164512_DmaTable[page];
 }
 
 Byte Rom_Get(Word address);
@@ -94,16 +97,16 @@ inline Word Mmu1600512_ReadW(Word address)
 inline void Mmu1600512_WriteW(Word address, Word data, bool commandLine)
 {
   // Unlikey!
-  if (commandLine && address > MMU1600512_COMMAND_WRITE)
+  if (commandLine && address > MMU164512_COMMAND_WRITE)
   {
-    switch(sMmu160512_Command)
+    switch(sMmu164512_Command)
     {
-      case MMU1600512_COMMAND_SET_PAGE:
+      case MMU164512_COMMAND_SET_PAGE:
       {
         u8 dst, src;
         dst = LO_BYTE(data);
         src = HI_BYTE(data);
-        sMmu160512_PageTable[src] = dst;
+        sMmu164512_PageTable[src] = dst;
       }
       return;
     }

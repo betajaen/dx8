@@ -2,11 +2,11 @@
 name: :cpy
 operations:
   :word:
-    - p = q
-    - NV00(p)
+    - p = q;
+    - CCR(p);
   :byte:
-    - p = q & 0xFF
-    - NV00(p)
+    - p = q & 0xFF;
+    - CCR(p);
   :none: []
 comment: Copy
 description: |

@@ -462,7 +462,7 @@ Sets the `p` to zero.
 
 # Compare
 
-`cmp `
+`cmp <p, q>`
 
 Compare two values, and set the NZVC registers based on their differences
 
@@ -618,11 +618,11 @@ Swap two values around
 |---|---|---|---
 | 0 | 0 | 0 | 0
 
-# IO
+# Input Output
 
 `io `
 
-Set the IO pins to a given 2-bit value
+Set the CPU-16 IO data pins to a given 2-bit value
 
 
 Forbidden in Protected Mode!
@@ -653,7 +653,7 @@ Set the Program Counter to the given address
 
 `jsr `
 
-Push `(Program Counter + 4)` to the PC Stack, and then to Set the PC the given address
+Push the next instruction address on to the PC Stack, and then set the Program Counter to the given address
 
 
 
@@ -686,7 +686,7 @@ Load a value from memory and put it in a register
 
 | N | V | Z | C
 |---|---|---|---
-| ✱ | 0 | ✱ | 0
+| ✱ |   | ✱ |  
 
 # Leave protected mode
 
@@ -831,6 +831,11 @@ Pop value from stack into a register
 | $01  | word  | r → p |  → none | `0000 0001 RGTR 0000 `
 | $41  | byte  | r → p |  → none | `0100 0001 RGTR 0000 `
 
+#### Flags:
+
+| N | V | Z | C
+|---|---|---|---
+| ✱ |   | ✱ |  
 
 # Push
 
@@ -1085,7 +1090,7 @@ Swaps the upper and lower halves of the value
 
 `tpr <p>`
 
-Copies an the Program Counter Register to an all purpose register
+Copies an the Program Counter Stack Register (PcStack) to an all purpose register
 
 
 
@@ -1100,7 +1105,7 @@ Copies an the Program Counter Register to an all purpose register
 
 `trp <p>`
 
-Copies an all purpose register to the Program stack register
+Copies an all purpose register to the Program Counter stack register (PcStack)
 
 
 

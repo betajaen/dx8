@@ -2,9 +2,9 @@
 name: :s
 operations:
   :word:
-    - BUS_WRITE_WORD(q, address)
+    - BUS_WRITE_WORD(q, address);
   :byte:
-    - BUS_WRITE_BYTE(q, address)
+    - BUS_WRITE_BYTE(q, address);
   :none: []
 comment: Store
 operands:

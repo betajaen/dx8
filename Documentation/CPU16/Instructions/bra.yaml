@@ -1,9 +1,13 @@
 --- !ruby/object:InstructionDefinition
 name: :bra
 operations:
-  :word: []
-  :byte: []
-  :none: []
+  :word:
+    - Cpu16_Branch_Sword(MDR.sw);
+  :byte:
+    - Cpu16_Branch_Sbyte(MDR.sb);
+  :none:
+    - Cpu16_Branch_Sword(p);
 operands:
+  - p
   - address
 comment: BRanch Always

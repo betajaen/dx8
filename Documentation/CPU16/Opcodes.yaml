@@ -22,10 +22,10 @@
   - clr.w ur:p                # clear register
   - clr.b ur:p                # clear register
 -
-  - exc.w ur:p, ur:p          # swap registers with themselves
-  - exc.b ur:q, ur:q          # swap registers with themselves
+  - exc.w ur:p, ur:q          # swap registers with themselves
+  - exc.b ur:p, ur:q          # swap registers with themselves
   - swp.w ur:p                # swap bytes with itself
-  - swp.b ur:q                # swap nibbles with itself
+  - swp.b ur:p                # swap nibbles with itself
 -
   - stq.w ur:p, u4:q          # set quick
   - stq.b ur:p, u4:q          # set quick
@@ -101,12 +101,12 @@
   - neg.b sr:p                # negate
 -
   - shl.w ur:p, u4:shift      # shift left
-  - shl.b ur:b, u4:shift      # shift left
+  - shl.b ur:p, u4:shift      # shift left
   - shr.w ur:p, u4:shift      # shift right
   - shr.b ur:p, u4:shift      # shift right
 -
   - rol.w ur:p, u4:shift      # roll left
-  - rol.b ur:b, u4:shift      # roll left
+  - rol.b ur:p, u4:shift      # roll left
   - ror.w ur:p, u4:shift      # roll right
   - ror.b ur:p, u4:shift      # roll right
 -
@@ -115,9 +115,9 @@
   - jsr pr:address            # push pc + 4 to stack and jump to address
   - jsr u16:address           # push pc + 4 to stack and jump to address
 -
-  - bra prr:address           # branch always - (relative jump to address)
-  - bra prrw:address          # branch always - (relative jump to address)
-  - bra prrb:address          # branch always - (relative jump to address)
+  - bra   prr:p               # branch always - (relative jump to address)
+  - bra.w prrw:address        # branch always - (relative jump to address)
+  - bra.b prrb:address        # branch always - (relative jump to address)
   - ret                       # return from subroutine
 -
   - cmp.w ur:p, ur:q          # compare to register
@@ -175,10 +175,10 @@
   - brn prrw:address          # branch negative
   - brn prrb:address          # branch negative
 -
-  - tsr ur:address            # transfer stack pointer to register
-  - trs ur:address            # transfer register to stack pointer
-  - tpr ur:address            # transfer program stack pointer to register
-  - trp ur:address            # transfer register to program stack pointer
+  - tsr ur:p                  # transfer stack pointer to register
+  - trs ur:p                  # transfer register to stack pointer
+  - tpr ur:p                  # transfer program stack pointer to register
+  - trp ur:p                  # transfer register to program stack pointer
 -
   - rti                       # return from interrupt
   - ent                       # enter protected mode

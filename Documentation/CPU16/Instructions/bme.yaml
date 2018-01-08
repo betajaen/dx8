@@ -1,10 +1,11 @@
 --- !ruby/object:InstructionDefinition
 name: :bme
-operations:
-  :word: []
-  :byte: []
-  :none: []
 operands:
   - address
 branch:
+  -
+    Z: true
+  -
+    C: false
+    Z: false
 comment: Branch if More than or Equals (signed)

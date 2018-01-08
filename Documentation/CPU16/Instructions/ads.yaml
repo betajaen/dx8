@@ -2,16 +2,17 @@
 name: :ads
 operations:
   :word:
-    - p = p + q
-    - NVZC_WORD(p)
+    - p = p + q;
+    - CCR(p);
   :byte:
-    - p = p + q
-    - NVZC_BYTE(p)
-    - p = FORCE_BYTE(p)
+    - p = p + q;
+    - CCR(p);
+    - p = (Byte) p;
   :none: []
 operands:
   - p
   - q
+signed: true
 comment: Add Signed
 description: |
   Add two signed values together and place the result the `p` register.

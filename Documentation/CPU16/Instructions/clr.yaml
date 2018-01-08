@@ -2,11 +2,13 @@
 name: :clr
 operations:
   :word:
-    - p = 0
-    - N0Z0(p)
+    - p = 0;
+    - FLAG_N = 0;
+    - FLAG_Z = 0;
   :byte:
-    - p = 0
-    - N0Z0(p)
+    - p = 0;
+    - FLAG_N = 0;
+    - FLAG_Z = 0;
   :none: []
 comment: Clear
 description: Sets the `p` to zero.

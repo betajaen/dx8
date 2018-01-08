@@ -2,13 +2,13 @@
 name: :add
 operations:
   :word:
-    - p = p + q
-    - NVZC(p)
+    - u32 r = (u32) p + (u32) q;
+    - p = (r & 0xFFFF);
+    - CCR(r);
   :byte:
-    - p = p + q
-    - NVZC(p)
-    - p = FORCE_BYTE(p)
-  :none: []
+    - i32 r = (u32) p + (u32) q;
+    - p = (r & 0xFF);
+    - CCR(r);
 operands:
   - p
   - q

@@ -2,15 +2,18 @@
 name: :exc
 operations:
   :word:
-    - Word t = p
-    - p = q
-    - q = t
+    - Word t = p;
+    - p = q;
+    - q = t;
   :byte:
-    - Byte t = p
-    - p = q
-    - q = t
+    - Byte t = (Byte) p;
+    - p = q;
+    - q = t;
   :none: []
 comment: Exchange
+operands:
+  - p
+  - q
 description: |
   Swap two values around
 flags:

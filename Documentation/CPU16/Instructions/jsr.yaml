@@ -3,7 +3,12 @@ name: :jsr
 operations:
   :word: []
   :byte: []
-  :none: []
+  :none:
+    - BUS_WRITE_WORD(PC_STACK, PC);
+    - PC_STACK--;
+    - PC = address;
+operands:
+    - address
 comment: Jump Subroutine
 description: |
-  Push `(Program Counter + 4)` to the PC Stack, and then to Set the PC the given address
+  Push the next instruction address on to the PC Stack, and then set the Program Counter to the given address

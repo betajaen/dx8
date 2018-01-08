@@ -2,12 +2,14 @@
 name: :psh
 operations:
   :word:
-    - BUS_WRITE_WORD(STACK, q)
-    - STACK--
+    - BUS_WRITE_WORD(STACK, q);
+    - STACK--;
   :byte:
-    - BUS_WRITE_BYTE(STACK, q)
-    - STACK--
+    - BUS_WRITE_BYTE(STACK, q);
+    - STACK--;
   :none: []
+operands:
+  - q
 comment: Push
 description: |
   Push value to stack

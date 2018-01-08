@@ -1,9 +1,5 @@
 --- !ruby/object:InstructionDefinition
 name: :bge
-operations:
-  :word: []
-  :byte: []
-  :none: []
 operands:
   - address
 branch:

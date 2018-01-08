@@ -4,9 +4,9 @@ operations:
   :word: []
   :byte: []
   :none:
-    - PC_STACK = p
+    - PC_STACK = p;
 operands:
   - p
 comment: Transfer Register to Program stack register
 description: |
-  Copies an all purpose register to the Program stack register
+  Copies an all purpose register to the Program Counter stack register (PcStack)

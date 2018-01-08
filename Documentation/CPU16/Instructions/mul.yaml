@@ -2,12 +2,11 @@
 name: :mul
 operations:
   :word:
-    - p = p * q
-    - NVZC_WORD(p)
+    - p = p * q;
+    - CCR(p);
   :byte:
-    - p = (p * q) & 0xFF
-    - NVZC_BYTE(p)
-    - p = FORCE_BYTE(p)
+    - p = (p * q) & 0xFF;
+    - CCR(p);
   :none: []
 operands:
   - p

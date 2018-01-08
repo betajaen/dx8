@@ -29,38 +29,29 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include <dx8/Core/Cpu16/dx8_Cpu16.h>
-#include <dx8/Core/Mmu160512/dx8_Mmu160512.h>
+#include <dx8/Core/Cpu160000/dx8_Cpu160000.h>
+#include <dx8/Core/Mmu164512/dx8_Mmu164512.h>
 
 #include "string.h"
 
 #define DX8_CYCLES_PER_MEMORY 4
 
-struct Cpu16 cpu16;
+extern struct Cpu16 CPU;
 
-#define CPU cpu16
-
-#define CPU16_INSTRUCTION_NOP 0x00FE
-#define OPERAND_dst LO_NIBBLE(operand)
-#define OPERAND_src HI_NIBBLE(operand)
-
-//#define MAKE_WORD(LO, HI) (LO + ((HI) * 256))
-
-#define PC_FETCH() imm = 0
+void Cpu16_Execute(Byte opcode, Byte operand, Byte* subCycle);
 
 void Cpu16_Reset()
 {
-  memset(&cpu16, 0, sizeof(struct Cpu16));
+  memset(&CPU, 0, sizeof(struct Cpu16));
   CPU.er.subCycle = 0xF;  // For fetching first instruction.
 }
 
-static void Cpu16_WriteW(Word address, Word data);
-static void Cpu16_WriteB(Word address, Word data);
-static Word Cpu16_ReadW(Word address);
-static Word Cpu16_ReadB(Word address);
+void Cpu16_Bus_WriteWord(Word address, Word data);
+void Cpu16_Bus_WriteByte(Word address, Word data);
+Word Cpu16_Bus_ReadWord(Word address);
+Word Cpu16_Bus_ReadByte(Word address);
 
-
-static void Cpu16_WriteW(Word address, Word data)
+void Cpu16_Bus_WriteWord(Word address, Word data)
 {
   CPU.memoryAccessThisCycle = true;
 
@@ -77,7 +68,8 @@ static void Cpu16_WriteW(Word address, Word data)
     {
       // Nice clean write to aligned memory!
       Mmu_Write(address, data, 0);
-      CPU.memoryCyclePenalty = 1;
+      CPU.memoryAccessThisCycle = 1;
+      CPU.memoryBusDelay = 0;
     }
     else
     {
@@ -97,28 +89,29 @@ static void Cpu16_WriteW(Word address, Word data)
         Mmu_Write(address - 1, lo, 0);
         Mmu_Write(address + 1, hi, 1);
         
-        CPU.memoryCyclePenalty = 4;
+        CPU.memoryAccessThisCycle = 1;
+        CPU.memoryBusDelay = 3;
     }
   }
 }
 
-static Word Cpu16_ReadW(Word address)
+Word Cpu16_Bus_ReadWord(Word address)
 {
-  CPU.memoryAccessThisCycle = true;
-
   if ((address & 1) == 0)
   {
+    CPU.memoryAccessThisCycle = 1;
+    CPU.memoryBusDelay = 0;
     // Clean read to aligned memory
     return Mmu_Read(address);
   }
   else
   {
     // Unaligned read from memory.
-
+    return 0;
   }
 }
 
-static void Cpu16_WriteB(Word address, Word value)
+void Cpu16_Bus_WriteByte(Word address, Word value)
 {
   CPU.memoryAccessThisCycle = true;
 
@@ -126,28 +119,26 @@ static void Cpu16_WriteB(Word address, Word value)
   {
     // Odd Address
     // Adjust address to memory, and read the hi byte.
-    Word v = Cpu16_ReadW(address - 1);
+    Word v = Cpu16_Bus_ReadWord(address - 1);
     Word lo = LO_BYTE(v);
-    Word m;
-    MAKE_WORD(lo, value);
+    Word m = MAKE_WORD(lo, value);
 
-    Cpu16_WriteW(address - 1, m);
+    Cpu16_Bus_WriteWord(address - 1, m);
   }
   else
   {
     // Even Address, byte will always be lo byte.
     // Odd Address
     // Access aligned to memory, and read the hi byte.
-    Word v = Cpu16_ReadW(address - 1);
+    Word v = Cpu16_Bus_ReadWord(address - 1);
     Word lo = LO_BYTE(v);
-    Word m;
-    MAKE_WORD(lo, value);
+    Word m = MAKE_WORD(lo, value);
 
-    Cpu16_WriteW(address - 1, m);
+    Cpu16_Bus_WriteWord(address - 1, m);
   }
 }
 
-static Word Cpu16_ReadB(Word address)
+Word Cpu16_Bus_ReadByte(Word address)
 {
   CPU.memoryAccessThisCycle = true;
 
@@ -155,86 +146,36 @@ static Word Cpu16_ReadB(Word address)
   {
     // Odd Address
     // Adjust address to memory, and read the hi byte.
-    Word v = Cpu16_ReadW(address - 1);
+    Word v = Cpu16_Bus_ReadWord(address - 1);
     Byte hi = HI_BYTE(v);
     return hi;
   }
   else
   {
     // Even Address, byte will always be lo byte.
-    Word v = Cpu16_ReadW(address);
+    Word v = Cpu16_Bus_ReadWord(address);
     Byte lo = LO_BYTE(v);
     return lo;
   }
 }
 
-#define COND_EQ            (false)
-#define COND_NEQ           (false)
-#define COND_OVERFLOW      (false)
-#define COND_CARRY         (false)
-#define COND_LT            (false)
-#define COND_GT            (false)
-#define COND_LT_EQ         (false)
-#define COND_GT_EQ         (false)
-#define COND_MORE          (false)
-#define COND_LOWER         (false)
-#define COND_MORE_EQ       (false)
-#define COND_LOWER_EQ      (false)
-#define COND_ZERO          (false)
-#define COND_NOT_ZERO      (false)
-#define COND_POSITIVE      (false)
-#define COND_NEGATIVE      (false)
-#define COND_EQ            (false)
-#define COND_NEQ           (false)
-#define COND_OVERFLOW      (false)
-#define COND_CARRY         (false)
-#define COND_LT            (false)
-#define COND_GT            (false)
-#define COND_LT_EQ         (false)
-#define COND_GT_EQ         (false)
-#define COND_MORE          (false)
-#define COND_LOWER         (false)
-#define COND_MORE_EQ       (false)
-#define COND_LOWER_EQ      (false)
-#define COND_ZERO          (false)
-#define COND_NOT_ZERO      (false)
-#define COND_POSITIVE      (false)
-#define COND_NOT_ZERO      (false)
-
-#define CPU16_ADC(D, S) (0)
-#define CPU16_SBC(D, S) (0)
-#define CPU16_ROL(D, S) (0)
-#define CPU16_ROR(D, S) (0)
-
-static void Cpu16_CmpW(Word a, Word b)
-{
-}
-
-static void Cpu16_CmpB(Word a, Word b)
-{
-}
-
-static void Cpu16_CmpBit(Word a, Word bit)
-{
-}
-
 static void Cpu16_PushPcCache(Word pc, Word data)
 {
-  CPU.cr[CPU.prCacheNextIdx].pc = pc;
-  CPU.cr[CPU.prCacheNextIdx].data = data;
+  CPU.programCache[CPU.programCacheNextIndex].pc = pc;
+  CPU.programCache[CPU.programCacheNextIndex].data = data;
 
-  CPU.prCacheNextIdx++;
-  if (CPU.prCacheNextIdx == CPU16_MAX_INSTRUCTION_CACHE)
+  CPU.programCacheNextIndex++;
+  if (CPU.programCacheNextIndex == CPU16_MAX_PROGRAM_CACHE)
   {
-    CPU.prCacheNextIdx = 0;
+    CPU.programCacheNextIndex = 0;
   }
 }
 
 bool Cpu16_SearchCache(Word pc, Word* value)
 {
-  for(u32 i=0;i < CPU16_MAX_INSTRUCTION_CACHE;i++)
+  for(u32 i=0;i < CPU16_MAX_PROGRAM_CACHE;i++)
   {
-    struct Cpu16PrefetchRegister* cache = CPU.cr;
+    struct Cpu16ProgramCacheRegister* cache = CPU.programCache;
     if (cache->pc == pc)
     {
       (*value) = cache->data;
@@ -246,57 +187,57 @@ bool Cpu16_SearchCache(Word pc, Word* value)
 
 Word Cpu16_PcRead()
 {
-  // @TODO
-  //    Either grab from cache or from memory. Cache first though!
-  //    Remember to set CPU.er.pcNextCached if cached!
-  //    And remember to set CPU.memoryAccessThisCycle = true; if we got it from memory!!
-  //    This is will automatically add to the instruction cache.
-
   Word value;
   if (Cpu16_SearchCache(CPU.pc, &value))
   {
-    CPU.er.pcNextCached;
     return value;
   }
 
-  value = Cpu16_ReadW(CPU.pc);
+  value = Cpu16_Bus_ReadWord(CPU.pc);
   Cpu16_PushPcCache(CPU.pc, value);
 
   return value;
 }
 
-#include <dx8/Core/Cpu16/dx8_Cpu16_Opcodes.inc>
-#include <dx8/Core/Cpu16/dx8_Cpu16_Cycles.inc>
+int  Cpu16_PcReadToMdr()
+{
+  Word value;
+  if (Cpu16_SearchCache(CPU.pc, &value))
+  {
+    return 2;
+  }
+
+  CPU.mdr.w = Cpu16_Bus_ReadWord(CPU.pc);
+  Cpu16_PushPcCache(CPU.pc, value);
+
+  return 1;
+}
 
 void Cpu16_FetchNextInstruction()
 {
   memset(&CPU.er, 0, sizeof(CPU.er));
 
-  CPU.er.instruction  = Cpu16_PcRead();
-  CPU.er.opcode       = CPU.dr.opcode;
-  CPU.er.operand      = CPU.dr.operand;
-  CPU.er.imm          = 0;
-  CPU.er.pcNextCached = false;
-  
+  Word instruction    = Cpu16_PcRead();
+  CPU.er.opcode       = LO_BYTE(instruction);
+  CPU.er.operand      = HI_BYTE(instruction);
+  CPU.er.subCycle     = 0x0;
+  CPU.pc         += 2;
 }
 
 void Cpu16_Prefetch()
 {
   // @TODO
-  //    Improve on this. Have some sort of resetable counter (reset during a flush), where
-  //    it will get PC + counter, and add it into the cache.
-  Word next = Cpu16_ReadW(CPU.pc + 2);
-  Cpu16_PushPcCache(CPU.pc + 2, next);
+  //  Essentially fetches PC+n. Where n increases each free bus cycle unless PC goes all crazy, and get's reset.
 }
 
-void Cpu16_Flush()
+void Cpu16_FlushPrefetch()
 {
   // This just resets the cache to empty, because the JSR may have moved. We can be clever and only
   // flush if the PC isn't in the cache. Making short jumps really efficent!
   
-  for(u32 i=0;i < CPU16_MAX_INSTRUCTION_CACHE;i++)
+  for(u32 i=0;i < CPU16_MAX_PROGRAM_CACHE;i++)
   {
-    struct Cpu16RegisterCache* cache = CPU.cr;
+    struct Cpu16ProgramCacheRegister* cache = CPU.programCache;
     if (cache->pc == CPU.pc)
     {
       return; // Good, we have the PC cached, no need to flush.
@@ -304,52 +245,77 @@ void Cpu16_Flush()
   }
   
   // PC isn't in the area we have cached. Let's clear it.
-  for(u32 i=0;i < CPU16_MAX_INSTRUCTION_CACHE;i++)
+  for(u32 i=0;i < CPU16_MAX_PROGRAM_CACHE;i++)
   {
-    struct Cpu16RegisterCache* cache = CPU.cr;
+    struct Cpu16ProgramCacheRegister* cache = CPU.programCache;
     cache->pc = 0;
-    cache->value = 0;
+    cache->data = 0;
   }
-  
+
+  CPU.memoryAccessThisCycle = true;
+  CPU.memoryBusDelay = 2;
 }
 
-
-void Cpu16_BusClock()
+void Cpu16_BusClock(u32 numBusCycles)
 {
-
-  if (CPU.halt)
+  while((numBusCycles--) > 0)
   {
-    return;
-  }
+    if (CPU.halt)
+    {
+      break;
+    }
   
-  CPU.memoryAccessThisCycle = false;
+    CPU.memoryAccessThisCycle = false;
 
-  if (CPU.er.subCycle == 0xF)
-  {
-    Cpu16_FetchNextInstruction();
+    // Some memory bus operations take more than one bus cycle; i.e. unaligned writes
+    // Delay the CPU until they are done.
+    if (CPU.memoryBusDelay > 0)
+    {
+      CPU.memoryAccessThisCycle = true;
+      --CPU.memoryBusDelay;
+      continue;
+    }
+
+    // Done? Fetch the next instruction.
+    if (CPU.er.subCycle == 0xFF)
+    {
+      Cpu16_FetchNextInstruction();
+    }
+
+    // Execute instruction
+    Cpu16_Execute(CPU.er.opcode, CPU.er.operand, &CPU.er.subCycle);
+
+    // If we haven't done anything on the bus, then let's do a prefetch!
+    if (CPU.memoryAccessThisCycle == false)
+    {
+      Cpu16_Prefetch();
+    }
   }
-
-  // @TODO
-  //    We need to pre-know if the next instruction will do a memory read/write
-  //    If it does we can't execute it, unless memoryAccessThisCycle is false.
-  //    because we've already used it for fetching the memory
-  Cpu_DecodeAndRun(CPU.er.opcode, CPU.er.operand, &CPU.er.operand); // Run state
-
-  CPU.busCycles += 1;
-  
-  // Sneaky get more PC stuff.
-  if (CPU.memoryAccessThisCycle = false)
-  {
-    Cpu16_Prefetch();
-  }
-
 }
 
 void Cpu16_StartOfFrame()
 {
+  // @TODO
 }
 
 void Cpu16_EndOfFrame(u32 remainingCycles)
 {
-  CPU.busCycles -= remainingCycles;
+  // @TODO
+}
+
+void Cpu16_CallInterrupt(int interruptName)
+{
+  // @TODO
+}
+
+void Cpu16_Branch_Sword(Sword address)
+{
+  CPU.pc += address;
+  Cpu16_FlushPrefetch();
+}
+
+void Cpu16_Branch_Sbyte(Sbyte address)
+{
+  CPU.pc += address;
+  Cpu16_FlushPrefetch();
 }

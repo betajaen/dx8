@@ -4,7 +4,7 @@ operations:
   :word: []
   :byte: []
   :none:
-    - p = STACK
+    - p = STACK;
 operands:
   - p
 comment: Transfer Stack to Register

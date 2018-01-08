@@ -2,11 +2,11 @@
 name: :or
 operations:
   :word:
-    - p = p | q
-    - N0Z0(p)
+    - p = p | q;
+    - CCR(p);
   :byte:
-    - p = (p | q) & 0xFF
-    - N0Z0(p)
+    - p = (p | q) & 0xFF;
+    - CCR(p);
   :none: []
 operands:
   - p

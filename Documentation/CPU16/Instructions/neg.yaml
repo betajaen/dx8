@@ -3,12 +3,15 @@ name: :neg
 name: :add
 operations:
   :word:
-    - p = !p
-    - NZ00_WORD(p)
+    - p = -p;
+    - CCR(p);
   :byte:
-    - p = !((Byte)p)
-    - NZ00_BYTE(p)
+    - p = -((Byte)p);
+    - CCR(p);
   :none: []
 comment: Negate
 description: |
   Negate value `p = -p`
+flags:
+  N: :set
+

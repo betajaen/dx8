@@ -4,7 +4,7 @@ operations:
   :word: []
   :byte: []
   :none: []
-comment: IO
+comment: Input Output
 description: |
-  Set the IO pins to a given 2-bit value
+  Set the CPU-16 IO data pins to a given 2-bit value
 protected: false

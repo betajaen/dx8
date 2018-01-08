@@ -2,13 +2,13 @@
 name: :dcp
 operations:
   :word:
-    - --p
-    - Word t = q - p
-    - NZVC(t)
+    - --p;
+    - Word t = q - p;
+    - CCR(t);
   :byte:
-    - --p
-    - Byte t = q - p
-    - NZVC(t)
+    - --p;
+    - Byte t = q - p;
+    - CCR(t);
   :none: []
 comment: Decrease and Compare
 description: |

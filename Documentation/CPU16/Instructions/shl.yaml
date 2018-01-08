@@ -2,11 +2,11 @@
 name: :shl
 operations:
   :word:
-    - p = p << shift
-    - NZ00(p)
+    - p = p << shift;
+    - CCR(p);
   :byte:
-    - p = (p << shift) & 0xFF
-    - NZ00(p)
+    - p = (p << shift) & 0xFF;
+    - CCR(p);
   :none: []
 comment: Shift Left
 operands:

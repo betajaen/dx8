@@ -2,12 +2,11 @@
 name: :sbs
 operations:
   :word:
-    - p = p - q
-    - NVZC_WORD(p)
+    - p = p - q;
+    - CCR(p);
   :byte:
-    - p = p - q
-    - NVZC_BYTE(p)
-    - p = FORCE_BYTE(p)
+    - p = p - q;
+    - CCR(p);
   :none: []
 operands:
   - p

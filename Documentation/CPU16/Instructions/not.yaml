@@ -2,11 +2,11 @@
 name: :xor
 operations:
   :word:
-    - p = ~p`
-    - N0Z0(p)
+    - p = ~p;
+    - CCR(p);
   :byte:
-    - p = (~p) & 0xFF
-    - N0Z0(p)
+    - p = (~p) & 0xFF;
+    - CCR(p);
   :none: []
 operands:
   - p

@@ -4,12 +4,8 @@ operations:
   :word: []
   :byte: []
   :none:
-    - FLAG_PROTECTED = 0
-    - PC_STACKS[1] = PC_STACKS
-    - STACKS[1] = STACK
-    - PC_STACK = PC_STACK[0]
-    - STACK = STACKS[0]
-    - CallInterrupt(INTERRUPT_TYPE_LEAVE_PROTECTION)
+    - Cpu16_CallInterrupt(Int_ProtectionDisable);
+    - FLAG_PROTECTED = 0;
 comment: Leave protected mode
 description: |
   Leave protected mode, and allowing access to the opcodes; enter, io. The 'leave protection' interrupt is also called.

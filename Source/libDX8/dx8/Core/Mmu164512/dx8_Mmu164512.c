@@ -29,72 +29,33 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_CPU_H
-#define DX8_CPU_H
+#include <dx8/Core/Mmu164512/dx8_Mmu164512.h>
+#include <malloc.h>
+#include <string.h>
 
-#include <dx8/dx8.h>
-
-#define CPU16_MAX_INSTRUCTION_CACHE 8
-
-typedef Word CpuRegister;
-
-enum RegisterName
-{
-  Reg_X,
-  Reg_Y,
-  Reg_Z,
-  Reg_W,
-  Reg_A,
-  Reg_Instruction,
-  Reg_ProgramCounter,
-  Reg_Stack,
-  Reg_ProgramCounterStack,
-  Reg_ConditionFlags,
-  Reg_COUNT
+u8 sMmu164512_PageTable[256] = {
+// 0     1     2     3     4     5     6     7
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 0
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 1
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 2
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 3
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 4
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 5
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 6
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 7
 };
 
-union Cpu16Registers
-{
-  Word registers[Reg_COUNT];
-  Word x, y, z, w, a, ir, pc, stack, pcStack, cf, mdr, mar;
+u8 sMmu164512_DmaTable[256] = {
+// 0     1     2     3     4     5     6     7
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 0
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 1
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 2
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 3
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 4
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 5
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 6
+   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, // 7
 };
 
-struct Cpu16PrefetchRegister
-{
-  Word pc, data;
-};
+u16   sMmu164512_Command;
 
-struct Cpu16ExecuteRegister
-{
-  Byte                    opcode;
-  Byte                    operand;
-  Byte                    subCycle;
-  Word                    imm;
-  Word                    pc;     // PC where this from.
-  Word                    pcNext; // Next address (after PC). Increases by 2 when reading opcode/operand, and then later an imm value
-  Word                    mar, mdr, temp;
-  bool                    pcNextCached;
-};
-
-struct Cpu16
-{
-  union   Cpu16Registers;
-  u32     busCycles;
-  bool    halt;
-  u8      io;
-  u32     memoryCyclePenalty;
-  struct  Cpu16PrefetchRegister      cr[CPU16_MAX_INSTRUCTION_CACHE];
-  struct  Cpu16ExecuteRegister       er;
-  u32                                prCacheNextIdx;
-  bool                               memoryAccessThisCycle;
-};
-
-void Cpu16_Reset();
-
-void Cpu16_BusClock(u32 cycles);
-
-void Cpu16_StartOfFrame();
-
-void Cpu16_EndOfFrame(u32 cycles);
-
-#endif
