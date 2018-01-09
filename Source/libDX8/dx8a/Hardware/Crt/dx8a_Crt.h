@@ -43,4 +43,8 @@ void Crt_StartFrame();
 
 void Crt_EndFrame();
 
+Byte* Crt_GetWriteBuffer();
+
+Byte* Crt_GetReadBuffer();
+
 #endif

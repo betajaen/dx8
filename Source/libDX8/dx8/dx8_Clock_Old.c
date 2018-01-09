@@ -38,6 +38,7 @@
 
 void Cpu_StepOnce();
 void Gpu_Clock(u32 subCycle);
+void Video_Clock(u32 subCycles);
 void Keyboard_Tick();
 void Floppy_Clock();
 void Sound_Clock();

@@ -32,36 +32,19 @@
 #include <dx8a/dx8a.h>
 #include <dx8a/Hardware/Clock/dx8a_Clock.h>
 #include <dx8a/Hardware/Cpu160000/dx8a_Cpu160000.h>
+#include <dx8a/Hardware/Video168256/dx8a_Video168256.h>
+#include <dx8a/Hardware/Video168256/dx8a_Video168256.h>
 
 #define BUS_CLOCKS_PER_TOP_VBLANK       28864
 #define BUS_CLOCKS_PER_BOTTOM_VBLANK    28480
 #define BUS_CLOCKS_VISIBLE              262144
 
 void Gpu_Clock(u32 subCycle);
-void Crt_StartFrame();
-void Crt_EndFrame();
-void Video_StartFrame();
-void Video_EndFrame();
-
-static void Clock_StartFrame()
-{
-  Crt_StartFrame();
-  Crt_EndFrame();
-}
-
-static void Clock_EndFrame()
-{
-  Video_EndFrame();
-  Crt_EndFrame();
-}
 
 static void Clock_Frames_Accurate(u32 numFrames)
 {
   while(numFrames-- > 0)
   {
-  
-    Clock_StartFrame();
-
     // Upper V-Blank Area
     // Video is Disabled
     for(u32 ii=0;ii < BUS_CLOCKS_PER_TOP_VBLANK;ii++)
@@ -77,19 +60,19 @@ static void Clock_Frames_Accurate(u32 numFrames)
     // Video is Enabled
     for (u32 ii = 0; ii < BUS_CLOCKS_VISIBLE; ii++)
     {
-      Gpu_Clock(0);
+      Video_Clock_Accurate_VisibleOnly(0);
       Cpu16_BusClock(1);
       // RESERVED: For IO.n
       Cpu16_BusClock(1);
-      Gpu_Clock(1);
+      Video_Clock_Accurate_VisibleOnly(1);
       Cpu16_BusClock(1);
       // RESERVED: For IO.n
       Cpu16_BusClock(1);
-      Gpu_Clock(2);
+      Video_Clock_Accurate_VisibleOnly(2);
       Cpu16_BusClock(1);
       // RESERVED: For EXPANSION.n
       Cpu16_BusClock(1);
-      Gpu_Clock(3);
+      Video_Clock_Accurate_VisibleOnly(3);
       Cpu16_BusClock(1);
       // RESERVED: For EXPANSION.n
       Cpu16_BusClock(1);
@@ -105,8 +88,6 @@ static void Clock_Frames_Accurate(u32 numFrames)
       // RESERVED: For EXPANSION.0
       // RESERVED: For EXPANSION.1
     }
-
-    Clock_EndFrame();
   }
 }
 
@@ -114,8 +95,6 @@ static void Clock_Frames_Fast(u32 numFrames)
 {
   while(numFrames-- > 0)
   {
-    Clock_StartFrame();
-
     // Upper V-Blank Area
     // Video is Disabled
     for(u32 ii=0;ii < BUS_CLOCKS_PER_TOP_VBLANK;ii++)
@@ -131,10 +110,7 @@ static void Clock_Frames_Fast(u32 numFrames)
     // Video is Enabled
     for (u32 ii = 0; ii < BUS_CLOCKS_VISIBLE; ii++)
     {
-      Gpu_Clock(0);
-      Gpu_Clock(1);
-      Gpu_Clock(2);
-      Gpu_Clock(3);
+      Video_Clock_Fast_VisibleOnly();
       Cpu16_BusClock(8);
       // RESERVED: For IO.0
       // RESERVED: For IO.1
@@ -152,8 +128,6 @@ static void Clock_Frames_Fast(u32 numFrames)
       // RESERVED: For EXPANSION.0
       // RESERVED: For EXPANSION.1
     }
-
-    Clock_EndFrame();
   }
 }
 

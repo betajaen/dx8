@@ -127,3 +127,13 @@ void Crt_EndFrame()
   sGfxCycle = 0;
   sGfxWaitFrame = 0;
 }
+
+Byte* Crt_GetWriteBuffer()
+{
+  return sGfxWriteBuffer;
+}
+
+Byte* Crt_GetReadBuffer()
+{
+  return sGfxReadBuffer;
+}

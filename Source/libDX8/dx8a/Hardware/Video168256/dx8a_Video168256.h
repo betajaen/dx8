@@ -39,7 +39,9 @@ void Video_Setup();
 
 void Video_Teardown();
 
-void Video_Clock(u32 subCycle);
+void Video_Clock_Accurate_VisibleOnly(u32 subCycle);
+
+void Video_Clock_Fast_VisibleOnly();
 
 void Video_StartFrame();
 
