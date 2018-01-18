@@ -54,28 +54,28 @@ const char* text =
 
 int main(int argc, char** argv)
 {
-  struct dx8_Token* token = dx8_tokenise_text(text);
+  struct Token* token = Tokenise(text);
 
-  union dx8_Code_Extern* externs = dx8_ast_tokens(token);
-  union dx8_Code_Extern* extern_ = externs;
+  union FileNode* externs = Nodify(token);
+  union FileNode* extern_ = externs;
 
   int counter = 0;
   while(extern_ != NULL)
   {
-    dx8_ast_debug(counter++, extern_);
+    DebugNodes(counter++, extern_);
 
-    if (extern_->eof_.instruction_type == CT_EOF)
+    if (extern_->eof_.instruction_type == NT_EndOfFile)
       break;
 
     extern_++;
   }
 
-  union dx8_Instruction* instructions = NULL;
-  struct dx8_Instruction_Symbol* symbols = NULL;
+  union Instruction* instructions = NULL;
+  struct InstructionSymbol* symbols = NULL;
 
-  dx8_build_instructions(&symbols, &instructions, externs);
+  Assemble(&symbols, &instructions, externs);
 
-  dx8_instructions_debug(symbols, instructions);
+  DebugAssembly(symbols, instructions);
 
   printf("Done.\n");
 }

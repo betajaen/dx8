@@ -34,7 +34,7 @@
 #include "References/stb.h"
 
 static int error = 0;
-static struct dx8_Token* errorToken;
+static struct Token* errorToken;
 static const char* errorStr;
 
 #define FAIL_WHEN(COND, STR) \
@@ -53,79 +53,79 @@ static const char* errorStr;
       return NULL;\
       
 #define FAIL_WHEN_SYNTAX(NOW, NOW_SYNTAX, FAIL_STR) \
-    FAIL_WHEN((dx8_Token_IsSpecificSyntax(NOW, NOW_SYNTAX) == true), FAIL_STR)
+    FAIL_WHEN((Token_IsSpecificSyntax(NOW, NOW_SYNTAX) == true), FAIL_STR)
     
 #define FAIL_WHEN_NOT_SYNTAX(NOW, NOW_SYNTAX, FAIL_STR) \
-    FAIL_WHEN((dx8_Token_IsSpecificSyntax(NOW, NOW_SYNTAX) == false), FAIL_STR)
+    FAIL_WHEN((Token_IsSpecificSyntax(NOW, NOW_SYNTAX) == false), FAIL_STR)
 
 #define FAIL_NOW_SYNTAX_1(NOW, NOW_SYNTAX, FAIL_STR) \
-    FAIL_WHEN((dx8_Token_IsSpecificSyntax(NOW, NOW_SYNTAX) == false), FAIL_STR)
+    FAIL_WHEN((Token_IsSpecificSyntax(NOW, NOW_SYNTAX) == false), FAIL_STR)
 
 #define FAIL_NEXT_SYNTAX_1(NOW, NEXT_SYNTAX, FAIL_STR) \
-    FAIL_WHEN((dx8_Token_IsSpecificSyntax(dx8_Token_Next(NOW), NEXT_SYNTAX) == false), FAIL_STR)
+    FAIL_WHEN((Token_IsSpecificSyntax(Token_Next(NOW), NEXT_SYNTAX) == false), FAIL_STR)
     
 #define FAIL_NEXT_SYNTAX_2(NOW, NEXT_SYNTAX, NEXT2_SYNTAX, FAIL_STR) \
-    FAIL_WHEN((dx8_Token_IsSpecificSyntax(dx8_Token_Next(NOW), NEXT_SYNTAX) == false) && \
-              (dx8_Token_IsSpecificSyntax(dx8_Token_NextNext(NOW), NEXT2_SYNTAX) == false)\
+    FAIL_WHEN((Token_IsSpecificSyntax(Token_Next(NOW), NEXT_SYNTAX) == false) && \
+              (Token_IsSpecificSyntax(Token_NextNext(NOW), NEXT2_SYNTAX) == false)\
     , FAIL_STR)
 
 #define FAIL_WHEN_KEYWORD(NOW, NOW_KEYWORD, FAIL_STR) \
-    FAIL_WHEN((dx8_Token_IsSpecificKeyword(NOW, NOW_KEYWORD) == true), FAIL_STR)
+    FAIL_WHEN((Token_IsSpecificKeyword(NOW, NOW_KEYWORD) == true), FAIL_STR)
     
 #define FAIL_WHEN_NOT_KEYWORD(NOW, NOW_KEYWORD, FAIL_STR) \
-    FAIL_WHEN((dx8_Token_IsSpecificKeyword(NOW, NOW_KEYWORD) == false), FAIL_STR)
+    FAIL_WHEN((Token_IsSpecificKeyword(NOW, NOW_KEYWORD) == false), FAIL_STR)
     
 #define FAIL_WHEN_NOT_NUMBER(NOW, FAIL_STR) \
-    FAIL_WHEN((dx8_Token_IsNumber(NOW) == false), FAIL_STR)
+    FAIL_WHEN((Token_IsNumber(NOW) == false), FAIL_STR)
     
 #define FAIL_WHEN_NOT_STRING(NOW, FAIL_STR) \
-    FAIL_WHEN((dx8_Token_IsString(NOW) == false), FAIL_STR)
+    FAIL_WHEN((Token_IsString(NOW) == false), FAIL_STR)
 
 
-struct dx8_Token* Parse_Scope(struct dx8_Code_Scope* scope, struct dx8_Token* token)
+struct Token* Parse_Scope(struct ScopeNode* scope, struct Token* token)
 {
   scope->return_.type   = RT_None;
   scope->return_.number = 0;
-  scope->type           = CT_Scope;
+  scope->type           = NT_Scope;
   scope->statements     = NULL;
 
   FAIL_WHEN_NOT_SYNTAX(token, TT_Syntax_Brace_Open, "Required { in start of scope block");
 
-  token = dx8_Token_Next(token);
+  token = Token_Next(token);
 
-  while(dx8_Token_IsNullOrEof(token) == false)
+  while(Token_IsNullOrEof(token) == false)
   {
-    struct dx8_Token* next = dx8_Token_Next(token);
+    struct Token* next = Token_Next(token);
 
     // Extra { in scope
     FAIL_WHEN_SYNTAX(token, TT_Syntax_Brace_Open, "Unexpected { in scope");
 
     // asm "xyz";
-    if (dx8_Token_IsSpecificKeyword(token, TT_Keyword_Asm))
+    if (Token_IsSpecificKeyword(token, TT_Keyword_Asm))
     {
       FAIL_WHEN_NOT_STRING(next, "Expected string for asm");
 
-      union dx8_Code_Statement statement;
-      statement.asm_.type = CT_Assembly;
+      union StatementNode statement;
+      statement.asm_.type = NT_Assembly;
       statement.asm_.text = next->str;
       statement.asm_.text_length = next->str_length;
       
-      token = dx8_Token_NextNext(token);
+      token = Token_NextNext(token);
 
       FAIL_WHEN_NOT_SYNTAX(token, TT_Syntax_SemiColon, "Expected ; for asm");
 
       stb_arr_push(scope->statements, statement);
 
-      token = dx8_Token_Next(next);
+      token = Token_Next(next);
       continue;
     }
 
     // return;
     // return 37;
-    if (dx8_Token_IsSpecificKeyword(token, TT_Keyword_Return))
+    if (Token_IsSpecificKeyword(token, TT_Keyword_Return))
     {
       // >> return 37;
-      if (dx8_Token_IsNumber(next))
+      if (Token_IsNumber(next))
       {
         // check for ; and then }
         FAIL_NEXT_SYNTAX_2(next, ';', '}', "Missing ; or } from scope");
@@ -133,31 +133,31 @@ struct dx8_Token* Parse_Scope(struct dx8_Code_Scope* scope, struct dx8_Token* to
         scope->return_.type   = RT_Number;
         scope->return_.number = next->number;
 
-        return dx8_Token_NextNext(next);
+        return Token_NextNext(next);
       }
       // return symbol;
-      else if (dx8_Token_IsSymbol(next))
+      else if (Token_IsSymbol(next))
       {
         scope->return_.type   = RT_Symbol;
         scope->return_.symbol = stb_hashlen(next->str, next->str_length);
         
-        return dx8_Token_NextNext(next);
+        return Token_NextNext(next);
       }
       // return;
-      else if (dx8_Token_IsSpecificSyntax(next, TT_Syntax_SemiColon))
+      else if (Token_IsSpecificSyntax(next, TT_Syntax_SemiColon))
       {
         FAIL_NEXT_SYNTAX_1(next, '}',  "Missing } from scope");
         
-        return dx8_Token_Next(next);
+        return Token_Next(next);
       }
 
       FAIL_ALWAYS("Unknown return syntax");
     }
 
     // }
-    if (dx8_Token_IsSpecificSyntax(token, '}'))
+    if (Token_IsSpecificSyntax(token, '}'))
     {
-      return dx8_Token_Next(token);
+      return Token_Next(token);
     }
 
     token++;
@@ -168,40 +168,40 @@ struct dx8_Token* Parse_Scope(struct dx8_Code_Scope* scope, struct dx8_Token* to
   return NULL;
 }
 
-struct dx8_Token* Parse_Define(struct dx8_Code_Define* define, struct dx8_Token* token)
+struct Token* Parse_Define(struct DefineNode* define, struct Token* token)
 {
   FAIL_WHEN_NOT_SYNTAX(token, TT_Syntax_Hash, "Required # in #define");
 
-  token = dx8_Token_Next(token);
+  token = Token_Next(token);
   
   FAIL_WHEN_NOT_KEYWORD(token, TT_Keyword_Define, "Expected define in preprocessor");
 
-  token = dx8_Token_Next(token);
+  token = Token_Next(token);
 
-  define->instruction_type = CT_Define;
+  define->instruction_type = NT_Define;
   define->symbol           = stb_hashlen(token->str, token->str_length);
   
-  token = dx8_Token_Next(token);
+  token = Token_Next(token);
 
   FAIL_WHEN_NOT_NUMBER(token, "Expected number in preprocessor define");
 
   define->value           = token->number;
   
-  return dx8_Token_Next(token);
+  return Token_Next(token);
 }
 
 
-struct dx8_Token* Parse_Function(struct dx8_Code_Function* function, struct dx8_Token* token)
+struct Token* Parse_Function(struct FunctionNode* function, struct Token* token)
 {
-  function->instruction_type = CT_Function;
+  function->instruction_type = NT_Function;
   function->symbol           = stb_hashlen(token->str, token->str_length);
 
   // Check function is ()
   FAIL_NEXT_SYNTAX_2(token, '(', ')', "Missing function parenthesis");
   
-  token = dx8_Token_NextNextNext(token);
+  token = Token_NextNextNext(token);
   
-  if (dx8_Token_IsSpecificSyntax(token, '{'))
+  if (Token_IsSpecificSyntax(token, '{'))
   {
     token = Parse_Scope(&function->scope, token);
   }
@@ -209,28 +209,28 @@ struct dx8_Token* Parse_Function(struct dx8_Code_Function* function, struct dx8_
   return token;
 }
 
-union dx8_Code_Extern* dx8_ast_tokens(struct dx8_Token* tokens)
+union FileNode* Nodify(struct Token* tokens)
 {
-  union dx8_Code_Extern* externs = NULL;
+  union FileNode* externs = NULL;
   u32 num = stb_arr_len(tokens) - 1;
-  struct dx8_Token *token = tokens;
+  struct Token *token = tokens;
 
   error = 0;
   errorToken = NULL;
 
   while(token != NULL)
   {
-    struct dx8_Token* next = dx8_Token_Next(token);
+    struct Token* next = Token_Next(token);
 
-    if (token->type == TT_Syntax_Hash && dx8_Token_IsSpecificKeyword(next, TT_Keyword_Define))
+    if (token->type == TT_Syntax_Hash && Token_IsSpecificKeyword(next, TT_Keyword_Define))
     {
-      union dx8_Code_Extern extern_;
+      union FileNode extern_;
       token = Parse_Define(&extern_.define, token);
       
       if (error)
       {
         printf("Syntax Error: %s\n", errorStr);
-        dx8_token_debug(0, errorToken);
+        DebugTokens(0, errorToken);
         return NULL;
       }
 
@@ -241,13 +241,13 @@ union dx8_Code_Extern* dx8_ast_tokens(struct dx8_Token* tokens)
 
     if (token->type == TT_Symbol && (next != NULL && next->type == TT_Syntax_Parentheses_Open))
     {
-      union dx8_Code_Extern extern_;
+      union FileNode extern_;
       token = Parse_Function(&extern_.function, token);
 
       if (error)
       {
         printf("Syntax Error: %s\n", errorStr);
-        dx8_token_debug(0, errorToken);
+        DebugTokens(0, errorToken);
         return NULL;
       }
 
@@ -255,11 +255,11 @@ union dx8_Code_Extern* dx8_ast_tokens(struct dx8_Token* tokens)
       continue;
     }
 
-    token = dx8_Token_Next(token);
+    token = Token_Next(token);
   }
 
-  union dx8_Code_Extern eof_;
-  eof_.eof_.instruction_type = CT_EOF;
+  union FileNode eof_;
+  eof_.eof_.instruction_type = NT_EndOfFile;
 
   stb_arr_push(externs, eof_);
 

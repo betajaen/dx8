@@ -41,12 +41,12 @@ static const kRegisterNames[] = {
   'a', 'x', 'y', 'z', 'w'
 };
 
-void dx8_instructions_debug(struct dx8_Instruction_Symbol* symbols, union dx8_Instruction* instructions)
+void DebugAssembly(struct InstructionSymbol* symbols, union Instruction* instructions)
 {
   u32 num = stb_arr_len(instructions);
   for(int i=0;i < num;i++)
   {
-    union dx8_Instruction* ins = &instructions[i];
+    union Instruction* ins = &instructions[i];
 
     if (ins->nop.symbol != 0)
     {

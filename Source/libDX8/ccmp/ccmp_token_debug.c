@@ -32,7 +32,7 @@
 #include "ccmp.h"
 #include "References/stb.h"
 
-void dx8_token_debug(int id, struct dx8_Token* token)
+void DebugTokens(int id, struct Token* token)
 {
   if (token == NULL)
   {

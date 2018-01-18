@@ -32,7 +32,7 @@
 #include "ccmp.h"
 #include "References/stb.h"
 
-void debug_return(int id, struct dx8_Code_Return* return_)
+void debug_return(int id, struct ReturnNode* return_)
 {
   if (return_->type == RT_None)
   {
@@ -52,41 +52,41 @@ void debug_return(int id, struct dx8_Code_Return* return_)
   }
 }
 
-void debug_assembly(int id, struct dx8_Code_Assembly_Statement* asm_)
+void debug_assembly(int id, struct AssemblyStatementNode* asm_)
 {
   printf("[%i] Asm '%.*s'\n", id, asm_->text_length, asm_->text);
 }
 
-void debug_statement(int id, union dx8_Code_Statement* statement)
+void debug_statement(int id, union StatementNode* statement)
 {
-  if (statement->asm_.type == CT_Assembly)
+  if (statement->asm_.type == NT_Assembly)
   {
     debug_assembly(id, &statement->asm_);
   }
 }
 
-void debug_scope(int id, struct dx8_Code_Scope* scope)
+void debug_scope(int id, struct ScopeNode* scope)
 {
     printf("[%i] Scope\n", id);
     
     u32 num = stb_arr_len(scope->statements);
     for(u32 i=0;i < num;i++)
     {
-      union dx8_Code_Statement* statement = &scope->statements[i];
+      union StatementNode* statement = &scope->statements[i];
       debug_statement(id, statement);
     }
 
     debug_return(id, &scope->return_);
 }
 
-void debug_function(int id, struct dx8_Code_Function* function)
+void debug_function(int id, struct FunctionNode* function)
 {
     printf("[%i] Function #%i\n", id,  function->symbol);
 
     debug_scope(id, &function->scope);
 }
 
-void dx8_ast_debug(int id, union dx8_Code_Extern* extern_)
+void DebugNodes(int id, union FileNode* extern_)
 {
   if (extern_ == NULL)
   {
@@ -94,13 +94,13 @@ void dx8_ast_debug(int id, union dx8_Code_Extern* extern_)
     return;
   }
 
-  if (extern_->eof_.instruction_type == CT_EOF)
+  if (extern_->eof_.instruction_type == NT_EndOfFile)
   {
     printf("[%i] EOF.\n", id);
     return;
   }
 
-  if (extern_->function.instruction_type == CT_Function)
+  if (extern_->function.instruction_type == NT_Function)
   {
     debug_function(id, &extern_->function);
   }

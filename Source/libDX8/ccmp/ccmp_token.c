@@ -59,48 +59,48 @@ test_log(void *pArg, enum lexer_log_level type, lexer_size line, const char *fmt
     va_end(arglist);
 }
 
-bool dx8_Token_IsNullOrEof(struct dx8_Token* token)
+bool Token_IsNullOrEof(struct Token* token)
 {
   return token == NULL || (token != NULL && token->type == TT_Keyword_EndOfFile);
 }
 
-bool dx8_Token_IsString(struct dx8_Token* token)
+bool Token_IsString(struct Token* token)
 {
   return token != NULL && token->type == TT_String;
 }
 
-bool dx8_Token_IsNumber(struct dx8_Token* token)
+bool Token_IsNumber(struct Token* token)
 {
   return token != NULL && token->type == TT_Number;
 }
 
-bool dx8_Token_IsKeyword(struct dx8_Token* token)
+bool Token_IsKeyword(struct Token* token)
 {
   return token != NULL && token->type > 0xFFFF;
 }
 
-bool dx8_Token_IsSpecificKeyword(struct dx8_Token* token, int keyword)
+bool Token_IsSpecificKeyword(struct Token* token, int keyword)
 {
   return token != NULL && token->type > 0xFFFF && token->type == keyword;
 }
 
-bool dx8_Token_IsSymbol(struct dx8_Token* token)
+bool Token_IsSymbol(struct Token* token)
 {
   return token != NULL && token->type == TT_Symbol;
 }
 
-bool dx8_Token_IsSyntax(struct dx8_Token* token)
+bool Token_IsSyntax(struct Token* token)
 {
   return token != NULL && token->type > 4 && token->type < 0xFF;
 }
 
-bool dx8_Token_IsSpecificSyntax(struct dx8_Token* token, int syntax)
+bool Token_IsSpecificSyntax(struct Token* token, int syntax)
 {
   return token != NULL && token->type > 4 && token->type < 0xFF && token->type == syntax;
 }
 
 
-bool dx8_Token_AfterTokenIs(struct dx8_Token* token, int type)
+bool Token_AfterTokenIs(struct Token* token, int type)
 {
   if (token == NULL)
     return false;
@@ -108,12 +108,12 @@ bool dx8_Token_AfterTokenIs(struct dx8_Token* token, int type)
   if (token->type == TT_Keyword_EndOfFile)
     return false;
 
-  struct dx8_Token* next = token + 1;
+  struct Token* next = token + 1;
   
   return token->type == type;
 }
 
-struct dx8_Token* dx8_Token_Next(struct dx8_Token* token)
+struct Token* Token_Next(struct Token* token)
 {
   if (token == NULL)
     return NULL;
@@ -124,7 +124,7 @@ struct dx8_Token* dx8_Token_Next(struct dx8_Token* token)
   if (token->type == TT_Keyword_EndOfFile)
     return NULL;
 
-  struct dx8_Token* next = token + 1;
+  struct Token* next = token + 1;
   
   if (next->type == TT_Keyword_EndOfFile)
     return NULL;
@@ -132,16 +132,16 @@ struct dx8_Token* dx8_Token_Next(struct dx8_Token* token)
   return next;
 }
 
-struct dx8_Token* dx8_Token_NextNext(struct dx8_Token* token)
+struct Token* Token_NextNext(struct Token* token)
 {
-  return dx8_Token_Next(dx8_Token_Next(token));
+  return Token_Next(Token_Next(token));
 }
 
-struct dx8_Token* dx8_Token_NextNextNext(struct dx8_Token* token)
+struct Token* Token_NextNextNext(struct Token* token)
 {
-  return dx8_Token_Next(dx8_Token_NextNext(token));
+  return Token_Next(Token_NextNext(token));
 }
-static void Token_Clear(struct dx8_Token* token)
+static void Token_Clear(struct Token* token)
 {
   token->type       = TT_None;
   token->str        = NULL;
@@ -149,9 +149,9 @@ static void Token_Clear(struct dx8_Token* token)
   token->number     = 0;
 }
 
-static struct dx8_Token* Token_AddNumber(struct dx8_Token* token, struct lexer_token* tok)
+static struct Token* Token_AddNumber(struct Token* token, struct lexer_token* tok)
 {
-  struct dx8_Token t;
+  struct Token t;
   Token_Clear(&t);
 
   t.type = TT_Number;
@@ -161,9 +161,9 @@ static struct dx8_Token* Token_AddNumber(struct dx8_Token* token, struct lexer_t
   return token;
 }
 
-static struct dx8_Token* Token_AddString(struct dx8_Token* token, struct lexer_token* tok)
+static struct Token* Token_AddString(struct Token* token, struct lexer_token* tok)
 {
-  struct dx8_Token t;
+  struct Token t;
   Token_Clear(&t);
 
   t.type = TT_String;
@@ -174,9 +174,9 @@ static struct dx8_Token* Token_AddString(struct dx8_Token* token, struct lexer_t
   return token;
 }
 
-static struct dx8_Token* Token_AddSymbol(struct dx8_Token* token, struct lexer_token* tok)
+static struct Token* Token_AddSymbol(struct Token* token, struct lexer_token* tok)
 {
-  struct dx8_Token t;
+  struct Token t;
   Token_Clear(&t);
 
   t.type = TT_Symbol;
@@ -187,9 +187,9 @@ static struct dx8_Token* Token_AddSymbol(struct dx8_Token* token, struct lexer_t
   return token;
 }
 
-static struct dx8_Token* Token_AddKeyword(struct dx8_Token* token, int keyword)
+static struct Token* Token_AddKeyword(struct Token* token, int keyword)
 {
-  struct dx8_Token t;
+  struct Token t;
   Token_Clear(&t);
 
   t.type = keyword;
@@ -198,9 +198,9 @@ static struct dx8_Token* Token_AddKeyword(struct dx8_Token* token, int keyword)
   return token;
 }
 
-static struct dx8_Token* Token_AddSyntax(struct dx8_Token* token, int syntax)
+static struct Token* Token_AddSyntax(struct Token* token, int syntax)
 {
-  struct dx8_Token t;
+  struct Token t;
   Token_Clear(&t);
 
   t.type = syntax;
@@ -210,9 +210,9 @@ static struct dx8_Token* Token_AddSyntax(struct dx8_Token* token, int syntax)
 }
 
 
-struct dx8_Token* dx8_tokenise_text(const char* text)
+struct Token* Tokenise(const char* text)
 {
-  struct dx8_Token* tokens = NULL;
+  struct Token* tokens = NULL;
 
   struct lexer_token tok;
   struct lexer lexer;

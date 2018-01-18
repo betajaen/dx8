@@ -46,7 +46,7 @@ typedef u8        dx8_char;
 typedef i16       dx8_int;
 typedef u16       dx8_size_t;
 
-enum dx8_TokenType
+enum TokenType
 {
   TT_None                       = 0,
   TT_Character                  = 1,
@@ -69,7 +69,7 @@ enum dx8_TokenType
   TT_Keyword_Asm                = 'ASM'
 };
 
-struct dx8_Token
+struct Token
 {
   int         type;
   const char* str;
@@ -77,73 +77,73 @@ struct dx8_Token
   i32         number;
 };
 
-enum dx8_CodeType
+enum NodeType
 {
-  CT_EOF      = 0,
-  CT_Scope    = 1,
-  CT_Function = 2,
-  CT_Define   = 3,
-  CT_Assembly = 4,
+  NT_EndOfFile    = 0,
+  NT_Scope        = 1,
+  NT_Function     = 2,
+  NT_Define       = 3,
+  NT_Assembly     = 4,
 };
 
-enum dx8_ReturnType
+enum ReturnNodeType
 {
   RT_None     = 0,  // No return
   RT_Number   = 1,  // return 32;
   RT_Symbol   = 2,  // return s;
 };
 
-struct dx8_Code_Return
+struct ReturnNode
 {
   int         type;
   int         number;    // number
   int         symbol;    // symbol
 };
 
-struct dx8_Code_Assembly_Statement
+struct AssemblyStatementNode
 {
   int         type;
   const char* text;
   u32         text_length;
 };
 
-union dx8_Code_Statement
+union StatementNode
 {
-  struct dx8_Code_Assembly_Statement asm_;
+  struct AssemblyStatementNode asm_;
 };
 
-struct dx8_Code_Scope
+struct ScopeNode
 {
   int                       type;
-  union dx8_Code_Statement* statements;
-  struct dx8_Code_Return    return_;
+  union StatementNode* statements;
+  struct ReturnNode    return_;
 };
 
-struct dx8_Code_Define
+struct DefineNode
 {
   int  instruction_type;
   u32  symbol;
   i32  value;
 };
 
-struct dx8_Code_Function
+struct FunctionNode
 {
   int  instruction_type;
   u32  symbol;
 
-  struct dx8_Code_Scope scope;
+  struct ScopeNode scope;
 };
 
-struct dx8_Code_EndOfFile
+struct EndOfFileNode
 {
   int  instruction_type;
 };
 
-union dx8_Code_Extern
+union FileNode
 {
-  struct dx8_Code_Define    define;
-  struct dx8_Code_Function  function;
-  struct dx8_Code_EndOfFile eof_;
+  struct DefineNode    define;
+  struct FunctionNode  function;
+  struct EndOfFileNode eof_;
 };
 
 enum InstructionType
@@ -154,68 +154,68 @@ enum InstructionType
   IT_Set  = 3,
 };
 
-struct dx8_Instruction_Nop
+struct NopInstruction
 {
   u32 type, index, address, size, symbol;
 };
 
-struct dx8_Instruction_Text
+struct TextInstruction
 {
   u32 type, index, address, size, symbol;
   const char* text;
   u32 text_length;
 };
 
-struct dx8_Instruction_Ret
+struct RetInstruction
 {
   u32 type, index, address, size, symbol;
 };
 
-struct dx8_Instruction_Set
+struct SetInstruction
 {
   u32 type, index, address, size, symbol;
   u16 register_;
   i32 value;
 };
 
-union dx8_Instruction
+union Instruction
 {
-  struct dx8_Instruction_Nop    nop;
-  struct dx8_Instruction_Text   text;
-  struct dx8_Instruction_Ret    ret;
-  struct dx8_Instruction_Set    set;
+  struct NopInstruction    nop;
+  struct TextInstruction   text;
+  struct RetInstruction    ret;
+  struct SetInstruction    set;
 };
 
-struct dx8_Instruction_Symbol
+struct InstructionSymbol
 {
   u32  symbol;
   u32  address;
   u32  size;
 };
 
-bool dx8_Token_IsNullOrEof(struct dx8_Token* token);
-bool dx8_Token_IsNumber(struct dx8_Token* token);
-bool dx8_Token_IsString(struct dx8_Token* token);
-bool dx8_Token_IsKeyword(struct dx8_Token* token);
-bool dx8_Token_IsSpecificKeyword(struct dx8_Token* token, int keyword);
-bool dx8_Token_IsSymbol(struct dx8_Token* token);
-bool dx8_Token_IsSyntax(struct dx8_Token* token);
-bool dx8_Token_IsSpecificSyntax(struct dx8_Token* token, int syntax);
+bool Token_IsNullOrEof(struct Token* token);
+bool Token_IsNumber(struct Token* token);
+bool Token_IsString(struct Token* token);
+bool Token_IsKeyword(struct Token* token);
+bool Token_IsSpecificKeyword(struct Token* token, int keyword);
+bool Token_IsSymbol(struct Token* token);
+bool Token_IsSyntax(struct Token* token);
+bool Token_IsSpecificSyntax(struct Token* token, int syntax);
 
-bool dx8_Token_AfterTokenIs(struct dx8_Token* token, int type);
-struct dx8_Token* dx8_Token_Next(struct dx8_Token* token);
-struct dx8_Token* dx8_Token_NextNext(struct dx8_Token* token);
-struct dx8_Token* dx8_Token_NextNextNext(struct dx8_Token* token);
+bool Token_AfterTokenIs(struct Token* token, int type);
+struct Token* Token_Next(struct Token* token);
+struct Token* Token_NextNext(struct Token* token);
+struct Token* Token_NextNextNext(struct Token* token);
 
-struct dx8_Token* dx8_tokenise_text(const char* text);
+struct Token* Tokenise(const char* text);
 
-union dx8_Code_Extern* dx8_ast_tokens(struct dx8_Token* first);
+union FileNode* Nodify(struct Token* first);
 
-void dx8_token_debug(int id, struct dx8_Token* token);
-void dx8_ast_debug(int id, union dx8_Code_Extern* extern_);
+void DebugTokens(int id, struct Token* token);
+void DebugNodes(int id, union FileNode* extern_);
 
-void dx8_build_instructions(struct dx8_Instruction_Symbol** outSymbols, union dx8_Instruction** outInstructions, union dx8_Code_Extern* code);
+void Assemble(struct InstructionSymbol** outSymbols, union Instruction** outInstructions, union FileNode* code);
 
-void dx8_instructions_debug(struct dx8_Instruction_Symbol* symbols, union dx8_Instruction* instructions);
+void DebugAssembly(struct InstructionSymbol* symbols, union Instruction* instructions);
 
 #endif

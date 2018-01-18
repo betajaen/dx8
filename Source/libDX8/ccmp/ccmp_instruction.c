@@ -49,9 +49,9 @@ static u32  nextInstructionSymbol      = 0;
 struct BuildContext
 {
   u32                             index;
-  struct dx8_Instruction_Symbol*  symbols;
-  union dx8_Instruction*          instructions;
-  union dx8_Code_Extern*          externs;
+  struct InstructionSymbol*  symbols;
+  union Instruction*          instructions;
+  union FileNode*          externs;
 };
 
 static void add_symbol(struct BuildContext* ctx)
@@ -59,14 +59,14 @@ static void add_symbol(struct BuildContext* ctx)
   
 }
 
-static i32 fetch_symbol_value(struct BuildContext* ctx, struct dx8_Code_Scope* scope, u32 symbol)
+static i32 fetch_symbol_value(struct BuildContext* ctx, struct ScopeNode* scope, u32 symbol)
 {
   // We only support #defines right now, which are in externs.
   u32 num = stb_arr_len(ctx->externs);
   for(u32 i=0;i < num;i++)
   {
-    union dx8_Code_Extern* extern_ = &ctx->externs[i];
-    if (extern_->define.instruction_type == CT_Define && extern_->define.symbol == symbol)
+    union FileNode* extern_ = &ctx->externs[i];
+    if (extern_->define.instruction_type == NT_Define && extern_->define.symbol == symbol)
     {
       return extern_->define.value;
     }
@@ -78,7 +78,7 @@ static i32 fetch_symbol_value(struct BuildContext* ctx, struct dx8_Code_Scope* s
 
 #define PUSH_COMMON(T) push_common(ctx, &v, T)
 #define PUSH_INSTRUCTION() stb_arr_push(ctx->instructions, v)
-void push_common(struct BuildContext* ctx, union dx8_Instruction* v, u32 type)
+void push_common(struct BuildContext* ctx, union Instruction* v, u32 type)
 {
   v->nop.index   = ctx->index++;
   v->nop.address = 0;
@@ -97,14 +97,14 @@ void push_common(struct BuildContext* ctx, union dx8_Instruction* v, u32 type)
 
 static void push_nop(struct BuildContext* ctx)
 {
-  union dx8_Instruction v;
+  union Instruction v;
   PUSH_COMMON(IT_Nop);
   PUSH_INSTRUCTION();
 }
 
 static void push_text(struct BuildContext* ctx, const char* text, u32 text_length)
 {
-  union dx8_Instruction v;
+  union Instruction v;
   PUSH_COMMON(IT_Text);
   v.text.text = text;
   v.text.text_length = text_length;
@@ -113,29 +113,29 @@ static void push_text(struct BuildContext* ctx, const char* text, u32 text_lengt
 
 static void push_ret(struct BuildContext* ctx)
 {
-  union dx8_Instruction v;
+  union Instruction v;
   PUSH_COMMON(IT_Ret);
   PUSH_INSTRUCTION();
 }
 
 static void push_set(struct BuildContext* ctx, u32 register_, u16 value)
 {
-  union dx8_Instruction v;
+  union Instruction v;
   PUSH_COMMON(IT_Set);
   v.set.register_ = register_;
   v.set.value     = value;
   PUSH_INSTRUCTION();
 }
 
-static void build_scope(struct BuildContext* ctx, struct dx8_Code_Scope* scope)
+static void build_scope(struct BuildContext* ctx, struct ScopeNode* scope)
 {
   // Statements
   u32 num = stb_arr_len(scope->statements);
   for(int i=0;i < num;i++)
   {
-    union dx8_Code_Statement* statement = &scope->statements[i];
+    union StatementNode* statement = &scope->statements[i];
     
-    if (statement->asm_.type == CT_Assembly)
+    if (statement->asm_.type == NT_Assembly)
     {
       push_text(ctx, statement->asm_.text, statement->asm_.text_length);
     }
@@ -159,14 +159,14 @@ static void build_scope(struct BuildContext* ctx, struct dx8_Code_Scope* scope)
   }
 }
 
-static void build_instruction(struct BuildContext* ctx, struct dx8_Code_Function* function)
+static void build_instruction(struct BuildContext* ctx, struct FunctionNode* function)
 {
   nextInstructionSymbol = function->symbol;
   build_scope(ctx, &function->scope);
 }
 
 
-void dx8_build_instructions(struct dx8_Instruction_Symbol** outSymbols, union dx8_Instruction** outInstructions, union dx8_Code_Extern* code)
+void Assemble(struct InstructionSymbol** outSymbols, union Instruction** outInstructions, union FileNode* code)
 {
   struct BuildContext ctx;
   ctx.index = 0;
@@ -178,9 +178,9 @@ void dx8_build_instructions(struct dx8_Instruction_Symbol** outSymbols, union dx
   u32 num = stb_arr_len(code);
   for(u32 i=0;i < num;i++)
   {
-    union dx8_Code_Extern* c = &code[i];
+    union FileNode* c = &code[i];
 
-    if (c->function.instruction_type == CT_Function)
+    if (c->function.instruction_type == NT_Function)
     {
       build_instruction(&ctx, &c->function);
     }
