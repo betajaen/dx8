@@ -34,6 +34,7 @@
 
 #include <dx8a/dx8a.h>
 
+#define DX8_ROM_SIZE        DX8_KILOBYTES(8)
 #define DX8_RAM_1_SIZE      DX8_KILOBYTES(32)
 #define DX8_RAM_2_SIZE      DX8_KILOBYTES(32)
 #define DX8_RAM_3_SIZE      DX8_KILOBYTES(32)
@@ -52,6 +53,6 @@ extern Byte* sSpriteRam; //[DX8_KILOBYTES(4)];
 
 void Ram_Setup();
 
-void Ram_Shutdown();
+void Ram_Teardown();
 
 #endif

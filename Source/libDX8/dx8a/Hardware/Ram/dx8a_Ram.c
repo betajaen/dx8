@@ -39,6 +39,7 @@ Byte* sRam12;
 Byte* sRam34;     
 Byte* sTileRam;   
 Byte* sSpriteRam;
+Byte* sRom;
 
 void Ram_Setup()
 {
@@ -46,6 +47,7 @@ void Ram_Setup()
   sRam34 = malloc(DX8_RAM_34_SIZE);
   sTileRam = malloc(DX8_RAM_TILE_SIZE);
   sSpriteRam = malloc(DX8_RAM_SPRITE_SIZE);
+  sRom = malloc(DX8_ROM_SIZE);
 
   memset(sRam12,     0, DX8_RAM_12_SIZE);
   memset(sRam34,     0, DX8_RAM_34_SIZE);
@@ -53,8 +55,9 @@ void Ram_Setup()
   memset(sSpriteRam, 0, DX8_RAM_SPRITE_SIZE);
 }
 
-void Ram_Shutdown()
+void Ram_Teardown()
 {
+  free(sRom);
   free(sSpriteRam);
   free(sTileRam);
   free(sRam34);

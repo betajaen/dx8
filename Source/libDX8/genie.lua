@@ -19,7 +19,7 @@ solution "DX8"
     language        "C"
     objdir          ".Obj"
     flags           { "FatalWarnings" }
-    defines         { "_CRT_SECURE_NO_WARNINGS" }
+    defines         { "DX8_IS_LIBRARY", "_CRT_SECURE_NO_WARNINGS" }
     includedirs     { "./"}
     files           {
       "dx8/*.c",
@@ -33,7 +33,7 @@ solution "DX8"
     language        "C"
     objdir          ".Obj"
     flags           { "FatalWarnings" }
-    defines         { "_CRT_SECURE_NO_WARNINGS" }
+    defines         { "DX8_IS_LIBRARY", "_CRT_SECURE_NO_WARNINGS" }
     includedirs     { "./"}
     files           {
       "dx8A/**.c",
@@ -77,14 +77,37 @@ solution "DX8"
     flags           { "FatalWarnings", "NoExceptions", "NoRTTI", "WinMain" }
     defines         { }
     links           { "libDX8A", "SDL2", "SDL2main" }
-    includedirs     { "./", "./Player/References/", "./Player/References/SDL2/include" }
-    libdirs         { "./Player/References/SDL2/lib/x86/" }
+    includedirs     { "./", "./Shared/References/", "./Shared/References/SDL2/include" }
+    libdirs         { "./Shared/References/SDL2/lib/x64/" }
 
     excludes        { }
 
     files           {
-      "Player/Player.c",
-      "Player/References/*.c",
-      "Player/References/*.h",
+      "Player/Runtime.c",
+      "Shared/References/*.c",
+      "Shared/Player/References/*.h",
+      "Shared/*.c",
+      "Shared/*.h",
+      "genie.lua"
+    }
+
+  project "ccmp"
+    kind            "ConsoleApp"
+    language        "C"
+    objdir          ".Obj"
+
+    flags           { "NoExceptions", "NoRTTI" }
+    defines         { }
+    links           { }
+    includedirs     { "cmp/References/" }
+    libdirs         { }
+
+    excludes        { }
+
+    files           {
+      "ccmp/References/**.c",
+      "ccmp/References/**.h",
+      "ccmp/*.c",
+      "ccmp/*.h",
       "genie.lua"
     }

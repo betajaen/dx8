@@ -29,64 +29,32 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_H
-#define DX8_H
+#include "ccmp.h"
+#include "References/stb.h"
 
-#include <stdint.h>
-#include <stdbool.h>
+void dx8_token_debug(int id, struct dx8_Token* token)
+{
+  if (token == NULL)
+  {
+    printf("<%i> NULL.\n", id);
+    return;
+  }
 
-#if defined(_MSC_VER)
-  #if defined(DX8_IS_LIBRARY)
-    #define DX8_EXPORT __declspec(dllexport) 
-  #else
-    #define DX8_EXPORT __declspec(dllimport) 
-  #endif
-#else
-
-#endif
-
-#define DX8_CPU_NO_INLINING
-
-#define DX8_DEBUG_INSTRUCTIONS      1
-#define DX8_DEBUG_INSTRUCTIONS_HISTORY 512
-
-
-#define DX8_KILOBYTES(BYTES)            ((BYTES) * 1024)
-
-#define LO_WORD(WORD)    ((WORD) & 0xFF)
-#define HI_WORD(WORD)    ((WORD >> 8) & 0xFF)
-#define LO_BYTE(WORD)    ((Byte)(WORD & 0xFF))
-#define HI_BYTE(WORD)    ((Byte)((WORD >> 8) & 0xFF))
-#define LO_NIBBLE(BYTE)  ((BYTE) & 0xF)
-#define HI_NIBBLE(BYTE)  ((BYTE >> 4) & 0xF)
-
-#define MAKE_WORD(LO, HI) ((LO) + (HI) * 256)
-#define MAKE_LOHI(W, LO, HI) LO = (W & 0xFF);  HI = (W >> 8) & 0xFF;
-
-#define QUOTE(name) #name
-#define STR(macro) QUOTE(macro)
-
-typedef uint8_t  Byte;
-typedef uint16_t Word;
-typedef int8_t   Sbyte;
-typedef int16_t  Sword;
-
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef int8_t   i8;
-typedef int16_t  i16;
-typedef int32_t  i32;
-typedef int64_t  i64;
-
-DX8_EXPORT void dx8a_Setup();
-
-DX8_EXPORT void dx8a_Teardown();
-
-DX8_EXPORT void dx8a_Frame(int numFrames);
-
-DX8_EXPORT unsigned char* dx8a_GetCrtReadBuffer();
-
-#endif
+  switch(token->type)
+  {
+    case TT_None:                         printf("<%i> None.\n", id); return;
+    case TT_Character:                    printf("<%i> Character %i.\n", id, token->number); return;
+    case TT_Number:                       printf("<%i> Number %i.\n", id, token->number); return;
+    case TT_String:                       printf("<%i> String '%.*s'.\n", id, token->str_length, token->str); return;
+    case TT_Symbol:                       printf("<%i> Symbol %.*s\n", id, token->str_length, token->str); return;
+    case TT_Syntax_SemiColon:             printf("<%i> Syntax ;.\n", id); return;
+    case TT_Syntax_Parentheses_Open:      printf("<%i> Syntax (.\n", id); return;
+    case TT_Syntax_Parentheses_Close:     printf("<%i> Syntax ).\n", id); return;
+    case TT_Syntax_Brace_Open:            printf("<%i> Syntax {.\n", id); return;
+    case TT_Syntax_Brace_Close:           printf("<%i> Syntax }.\n", id); return;
+    case TT_Keyword_EndOfFile:            printf("<%i> Keyword EndOfFile.\n", id); return;
+    case TT_Keyword_Int:                  printf("<%i> Keyword Integer.\n", id); return;
+    case TT_Keyword_Char:                 printf("<%i> Keyword Character.\n", id); return;
+    case TT_Keyword_Return:               printf("<%i> Keyword Return.\n", id); return;
+  }
+}

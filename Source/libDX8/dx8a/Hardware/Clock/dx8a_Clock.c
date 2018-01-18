@@ -39,10 +39,14 @@
 #define BUS_CLOCKS_PER_BOTTOM_VBLANK    28480
 #define BUS_CLOCKS_VISIBLE              262144
 
-void Gpu_Clock(u32 subCycle);
+static u32 sCycles;
+static u32 sNumFrames;
+static u32 sMilliseconds;
 
 static void Clock_Frames_Accurate(u32 numFrames)
 {
+  sCycles = 0;
+
   while(numFrames-- > 0)
   {
     // Upper V-Blank Area
@@ -55,6 +59,8 @@ static void Clock_Frames_Accurate(u32 numFrames)
       // RESERVED: For EXPANSION.0
       // RESERVED: For EXPANSION.1
     }
+    
+    sCycles += BUS_CLOCKS_PER_TOP_VBLANK;
 
     // Visible Area
     // Video is Enabled
@@ -78,6 +84,8 @@ static void Clock_Frames_Accurate(u32 numFrames)
       Cpu16_BusClock(1);
     }
     
+    sCycles += BUS_CLOCKS_VISIBLE;
+
     // Lower V-Blank Area
     // Video is Disabled
     for(u32 ii=0;ii < BUS_CLOCKS_PER_TOP_VBLANK;ii++)
@@ -93,6 +101,8 @@ static void Clock_Frames_Accurate(u32 numFrames)
 
 static void Clock_Frames_Fast(u32 numFrames)
 {
+  sCycles = 0;
+  
   while(numFrames-- > 0)
   {
     // Upper V-Blank Area
@@ -106,6 +116,8 @@ static void Clock_Frames_Fast(u32 numFrames)
       // RESERVED: For EXPANSION.1
     }
 
+    sCycles += BUS_CLOCKS_PER_TOP_VBLANK;
+
     // Visible Area
     // Video is Enabled
     for (u32 ii = 0; ii < BUS_CLOCKS_VISIBLE; ii++)
@@ -118,6 +130,8 @@ static void Clock_Frames_Fast(u32 numFrames)
       // RESERVED: For EXPANSION.1
     }
     
+    sCycles += BUS_CLOCKS_VISIBLE;
+
     // Lower V-Blank Area
     // Video is Disabled
     for(u32 ii=0;ii < BUS_CLOCKS_PER_TOP_VBLANK;ii++)
@@ -128,6 +142,9 @@ static void Clock_Frames_Fast(u32 numFrames)
       // RESERVED: For EXPANSION.0
       // RESERVED: For EXPANSION.1
     }
+    
+    sCycles += BUS_CLOCKS_PER_TOP_VBLANK;
+
   }
 }
 
@@ -142,4 +159,19 @@ void Clock_Frame(u32 numFrames, u32 clockAccuracy)
       Clock_Frames_Accurate(numFrames);
     break;
   }
+}
+
+int Clock_GetCycle()
+{
+  return sCycles;
+}
+
+int Clock_GetMilliseconds()
+{
+  return sMilliseconds;
+}
+
+int Clock_GetFrame()
+{
+  return sNumFrames;
 }

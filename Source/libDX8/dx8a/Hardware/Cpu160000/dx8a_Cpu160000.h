@@ -42,6 +42,8 @@ typedef Word CpuRegister;
 #define CHECK_CARRY_WORD(X) 0
 #define CHECK_CARRY_BYTE(X) 0
 
+extern struct Cpu16 CPU;
+
 enum InterruptName
 {
   Int_Reset              = 0,

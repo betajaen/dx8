@@ -29,64 +29,57 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_H
-#define DX8_H
+#include "ccmp.h"
+#include "References/stb.h"
 
-#include <stdint.h>
-#include <stdbool.h>
+void debug_return(int id, struct dx8_Code_Return* return_)
+{
+  if (return_->type == RT_None)
+  {
+    printf("[%i] Return\n", id);
+  }
+  else if (return_->type == RT_Number)
+  {
+    printf("[%i] Return-Number %i\n", id, return_->number);
+  }
+  else
+  {
+    printf("[%i] Return-<UNKNOWN-FEATURE>\n", id);
+  }
+}
 
-#if defined(_MSC_VER)
-  #if defined(DX8_IS_LIBRARY)
-    #define DX8_EXPORT __declspec(dllexport) 
-  #else
-    #define DX8_EXPORT __declspec(dllimport) 
-  #endif
-#else
+void debug_scope(int id, struct dx8_Code_Scope* scope)
+{
+    printf("[%i] Scope\n", id);
+    
 
-#endif
+    debug_return(id, &scope->return_);
+}
 
-#define DX8_CPU_NO_INLINING
+void debug_function(int id, struct dx8_Code_Function* function)
+{
+    printf("[%i] Function #%i\n", id,  function->symbol);
 
-#define DX8_DEBUG_INSTRUCTIONS      1
-#define DX8_DEBUG_INSTRUCTIONS_HISTORY 512
+    debug_scope(id, &function->scope);
+}
 
+void dx8_ast_debug(int id, union dx8_Code_Extern* extern_)
+{
+  if (extern_ == NULL)
+  {
+    printf("[%i] NULL.\n", id);
+    return;
+  }
 
-#define DX8_KILOBYTES(BYTES)            ((BYTES) * 1024)
+  if (extern_->eof_.instruction_type == CT_EOF)
+  {
+    printf("[%i] EOF.\n", id);
+    return;
+  }
 
-#define LO_WORD(WORD)    ((WORD) & 0xFF)
-#define HI_WORD(WORD)    ((WORD >> 8) & 0xFF)
-#define LO_BYTE(WORD)    ((Byte)(WORD & 0xFF))
-#define HI_BYTE(WORD)    ((Byte)((WORD >> 8) & 0xFF))
-#define LO_NIBBLE(BYTE)  ((BYTE) & 0xF)
-#define HI_NIBBLE(BYTE)  ((BYTE >> 4) & 0xF)
+  if (extern_->function.instruction_type == CT_Function)
+  {
+    debug_function(id, &extern_->function);
+  }
 
-#define MAKE_WORD(LO, HI) ((LO) + (HI) * 256)
-#define MAKE_LOHI(W, LO, HI) LO = (W & 0xFF);  HI = (W >> 8) & 0xFF;
-
-#define QUOTE(name) #name
-#define STR(macro) QUOTE(macro)
-
-typedef uint8_t  Byte;
-typedef uint16_t Word;
-typedef int8_t   Sbyte;
-typedef int16_t  Sword;
-
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef int8_t   i8;
-typedef int16_t  i16;
-typedef int32_t  i32;
-typedef int64_t  i64;
-
-DX8_EXPORT void dx8a_Setup();
-
-DX8_EXPORT void dx8a_Teardown();
-
-DX8_EXPORT void dx8a_Frame(int numFrames);
-
-DX8_EXPORT unsigned char* dx8a_GetCrtReadBuffer();
-
-#endif
+}

@@ -29,64 +29,41 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_H
-#define DX8_H
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
 
-#include <stdint.h>
-#include <stdbool.h>
+#include "ccmp.h"
+#include "References/stb.h"
 
-#if defined(_MSC_VER)
-  #if defined(DX8_IS_LIBRARY)
-    #define DX8_EXPORT __declspec(dllexport) 
-  #else
-    #define DX8_EXPORT __declspec(dllimport) 
-  #endif
-#else
+static const kRegisterNames[] = {
+  'a', 'x', 'y', 'z', 'w'
+};
 
-#endif
+void dx8_instructions_debug(struct dx8_Instruction_Symbol* symbols, union dx8_Instruction* instructions)
+{
+  u32 num = stb_arr_len(instructions);
+  for(int i=0;i < num;i++)
+  {
+    union dx8_Instruction* ins = &instructions[i];
 
-#define DX8_CPU_NO_INLINING
+    if (ins->nop.symbol != 0)
+    {
+      printf("S_%08X: ", ins->nop.symbol);
+    }
+    else
+    {
+      printf("            ");
+    }
 
-#define DX8_DEBUG_INSTRUCTIONS      1
-#define DX8_DEBUG_INSTRUCTIONS_HISTORY 512
+    switch(ins->nop.type)
+    {
+      case IT_Nop:    printf("nop");    break;
+      case IT_Ret:    printf("ret");    break;
+      case IT_Set:    printf("set %c, %i", kRegisterNames[ins->set.register_], ins->set.value);    break;
+    }
 
-
-#define DX8_KILOBYTES(BYTES)            ((BYTES) * 1024)
-
-#define LO_WORD(WORD)    ((WORD) & 0xFF)
-#define HI_WORD(WORD)    ((WORD >> 8) & 0xFF)
-#define LO_BYTE(WORD)    ((Byte)(WORD & 0xFF))
-#define HI_BYTE(WORD)    ((Byte)((WORD >> 8) & 0xFF))
-#define LO_NIBBLE(BYTE)  ((BYTE) & 0xF)
-#define HI_NIBBLE(BYTE)  ((BYTE >> 4) & 0xF)
-
-#define MAKE_WORD(LO, HI) ((LO) + (HI) * 256)
-#define MAKE_LOHI(W, LO, HI) LO = (W & 0xFF);  HI = (W >> 8) & 0xFF;
-
-#define QUOTE(name) #name
-#define STR(macro) QUOTE(macro)
-
-typedef uint8_t  Byte;
-typedef uint16_t Word;
-typedef int8_t   Sbyte;
-typedef int16_t  Sword;
-
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef int8_t   i8;
-typedef int16_t  i16;
-typedef int32_t  i32;
-typedef int64_t  i64;
-
-DX8_EXPORT void dx8a_Setup();
-
-DX8_EXPORT void dx8a_Teardown();
-
-DX8_EXPORT void dx8a_Frame(int numFrames);
-
-DX8_EXPORT unsigned char* dx8a_GetCrtReadBuffer();
-
-#endif
+    printf("\n");
+  }
+}

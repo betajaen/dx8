@@ -36,14 +36,14 @@
 
 #define DX8_CYCLES_PER_MEMORY 4
 
-extern struct Cpu16 CPU;
+struct Cpu16 CPU;
 
 void Cpu16_Execute(Byte opcode, Byte operand, Byte* subCycle);
 
 void Cpu16_Reset()
 {
   memset(&CPU, 0, sizeof(struct Cpu16));
-  CPU.er.subCycle = 0xF;  // For fetching first instruction.
+  CPU.er.subCycle = 0xFF;  // For fetching first instruction.
 }
 
 void Cpu16_Bus_WriteWord(Word address, Word data);
@@ -221,7 +221,7 @@ void Cpu16_FetchNextInstruction()
   CPU.er.opcode       = LO_BYTE(instruction);
   CPU.er.operand      = HI_BYTE(instruction);
   CPU.er.subCycle     = 0x0;
-  CPU.pc         += 2;
+  CPU.pc              += 2;
 }
 
 void Cpu16_Prefetch()

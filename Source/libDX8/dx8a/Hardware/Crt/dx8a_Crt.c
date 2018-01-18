@@ -98,6 +98,7 @@ void Crt_MarkDirty()
 
 void Crt_SwapBuffers()
 {
+
   if (sGfxReadBuffer == sGfxBuffers[0])
   {
     sGfxReadBuffer = sGfxBuffers[1];
@@ -108,7 +109,10 @@ void Crt_SwapBuffers()
     sGfxReadBuffer = sGfxBuffers[0];
     sGfxWriteBuffer = sGfxBuffers[1];
   }
+  
   memset(sGfxWriteBuffer, 0, DX8_GFX_BUFFER_SIZE);
+  
+  Crt_MarkDirty();
 }
 
 void Crt_StartFrame()

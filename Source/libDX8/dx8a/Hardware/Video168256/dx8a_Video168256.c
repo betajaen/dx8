@@ -31,6 +31,7 @@
 
 #include <dx8a/Hardware/Video168256/dx8a_Video168256.h>
 #include <dx8a/Hardware/Bus/dx8a_Bus.h>
+#include <dx8a/Hardware/Crt/dx8a_Crt.h>
 #include <dx8a/dx8a_Configuration.h>
 #include <dx8a/dx8a_Log.h>
 #include <assert.h>
@@ -55,9 +56,10 @@ typedef struct
   Byte image[4];
 } SpriteRegister;
 
-typedef struct
+typedef union
 {
-  Byte lo, hi;
+  Word w;
+  struct { Byte lo, hi; };
 } CharacterRegister;
 
 typedef struct
@@ -170,26 +172,37 @@ void Gpu_Fetch_Sprite(int index)
 {
   SpriteRegister* sprite = &sGpu.Sprites[index];
   
-  sprite->x     = Bus_Read(GFX_FAST_SPRITES + (index * 4) + 0, DMA_Video168256);
-  sprite->y     = Bus_Read(GFX_FAST_SPRITES + (index * 4) + 1, DMA_Video168256);
-  sprite->flags = Bus_Read(GFX_FAST_SPRITES + (index * 4) + 2, DMA_Video168256);
-  sprite->addr  = Bus_Read(GFX_FAST_SPRITES + (index * 4) + 3, DMA_Video168256);
+  Word x8_y       = Bus_Read(GFX_FAST_SPRITES + (index * 4) + 0, DMA_Video168256);
+  Word flags_addr = Bus_Read(GFX_FAST_SPRITES + (index * 4) + 2, DMA_Video168256);
+
+  sprite->x     = LO_WORD(x8_y);
+  sprite->y     = HI_WORD(x8_y);
+  sprite->flags = LO_WORD(flags_addr);
+  sprite->addr  = HI_WORD(flags_addr);
+
+  if ((sprite->flags & 0x80) != 0)
+  {
+    sprite->x  += 256;
+  }
+
 }
 
 void Gpu_Fetch_SpriteImage(int index)
 {
   SpriteRegister* sprite = &sGpu.Sprites[index];
   
-  sprite->image[0] = Bus_Read(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 0, DMA_TileSprite);  // Just get the first row for now.
-  sprite->image[1] = Bus_Read(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 1, DMA_TileSprite);
-  sprite->image[2] = Bus_Read(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 2, DMA_TileSprite);
-  sprite->image[3] = Bus_Read(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 3, DMA_TileSprite);
+  Word sprite01 = Bus_Read(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 0, DMA_TileSprite); // Just get the first row for now.
+  Word sprite23 = Bus_Read(GFX_FAST_SPRITE_MEM + (sprite->addr * 64) + 2, DMA_TileSprite);
+
+  sprite->image[0] = LO_BYTE(sprite01);
+  sprite->image[1] = HI_BYTE(sprite01);
+  sprite->image[2] = LO_BYTE(sprite23);
+  sprite->image[3] = LO_BYTE(sprite23);
 }
 
 inline void Gpu_Clock_Visible_C()
 {
-  sGpu.C.lo = Bus_Read(sGpu.CCounter + 0, DMA_Ram34);
-  sGpu.C.hi = Bus_Read(sGpu.CCounter + 1, DMA_Ram34);
+  sGpu.C.w = Bus_Read(sGpu.CCounter + 0, DMA_Ram34);
   sGpu.CCounter += 2;
 }
 
@@ -201,11 +214,10 @@ inline void Gpu_ByteToK2(Byte m, Byte* k)
 
 inline void Gpu_Clock_Visible_K()
 {
-  Byte colour_lo = Bus_Read(sGpu.KCounter + 0, DMA_Ram34);
-  Byte colour_hi = Bus_Read(sGpu.KCounter + 1, DMA_Ram34);
+  Word colours4 = Bus_Read(sGpu.KCounter + 0, DMA_Ram34); // Four colours are encoded in 1 word
   
-  Gpu_ByteToK2(colour_lo, &sGpu.K.colour[0]);
-  Gpu_ByteToK2(colour_hi, &sGpu.K.colour[2]);
+  Gpu_ByteToK2(LO_BYTE(colours4), &sGpu.K.colour[0]); // Colours 0..1
+  Gpu_ByteToK2(HI_BYTE(colours4), &sGpu.K.colour[2]); // Colours 2..3
   
   sGpu.KCounter += 2;
 }
@@ -270,6 +282,7 @@ void Gpu_Scanline_End(Byte* writeBuffer)
 
 void Gpu_Scanline_EndFrame()
 {
+
   // Reset everything in the Gpu - It is inactive in this phase.
   memset(&sGpu, 0, sizeof(sGpu));
   memset(sGpu_Scanline, 0, sizeof(sGpu_Scanline));
@@ -317,7 +330,7 @@ void Video_Teardown()
 {
 }
 
-void Video_Clock_VisibleOnly(u32 subCycle)
+void Video_Clock_Accurate_VisibleOnly(u32 subCycle)
 {
   if (sGfxHalt == 1)
     return;
@@ -332,14 +345,11 @@ void Video_Clock_VisibleOnly(u32 subCycle)
     if (sGfxCycle == DX8_GFX_CYCLES_PER_VISIBLE_AREA)
     {
       sGfxFrame++;
+      
       // End of Frame.
       Gpu_Scanline_EndFrame();
-    
-      Gpu_OSD_PastDecimal(sGfxWriteBuffer, sGfxFrame, 40, 40);
-      Gpu_OSD_PastDecimal(sGfxWriteBuffer, sGfxFrame % 50, 40, 46);
+      Crt_EndFrame();
 
-      Crt_SwapBuffers();
-      Crt_MarkDirty();
       sGfxCycle = 0;
       sGfxWaitFrame = 0;
       sGfxWriteBuffer = Crt_GetWriteBuffer();
@@ -361,14 +371,11 @@ void Video_Clock_Fast_VisibleOnly()
   if (sGfxCycle == DX8_GFX_CYCLES_PER_VISIBLE_AREA)
   {
     sGfxFrame++;
+    
     // End of Frame.
     Gpu_Scanline_EndFrame();
-    
-    Gpu_OSD_PastDecimal(sGfxWriteBuffer, sGfxFrame, 40, 40);
-    Gpu_OSD_PastDecimal(sGfxWriteBuffer, sGfxFrame % 50, 40, 46);
+    Crt_EndFrame();
 
-    Crt_SwapBuffers();
-    Crt_MarkDirty();
     sGfxCycle = 0;
     sGfxWaitFrame = 0;
     sGfxWriteBuffer = Crt_GetWriteBuffer();

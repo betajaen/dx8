@@ -81,17 +81,17 @@ void Gpu_Clock_Scanline_Accurate(Byte* writeBuffer, u32 subCycle)
       if (subCycle == 3)
       {
         // Video
-        sGpu.Reg_Flags           = FastRam_Get(GFX_FAST_FLAGS);
-        sGpu.Reg_Screen0_Flags   = FastRam_Get(GFX_FAST_SCREEN0_FLAGS);
+        sGpu.Reg_Flags           = 0; // FastRam_Get(GFX_FAST_FLAGS);
+        sGpu.Reg_Screen0_Flags   = 0; // FastRam_Get(GFX_FAST_SCREEN0_FLAGS);
 
-        sGpu.Reg_Screen0_Scroll  = FastRam_Get(GFX_FAST_SCREEN0_SCROLL);
-        sGpu.Reg_Screen0_Palette = FastRam_Get(GFX_FAST_SCREEN0_PALETTE);
+        sGpu.Reg_Screen0_Scroll  = 0; // FastRam_Get(GFX_FAST_SCREEN0_SCROLL);
+        sGpu.Reg_Screen0_Palette = 0; // FastRam_Get(GFX_FAST_SCREEN0_PALETTE);
       
-        sGpu.Reg_Screen1_Flags   = FastRam_Get(GFX_FAST_SCREEN1_FLAGS);
-        sGpu.Reg_Screen1_Scroll  = FastRam_Get(GFX_FAST_SCREEN1_SCROLL);
+        sGpu.Reg_Screen1_Flags   = 0; // FastRam_Get(GFX_FAST_SCREEN1_FLAGS);
+        sGpu.Reg_Screen1_Scroll  = 0; // FastRam_Get(GFX_FAST_SCREEN1_SCROLL);
 
-        sGpu.Reg_Screen1_Palette = FastRam_Get(GFX_FAST_SCREEN1_PALETTE);
-        FastRam_Get(GFX_FAST_SCREEN1_PALETTE + 1); // Garbage byte
+        sGpu.Reg_Screen1_Palette = 0; // FastRam_Get(GFX_FAST_SCREEN1_PALETTE);
+        // FastRam_Get(GFX_FAST_SCREEN1_PALETTE + 1); // Garbage byte
 
         // Sprite
         Gpu_Fetch_SpriteImage(4);
@@ -140,7 +140,7 @@ void Gpu_Clock_Scanline_Accurate(Byte* writeBuffer, u32 subCycle)
     {
       if (subCycle == 3)
       {
-        Byte flags = FastRam_Get(GFX_FAST_FLAGS);
+        Byte flags = 0; // FastRam_Get(GFX_FAST_FLAGS);
       
         sGpu.ScrollY = sGpu.Y; // For now, but need to implement Y scrolling.
       
@@ -200,7 +200,7 @@ void Gpu_Clock_Scanline_Accurate(Byte* writeBuffer, u32 subCycle)
     {
       if (subCycle == 3)
       {
-        Byte flags = FastRam_Get(GFX_FAST_FLAGS);
+        Byte flags = 0; // FastRam_Get(GFX_FAST_FLAGS);
       
         sGpu.ScrollY = sGpu.Y; // For now, but need to implement Y scrolling.
       

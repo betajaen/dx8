@@ -29,64 +29,75 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_H
-#define DX8_H
+#include "ccmp.h"
 
-#include <stdint.h>
-#include <stdbool.h>
+#define STB_DEFINE
+#include "References/stb.h"
 
-#if defined(_MSC_VER)
-  #if defined(DX8_IS_LIBRARY)
-    #define DX8_EXPORT __declspec(dllexport) 
-  #else
-    #define DX8_EXPORT __declspec(dllimport) 
-  #endif
-#else
+const char* text = 
+  "main()\n"
+  "{\n"
+  "  return 37;\n"
+  "}"
+  "\n"
+  "five()\n"
+  "{\n"
+  "  return 5;\n"
+  "}"
+  ;
 
-#endif
+int main(int argc, char** argv)
+{
+  struct dx8_Token* token = dx8_tokenise_text(text);
+  u32 num = stb_arr_len(token);
+  for(u32 i=0;i < num;i++)
+  {
+    struct dx8_Token* t = &token[i];
 
-#define DX8_CPU_NO_INLINING
+    if (dx8_Token_IsSymbol(t))
+    {
+      printf("Symbol = %.*s\n", t->str_length, t->str);
+    }
+    else if (dx8_Token_IsKeyword(t))
+    {
+      printf("Keyword = %i\n", t->type);
+    }
+    else if (dx8_Token_IsNumber(t))
+    {
+      printf("Number = %i\n", t->number);
+    }
+    else if (dx8_Token_IsSyntax(t))
+    {
+      printf("Syntax = %c\n", t->type);
+    }
+    else
+    {
+      printf("Token = %i\n", t->type);
+    }
+  }
+  
+  printf("---\n");
 
-#define DX8_DEBUG_INSTRUCTIONS      1
-#define DX8_DEBUG_INSTRUCTIONS_HISTORY 512
+  union dx8_Code_Extern* externs = dx8_ast_tokens(token);
+  union dx8_Code_Extern* extern_ = externs;
 
+  int counter = 0;
+  while(extern_ != NULL)
+  {
+    dx8_ast_debug(counter++, extern_);
 
-#define DX8_KILOBYTES(BYTES)            ((BYTES) * 1024)
+    if (extern_->eof_.instruction_type == CT_EOF)
+      break;
 
-#define LO_WORD(WORD)    ((WORD) & 0xFF)
-#define HI_WORD(WORD)    ((WORD >> 8) & 0xFF)
-#define LO_BYTE(WORD)    ((Byte)(WORD & 0xFF))
-#define HI_BYTE(WORD)    ((Byte)((WORD >> 8) & 0xFF))
-#define LO_NIBBLE(BYTE)  ((BYTE) & 0xF)
-#define HI_NIBBLE(BYTE)  ((BYTE >> 4) & 0xF)
+    extern_++;
+  }
 
-#define MAKE_WORD(LO, HI) ((LO) + (HI) * 256)
-#define MAKE_LOHI(W, LO, HI) LO = (W & 0xFF);  HI = (W >> 8) & 0xFF;
+  union dx8_Instruction* instructions = NULL;
+  struct dx8_Instruction_Symbol* symbols = NULL;
 
-#define QUOTE(name) #name
-#define STR(macro) QUOTE(macro)
+  dx8_build_instructions(&symbols, &instructions, externs);
 
-typedef uint8_t  Byte;
-typedef uint16_t Word;
-typedef int8_t   Sbyte;
-typedef int16_t  Sword;
+  dx8_instructions_debug(symbols, instructions);
 
-typedef uint8_t  u8;
-typedef uint16_t u16;
-typedef uint32_t u32;
-typedef uint64_t u64;
-
-typedef int8_t   i8;
-typedef int16_t  i16;
-typedef int32_t  i32;
-typedef int64_t  i64;
-
-DX8_EXPORT void dx8a_Setup();
-
-DX8_EXPORT void dx8a_Teardown();
-
-DX8_EXPORT void dx8a_Frame(int numFrames);
-
-DX8_EXPORT unsigned char* dx8a_GetCrtReadBuffer();
-
-#endif
+  printf("Done.\n");
+}

@@ -34,9 +34,6 @@
 #define DX8_CLOCK_GPU_MZ                ((DX8_CLOCK_GPU * DX8_PAL_HZ) / 1000000.0)
 #define DX8_CLOCK_CPU_MZ                ((DX8_CLOCK_CPU * DX8_PAL_HZ) / 1000000.0)
 
-
-#define DX8_ROM_SIZE                    8192
-
 // Old style of constants
 #include <dx8a/dx8a_Constants.inc>
 #include <dx8a/dx8a_Scancodes.inc>
