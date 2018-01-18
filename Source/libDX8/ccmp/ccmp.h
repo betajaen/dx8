@@ -59,11 +59,13 @@ enum dx8_TokenType
   TT_Syntax_Parentheses_Close   = ')',
   TT_Syntax_Brace_Open          = '{',
   TT_Syntax_Brace_Close         = '}',
+  TT_Syntax_Hash                = '#',
   
   TT_Keyword_EndOfFile          = 'EOF',
   TT_Keyword_Int                = 'INT',
   TT_Keyword_Char               = 'CHAR',
-  TT_Keyword_Return             = 'RET'
+  TT_Keyword_Return             = 'RET',
+  TT_Keyword_Define             = 'DEFN'
 };
 
 struct dx8_Token
@@ -72,7 +74,6 @@ struct dx8_Token
   const char* str;
   u16         str_length;
   i32         number;
-  struct dx8_Token *parent, *first, *last;
 };
 
 enum dx8_CodeType
@@ -80,24 +81,34 @@ enum dx8_CodeType
   CT_EOF      = 0,
   CT_Scope    = 1,
   CT_Function = 2,
+  CT_Define   = 3,
 };
 
 enum dx8_ReturnType
 {
   RT_None     = 0,  // No return
   RT_Number   = 1,  // return 32;
+  RT_Symbol   = 2,  // return s;
 };
 
 struct dx8_Code_Return
 {
   int         type;
   int         number;    // number
+  int         symbol;    // symbol
 };
 
 struct dx8_Code_Scope
 {
   int                     type;
   struct dx8_Code_Return  return_;
+};
+
+struct dx8_Code_Define
+{
+  int  instruction_type;
+  u32  symbol;
+  i32  value;
 };
 
 struct dx8_Code_Function
@@ -115,15 +126,16 @@ struct dx8_Code_EndOfFile
 
 union dx8_Code_Extern
 {
+  struct dx8_Code_Define    define;
   struct dx8_Code_Function  function;
   struct dx8_Code_EndOfFile eof_;
 };
 
 enum InstructionType
 {
-  IT_Nop    = 0,
+  IT_Nop = 0,
   IT_Ret = 1,
-  IT_Set    = 2,
+  IT_Set = 2,
 };
 
 struct dx8_Instruction_Nop

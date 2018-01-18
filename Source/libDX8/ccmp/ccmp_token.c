@@ -103,7 +103,7 @@ bool dx8_Token_IsSpecificSyntax(struct dx8_Token* token, int syntax)
 bool dx8_Token_AfterTokenIs(struct dx8_Token* token, int type)
 {
   if (token == NULL)
-    return NULL;
+    return false;
 
   if (token->type == TT_Keyword_EndOfFile)
     return false;
@@ -147,9 +147,6 @@ static void Token_Clear(struct dx8_Token* token)
   token->str        = NULL;
   token->str_length = 0;
   token->number     = 0;
-  token->parent     = NULL;
-  token->first      = NULL;
-  token->last       = NULL;
 }
 
 static struct dx8_Token* Token_AddNumber(struct dx8_Token* token, struct lexer_token* tok)
@@ -251,6 +248,8 @@ struct dx8_Token* dx8_tokenise_text(const char* text)
         tokens = Token_AddKeyword(tokens, TT_Keyword_Char);
       else if (lexer_token_cmp(&tok, "return") == 0)
         tokens = Token_AddKeyword(tokens, TT_Keyword_Return);
+      else if (lexer_token_cmp(&tok, "define") == 0)
+        tokens = Token_AddKeyword(tokens, TT_Keyword_Define);
       else
         tokens = Token_AddSymbol(tokens, &tok);
     }
@@ -266,6 +265,8 @@ struct dx8_Token* dx8_tokenise_text(const char* text)
         tokens = Token_AddSyntax(tokens, TT_Syntax_Brace_Close);
       else  if (tok.subtype == LEXER_PUNCT_SEMICOLON)
         tokens = Token_AddSyntax(tokens, TT_Syntax_SemiColon);
+      else  if (tok.subtype == LEXER_PUNCT_PRECOMPILER)
+        tokens = Token_AddSyntax(tokens, TT_Syntax_Hash);
       else
         printf("unknown syntax\n");
     }

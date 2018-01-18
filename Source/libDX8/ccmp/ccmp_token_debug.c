@@ -56,5 +56,6 @@ void dx8_token_debug(int id, struct dx8_Token* token)
     case TT_Keyword_Int:                  printf("<%i> Keyword Integer.\n", id); return;
     case TT_Keyword_Char:                 printf("<%i> Keyword Character.\n", id); return;
     case TT_Keyword_Return:               printf("<%i> Keyword Return.\n", id); return;
+    case TT_Keyword_Define:               printf("<%i> Keyword Define.\n", id); return;
   }
 }

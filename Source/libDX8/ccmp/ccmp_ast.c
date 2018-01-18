@@ -69,6 +69,16 @@ static const char* errorStr;
               (dx8_Token_IsSpecificSyntax(dx8_Token_NextNext(NOW), NEXT2_SYNTAX) == false)\
     , FAIL_STR)
 
+#define FAIL_WHEN_KEYWORD(NOW, NOW_KEYWORD, FAIL_STR) \
+    FAIL_WHEN((dx8_Token_IsSpecificKeyword(NOW, NOW_KEYWORD) == true), FAIL_STR)
+    
+#define FAIL_WHEN_NOT_KEYWORD(NOW, NOW_KEYWORD, FAIL_STR) \
+    FAIL_WHEN((dx8_Token_IsSpecificKeyword(NOW, NOW_KEYWORD) == false), FAIL_STR)
+    
+#define FAIL_WHEN_NOT_NUMBER(NOW, FAIL_STR) \
+    FAIL_WHEN((dx8_Token_IsNumber(NOW) == false), FAIL_STR)
+
+
 struct dx8_Token* Parse_Scope(struct dx8_Code_Scope* scope, struct dx8_Token* token)
 {
   scope->return_.type   = RT_None;
@@ -101,6 +111,14 @@ struct dx8_Token* Parse_Scope(struct dx8_Code_Scope* scope, struct dx8_Token* to
 
         return dx8_Token_NextNext(next);
       }
+      // return symbol;
+      else if (dx8_Token_IsSymbol(next))
+      {
+        scope->return_.type   = RT_Symbol;
+        scope->return_.symbol = stb_hashlen(next->str, next->str_length);
+        
+        return dx8_Token_NextNext(next);
+      }
       // return;
       else if (dx8_Token_IsSpecificSyntax(next, TT_Syntax_SemiColon))
       {
@@ -125,6 +143,29 @@ struct dx8_Token* Parse_Scope(struct dx8_Code_Scope* scope, struct dx8_Token* to
   FAIL_ALWAYS("End of line found when finding closing }");
   return NULL;
 }
+
+struct dx8_Token* Parse_Define(struct dx8_Code_Define* define, struct dx8_Token* token)
+{
+  FAIL_WHEN_NOT_SYNTAX(token, TT_Syntax_Hash, "Required # in #define");
+
+  token = dx8_Token_Next(token);
+  
+  FAIL_WHEN_NOT_KEYWORD(token, TT_Keyword_Define, "Expected define in preprocessor");
+
+  token = dx8_Token_Next(token);
+
+  define->instruction_type = CT_Define;
+  define->symbol           = stb_hashlen(token->str, token->str_length);
+  
+  token = dx8_Token_Next(token);
+
+  FAIL_WHEN_NOT_NUMBER(token, "Expected number in preprocessor define");
+
+  define->value           = token->number;
+  
+  return dx8_Token_Next(token);
+}
+
 
 struct dx8_Token* Parse_Function(struct dx8_Code_Function* function, struct dx8_Token* token)
 {
@@ -156,6 +197,23 @@ union dx8_Code_Extern* dx8_ast_tokens(struct dx8_Token* tokens)
   while(token != NULL)
   {
     struct dx8_Token* next = dx8_Token_Next(token);
+
+    if (token->type == TT_Syntax_Hash && dx8_Token_IsSpecificKeyword(next, TT_Keyword_Define))
+    {
+      union dx8_Code_Extern extern_;
+      token = Parse_Define(&extern_.define, token);
+      
+      if (error)
+      {
+        printf("Syntax Error: %s\n", errorStr);
+        dx8_token_debug(0, errorToken);
+        return NULL;
+      }
+
+      stb_arr_push(externs, extern_);
+
+      continue;
+    }
 
     if (token->type == TT_Symbol && (next != NULL && next->type == TT_Syntax_Parentheses_Open))
     {

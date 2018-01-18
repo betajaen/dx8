@@ -42,6 +42,10 @@ void debug_return(int id, struct dx8_Code_Return* return_)
   {
     printf("[%i] Return-Number %i\n", id, return_->number);
   }
+  else if (return_->type == RT_Symbol)
+  {
+    printf("[%i] Return-Symbol %i\n", id, return_->symbol);
+  }
   else
   {
     printf("[%i] Return-<UNKNOWN-FEATURE>\n", id);

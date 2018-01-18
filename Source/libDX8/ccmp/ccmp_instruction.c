@@ -51,11 +51,29 @@ struct BuildContext
   u32                             index;
   struct dx8_Instruction_Symbol*  symbols;
   union dx8_Instruction*          instructions;
+  union dx8_Code_Extern*          externs;
 };
 
 static void add_symbol(struct BuildContext* ctx)
 {
   
+}
+
+static i32 fetch_symbol_value(struct BuildContext* ctx, struct dx8_Code_Scope* scope, u32 symbol)
+{
+  // We only support #defines right now, which are in externs.
+  u32 num = stb_arr_len(ctx->externs);
+  for(u32 i=0;i < num;i++)
+  {
+    union dx8_Code_Extern* extern_ = &ctx->externs[i];
+    if (extern_->define.instruction_type == CT_Define && extern_->define.symbol == symbol)
+    {
+      return extern_->define.value;
+    }
+  }
+
+  printf("Unknown Symbol: %i resorting to 0\n", symbol);
+  return 0;
 }
 
 #define PUSH_COMMON(T) push_common(ctx, &v, T)
@@ -107,6 +125,11 @@ static void build_scope(struct BuildContext* ctx, struct dx8_Code_Scope* scope)
   {
     push_ret(ctx);
   }
+  else if (scope->return_.type == RT_Symbol)
+  {
+    push_set(ctx, REGISTER_A, fetch_symbol_value(ctx, scope, scope->return_.symbol));
+    push_ret(ctx);
+  }
   else if (scope->return_.type == RT_Number)
   {
     push_set(ctx, REGISTER_A, scope->return_.number);
@@ -127,6 +150,7 @@ void dx8_build_instructions(struct dx8_Instruction_Symbol** outSymbols, union dx
   ctx.index = 0;
   ctx.instructions = NULL;
   ctx.symbols = NULL;
+  ctx.externs = code;
   nextInstructionSymbol = 0;
   
   u32 num = stb_arr_len(code);
@@ -138,7 +162,6 @@ void dx8_build_instructions(struct dx8_Instruction_Symbol** outSymbols, union dx
     {
       build_instruction(&ctx, &c->function);
     }
-
   }
 
   *outSymbols      = ctx.symbols;

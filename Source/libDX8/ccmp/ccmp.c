@@ -40,43 +40,16 @@ const char* text =
   "  return 37;\n"
   "}"
   "\n"
+  "#define FIVE 5\n"
   "five()\n"
   "{\n"
-  "  return 5;\n"
+  "  return FIVE;\n"
   "}"
   ;
 
 int main(int argc, char** argv)
 {
   struct dx8_Token* token = dx8_tokenise_text(text);
-  u32 num = stb_arr_len(token);
-  for(u32 i=0;i < num;i++)
-  {
-    struct dx8_Token* t = &token[i];
-
-    if (dx8_Token_IsSymbol(t))
-    {
-      printf("Symbol = %.*s\n", t->str_length, t->str);
-    }
-    else if (dx8_Token_IsKeyword(t))
-    {
-      printf("Keyword = %i\n", t->type);
-    }
-    else if (dx8_Token_IsNumber(t))
-    {
-      printf("Number = %i\n", t->number);
-    }
-    else if (dx8_Token_IsSyntax(t))
-    {
-      printf("Syntax = %c\n", t->type);
-    }
-    else
-    {
-      printf("Token = %i\n", t->type);
-    }
-  }
-  
-  printf("---\n");
 
   union dx8_Code_Extern* externs = dx8_ast_tokens(token);
   union dx8_Code_Extern* extern_ = externs;
