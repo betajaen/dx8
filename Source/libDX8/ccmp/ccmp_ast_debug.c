@@ -52,10 +52,29 @@ void debug_return(int id, struct dx8_Code_Return* return_)
   }
 }
 
+void debug_assembly(int id, struct dx8_Code_Assembly_Statement* asm_)
+{
+  printf("[%i] Asm '%.*s'\n", id, asm_->text_length, asm_->text);
+}
+
+void debug_statement(int id, union dx8_Code_Statement* statement)
+{
+  if (statement->asm_.type == CT_Assembly)
+  {
+    debug_assembly(id, &statement->asm_);
+  }
+}
+
 void debug_scope(int id, struct dx8_Code_Scope* scope)
 {
     printf("[%i] Scope\n", id);
     
+    u32 num = stb_arr_len(scope->statements);
+    for(u32 i=0;i < num;i++)
+    {
+      union dx8_Code_Statement* statement = &scope->statements[i];
+      debug_statement(id, statement);
+    }
 
     debug_return(id, &scope->return_);
 }

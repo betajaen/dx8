@@ -65,7 +65,8 @@ enum dx8_TokenType
   TT_Keyword_Int                = 'INT',
   TT_Keyword_Char               = 'CHAR',
   TT_Keyword_Return             = 'RET',
-  TT_Keyword_Define             = 'DEFN'
+  TT_Keyword_Define             = 'DEFN',
+  TT_Keyword_Asm                = 'ASM'
 };
 
 struct dx8_Token
@@ -82,6 +83,7 @@ enum dx8_CodeType
   CT_Scope    = 1,
   CT_Function = 2,
   CT_Define   = 3,
+  CT_Assembly = 4,
 };
 
 enum dx8_ReturnType
@@ -98,10 +100,23 @@ struct dx8_Code_Return
   int         symbol;    // symbol
 };
 
+struct dx8_Code_Assembly_Statement
+{
+  int         type;
+  const char* text;
+  u32         text_length;
+};
+
+union dx8_Code_Statement
+{
+  struct dx8_Code_Assembly_Statement asm_;
+};
+
 struct dx8_Code_Scope
 {
-  int                     type;
-  struct dx8_Code_Return  return_;
+  int                       type;
+  union dx8_Code_Statement* statements;
+  struct dx8_Code_Return    return_;
 };
 
 struct dx8_Code_Define
@@ -133,14 +148,22 @@ union dx8_Code_Extern
 
 enum InstructionType
 {
-  IT_Nop = 0,
-  IT_Ret = 1,
-  IT_Set = 2,
+  IT_Nop  = 0,
+  IT_Text = 1,
+  IT_Ret  = 2,
+  IT_Set  = 3,
 };
 
 struct dx8_Instruction_Nop
 {
   u32 type, index, address, size, symbol;
+};
+
+struct dx8_Instruction_Text
+{
+  u32 type, index, address, size, symbol;
+  const char* text;
+  u32 text_length;
 };
 
 struct dx8_Instruction_Ret
@@ -158,6 +181,7 @@ struct dx8_Instruction_Set
 union dx8_Instruction
 {
   struct dx8_Instruction_Nop    nop;
+  struct dx8_Instruction_Text   text;
   struct dx8_Instruction_Ret    ret;
   struct dx8_Instruction_Set    set;
 };

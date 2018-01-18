@@ -77,6 +77,9 @@ static const char* errorStr;
     
 #define FAIL_WHEN_NOT_NUMBER(NOW, FAIL_STR) \
     FAIL_WHEN((dx8_Token_IsNumber(NOW) == false), FAIL_STR)
+    
+#define FAIL_WHEN_NOT_STRING(NOW, FAIL_STR) \
+    FAIL_WHEN((dx8_Token_IsString(NOW) == false), FAIL_STR)
 
 
 struct dx8_Token* Parse_Scope(struct dx8_Code_Scope* scope, struct dx8_Token* token)
@@ -84,6 +87,7 @@ struct dx8_Token* Parse_Scope(struct dx8_Code_Scope* scope, struct dx8_Token* to
   scope->return_.type   = RT_None;
   scope->return_.number = 0;
   scope->type           = CT_Scope;
+  scope->statements     = NULL;
 
   FAIL_WHEN_NOT_SYNTAX(token, TT_Syntax_Brace_Open, "Required { in start of scope block");
 
@@ -91,15 +95,35 @@ struct dx8_Token* Parse_Scope(struct dx8_Code_Scope* scope, struct dx8_Token* to
 
   while(dx8_Token_IsNullOrEof(token) == false)
   {
+    struct dx8_Token* next = dx8_Token_Next(token);
+
     // Extra { in scope
     FAIL_WHEN_SYNTAX(token, TT_Syntax_Brace_Open, "Unexpected { in scope");
+
+    // asm "xyz";
+    if (dx8_Token_IsSpecificKeyword(token, TT_Keyword_Asm))
+    {
+      FAIL_WHEN_NOT_STRING(next, "Expected string for asm");
+
+      union dx8_Code_Statement statement;
+      statement.asm_.type = CT_Assembly;
+      statement.asm_.text = next->str;
+      statement.asm_.text_length = next->str_length;
+      
+      token = dx8_Token_NextNext(token);
+
+      FAIL_WHEN_NOT_SYNTAX(token, TT_Syntax_SemiColon, "Expected ; for asm");
+
+      stb_arr_push(scope->statements, statement);
+
+      token = dx8_Token_Next(next);
+      continue;
+    }
 
     // return;
     // return 37;
     if (dx8_Token_IsSpecificKeyword(token, TT_Keyword_Return))
     {
-      struct dx8_Token* next = dx8_Token_Next(token);
-
       // >> return 37;
       if (dx8_Token_IsNumber(next))
       {

@@ -60,6 +60,7 @@ void dx8_instructions_debug(struct dx8_Instruction_Symbol* symbols, union dx8_In
     switch(ins->nop.type)
     {
       case IT_Nop:    printf("nop");    break;
+      case IT_Text:   printf("%.*s", ins->text.text_length, ins->text.text); break;
       case IT_Ret:    printf("ret");    break;
       case IT_Set:    printf("set %c, %i", kRegisterNames[ins->set.register_], ins->set.value);    break;
     }

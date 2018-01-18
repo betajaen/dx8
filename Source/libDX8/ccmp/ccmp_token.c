@@ -250,6 +250,8 @@ struct dx8_Token* dx8_tokenise_text(const char* text)
         tokens = Token_AddKeyword(tokens, TT_Keyword_Return);
       else if (lexer_token_cmp(&tok, "define") == 0)
         tokens = Token_AddKeyword(tokens, TT_Keyword_Define);
+      else if (lexer_token_cmp(&tok, "asm") == 0)
+        tokens = Token_AddKeyword(tokens, TT_Keyword_Asm);
       else
         tokens = Token_AddSymbol(tokens, &tok);
     }

@@ -45,6 +45,11 @@ const char* text =
   "{\n"
   "  return FIVE;\n"
   "}"
+  "asm_test()\n"
+  "{\n"
+  "  asm \"push x\";\n"
+  "  asm \"setq a, 5\";\n"
+  "}"
   ;
 
 int main(int argc, char** argv)

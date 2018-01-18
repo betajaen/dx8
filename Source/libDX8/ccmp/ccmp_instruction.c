@@ -102,6 +102,15 @@ static void push_nop(struct BuildContext* ctx)
   PUSH_INSTRUCTION();
 }
 
+static void push_text(struct BuildContext* ctx, const char* text, u32 text_length)
+{
+  union dx8_Instruction v;
+  PUSH_COMMON(IT_Text);
+  v.text.text = text;
+  v.text.text_length = text_length;
+  PUSH_INSTRUCTION();
+}
+
 static void push_ret(struct BuildContext* ctx)
 {
   union dx8_Instruction v;
@@ -120,6 +129,19 @@ static void push_set(struct BuildContext* ctx, u32 register_, u16 value)
 
 static void build_scope(struct BuildContext* ctx, struct dx8_Code_Scope* scope)
 {
+  // Statements
+  u32 num = stb_arr_len(scope->statements);
+  for(int i=0;i < num;i++)
+  {
+    union dx8_Code_Statement* statement = &scope->statements[i];
+    
+    if (statement->asm_.type == CT_Assembly)
+    {
+      push_text(ctx, statement->asm_.text, statement->asm_.text_length);
+    }
+
+  }
+
   // Return
   if (scope->return_.type == RT_None)
   {
