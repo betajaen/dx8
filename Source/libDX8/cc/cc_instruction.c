@@ -94,8 +94,6 @@ static i32 fetch_symbol_value(struct BuildContext* ctx, Node* scope, u32 symbol)
 void push_common(struct BuildContext* ctx, Instruction* v, u32 type)
 {
   v->index   = ctx->index++;
-  v->address = 0;
-  v->size    = 0;
   v->type    = type;
   if (nextInstructionSymbol)
   {
@@ -182,7 +180,6 @@ static void build_scope(struct BuildContext* ctx, Node* scope)
 
 static void build_function(struct BuildContext* ctx, Node* node)
 {
-  //nextInstructionSymbol = node->symbol;
   nextInstructionSymbolText = &node->text;
 
   build_scope(ctx, node->Function.scope);

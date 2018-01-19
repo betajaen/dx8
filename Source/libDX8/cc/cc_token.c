@@ -210,14 +210,14 @@ static struct Token* Token_AddSyntax(struct Token* token, int syntax)
 }
 
 
-struct Token* Tokenise(const char* text)
+struct Token* Tokenise(const char* text, int len)
 {
   struct Token* tokens = NULL;
 
   struct lexer_token tok;
   struct lexer lexer;
 
-  lexer_init(&lexer, text, (dx8_size_t) strlen(text), NULL, test_log, NULL);
+  lexer_init(&lexer, text, len - 1, NULL, test_log, NULL);
 
   while(lexer_read(&lexer, &tok) == 1)
   {

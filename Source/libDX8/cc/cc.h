@@ -29,8 +29,8 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#ifndef DX8_CCMP_H
-#define DX8_CCMP_H
+#ifndef CC_H
+#define CC_H
 
 #include <stdint.h>
 #include <stdbool.h>
@@ -147,8 +147,6 @@ struct Instruction
 {
   u32 type;
   u32 index;
-  u32 address;
-  u32 size;
   u32 symbol;
   String* symbolText;
 
@@ -180,15 +178,13 @@ struct Token* Token_Next(struct Token* token);
 struct Token* Token_NextNext(struct Token* token);
 struct Token* Token_NextNextNext(struct Token* token);
 
-struct Token* Tokenise(const char* text);
+struct Token* Tokenise(const char* text, int len);
 
 Node* Nodify(struct Token* first);
 
-void DebugTokens(int id, struct Token* token);
-
 void Assemble(Instruction** outInstructions, Node* fileNode);
 
-void DebugAssembly(Instruction* instructions);
+void WriteAssembly(Instruction* instructions);
 
 void NodeList_Add(NodeList* list, Node* node);
 

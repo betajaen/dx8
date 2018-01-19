@@ -260,7 +260,6 @@ Node* Nodify(struct Token* tokens)
       if (error)
       {
         printf("Syntax Error: %s\n", errorStr);
-        DebugTokens(0, errorToken);
         return NULL;
       }
 
@@ -276,7 +275,6 @@ Node* Nodify(struct Token* tokens)
       if (error)
       {
         printf("Syntax Error: %s\n", errorStr);
-        DebugTokens(0, errorToken);
         return NULL;
       }
       

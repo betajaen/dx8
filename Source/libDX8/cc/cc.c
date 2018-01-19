@@ -49,21 +49,41 @@ const char* text =
   "{\n"
   "  asm \"push x\";\n"
   "  asm \"setq a, 5\";\n"
-  "}"
-  ;
+  "}";
 
 int main(int argc, char** argv)
 {
+  FILE* f;
   Instruction* instructions = NULL;
   struct Token* token = NULL;
+  u32 len;
+  char* text;
+  Node* nodes;
   
-  token = Tokenise(text);
+  if (argc == 1)
+  {
+    printf("cc.exe FILE.C\n");
+    return;
+  }
 
-  Node* nodes = Nodify(token);
+  f = fopen(argv[1], "rb");
+  if (f == NULL)
+  {
+    printf("File not found\n");
+    return;
+  }
+
+  len = stb_filelen(f);
+
+  text = malloc(len + 1);
+  fread(text, len, 1, f);
+  fclose(f);
+
+  text[len] = ' ';
+
+  token = Tokenise(text, len);
+  nodes = Nodify(token);
 
   Assemble(&instructions, nodes);
-
-  DebugAssembly(instructions);
-
-  printf("Done.\n");
+  WriteAssembly(instructions);
 }

@@ -41,7 +41,7 @@ static const kRegisterNames[] = {
   'a', 'x', 'y', 'z', 'w'
 };
 
-void DebugAssembly(struct Instruction* instructions)
+void WriteAssembly(struct Instruction* instructions)
 {
   u32 num = stb_arr_len(instructions);
   for(u32 i=0;i < num;i++)

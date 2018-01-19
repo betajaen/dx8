@@ -1318,7 +1318,7 @@ lexer_read(struct lexer *lexer, struct lexer_token *token)
     } else if (!lexer_read_punctuation(lexer, token)) {
         if (lexer->log) {
             lexer->log(lexer->userdata, LEXER_ERROR, lexer->line,
-                "unkown punctuation: %c", c);
+                "unkown punctuation: '%c' %i", c, c);
         }
         lexer->error = 1;
         return 0;
