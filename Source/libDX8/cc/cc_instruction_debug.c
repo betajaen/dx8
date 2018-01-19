@@ -29,33 +29,42 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include "ccmp.h"
+#include <stdio.h>
+#include <stdarg.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "cc.h"
 #include "References/stb.h"
 
-void DebugTokens(int id, struct Token* token)
-{
-  if (token == NULL)
-  {
-    printf("<%i> NULL.\n", id);
-    return;
-  }
+static const kRegisterNames[] = {
+  'a', 'x', 'y', 'z', 'w'
+};
 
-  switch(token->type)
+void DebugAssembly(struct Instruction* instructions)
+{
+  u32 num = stb_arr_len(instructions);
+  for(u32 i=0;i < num;i++)
   {
-    case TT_None:                         printf("<%i> None.\n", id); return;
-    case TT_Character:                    printf("<%i> Character %i.\n", id, token->number); return;
-    case TT_Number:                       printf("<%i> Number %i.\n", id, token->number); return;
-    case TT_String:                       printf("<%i> String '%.*s'.\n", id, token->str_length, token->str); return;
-    case TT_Symbol:                       printf("<%i> Symbol %.*s\n", id, token->str_length, token->str); return;
-    case TT_Syntax_SemiColon:             printf("<%i> Syntax ;.\n", id); return;
-    case TT_Syntax_Parentheses_Open:      printf("<%i> Syntax (.\n", id); return;
-    case TT_Syntax_Parentheses_Close:     printf("<%i> Syntax ).\n", id); return;
-    case TT_Syntax_Brace_Open:            printf("<%i> Syntax {.\n", id); return;
-    case TT_Syntax_Brace_Close:           printf("<%i> Syntax }.\n", id); return;
-    case TT_Keyword_EndOfFile:            printf("<%i> Keyword EndOfFile.\n", id); return;
-    case TT_Keyword_Int:                  printf("<%i> Keyword Integer.\n", id); return;
-    case TT_Keyword_Char:                 printf("<%i> Keyword Character.\n", id); return;
-    case TT_Keyword_Return:               printf("<%i> Keyword Return.\n", id); return;
-    case TT_Keyword_Define:               printf("<%i> Keyword Define.\n", id); return;
+    Instruction* ins = &instructions[i];
+
+    if (ins->symbol != 0)
+    {
+      printf("S_%08X:\n", ins->symbol);
+    }
+    else if (ins->symbolText != NULL)
+    {
+      printf("%.*s:\n", ins->symbolText->len, ins->symbolText->str);
+    }
+
+    switch(ins->type)
+    {
+      case IT_Nop:    printf("    nop");    break;
+      case IT_Text:   printf("    %.*s", ins->Text.text_length, ins->Text.text); break;
+      case IT_Ret:    printf("    ret");    break;
+      case IT_Set:    printf("    set %c, %i", kRegisterNames[ins->Set.register_], ins->Set.value);    break;
+    }
+
+    printf("\n");
   }
 }

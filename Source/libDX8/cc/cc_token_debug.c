@@ -29,41 +29,33 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include "ccmp.h"
-
-#define STB_DEFINE
+#include "cc.h"
 #include "References/stb.h"
 
-const char* text = 
-  "main()\n"
-  "{\n"
-  "  return 37;\n"
-  "}"
-  "\n"
-  "#define FIVE 5\n"
-  "five()\n"
-  "{\n"
-  "  return FIVE;\n"
-  "}"
-  "asm_test()\n"
-  "{\n"
-  "  asm \"push x\";\n"
-  "  asm \"setq a, 5\";\n"
-  "}"
-  ;
-
-int main(int argc, char** argv)
+void DebugTokens(int id, struct Token* token)
 {
-  Instruction* instructions = NULL;
-  struct Token* token = NULL;
-  
-  token = Tokenise(text);
+  if (token == NULL)
+  {
+    printf("<%i> NULL.\n", id);
+    return;
+  }
 
-  Node* nodes = Nodify(token);
-
-  Assemble(&instructions, nodes);
-
-  DebugAssembly(instructions);
-
-  printf("Done.\n");
+  switch(token->type)
+  {
+    case TT_None:                         printf("<%i> None.\n", id); return;
+    case TT_Character:                    printf("<%i> Character %i.\n", id, token->number); return;
+    case TT_Number:                       printf("<%i> Number %i.\n", id, token->number); return;
+    case TT_String:                       printf("<%i> String '%.*s'.\n", id, token->str_length, token->str); return;
+    case TT_Symbol:                       printf("<%i> Symbol %.*s\n", id, token->str_length, token->str); return;
+    case TT_Syntax_SemiColon:             printf("<%i> Syntax ;.\n", id); return;
+    case TT_Syntax_Parentheses_Open:      printf("<%i> Syntax (.\n", id); return;
+    case TT_Syntax_Parentheses_Close:     printf("<%i> Syntax ).\n", id); return;
+    case TT_Syntax_Brace_Open:            printf("<%i> Syntax {.\n", id); return;
+    case TT_Syntax_Brace_Close:           printf("<%i> Syntax }.\n", id); return;
+    case TT_Keyword_EndOfFile:            printf("<%i> Keyword EndOfFile.\n", id); return;
+    case TT_Keyword_Int:                  printf("<%i> Keyword Integer.\n", id); return;
+    case TT_Keyword_Char:                 printf("<%i> Keyword Character.\n", id); return;
+    case TT_Keyword_Return:               printf("<%i> Keyword Return.\n", id); return;
+    case TT_Keyword_Define:               printf("<%i> Keyword Define.\n", id); return;
+  }
 }

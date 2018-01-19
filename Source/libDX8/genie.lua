@@ -91,7 +91,7 @@ solution "DX8"
       "genie.lua"
     }
 
-  project "ccmp"
+  project "cc"
     kind            "ConsoleApp"
     language        "C"
     objdir          ".Obj"
@@ -99,15 +99,15 @@ solution "DX8"
     flags           { "NoExceptions", "NoRTTI" }
     defines         { }
     links           { }
-    includedirs     { "cmp/References/" }
+    includedirs     { "cc/References/" }
     libdirs         { }
 
     excludes        { }
 
     files           {
-      "ccmp/References/**.c",
-      "ccmp/References/**.h",
-      "ccmp/*.c",
-      "ccmp/*.h",
+      "cc/References/**.c",
+      "cc/References/**.h",
+      "cc/*.c",
+      "cc/*.h",
       "genie.lua"
     }

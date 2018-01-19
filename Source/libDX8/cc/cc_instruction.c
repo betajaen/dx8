@@ -34,7 +34,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "ccmp.h"
+#include "cc.h"
 
 #include "References/stb.h"
 

@@ -29,7 +29,7 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include "ccmp.h"
+#include "cc.h"
 
 #include "References/stb.h"
 

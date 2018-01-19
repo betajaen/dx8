@@ -29,42 +29,41 @@
 //! OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //! THE SOFTWARE.
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
-#include <string.h>
+#include "cc.h"
 
-#include "ccmp.h"
+#define STB_DEFINE
 #include "References/stb.h"
 
-static const kRegisterNames[] = {
-  'a', 'x', 'y', 'z', 'w'
-};
+const char* text = 
+  "main()\n"
+  "{\n"
+  "  return 37;\n"
+  "}"
+  "\n"
+  "#define FIVE 5\n"
+  "five()\n"
+  "{\n"
+  "  return FIVE;\n"
+  "}"
+  "asm_test()\n"
+  "{\n"
+  "  asm \"push x\";\n"
+  "  asm \"setq a, 5\";\n"
+  "}"
+  ;
 
-void DebugAssembly(struct Instruction* instructions)
+int main(int argc, char** argv)
 {
-  u32 num = stb_arr_len(instructions);
-  for(int i=0;i < num;i++)
-  {
-    Instruction* ins = &instructions[i];
+  Instruction* instructions = NULL;
+  struct Token* token = NULL;
+  
+  token = Tokenise(text);
 
-    if (ins->symbol != 0)
-    {
-      printf("S_%08X:\n", ins->symbol);
-    }
-    else if (ins->symbolText != NULL)
-    {
-      printf("%.*s:\n", ins->symbolText->len, ins->symbolText->str);
-    }
+  Node* nodes = Nodify(token);
 
-    switch(ins->type)
-    {
-      case IT_Nop:    printf("    nop");    break;
-      case IT_Text:   printf("    %.*s", ins->Text.text_length, ins->Text.text); break;
-      case IT_Ret:    printf("    ret");    break;
-      case IT_Set:    printf("    set %c, %i", kRegisterNames[ins->Set.register_], ins->Set.value);    break;
-    }
+  Assemble(&instructions, nodes);
 
-    printf("\n");
-  }
+  DebugAssembly(instructions);
+
+  printf("Done.\n");
 }
