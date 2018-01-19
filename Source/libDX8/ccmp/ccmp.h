@@ -46,6 +46,11 @@ typedef u8        dx8_char;
 typedef i16       dx8_int;
 typedef u16       dx8_size_t;
 
+typedef struct Node Node;
+typedef struct NodeList NodeList;
+typedef struct String String;
+typedef struct Instruction Instruction;
+
 enum TokenType
 {
   TT_None                       = 0,
@@ -69,6 +74,12 @@ enum TokenType
   TT_Keyword_Asm                = 'ASM'
 };
 
+struct String
+{
+  const char* str;
+  u32         len;
+};
+
 struct Token
 {
   int         type;
@@ -77,73 +88,51 @@ struct Token
   i32         number;
 };
 
-enum NodeType
+typedef enum
 {
-  NT_EndOfFile    = 0,
-  NT_Scope        = 1,
-  NT_Function     = 2,
+  NT_None         = 0,
+  NT_File         = 1,
+  NT_EndOfFile    = 2,
   NT_Define       = 3,
-  NT_Assembly     = 4,
+  NT_Function     = 4,
+  NT_Scope        = 5,
+  NT_Symbol       = 6,
+  NT_Number       = 7,
+  NT_Assembly     = 8,
+} NodeType;
+
+struct NodeList
+{
+  Node *first, *last;
 };
 
-enum ReturnNodeType
+struct Node
 {
-  RT_None     = 0,  // No return
-  RT_Number   = 1,  // return 32;
-  RT_Symbol   = 2,  // return s;
-};
-
-struct ReturnNode
-{
-  int         type;
-  int         number;    // number
-  int         symbol;    // symbol
-};
-
-struct AssemblyStatementNode
-{
-  int         type;
-  const char* text;
-  u32         text_length;
-};
-
-union StatementNode
-{
-  struct AssemblyStatementNode asm_;
-};
-
-struct ScopeNode
-{
-  int                       type;
-  union StatementNode* statements;
-  struct ReturnNode    return_;
-};
-
-struct DefineNode
-{
-  int  instruction_type;
-  u32  symbol;
-  i32  value;
-};
-
-struct FunctionNode
-{
-  int  instruction_type;
-  u32  symbol;
-
-  struct ScopeNode scope;
-};
-
-struct EndOfFileNode
-{
-  int  instruction_type;
-};
-
-union FileNode
-{
-  struct DefineNode    define;
-  struct FunctionNode  function;
-  struct EndOfFileNode eof_;
+  NodeType type;
+  u32      symbol;
+  String   text;
+  Node     *next;
+  union {
+    struct {
+      NodeList nodes;
+    } File;
+    struct {
+      Node*    scope;
+    } Function;
+    struct {
+      NodeList nodes;
+      Node*    return_;
+    } Scope;
+    struct {
+      i32     value;
+    } Number;
+    struct {
+      String  text;
+    } Assembly;
+    struct {
+      Node*   value;
+    } Define;
+  };
 };
 
 enum InstructionType
@@ -154,43 +143,27 @@ enum InstructionType
   IT_Set  = 3,
 };
 
-struct NopInstruction
+struct Instruction
 {
-  u32 type, index, address, size, symbol;
-};
+  u32 type;
+  u32 index;
+  u32 address;
+  u32 size;
+  u32 symbol;
+  String* symbolText;
 
-struct TextInstruction
-{
-  u32 type, index, address, size, symbol;
-  const char* text;
-  u32 text_length;
-};
+  union
+  {
+    struct {
+      const char* text;
+      u32 text_length;
+    } Text;
+    struct {
+      u16 register_;
+      i32 value;
+    } Set;
+  };
 
-struct RetInstruction
-{
-  u32 type, index, address, size, symbol;
-};
-
-struct SetInstruction
-{
-  u32 type, index, address, size, symbol;
-  u16 register_;
-  i32 value;
-};
-
-union Instruction
-{
-  struct NopInstruction    nop;
-  struct TextInstruction   text;
-  struct RetInstruction    ret;
-  struct SetInstruction    set;
-};
-
-struct InstructionSymbol
-{
-  u32  symbol;
-  u32  address;
-  u32  size;
 };
 
 bool Token_IsNullOrEof(struct Token* token);
@@ -209,13 +182,14 @@ struct Token* Token_NextNextNext(struct Token* token);
 
 struct Token* Tokenise(const char* text);
 
-union FileNode* Nodify(struct Token* first);
+Node* Nodify(struct Token* first);
 
 void DebugTokens(int id, struct Token* token);
-void DebugNodes(int id, union FileNode* extern_);
 
-void Assemble(struct InstructionSymbol** outSymbols, union Instruction** outInstructions, union FileNode* code);
+void Assemble(Instruction** outInstructions, Node* fileNode);
 
-void DebugAssembly(struct InstructionSymbol* symbols, union Instruction* instructions);
+void DebugAssembly(Instruction* instructions);
+
+void NodeList_Add(NodeList* list, Node* node);
 
 #endif

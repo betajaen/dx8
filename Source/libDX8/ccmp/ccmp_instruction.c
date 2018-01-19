@@ -44,14 +44,14 @@
 #define REGISTER_Z 3
 #define REGISTER_W 4
 
-static u32  nextInstructionSymbol      = 0;
+static u32     nextInstructionSymbol = 0;
+static String* nextInstructionSymbolText = NULL;
 
 struct BuildContext
 {
-  u32                             index;
-  struct InstructionSymbol*  symbols;
-  union Instruction*          instructions;
-  union FileNode*          externs;
+  u32                           index;
+  Instruction*                  instructions;
+  NodeList*                     nodes;
 };
 
 static void add_symbol(struct BuildContext* ctx)
@@ -59,17 +59,30 @@ static void add_symbol(struct BuildContext* ctx)
   
 }
 
-static i32 fetch_symbol_value(struct BuildContext* ctx, struct ScopeNode* scope, u32 symbol)
+static i32 fetch_symbol_value(struct BuildContext* ctx, Node* scope, u32 symbol)
 {
-  // We only support #defines right now, which are in externs.
-  u32 num = stb_arr_len(ctx->externs);
-  for(u32 i=0;i < num;i++)
+  // We only support #defines right now which can only in the file nodes
+  Node* node = ctx->nodes->first;
+  while(node != NULL)
   {
-    union FileNode* extern_ = &ctx->externs[i];
-    if (extern_->define.instruction_type == NT_Define && extern_->define.symbol == symbol)
+    if (node->type== NT_Define && node->symbol == symbol)
     {
-      return extern_->define.value;
+      Node* value = node->Define.value;
+
+      if (value == NULL)
+        return 0;
+      else if (value->type == NT_Number)
+      {
+        return value->Number.value;
+      }
+      else
+      {
+        printf("Unknown Symbol type for: %.*s resorting to 0\n", node->text.len, node->text.str);
+        return 0;
+      }
     }
+
+    node = node->next;
   }
 
   printf("Unknown Symbol: %i resorting to 0\n", symbol);
@@ -78,114 +91,124 @@ static i32 fetch_symbol_value(struct BuildContext* ctx, struct ScopeNode* scope,
 
 #define PUSH_COMMON(T) push_common(ctx, &v, T)
 #define PUSH_INSTRUCTION() stb_arr_push(ctx->instructions, v)
-void push_common(struct BuildContext* ctx, union Instruction* v, u32 type)
+void push_common(struct BuildContext* ctx, Instruction* v, u32 type)
 {
-  v->nop.index   = ctx->index++;
-  v->nop.address = 0;
-  v->nop.size    = 0;
-  v->nop.type    = type;
+  v->index   = ctx->index++;
+  v->address = 0;
+  v->size    = 0;
+  v->type    = type;
   if (nextInstructionSymbol)
   {
-    v->nop.symbol = nextInstructionSymbol;
+    v->symbol = nextInstructionSymbol;
+    v->symbolText = NULL;
     nextInstructionSymbol = 0;
+  }
+  else if (nextInstructionSymbolText)
+  {
+    v->symbol = 0;
+    v->symbolText = nextInstructionSymbolText;
+    nextInstructionSymbolText = NULL;
   }
   else
   {
-    v->nop.symbol = 0;
+    v->symbol = 0;
+    v->symbolText = NULL;
   }
 }
 
 static void push_nop(struct BuildContext* ctx)
 {
-  union Instruction v;
+  Instruction v;
   PUSH_COMMON(IT_Nop);
   PUSH_INSTRUCTION();
 }
 
 static void push_text(struct BuildContext* ctx, const char* text, u32 text_length)
 {
-  union Instruction v;
+  Instruction v;
   PUSH_COMMON(IT_Text);
-  v.text.text = text;
-  v.text.text_length = text_length;
+  v.Text.text = text;
+  v.Text.text_length = text_length;
   PUSH_INSTRUCTION();
 }
 
 static void push_ret(struct BuildContext* ctx)
 {
-  union Instruction v;
+  Instruction v;
   PUSH_COMMON(IT_Ret);
   PUSH_INSTRUCTION();
 }
 
 static void push_set(struct BuildContext* ctx, u32 register_, u16 value)
 {
-  union Instruction v;
+  Instruction v;
   PUSH_COMMON(IT_Set);
-  v.set.register_ = register_;
-  v.set.value     = value;
+  v.Set.register_ = register_;
+  v.Set.value     = value;
   PUSH_INSTRUCTION();
 }
 
-static void build_scope(struct BuildContext* ctx, struct ScopeNode* scope)
+static void build_scope(struct BuildContext* ctx, Node* scope)
 {
-  // Statements
-  u32 num = stb_arr_len(scope->statements);
-  for(int i=0;i < num;i++)
+  // Nodes
+  Node* statement = scope->Scope.nodes.first;
+  while(statement != NULL)
   {
-    union StatementNode* statement = &scope->statements[i];
-    
-    if (statement->asm_.type == NT_Assembly)
+    if (statement->type == NT_Assembly)
     {
-      push_text(ctx, statement->asm_.text, statement->asm_.text_length);
+      push_text(ctx, statement->Assembly.text.str, statement->Assembly.text.len);
     }
 
+    statement = statement->next;
   }
 
   // Return
-  if (scope->return_.type == RT_None)
+  Node* return_ = scope->Scope.return_;
+  if (return_ == NULL)
   {
     push_ret(ctx);
   }
-  else if (scope->return_.type == RT_Symbol)
+  else if (return_->type == NT_Symbol)
   {
-    push_set(ctx, REGISTER_A, fetch_symbol_value(ctx, scope, scope->return_.symbol));
+    push_set(ctx, REGISTER_A, fetch_symbol_value(ctx, scope, return_->symbol));
     push_ret(ctx);
   }
-  else if (scope->return_.type == RT_Number)
+  else if (return_->type == NT_Number)
   {
-    push_set(ctx, REGISTER_A, scope->return_.number);
+    push_set(ctx, REGISTER_A, return_->Number.value);
     push_ret(ctx);
   }
 }
 
-static void build_instruction(struct BuildContext* ctx, struct FunctionNode* function)
+static void build_function(struct BuildContext* ctx, Node* node)
 {
-  nextInstructionSymbol = function->symbol;
-  build_scope(ctx, &function->scope);
+  //nextInstructionSymbol = node->symbol;
+  nextInstructionSymbolText = &node->text;
+
+  build_scope(ctx, node->Function.scope);
 }
 
 
-void Assemble(struct InstructionSymbol** outSymbols, union Instruction** outInstructions, union FileNode* code)
+void Assemble(Instruction** outInstructions, Node* fileNode)
 {
   struct BuildContext ctx;
   ctx.index = 0;
   ctx.instructions = NULL;
-  ctx.symbols = NULL;
-  ctx.externs = code;
-  nextInstructionSymbol = 0;
-  
-  u32 num = stb_arr_len(code);
-  for(u32 i=0;i < num;i++)
-  {
-    union FileNode* c = &code[i];
+  ctx.nodes = &fileNode->File.nodes;
 
-    if (c->function.instruction_type == NT_Function)
+  nextInstructionSymbol = 0;
+  nextInstructionSymbolText = NULL;
+  
+  Node* node = ctx.nodes->first;
+
+  while(node != NULL)
+  {
+    if (node->type == NT_Function)
     {
-      build_instruction(&ctx, &c->function);
+      build_function(&ctx, node);
     }
+    node = node->next;
   }
 
-  *outSymbols      = ctx.symbols;
   *outInstructions = ctx.instructions;
 }

@@ -81,13 +81,31 @@ static const char* errorStr;
 #define FAIL_WHEN_NOT_STRING(NOW, FAIL_STR) \
     FAIL_WHEN((Token_IsString(NOW) == false), FAIL_STR)
 
-
-struct Token* Parse_Scope(struct ScopeNode* scope, struct Token* token)
+Node* Node_Create(NodeType type)
 {
-  scope->return_.type   = RT_None;
-  scope->return_.number = 0;
-  scope->type           = NT_Scope;
-  scope->statements     = NULL;
+  Node* node = malloc(sizeof(Node));
+  memset(node, 0, sizeof(Node));
+  node->type = type;
+  
+  return node;
+}
+
+void NodeList_Add(NodeList* list, Node* node)
+{
+  if (list->last == NULL)
+  {
+    list->first = list->last = node;
+  }
+  else
+  {
+    list->last->next = node;
+    list->last = node;
+  }
+}
+
+struct Token* Parse_Scope(Node* scope, struct Token* token)
+{
+  NodeList* list = &scope->Scope.nodes;
 
   FAIL_WHEN_NOT_SYNTAX(token, TT_Syntax_Brace_Open, "Required { in start of scope block");
 
@@ -105,16 +123,15 @@ struct Token* Parse_Scope(struct ScopeNode* scope, struct Token* token)
     {
       FAIL_WHEN_NOT_STRING(next, "Expected string for asm");
 
-      union StatementNode statement;
-      statement.asm_.type = NT_Assembly;
-      statement.asm_.text = next->str;
-      statement.asm_.text_length = next->str_length;
-      
+      Node* asm_ = Node_Create(NT_Assembly);
+      asm_->Assembly.text.str = next->str;
+      asm_->Assembly.text.len = next->str_length;
+
       token = Token_NextNext(token);
 
       FAIL_WHEN_NOT_SYNTAX(token, TT_Syntax_SemiColon, "Expected ; for asm");
 
-      stb_arr_push(scope->statements, statement);
+      NodeList_Add(list, asm_);
 
       token = Token_Next(next);
       continue;
@@ -130,17 +147,23 @@ struct Token* Parse_Scope(struct ScopeNode* scope, struct Token* token)
         // check for ; and then }
         FAIL_NEXT_SYNTAX_2(next, ';', '}', "Missing ; or } from scope");
 
-        scope->return_.type   = RT_Number;
-        scope->return_.number = next->number;
+        Node* number = Node_Create(NT_Number);
+        number->Number.value = next->number;
+
+        scope->Scope.return_ = number;
 
         return Token_NextNext(next);
       }
       // return symbol;
       else if (Token_IsSymbol(next))
       {
-        scope->return_.type   = RT_Symbol;
-        scope->return_.symbol = stb_hashlen(next->str, next->str_length);
+        Node* symbol     = Node_Create(NT_Symbol);
+        symbol->text.str = next->str;
+        symbol->text.len = next->str_length;
+        symbol->symbol   = stb_hashlen(next->str, next->str_length);
         
+        scope->Scope.return_ = symbol;
+
         return Token_NextNext(next);
       }
       // return;
@@ -168,7 +191,7 @@ struct Token* Parse_Scope(struct ScopeNode* scope, struct Token* token)
   return NULL;
 }
 
-struct Token* Parse_Define(struct DefineNode* define, struct Token* token)
+struct Token* Parse_Define(Node* define, struct Token* token)
 {
   FAIL_WHEN_NOT_SYNTAX(token, TT_Syntax_Hash, "Required # in #define");
 
@@ -178,23 +201,28 @@ struct Token* Parse_Define(struct DefineNode* define, struct Token* token)
 
   token = Token_Next(token);
 
-  define->instruction_type = NT_Define;
-  define->symbol           = stb_hashlen(token->str, token->str_length);
+  define->text.str = token->str;
+  define->text.len = token->str_length;
+  define->symbol   = stb_hashlen(token->str, token->str_length);
   
   token = Token_Next(token);
 
   FAIL_WHEN_NOT_NUMBER(token, "Expected number in preprocessor define");
 
-  define->value           = token->number;
-  
+  Node* number = Node_Create(NT_Number);
+  number->Number.value = token->number;
+
+  define->Define.value = number;
+
   return Token_Next(token);
 }
 
 
-struct Token* Parse_Function(struct FunctionNode* function, struct Token* token)
+struct Token* Parse_Function(Node* function, struct Token* token)
 {
-  function->instruction_type = NT_Function;
-  function->symbol           = stb_hashlen(token->str, token->str_length);
+  function->text.str  = token->str;
+  function->text.len  = token->str_length;
+  function->symbol    = stb_hashlen(token->str, token->str_length);
 
   // Check function is ()
   FAIL_NEXT_SYNTAX_2(token, '(', ')', "Missing function parenthesis");
@@ -203,15 +231,17 @@ struct Token* Parse_Function(struct FunctionNode* function, struct Token* token)
   
   if (Token_IsSpecificSyntax(token, '{'))
   {
-    token = Parse_Scope(&function->scope, token);
+    function->Function.scope = Node_Create(NT_Scope);
+    token = Parse_Scope(function->Function.scope, token);
   }
 
   return token;
 }
 
-union FileNode* Nodify(struct Token* tokens)
+Node* Nodify(struct Token* tokens)
 {
-  union FileNode* externs = NULL;
+  Node* file = Node_Create(NT_File);
+  
   u32 num = stb_arr_len(tokens) - 1;
   struct Token *token = tokens;
 
@@ -224,8 +254,8 @@ union FileNode* Nodify(struct Token* tokens)
 
     if (token->type == TT_Syntax_Hash && Token_IsSpecificKeyword(next, TT_Keyword_Define))
     {
-      union FileNode extern_;
-      token = Parse_Define(&extern_.define, token);
+      Node* node = Node_Create(NT_Define);
+      token = Parse_Define(node, token);
       
       if (error)
       {
@@ -234,15 +264,14 @@ union FileNode* Nodify(struct Token* tokens)
         return NULL;
       }
 
-      stb_arr_push(externs, extern_);
-
+      NodeList_Add(&file->File.nodes, node);
       continue;
     }
 
     if (token->type == TT_Symbol && (next != NULL && next->type == TT_Syntax_Parentheses_Open))
     {
-      union FileNode extern_;
-      token = Parse_Function(&extern_.function, token);
+      Node* node = Node_Create(NT_Function);
+      token = Parse_Function(node, token);
 
       if (error)
       {
@@ -250,18 +279,16 @@ union FileNode* Nodify(struct Token* tokens)
         DebugTokens(0, errorToken);
         return NULL;
       }
-
-      stb_arr_push(externs, extern_);
+      
+      NodeList_Add(&file->File.nodes, node);
       continue;
     }
 
     token = Token_Next(token);
   }
 
-  union FileNode eof_;
-  eof_.eof_.instruction_type = NT_EndOfFile;
 
-  stb_arr_push(externs, eof_);
+  NodeList_Add(&file->File.nodes, Node_Create(NT_EndOfFile));
 
-  return externs;
+  return file;
 }

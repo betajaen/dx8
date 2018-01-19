@@ -54,28 +54,16 @@ const char* text =
 
 int main(int argc, char** argv)
 {
-  struct Token* token = Tokenise(text);
+  Instruction* instructions = NULL;
+  struct Token* token = NULL;
+  
+  token = Tokenise(text);
 
-  union FileNode* externs = Nodify(token);
-  union FileNode* extern_ = externs;
+  Node* nodes = Nodify(token);
 
-  int counter = 0;
-  while(extern_ != NULL)
-  {
-    DebugNodes(counter++, extern_);
+  Assemble(&instructions, nodes);
 
-    if (extern_->eof_.instruction_type == NT_EndOfFile)
-      break;
-
-    extern_++;
-  }
-
-  union Instruction* instructions = NULL;
-  struct InstructionSymbol* symbols = NULL;
-
-  Assemble(&symbols, &instructions, externs);
-
-  DebugAssembly(symbols, instructions);
+  DebugAssembly(instructions);
 
   printf("Done.\n");
 }

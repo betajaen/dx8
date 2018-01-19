@@ -41,28 +41,28 @@ static const kRegisterNames[] = {
   'a', 'x', 'y', 'z', 'w'
 };
 
-void DebugAssembly(struct InstructionSymbol* symbols, union Instruction* instructions)
+void DebugAssembly(struct Instruction* instructions)
 {
   u32 num = stb_arr_len(instructions);
   for(int i=0;i < num;i++)
   {
-    union Instruction* ins = &instructions[i];
+    Instruction* ins = &instructions[i];
 
-    if (ins->nop.symbol != 0)
+    if (ins->symbol != 0)
     {
-      printf("S_%08X: ", ins->nop.symbol);
+      printf("S_%08X:\n", ins->symbol);
     }
-    else
+    else if (ins->symbolText != NULL)
     {
-      printf("            ");
+      printf("%.*s:\n", ins->symbolText->len, ins->symbolText->str);
     }
 
-    switch(ins->nop.type)
+    switch(ins->type)
     {
-      case IT_Nop:    printf("nop");    break;
-      case IT_Text:   printf("%.*s", ins->text.text_length, ins->text.text); break;
-      case IT_Ret:    printf("ret");    break;
-      case IT_Set:    printf("set %c, %i", kRegisterNames[ins->set.register_], ins->set.value);    break;
+      case IT_Nop:    printf("    nop");    break;
+      case IT_Text:   printf("    %.*s", ins->Text.text_length, ins->Text.text); break;
+      case IT_Ret:    printf("    ret");    break;
+      case IT_Set:    printf("    set %c, %i", kRegisterNames[ins->Set.register_], ins->Set.value);    break;
     }
 
     printf("\n");
