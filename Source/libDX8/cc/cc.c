@@ -74,11 +74,12 @@ int main(int argc, char** argv)
 
   len = stb_filelen(f);
 
-  text = malloc(len + 1);
-  fread(text, len, 1, f);
+  text = malloc(len + 2);
+  fread(text, len, 2, f);
   fclose(f);
 
   text[len] = ' ';
+  text[len+1] = 0;
 
   nodes = ReadText(text, len);
   

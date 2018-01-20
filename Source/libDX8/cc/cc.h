@@ -61,7 +61,14 @@ typedef enum
   NT_Scope        = 5,
   NT_Number       = 6,
   NT_Assembly     = 7,
+  NT_While        = 8
 } NodeType;
+
+typedef enum
+{
+  SC_Function     = 0,
+  SC_While        = 1,
+} ScopeType;
 
 struct String
 {
@@ -78,6 +85,7 @@ struct Node
 {
   NodeType type;
   u32      symbol;
+  u32      index;
   String   text;
   Node     *next;
   union {
@@ -88,6 +96,7 @@ struct Node
       Node*    scope;
     } Function;
     struct {
+      u32      type;
       NodeList nodes;
       Node*    return_;
     } Scope;
@@ -100,15 +109,21 @@ struct Node
     struct {
       Node*   value;
     } Symbol;
+    struct {
+      Node* scope;
+    } While;
   };
 };
 
 enum InstructionType
 {
-  IT_Nop  = 0,
-  IT_Text = 1,
-  IT_Ret  = 2,
-  IT_Set  = 3,
+  IT_Nop          = 0,
+  IT_Blank        = 1,
+  IT_Comment      = 2,
+  IT_Text         = 3,
+  IT_Return       = 4,
+  IT_Set          = 5,
+  IT_BranchAlways = 6,
 };
 
 struct Instruction
@@ -128,6 +143,12 @@ struct Instruction
       u16 register_;
       i32 value;
     } Set;
+    struct {
+      const char* text;
+    } Comment;
+    struct {
+      u32 target;
+    } BranchAlways;
   };
 
 };

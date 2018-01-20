@@ -48,14 +48,16 @@ typedef struct TokenCtx    TokenCtx;
 static const char* kKeywords[] = {
   "return",
   "asm",
-  "define"
+  "define",
+  "while"
 };
 
 enum KeywordType
 {
   KT_Return,
   KT_Asm,
-  KT_Define
+  KT_Define,
+  KT_While
 };
 
 static const u32 kKeywordsCount = stb_arrcount(kKeywords);
@@ -138,7 +140,7 @@ void Print_Token(struct TokenInfo* token)
     printf("End of File\n");
   }
   
-  //printf("Around: %.*s\n", 30,  token->tok.str);
+  printf("Line %i, Around\n %.*s\n", token->lexer.line, 30, token->tok.str);
 }
 
 #define TOKEN_IS_SYNTAX(TOK)                     ((TOK)->bIsSyntax)
@@ -152,6 +154,18 @@ void Print_Token(struct TokenInfo* token)
 #define TOKEN_STR(TOK)                           ((TOK)->tok.str)
 #define TOKEN_STR_LEN(TOK)                       ((TOK)->tok.len)
 #define TOKEN_NUMBER(TOK)                        ((TOK)->number)
+
+int TOKEN_IS_SPECIFIC_SYMBOL(struct TokenInfo* TOK, const char* SYMBOL)
+{
+  if (TOK->bIsSymbol == false)
+    return 0;
+  
+  int len = strlen(SYMBOL);
+  int hash1 = stb_hashlen(SYMBOL, len);
+  int hash2 = stb_hashlen(TOK->tok.str, TOK->tok.len);
+
+  return hash1 == hash2;
+}
 
 i32 Node_FetchSymbol_Number(NodeList* nodes, u32 symbol)
 {
@@ -352,11 +366,14 @@ static int Token_Read(TokenCtx* ctx)
 
 #define Token_Next(C) Token_Read(C)
 
+static u32 sNextNodeId = 0;
+
 Node* Node_Create(NodeType type)
 {
   Node* node = malloc(sizeof(Node));
   memset(node, 0, sizeof(Node));
   node->type = type;
+  node->index = sNextNodeId++;
   
   return node;
 }
@@ -374,8 +391,41 @@ void NodeList_Add(NodeList* list, Node* node)
   }
 }
 
-void Parse_Scope(TokenCtx* ctx, Node* scope)
+void Parse_Scope(TokenCtx* ctx, Node* scope);
+
+void Parse_While(TokenCtx* ctx, Node* scopeParent)
 {
+  // while
+  Ctx_Panic_If(ctx, TOKEN_IS_SPECIFIC_KEYWORD(&ctx->tok, KT_While) == false, "Expected while");
+  Token_Next(ctx);
+
+  // (
+  Ctx_Panic_If(ctx, TOKEN_IS_SPECIFIC_SYNTAX(&ctx->tok, ST_Parentheses_Open) == false, "Expected (");
+  Token_Next(ctx);
+
+  // TRUE
+  Ctx_Panic_If(ctx, TOKEN_IS_SPECIFIC_SYMBOL(&ctx->tok, "TRUE") == false, "Unexpected condition in while expression");
+  Token_Next(ctx);
+  
+  // )
+  Ctx_Panic_If(ctx, TOKEN_IS_SPECIFIC_SYNTAX(&ctx->tok, ST_Parentheses_Close) == false, "Expected )");
+  Token_Next(ctx);
+  
+  // ...
+
+  Node* while_ = Node_Create(NT_While);
+  NodeList_Add(&scopeParent->Scope.nodes, while_);
+  
+  Node* scope = Node_Create(NT_Scope);
+  Parse_Scope(ctx, scope, SC_While);
+  
+  while_->While.scope = scope;
+}
+
+void Parse_Scope(TokenCtx* ctx, Node* scope, u32 scopeType)
+{
+  scope->Scope.type = scopeType;
+
   NodeList* list = &scope->Scope.nodes;
 
   Ctx_Panic_If(ctx, TOKEN_IS_SPECIFIC_SYNTAX(&ctx->tok, ST_Brace_Open) == false, "Missing { in start of scope block");
@@ -389,7 +439,6 @@ void Parse_Scope(TokenCtx* ctx, Node* scope)
     if (TOKEN_IS_SPECIFIC_SYNTAX(&ctx->tok, ST_Brace_Close))
     {
       // Special case, where return isn't defined.
-      Token_Next(ctx);
       return;
     }
 
@@ -403,10 +452,19 @@ void Parse_Scope(TokenCtx* ctx, Node* scope)
       Node* asm_ = Node_Create(NT_Assembly);
       asm_->Assembly.text.str = TOKEN_STR(&ctx->tok);
       asm_->Assembly.text.len = TOKEN_STR_LEN(&ctx->tok);
+      NodeList_Add(list, asm_);
 
       Token_Next(ctx);
 
-      NodeList_Add(list, asm_);
+      Ctx_Panic_If(ctx, TOKEN_IS_SPECIFIC_SYNTAX(&ctx->tok, ST_Semicolon) == false, "Expected ; after asm string");
+
+      continue;
+    }
+
+    // while(TRUE) { }
+    if (TOKEN_IS_SPECIFIC_KEYWORD(&ctx->tok, KT_While))
+    {
+      Parse_While(ctx, scope, SC_While);
       continue;
     }
 
@@ -453,7 +511,7 @@ void Parse_Scope(TokenCtx* ctx, Node* scope)
   }
   
   Token_Next(ctx);
-  Ctx_Panic_If(ctx, TOKEN_IS_SPECIFIC_SYNTAX(&ctx->tok, ST_Semicolon) == false, "Expected ; after return");
+  Ctx_Panic_If(ctx, TOKEN_IS_SPECIFIC_SYNTAX(&ctx->tok, ST_Semicolon) == false, "Expected ; after return B");
 
   Token_Next(ctx);
   Ctx_Panic_If(ctx, TOKEN_IS_SPECIFIC_SYNTAX(&ctx->tok, ST_Brace_Close) == false, "Expected } after end of scope");
@@ -510,7 +568,7 @@ void Parse_Function(TokenCtx* ctx)
     Node* scope = Node_Create(NT_Scope);
     node->Function.scope = scope;
 
-    Parse_Scope(ctx, scope);
+    Parse_Scope(ctx, scope, SC_Function);
     return;
   }
 
@@ -535,12 +593,35 @@ void  Parse_FunctionOrWhat(TokenCtx* ctx)
   Ctx_Panic(ctx, "Unrecongised keyword, was expecting a function name.");
 }
 
+void AddNumericSymbol(TokenCtx* ctx, const char* name, i32 value)
+{
+  Node* node = Node_Create(NT_Symbol);
+  node->text.str = name;
+  node->text.len = strlen(name);
+  node->symbol   = stb_hashlen(node->text.str, node->text.len);
+  Node* number = Node_Create(NT_Number);
+  number->Number.value = value;
+  node->Symbol.value = number;
+  
+  NodeList_Add(&ctx->exports->File.nodes, node);
+}
+
+void AddDefaultSymbols(TokenCtx* ctx)
+{
+  AddNumericSymbol(ctx, "YES", 1);
+  AddNumericSymbol(ctx, "NO", 0);
+  AddNumericSymbol(ctx, "TRUE", 1);
+  AddNumericSymbol(ctx, "FALSE", 0);
+}
+
 Node* ReadText(const char* text, int text_length)
 {
   TokenCtx ctx;
   memset(&ctx, 0, sizeof(TokenCtx));
 
   ctx.exports = Node_Create(NT_File);
+
+  AddDefaultSymbols(&ctx);
 
   lexer_init(&ctx.tok.lexer, text, text_length - 1, NULL, Lexer_Debug, NULL);
   lexer_init(&ctx.last.lexer, text, text_length - 1, NULL, Lexer_Debug, NULL);

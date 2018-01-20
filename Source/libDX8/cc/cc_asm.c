@@ -60,13 +60,22 @@ void WriteAssembly(struct Instruction* instructions, const char* path)
     {
       fprintf(f, "%.*s:\n", ins->symbolText->len, ins->symbolText->str);
     }
+    else if (ins->type == IT_Blank)
+    {
+      fprintf(f, "\n");
+    }
+
+    if (ins->type == IT_Blank)
+      continue;
 
     switch(ins->type)
     {
-      case IT_Nop:    fprintf(f, "    nop");    break;
-      case IT_Text:   fprintf(f, "    %.*s", ins->Text.text_length, ins->Text.text); break;
-      case IT_Ret:    fprintf(f, "    ret");    break;
-      case IT_Set:    fprintf(f, "    set %c, %i", kRegisterNames[ins->Set.register_], ins->Set.value);    break;
+      case IT_Nop:          fprintf(f, "    nop");    break;
+      case IT_Comment:      fprintf(f, "; %s", ins->Comment.text);    break;
+      case IT_Text:         fprintf(f, "    %.*s", ins->Text.text_length, ins->Text.text); break;
+      case IT_Return:       fprintf(f, "    ret");    break;
+      case IT_Set:          fprintf(f, "    set %c, %i", kRegisterNames[ins->Set.register_], ins->Set.value);    break;
+      case IT_BranchAlways: fprintf(f, "    bra S_%08X", ins->BranchAlways.target); break;
     }
 
     fprintf(f, "\n");

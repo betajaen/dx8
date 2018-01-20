@@ -66,17 +66,26 @@ void push_common(struct BuildContext* ctx, Instruction* v, u32 type)
 {
   v->index   = ctx->index++;
   v->type    = type;
-  if (nextInstructionSymbol)
+
+  if (type != IT_Comment)
   {
-    v->symbol = nextInstructionSymbol;
-    v->symbolText = NULL;
-    nextInstructionSymbol = 0;
-  }
-  else if (nextInstructionSymbolText)
-  {
-    v->symbol = 0;
-    v->symbolText = nextInstructionSymbolText;
-    nextInstructionSymbolText = NULL;
+    if (nextInstructionSymbol)
+    {
+      v->symbol = nextInstructionSymbol;
+      v->symbolText = NULL;
+      nextInstructionSymbol = 0;
+    }
+    else if (nextInstructionSymbolText)
+    {
+      v->symbol = 0;
+      v->symbolText = nextInstructionSymbolText;
+      nextInstructionSymbolText = NULL;
+    }
+    else
+    {
+      v->symbol = 0;
+      v->symbolText = NULL;
+    }
   }
   else
   {
@@ -92,6 +101,13 @@ static void push_nop(struct BuildContext* ctx)
   PUSH_INSTRUCTION();
 }
 
+static void push_blank(struct BuildContext* ctx)
+{
+  Instruction v;
+  PUSH_COMMON(IT_Blank);
+  PUSH_INSTRUCTION();
+}
+
 static void push_text(struct BuildContext* ctx, const char* text, u32 text_length)
 {
   Instruction v;
@@ -104,7 +120,7 @@ static void push_text(struct BuildContext* ctx, const char* text, u32 text_lengt
 static void push_ret(struct BuildContext* ctx)
 {
   Instruction v;
-  PUSH_COMMON(IT_Ret);
+  PUSH_COMMON(IT_Return);
   PUSH_INSTRUCTION();
 }
 
@@ -117,25 +133,63 @@ static void push_set(struct BuildContext* ctx, u32 register_, u16 value)
   PUSH_INSTRUCTION();
 }
 
+static void push_comment(struct BuildContext* ctx, const char* text)
+{
+  Instruction v;
+  PUSH_COMMON(IT_Comment);
+  v.Comment.text = text;
+  PUSH_INSTRUCTION();
+}
+
+static void push_branch_always(struct BuildContext* ctx, u32 sym)
+{
+  Instruction v;
+  PUSH_COMMON(IT_BranchAlways);
+  v.BranchAlways.target = sym;
+  PUSH_INSTRUCTION();
+}
+
+static void flush(struct BuildContext* ctx)
+{
+  if (nextInstructionSymbol || nextInstructionSymbolText)
+  {
+    push_blank(ctx);
+  }
+}
+
 static void build_scope(struct BuildContext* ctx, Node* scope)
 {
   // Nodes
-  Node* statement = scope->Scope.nodes.first;
-  while(statement != NULL)
+  Node* node = scope->Scope.nodes.first;
+  while(node != NULL)
   {
-    if (statement->type == NT_Assembly)
+    if (node->type == NT_Assembly)
     {
-      push_text(ctx, statement->Assembly.text.str, statement->Assembly.text.len);
+      push_text(ctx, node->Assembly.text.str, node->Assembly.text.len);
+    }
+    else if (node->type == NT_While)
+    {
+      flush(ctx);
+      nextInstructionSymbol = node->index;
+      int sym = node->index;
+      push_blank(ctx);
+      build_scope(ctx, node->While.scope);
+
+      push_branch_always(ctx, sym);
     }
 
-    statement = statement->next;
+    node = node->next;
   }
 
   // Return
   Node* return_ = scope->Scope.return_;
+  
   if (return_ == NULL)
   {
-    push_ret(ctx);
+    if (scope->Scope.type == SC_Function)
+    {
+      push_ret(ctx);
+    }
   }
   else if (return_->type == NT_Symbol)
   {
@@ -147,6 +201,11 @@ static void build_scope(struct BuildContext* ctx, Node* scope)
     push_set(ctx, REGISTER_A, return_->Number.value);
     push_ret(ctx);
   }
+  else if (return_->type == NT_None)
+  {
+    push_ret(ctx);
+  }
+
 }
 
 static void build_function(struct BuildContext* ctx, Node* node)
@@ -171,9 +230,11 @@ void Assemble(Instruction** outInstructions, Node* fileNode)
   
   while(node != NULL)
   {
+    flush(&ctx);
     if (node->type == NT_Function)
     {
       build_function(&ctx, node);
+      push_blank(&ctx);
     }
     node = node->next;
   }
