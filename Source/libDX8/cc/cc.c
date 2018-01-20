@@ -81,7 +81,15 @@ int main(int argc, char** argv)
   text[len] = ' ';
 
   nodes = ReadText(text, len);
+  
 
   Assemble(&instructions, nodes);
-  WriteAssembly(instructions);
+  
+  char m[256];
+  memset(m, 0, 256);
+
+  stb_replaceext(m, argv[1], ".s");
+
+  WriteAssembly(instructions, m);
+
 }

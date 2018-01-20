@@ -132,6 +132,10 @@ struct Instruction
 
 };
 
+i32 NodeList_FetchSymbol_Number(NodeList* list, u32 symbol);
+
+bool NodeList_HasSymbol(NodeList* list, u32 symbol);
+
 Node* ReadText(const char* text, int text_length);
 
 void Assemble(Instruction** outInstructions, Node* fileNode);

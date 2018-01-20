@@ -41,8 +41,12 @@ static const kRegisterNames[] = {
   'a', 'x', 'y', 'z', 'w'
 };
 
-void WriteAssembly(struct Instruction* instructions)
+void WriteAssembly(struct Instruction* instructions, const char* path)
 {
+  printf("> %s", path);
+
+  FILE* f = fopen(path, "wb");
+
   u32 num = stb_arr_len(instructions);
   for(u32 i=0;i < num;i++)
   {
@@ -50,21 +54,23 @@ void WriteAssembly(struct Instruction* instructions)
 
     if (ins->symbol != 0)
     {
-      printf("S_%08X:\n", ins->symbol);
+      fprintf(f, "S_%08X:\n", ins->symbol);
     }
     else if (ins->symbolText != NULL)
     {
-      printf("%.*s:\n", ins->symbolText->len, ins->symbolText->str);
+      fprintf(f, "%.*s:\n", ins->symbolText->len, ins->symbolText->str);
     }
 
     switch(ins->type)
     {
-      case IT_Nop:    printf("    nop");    break;
-      case IT_Text:   printf("    %.*s", ins->Text.text_length, ins->Text.text); break;
-      case IT_Ret:    printf("    ret");    break;
-      case IT_Set:    printf("    set %c, %i", kRegisterNames[ins->Set.register_], ins->Set.value);    break;
+      case IT_Nop:    fprintf(f, "    nop");    break;
+      case IT_Text:   fprintf(f, "    %.*s", ins->Text.text_length, ins->Text.text); break;
+      case IT_Ret:    fprintf(f, "    ret");    break;
+      case IT_Set:    fprintf(f, "    set %c, %i", kRegisterNames[ins->Set.register_], ins->Set.value);    break;
     }
 
-    printf("\n");
+    fprintf(f, "\n");
   }
+  
+  fclose(f);
 }

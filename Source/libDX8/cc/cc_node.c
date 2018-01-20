@@ -153,6 +153,94 @@ void Print_Token(struct TokenInfo* token)
 #define TOKEN_STR_LEN(TOK)                       ((TOK)->tok.len)
 #define TOKEN_NUMBER(TOK)                        ((TOK)->number)
 
+i32 Node_FetchSymbol_Number(NodeList* nodes, u32 symbol)
+{
+  // We only support #defines right now which can only in the file nodes
+  Node* node = nodes->first;
+  while(node != NULL)
+  {
+    if (node->type== NT_Symbol && node->symbol == symbol)
+    {
+      Node* value = node->Symbol.value;
+
+      if (value == NULL)
+        return 0;
+      else if (value->type == NT_Number)
+      {
+        return value->Number.value;
+      }
+      else
+      {
+        printf("Unknown Symbol type for: %.*s resorting to 0\n", node->text.len, node->text.str);
+        return 0;
+      }
+    }
+
+    node = node->next;
+  }
+
+  printf("Unknown Symbol: %i resorting to 0\n", symbol);
+  return 0;
+}
+
+i32 NodeList_FetchSymbol_Number(NodeList* nodes, u32 symbol)
+{
+  Node* node = nodes->first;
+  
+  while(node != NULL)
+  {
+    if (node->type== NT_Symbol && node->symbol == symbol)
+    {
+      Node* value = node->Symbol.value;
+
+      if (value == NULL)
+        return 0;
+      else if (value->type == NT_Number)
+      {
+        return value->Number.value;
+      }
+      else
+      {
+        printf("Unknown Symbol type for: %.*s resorting to 0\n", node->text.len, node->text.str);
+        return 0;
+      }
+    }
+
+    node = node->next;
+  }
+
+  printf("Unknown Symbol: %i resorting to 0\n", symbol);
+  return 0;
+}
+
+bool NodeList_HasSymbol(NodeList* nodes, u32 symbol)
+{
+  Node* node = nodes->first;
+
+  while(node != NULL)
+  {
+    if (node->type== NT_Symbol && node->symbol == symbol)
+    {
+      Node* value = node->Symbol.value;
+
+      if (value == NULL)
+        return false;
+      else if (value->type == NT_Number)
+      {
+        return true;
+      }
+      else
+      {
+        return false;
+      }
+    }
+
+    node = node->next;
+  }
+
+  return false;
+}
+
 struct TokenCtx
 {
   struct TokenInfo tok, peek, last;
@@ -348,6 +436,8 @@ void Parse_Scope(TokenCtx* ctx, Node* scope)
         symbol->text.len = TOKEN_STR_LEN(&ctx->tok);
         symbol->symbol   = stb_hashlen(symbol->text.str, symbol->text.len);
 
+        Ctx_Panic_If(ctx, NodeList_HasSymbol(&ctx->exports->File.nodes, symbol->symbol) == false, "Unknown Symbol");
+
         scope->Scope.return_ = symbol;
         
         break;
@@ -458,9 +548,6 @@ Node* ReadText(const char* text, int text_length)
   while(Token_Read(&ctx))
   {
     // #define XYZ ...
-    Print_Token(&ctx.tok);
-    printf("...\n");
-
     if (TOKEN_IS_SPECIFIC_SYNTAX(&ctx.tok, ST_Hash))
     {
       Parse_Define(&ctx);

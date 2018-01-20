@@ -59,38 +59,9 @@ static void add_symbol(struct BuildContext* ctx)
   
 }
 
-static i32 fetch_symbol_value(struct BuildContext* ctx, Node* scope, u32 symbol)
-{
-  // We only support #defines right now which can only in the file nodes
-  Node* node = ctx->nodes->first;
-  while(node != NULL)
-  {
-    if (node->type== NT_Symbol && node->symbol == symbol)
-    {
-      Node* value = node->Symbol.value;
-
-      if (value == NULL)
-        return 0;
-      else if (value->type == NT_Number)
-      {
-        return value->Number.value;
-      }
-      else
-      {
-        printf("Unknown Symbol type for: %.*s resorting to 0\n", node->text.len, node->text.str);
-        return 0;
-      }
-    }
-
-    node = node->next;
-  }
-
-  printf("Unknown Symbol: %i resorting to 0\n", symbol);
-  return 0;
-}
-
 #define PUSH_COMMON(T) push_common(ctx, &v, T)
 #define PUSH_INSTRUCTION() stb_arr_push(ctx->instructions, v)
+
 void push_common(struct BuildContext* ctx, Instruction* v, u32 type)
 {
   v->index   = ctx->index++;
@@ -168,7 +139,7 @@ static void build_scope(struct BuildContext* ctx, Node* scope)
   }
   else if (return_->type == NT_Symbol)
   {
-    push_set(ctx, REGISTER_A, fetch_symbol_value(ctx, scope, return_->symbol));
+    push_set(ctx, REGISTER_A, NodeList_FetchSymbol_Number(ctx->nodes, return_->symbol));
     push_ret(ctx);
   }
   else if (return_->type == NT_Number)
@@ -198,14 +169,8 @@ void Assemble(Instruction** outInstructions, Node* fileNode)
   
   Node* node = ctx.nodes->first;
   
-  printf("Nodes = %p\n", node);
-
   while(node != NULL)
   {
-
-    printf("Node = %p\n", node);
-    printf("Node Type = %i\n", node->type);
-
     if (node->type == NT_Function)
     {
       build_function(&ctx, node);
