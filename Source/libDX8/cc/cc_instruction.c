@@ -65,9 +65,9 @@ static i32 fetch_symbol_value(struct BuildContext* ctx, Node* scope, u32 symbol)
   Node* node = ctx->nodes->first;
   while(node != NULL)
   {
-    if (node->type== NT_Define && node->symbol == symbol)
+    if (node->type== NT_Symbol && node->symbol == symbol)
     {
-      Node* value = node->Define.value;
+      Node* value = node->Symbol.value;
 
       if (value == NULL)
         return 0;
@@ -197,9 +197,15 @@ void Assemble(Instruction** outInstructions, Node* fileNode)
   nextInstructionSymbolText = NULL;
   
   Node* node = ctx.nodes->first;
+  
+  printf("Nodes = %p\n", node);
 
   while(node != NULL)
   {
+
+    printf("Node = %p\n", node);
+    printf("Node Type = %i\n", node->type);
+
     if (node->type == NT_Function)
     {
       build_function(&ctx, node);

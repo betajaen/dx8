@@ -51,55 +51,23 @@ typedef struct NodeList NodeList;
 typedef struct String String;
 typedef struct Instruction Instruction;
 
-enum TokenType
-{
-  TT_None                       = 0,
-  TT_Character                  = 1,
-  TT_Number                     = 2,
-  TT_String                     = 3,
-  TT_Symbol                     = 4,
-
-  TT_Syntax_SemiColon           = ';',
-  TT_Syntax_Parentheses_Open    = '(',
-  TT_Syntax_Parentheses_Close   = ')',
-  TT_Syntax_Brace_Open          = '{',
-  TT_Syntax_Brace_Close         = '}',
-  TT_Syntax_Hash                = '#',
-  
-  TT_Keyword_EndOfFile          = 'EOF',
-  TT_Keyword_Int                = 'INT',
-  TT_Keyword_Char               = 'CHAR',
-  TT_Keyword_Return             = 'RET',
-  TT_Keyword_Define             = 'DEFN',
-  TT_Keyword_Asm                = 'ASM'
-};
-
-struct String
-{
-  const char* str;
-  u32         len;
-};
-
-struct Token
-{
-  int         type;
-  const char* str;
-  u16         str_length;
-  i32         number;
-};
-
 typedef enum
 {
   NT_None         = 0,
   NT_File         = 1,
   NT_EndOfFile    = 2,
-  NT_Define       = 3,
+  NT_Symbol       = 3,
   NT_Function     = 4,
   NT_Scope        = 5,
-  NT_Symbol       = 6,
-  NT_Number       = 7,
-  NT_Assembly     = 8,
+  NT_Number       = 6,
+  NT_Assembly     = 7,
 } NodeType;
+
+struct String
+{
+  char* str;
+  u32   len;
+};
 
 struct NodeList
 {
@@ -131,7 +99,7 @@ struct Node
     } Assembly;
     struct {
       Node*   value;
-    } Define;
+    } Symbol;
   };
 };
 
@@ -164,23 +132,7 @@ struct Instruction
 
 };
 
-bool Token_IsNullOrEof(struct Token* token);
-bool Token_IsNumber(struct Token* token);
-bool Token_IsString(struct Token* token);
-bool Token_IsKeyword(struct Token* token);
-bool Token_IsSpecificKeyword(struct Token* token, int keyword);
-bool Token_IsSymbol(struct Token* token);
-bool Token_IsSyntax(struct Token* token);
-bool Token_IsSpecificSyntax(struct Token* token, int syntax);
-
-bool Token_AfterTokenIs(struct Token* token, int type);
-struct Token* Token_Next(struct Token* token);
-struct Token* Token_NextNext(struct Token* token);
-struct Token* Token_NextNextNext(struct Token* token);
-
-struct Token* Tokenise(const char* text, int len);
-
-Node* Nodify(struct Token* first);
+Node* ReadText(const char* text, int text_length);
 
 void Assemble(Instruction** outInstructions, Node* fileNode);
 

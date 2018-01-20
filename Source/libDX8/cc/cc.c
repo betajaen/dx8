@@ -55,7 +55,6 @@ int main(int argc, char** argv)
 {
   FILE* f;
   Instruction* instructions = NULL;
-  struct Token* token = NULL;
   u32 len;
   char* text;
   Node* nodes;
@@ -81,8 +80,7 @@ int main(int argc, char** argv)
 
   text[len] = ' ';
 
-  token = Tokenise(text, len);
-  nodes = Nodify(token);
+  nodes = ReadText(text, len);
 
   Assemble(&instructions, nodes);
   WriteAssembly(instructions);
